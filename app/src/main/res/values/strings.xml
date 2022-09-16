@@ -10,5 +10,7 @@
     <string name="menu_event_list">Event list</string>
     <string name="menu_user_calendar">User calendar</string>
     <string name="menu_settings">User settings</string>
+    <string name="user_profile">User profile</string>
+    <string name="menu_user_logout">Logout</string>
     <string name="floating_action_button">Create event</string>
 </resources>
