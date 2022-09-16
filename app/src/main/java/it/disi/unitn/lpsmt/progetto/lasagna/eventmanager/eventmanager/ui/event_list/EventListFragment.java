@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.home;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentHomeBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentEventListBinding;
 
-public class HomeFragment extends Fragment {
+public class EventListFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
+    private FragmentEventListBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        EventListViewModel eventListViewModel =
+                new ViewModelProvider(this).get(EventListViewModel.class);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentEventListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        eventListViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

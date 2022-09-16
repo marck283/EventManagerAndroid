@@ -3,23 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_event_list">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.home.HomeFragment"
+        android:id="@+id/nav_event_list"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment"
         android:label="@string/menu_event_list"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_event_list" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.gallery.GalleryFragment"
+        android:id="@+id/nav_user_calendar"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_calendar.UserCalendarFragment"
         android:label="@string/menu_user_calendar"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_user_calendar" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.slideshow.SlideshowFragment"
+        android:id="@+id/nav_user_settings"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment"
         android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_menu_settings" />
+    <fragment
+        android:id="@+id/nav_user_profile"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile.UserProfileFragment"
+        android:label="@string/user_profile"
+        tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_logout.UserLogoutFragment"
+        android:label="@string/menu_user_logout"
+        tools:layout="@layout/fragment_user_logout" />
 </navigation>

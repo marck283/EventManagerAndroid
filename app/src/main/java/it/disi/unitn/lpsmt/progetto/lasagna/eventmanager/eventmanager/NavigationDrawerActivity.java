@@ -36,7 +36,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_event_list, R.id.nav_user_calendar, R.id.nav_user_settings,
+                R.id.nav_user_profile, R.id.nav_logout)
                 .setOpenableLayout(drawer)
                 .build();
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);

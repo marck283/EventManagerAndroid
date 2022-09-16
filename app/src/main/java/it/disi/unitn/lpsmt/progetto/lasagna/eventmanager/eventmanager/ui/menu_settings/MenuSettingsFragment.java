@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.slideshow;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentSlideshowBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentMenuSettingsBinding;
 
-public class SlideshowFragment extends Fragment {
+public class MenuSettingsFragment extends Fragment {
 
-    private FragmentSlideshowBinding binding;
+    private FragmentMenuSettingsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SlideshowViewModel slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        MenuSettingsViewModel menuSettingsViewModel =
+                new ViewModelProvider(this).get(MenuSettingsViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentMenuSettingsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textSlideshow;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        menuSettingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
