@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EventManager</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="navigation_drawer_open">Apri menù di navigazione</string>
+    <string name="navigation_drawer_close">Chiudi menù di navigazione</string>
+    <string name="nav_header_desc">Menù di navigazione</string>
+    <string name="floating_action_button">Crea evento</string>
+    <string name="menu_event_list">Lista eventi</string>
+    <string name="menu_user_calendar">Calendario utente</string>
+    <string name="menu_settings">Impostazioni</string>
+</resources>

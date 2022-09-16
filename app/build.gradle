@@ -28,6 +28,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager'
 }
 
 dependencies {
