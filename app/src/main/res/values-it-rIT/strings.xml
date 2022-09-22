@@ -11,4 +11,9 @@
     <string name="menu_settings">Impostazioni</string>
     <string name="user_profile">Profilo</string>
     <string name="menu_user_logout">Esci</string>
+    <string name="event_name">"Attività "</string>
+    <string name="event_category_name">"Categoria: "</string>
+    <string name="event_duration">"Durata: "</string>
+    <string name="event_address">Indirizzo:</string>
+    <string name="event_city">"Città: "</string>
 </resources>

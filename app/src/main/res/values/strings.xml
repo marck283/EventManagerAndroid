@@ -13,4 +13,9 @@
     <string name="user_profile">User profile</string>
     <string name="menu_user_logout">Logout</string>
     <string name="floating_action_button">Create event</string>
+    <string name="event_name">Activity: </string>
+    <string name="event_category_name">Category: </string>
+    <string name="event_duration">Duration: </string>
+    <string name="event_address">Address: </string>
+    <string name="event_city">City: </string>
 </resources>
