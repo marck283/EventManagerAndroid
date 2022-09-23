@@ -20,6 +20,7 @@ public class CardView extends MaterialCardView {
     public CardView(Context context, String eventPicUrl, String _n, String _c, String _d,
                     String _ind, String _cit) {
         super(context);
+        image = new ImageView(context);
         Picasso.get().load(eventPicUrl).into(image);
         nomeAtt = _n;
         categoria = _c;
