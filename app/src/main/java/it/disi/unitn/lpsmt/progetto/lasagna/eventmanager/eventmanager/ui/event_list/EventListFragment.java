@@ -12,12 +12,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentEventListBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.PublicEvents;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.views.cards.CardView;
 
 public class EventListFragment extends Fragment {
@@ -38,7 +36,7 @@ public class EventListFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         ConstraintLayout layout = (ConstraintLayout)view.findViewById(R.id.eventListLayout);
         PublicEvents pubEv = new PublicEvents();
         String token = null, nomeAtt = null, categoria = null, durata = null, indirizzo = null,
@@ -51,7 +49,7 @@ public class EventListFragment extends Fragment {
             indirizzo = savedInstanceState.getString("indirizzo");
             citta = savedInstanceState.getString("citta");
         }
-        for(JSONObject j: pubEv.getEvents(token, nomeAtt, categoria, durata, indirizzo, citta)) {
+        for(PublicEvent j: pubEv.getEvents(token, nomeAtt, categoria, durata, indirizzo, citta).getList()) {
             try {
                 //Do not test until events are modified with the possibility of creating them with an image
                 //Now the problem is: we downloaded the informations about events, but how do we show them?
@@ -60,7 +58,7 @@ public class EventListFragment extends Fragment {
                         j.getString("citta"));
                 card.setBody();
                 layout.addView(card);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
