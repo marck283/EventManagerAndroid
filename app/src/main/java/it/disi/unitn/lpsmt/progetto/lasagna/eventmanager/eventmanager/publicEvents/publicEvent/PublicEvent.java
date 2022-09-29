@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent;
 
+import android.util.Log;
+
 public class PublicEvent {
     private String id, eventid, self, name, category;
 
@@ -9,6 +11,14 @@ public class PublicEvent {
         self = s;
         name = n;
         category = c;
+    }
+
+    public void print() {
+        Log.i("id", "id: " + id);
+        Log.i("eventid", "eventid: " + eventid);
+        Log.i("self", "self: " + self);
+        Log.i("name", "name: " + name);
+        Log.i("category", "category: " + category);
     }
 
     public String getString(String field) throws Exception {

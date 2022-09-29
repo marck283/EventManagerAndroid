@@ -37,7 +37,7 @@ public class EventListFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ConstraintLayout layout = (ConstraintLayout)view.findViewById(R.id.eventListLayout);
+        ConstraintLayout layout = view.findViewById(R.id.eventListLayout);
         PublicEvents pubEv = new PublicEvents();
         String token = null, nomeAtt = null, categoria = null, durata = null, indirizzo = null,
         citta = null;
@@ -51,7 +51,6 @@ public class EventListFragment extends Fragment {
         }
         for(PublicEvent j: pubEv.getEvents(token, nomeAtt, categoria, durata, indirizzo, citta).getList()) {
             try {
-                //Do not test until events are modified with the possibility of creating them with an image
                 //Now the problem is: we downloaded the informations about events, but how do we show them?
                 CardView card = new CardView(this.requireContext(), j.getString("eventPic"), j.getString("nomeAtt"),
                         j.getString("categoria"), j.getString("durata"), j.getString("indirizzo"),

@@ -1,12 +1,13 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PubEvList;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,9 +30,9 @@ public class PublicEvents {
     public PubEvList getEvents(@Nullable String token, @Nullable String nomeAtt,
                                       @Nullable String categoria, @Nullable String durata,
                                       @Nullable String indirizzo, @Nullable String citta) {
-        Call<PubEvList> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta);
+        Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta);
         final PubEvList list = new PubEvList();
-        call.enqueue(new Callback<PubEvList>() {
+        call.enqueue(new Callback<JsonObject>() {
 
             /**
              * Invoked for a received HTTP response.
@@ -43,10 +44,13 @@ public class PublicEvents {
              * @param response
              */
             @Override
-            public void onResponse(@NonNull Call<PubEvList> call, @NonNull Response<PubEvList> response) {
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 PubEvList l2 = new PubEvList();
-                l2.parseJSON(response.toString());
-                getList(list, l2);
+                if (response.body() != null) {
+                    l2 = l2.parseJSON(response.body());
+                } else {
+                    Log.d("null", "null");
+                }
             }
 
             /**
@@ -57,7 +61,7 @@ public class PublicEvents {
              * @param t
              */
             @Override
-            public void onFailure(@NonNull Call<PubEvList> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 try {
                     throw t;
                 } catch (Throwable e) {
@@ -66,11 +70,5 @@ public class PublicEvents {
             }
         });
         return list;
-    }
-
-    public void getList(PubEvList l1, PubEvList l2) {
-        for(PublicEvent p: l2.getList()) {
-            l1.getList().add(p);
-        }
     }
 }
