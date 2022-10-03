@@ -2,20 +2,24 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="330dp"
+    android:layout_height="350dp"
+    android:layout_marginStart="35dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginTop="40dp"
     app:cardCornerRadius="3dp"
     app:cardElevation="2dp"
     tools:layout_editor_absoluteX="-43dp"
-    tools:layout_editor_absoluteY="-20dp">
+    tools:layout_editor_absoluteY="-20dp"
+    android:clickable="true"
+    android:focusable="true"> <!-- Prossimo passo: l'evento onClick su una card reindirizza ad
+     una videata di informazioni su quell'evento in base a se l'utente è iscritto o meno. -->
+    <!-- Tuttavia perché il marginTop non funziona? -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="350dp"
-        android:layout_height="390dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:context="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment">
 
         <ImageView
