@@ -14,9 +14,6 @@ public class PublicEvent {
         this.id = id;
         eventid = evId;
         Log.i("idev", String.valueOf(eventid)); //Perché non viene eseguita questa istruzione?
-
-        //Devo anche risolvere l'errore su RecyclerView "no adapter attached; skipping layout"
-
         self = s;
         name = n;
         category = c;
