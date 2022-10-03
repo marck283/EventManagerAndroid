@@ -21,7 +21,4 @@
     <string name="event_city">City: </string>
     <string name="scrollview" translatable="false">ScrollView</string>
     <string name="scroll_view">ScrollView</string>
-    <string name="imageview" translatable="false">ImageView</string>
-    <string name="linearLayout" translatable="false">LinearLayout</string>
-    <string name="event_picture">Event picture</string>
 </resources>

@@ -1,12 +1,17 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PubEvList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,25 +20,27 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PublicEvents {
-    private Retrofit retro;
-    private PublicEventsInterface pubEv;
+    private final PublicEventsInterface pubEv;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    public PublicEvents() {
-        retro = new Retrofit.Builder()
+    public PublicEvents(@NonNull View layout) {
+        Retrofit retro = new Retrofit.Builder()
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         pubEv = retro.create(PublicEventsInterface.class);
+        mRecyclerView = layout.findViewById(R.id.recycler_view);
+        mLayoutManager = new LinearLayoutManager(layout.getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    //Next: convert from array to List
-    public PubEvList getEvents(@Nullable String token, @Nullable String nomeAtt,
-                                      @Nullable String categoria, @Nullable String durata,
-                                      @Nullable String indirizzo, @Nullable String citta) {
+    public void getEvents(ConstraintLayout l,
+                          @Nullable String token, @Nullable String nomeAtt,
+                          @Nullable String categoria, @Nullable String durata,
+                          @Nullable String indirizzo, @Nullable String citta) {
         Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta);
-        final PubEvList list = new PubEvList();
         call.enqueue(new Callback<JsonObject>() {
-
             /**
              * Invoked for a received HTTP response.
              *
@@ -47,9 +54,21 @@ public class PublicEvents {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 PubEvList l2 = new PubEvList();
                 if (response.body() != null) {
-                    l2 = l2.parseJSON(response.body());
+                    if(response.isSuccessful()) {
+                        l2 = l2.parseJSON(response.body());
+                        if(l2 != null) {
+                            //Poiché i risultati vengono ricevuti su un thread secondario, non posso
+                            //aggiornare l'interfaccia utente all'interno di questo metodo.
+                            PubEvAdapter l1 = new PubEvAdapter(l2.getList(), l.getContext());
+                            mRecyclerView.setAdapter(l1);
+                        } else {
+                            Log.e("null", "Public event list is null");
+                        }
+                    } else {
+                        Log.i("success", "Unsuccessful operation");
+                    }
                 } else {
-                    Log.d("null", "null");
+                    Log.d("null", "response is null");
                 }
             }
 
@@ -69,6 +88,5 @@ public class PublicEvents {
                 }
             }
         });
-        return list;
     }
 }

@@ -11,12 +11,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EventManager"
-        tools:targetApi="31">
+        android:theme="@style/Theme.MaterialComponents.Light"
+        tools:targetApi="32">
         <activity
             android:name=".NavigationDrawerActivity"
             android:exported="true"
-            android:theme="@style/Theme.EventManager.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
