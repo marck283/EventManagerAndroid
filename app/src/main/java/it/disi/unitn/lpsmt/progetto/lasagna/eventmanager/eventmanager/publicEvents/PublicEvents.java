@@ -23,6 +23,7 @@ public class PublicEvents {
     private final PublicEventsInterface pubEv;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private PubEvAdapter l1;
 
     public PublicEvents(@NonNull View layout) {
         Retrofit retro = new Retrofit.Builder()
@@ -33,6 +34,8 @@ public class PublicEvents {
         mRecyclerView = layout.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(layout.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        l1 = new PubEvAdapter();
+        mRecyclerView.setAdapter(l1);
     }
 
     public void getEvents(ConstraintLayout l,
@@ -59,7 +62,7 @@ public class PublicEvents {
                         if(l2 != null) {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
-                            PubEvAdapter l1 = new PubEvAdapter(l2.getList(), l.getContext());
+                            l1 = new PubEvAdapter(l2.getList(), l.getContext());
                             mRecyclerView.setAdapter(l1);
                         } else {
                             Log.e("null", "Public event list is null");

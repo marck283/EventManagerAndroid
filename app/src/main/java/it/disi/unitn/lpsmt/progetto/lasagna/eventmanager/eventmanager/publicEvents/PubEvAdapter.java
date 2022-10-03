@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -40,6 +41,11 @@ public class PubEvAdapter extends RecyclerView.Adapter<PubEvAdapter.ViewHolder> 
                 e.printStackTrace();
             }
         }
+    }
+
+    public PubEvAdapter() {
+        evList = new ArrayList<>();
+        mContext = null;
     }
 
     public PubEvAdapter(List<PublicEvent> pubL, Context c) {
