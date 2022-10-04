@@ -1,5 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -18,6 +21,13 @@ public class PublicEvent {
         name = n;
         category = c;
         eventPic = ep;
+    }
+
+    public Bitmap decodeBase64() {
+        byte[] decodedImg = Base64.decode(eventPic
+                .replace("data:image/png;base64,", "")
+                .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
+        return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
     }
 
     public String getString(@NonNull String field) throws Exception {
