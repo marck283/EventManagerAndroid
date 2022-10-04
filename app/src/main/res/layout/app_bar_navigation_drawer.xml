@@ -23,6 +23,7 @@
 
     <include
         layout="@layout/content_navigation_drawer"
+        android:layout_width="match_parent"
         android:layout_height="443dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
