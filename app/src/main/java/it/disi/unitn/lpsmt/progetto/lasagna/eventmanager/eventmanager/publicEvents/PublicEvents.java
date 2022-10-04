@@ -13,7 +13,6 @@ import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PubEvList;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +31,8 @@ public class PublicEvents {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         pubEv = retro.create(PublicEventsInterface.class);
+
+        //Imposto la RecyclerView
         mRecyclerView = layout.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(layout.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -60,7 +61,6 @@ public class PublicEvents {
                 if (response.body() != null) {
                     if(response.isSuccessful()) {
                         l2 = l2.parseJSON(response.body());
-                        Log.i("info", response.body().toString());
                         if(l2 != null) {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.

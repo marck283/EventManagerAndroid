@@ -22,6 +22,7 @@ public class PublicEvent {
         eventPic = ep;
     }
 
+    //Metodo di stampa per il debug
     public void print() {
         Log.i("info", String.valueOf(id));
         Log.i("info", String.valueOf(eventid));
