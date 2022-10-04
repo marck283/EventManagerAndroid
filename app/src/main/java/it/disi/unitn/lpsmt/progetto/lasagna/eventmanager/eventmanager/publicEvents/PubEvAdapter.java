@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +30,17 @@ public class PubEvAdapter extends RecyclerView.Adapter<PubEvAdapter.ViewHolder> 
             imgView = itemView.findViewById(R.id.imageView2);
             evName = itemView.findViewById(R.id.textView3);
             catName = itemView.findViewById(R.id.textView5);
+
+            itemView.setOnClickListener(l -> {
+                //Avvia un'altra Activity che richiede le informazioni sull'evento
+                //Passare l'ID dell'evento tramite Bundle
+                Log.i("click", "card clicked");
+            });
         }
 
         public void bindData(PublicEvent dataModel, Context context) {
             try {
                 imgView.setImageBitmap(dataModel.decodeBase64());
-
                 evName.setText(dataModel.getString("name"));
                 catName.setText(dataModel.getString("category"));
             } catch (Exception e) {

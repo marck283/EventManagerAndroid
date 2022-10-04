@@ -13,6 +13,7 @@ import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PubEvList;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,6 +64,9 @@ public class PublicEvents {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
                             l1 = new PubEvAdapter(l2.getList(), l.getContext());
+                            for(PublicEvent pe: l2.getList()) {
+                                pe.print();
+                            }
                             mRecyclerView.setAdapter(l1);
                         } else {
                             Log.e("null", "Public event list is null");

@@ -16,11 +16,17 @@ public class PublicEvent {
     public PublicEvent(String id, String evId, String s, String n, String c, String ep) {
         this.id = id;
         eventid = evId;
-        Log.i("idev", String.valueOf(eventid)); //Perché non viene eseguita questa istruzione?
         self = s;
         name = n;
         category = c;
         eventPic = ep;
+    }
+
+    public void print() {
+        Log.i("info", String.valueOf(id));
+        Log.i("info", String.valueOf(eventid));
+        Log.i("info", String.valueOf(self));
+        Log.i("info", String.valueOf(name));
     }
 
     public Bitmap decodeBase64() {
