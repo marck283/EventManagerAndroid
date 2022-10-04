@@ -1,6 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -32,9 +34,21 @@ public class PubEvAdapter extends RecyclerView.Adapter<PubEvAdapter.ViewHolder> 
             catName = itemView.findViewById(R.id.textView5);
         }
 
+        private void setImageView(PublicEvent dataModel) throws Exception {
+            String encImage = dataModel.getString("eventPic")
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,","");; //Ritorna una stringa in formato Base64
+            byte[] decodedImage = Base64.decode(encImage, Base64.DEFAULT);
+
+            //Decodifico la stringa ottenuta
+            Bitmap decoded = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.length);
+            imgView.setImageBitmap(decoded);
+        }
+
         public void bindData(PublicEvent dataModel, Context context) {
-            imgView.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.evimgview));
             try {
+                setImageView(dataModel);
+
                 evName.setText(dataModel.getString("name"));
                 catName.setText(dataModel.getString("category"));
             } catch (Exception e) {
