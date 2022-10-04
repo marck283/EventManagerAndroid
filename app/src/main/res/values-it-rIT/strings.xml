@@ -18,4 +18,12 @@
     <string name="event_city">"Città: "</string>
     <string name="scroll_view">ScrollView</string>
     <string name="event_picture">Immagine evento</string>
+    <string name="date">Data e ora</string>
+    <string name="day">"Giorno: "</string>
+    <string name="duration">"Durata evento: "</string>
+    <string name="organizer">Organizzatore</string>
+    <string name="event_address_info">Luogo evento</string>
+    <string name="city">"Comune: "</string>
+    <string name="time">"Orario: "</string>
+    <string name="public_event_sign_up">Registrati</string>
 </resources>

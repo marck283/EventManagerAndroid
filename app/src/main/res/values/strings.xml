@@ -24,4 +24,12 @@
     <string name="imageview" translatable="false">ImageView</string>
     <string name="linearLayout" translatable="false">LinearLayout</string>
     <string name="event_picture">Event picture</string>
+    <string name="date">Date</string>
+    <string name="day">Day: </string>
+    <string name="duration">Duration: </string>
+    <string name="organizer">Organizer: </string>
+    <string name="event_address_info">Event address</string>
+    <string name="city">City: </string>
+    <string name="time">Time: </string>
+    <string name="public_event_sign_up">Sign up</string>
 </resources>
