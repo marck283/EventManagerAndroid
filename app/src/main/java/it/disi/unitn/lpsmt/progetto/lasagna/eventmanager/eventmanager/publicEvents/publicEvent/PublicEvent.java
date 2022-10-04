@@ -13,9 +13,9 @@ public class PublicEvent {
     private String self; //URL dell'evento
     private String name, category, eventPic; //Informazioni sull'evento
 
-    public PublicEvent(String id, String evId, String s, String n, String c, String ep) {
+    public PublicEvent(String id, String idevent, String s, String n, String c, String ep) {
         this.id = id;
-        eventid = evId;
+        eventid = idevent;
         self = s;
         name = n;
         category = c;

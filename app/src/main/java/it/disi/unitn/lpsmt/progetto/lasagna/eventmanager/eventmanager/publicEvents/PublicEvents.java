@@ -60,13 +60,11 @@ public class PublicEvents {
                 if (response.body() != null) {
                     if(response.isSuccessful()) {
                         l2 = l2.parseJSON(response.body());
+                        Log.i("info", response.body().toString());
                         if(l2 != null) {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
                             l1 = new PubEvAdapter(l2.getList(), l.getContext());
-                            for(PublicEvent pe: l2.getList()) {
-                                pe.print();
-                            }
                             mRecyclerView.setAdapter(l1);
                         } else {
                             Log.e("null", "Public event list is null");
