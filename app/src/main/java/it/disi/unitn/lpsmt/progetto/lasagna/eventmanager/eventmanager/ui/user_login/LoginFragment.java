@@ -26,7 +26,7 @@ public class LoginFragment extends Fragment {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
         View root = binding.getRoot();
-        mViewModel.login(root);
+        mViewModel.login(root, this.requireActivity());
 
         return root;
     }
