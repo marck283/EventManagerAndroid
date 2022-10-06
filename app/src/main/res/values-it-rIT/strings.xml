@@ -26,4 +26,6 @@
     <string name="city">"Comune: "</string>
     <string name="time">"Orario: "</string>
     <string name="public_event_sign_up">Registrati</string>
+    <string name="log_in">Accesso</string>
+    <string name="log_in_text">Accedi per usare tutte le funzionalità dell\'applicazione!</string>
 </resources>
