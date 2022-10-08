@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -29,19 +28,23 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.googleSignInClient.GSignInClient;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityNavigationDrawerBinding binding;
     private GoogleSignInAccount account;
+    private View root;
+    private GSignInClient gsi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        root = binding.getRoot();
+        setContentView(root);
 
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -51,14 +54,23 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        account = GoogleSignIn.getLastSignedInAccount(this);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_event_list, R.id.nav_user_calendar, R.id.nav_user_settings,
                 R.id.nav_user_profile, R.id.nav_logout)
                 .setOpenableLayout(drawer)
                 .build();
 
-        updateUI(navigationView);
+        //Reimplementare l'intero meccanismo di Google Sign In e aggiornamento dell'interfaccia utente
+        //facendo in modo che, al termine del metodo "onActivityResult()" il controllo sia ritornato
+        //all'Activity precedente (esclusa quella di login) e che il suo stato sia salvato. Per fare
+        //ciò, dovrò salvare lo stato dell'Activity nel Bundle della stessa (ripassare il ciclo di
+        //vita delle Activity prima di fare ciò).
+        gsi = new GSignInClient(root);
+        account = gsi.getAccount();
+        if(account == null) {
+            gsi.silentSignIn(this);
+        }
+        updateUI(navigationView); //Qui c'è un errore perché silentSignIn() contiene una callback
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
