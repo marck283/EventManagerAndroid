@@ -24,7 +24,7 @@
     <include
         layout="@layout/content_navigation_drawer"
         android:layout_width="match_parent"
-        android:layout_height="443dp" />
+        android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
