@@ -1,19 +1,22 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
-import android.content.ContentResolver;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,11 +24,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.googleSignInClient.GSignInClient;
@@ -37,6 +35,12 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private GoogleSignInAccount account;
     private View root;
     private GSignInClient gsi;
+    private NavigationView navigationView;
+
+    private SignInClient oneTapClient;
+    private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
+    private static final int REQ_SIGN_IN = 3;
+    private boolean showOneTapUI = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
         DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
+        navigationView = binding.navView;
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -65,12 +69,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         //all'Activity precedente (esclusa quella di login) e che il suo stato sia salvato. Per fare
         //ciò, dovrò salvare lo stato dell'Activity nel Bundle della stessa (ripassare il ciclo di
         //vita delle Activity prima di fare ciò).
-        gsi = new GSignInClient(root);
-        account = gsi.getAccount();
-        if(account == null) {
-            gsi.silentSignIn(this);
-        }
-        updateUI(navigationView); //Qui c'è un errore perché silentSignIn() contiene una callback
+        gsi = new GSignInClient(this);
+        account = gsi.getAccount(this);
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
@@ -80,63 +80,75 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Aggiorna l'interfaccia utente in base al fatto che l'utente sia ancora autenticato.
-     * @param navigationView L'istanza di View necessaria per impostare il layout corretto
-     */
-    private void updateUI(NavigationView navigationView) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         if(account == null) {
-            //Poiché il menù viene caricato dal file di layout activity_navigation_drawer_drawer.xml
-            //devo rimuovere da codice tutti gi elementi che contiene e poi inserire quelli del
-            //menù dato in navmenu_not_logged_in.xml.
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.navmenu_not_logged_in);
-        } else {
-            //Ottieni l'intestazione del menù di navigazione standard per inserire username e email
-            //dell'utente. Si noti che nessuno dei seguenti valori è garantito per ogni utente.
-            String name = account.getGivenName();
-            String email = account.getEmail();
-            Uri photoUrl = account.getPhotoUrl();
-            byte[] imgBytes = readBytes(photoUrl);
+            gsi.silentSignIn(this);
+        }
 
-            //Next: set up the ImageView, then set up the two text views.
-            View view = navigationView.getHeaderView(R.id.nav_view);
-            Bitmap imgBitmap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.length);
-            ImageView imgView = view.findViewById(R.id.imageView);
-            imgView.setImageBitmap(imgBitmap);
+        //Chiamo il metodo di aggiornamento dell'interfaccia qui perché l'Activity
+        //ha già raggiunto lo stato di CREATED.
+        updateUI(account); //Qui c'è un errore perché silentSignIn() contiene una callback
+    }
 
-            TextView un = view.findViewById(R.id.profile_name), email1 = view.findViewById(R.id.profile_email);
-            un.setText(name);
-            email1.setText(email);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_ONE_TAP: {
+                handleOneTapSignInResult(data);
+                break;
+            }
+            case REQ_SIGN_IN: {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+                break;
+            }
         }
     }
 
-    /**
-     * Ritorna un array di byte che rappresenta la risorsa fornita sotto forma di Uri.
-     * @param uri La risorsa fornita sotto forma di Uri
-     * @return Un array di byte che rappresenta la risorsa fornita
-     */
-    private byte[] readBytes(Uri uri) {
-        ContentResolver cr = getBaseContext().getContentResolver();
-        InputStream stream;
-        ByteArrayOutputStream byteArrayStream;
-        byte[] bytes = null;
+    public void handleSignInResult(@NonNull Task<GoogleSignInAccount> task) {
         try {
-            stream = cr.openInputStream(uri);
-            byteArrayStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int i;
-            while ((i = stream.read(buffer, 0, buffer.length)) > 0) {
-                byteArrayStream.write(buffer, 0, i);
-            }
-            stream.close();
-            bytes = byteArrayStream.toByteArray();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+
+            //Signed in successfully, authenticate to web server
+            gsi.serverLogin(account);
+
+            // Signed in successfully, show authenticated UI.
+            updateUI(account);
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w("fail", "signInResult:failed code=" + e.getStatusCode());
+            updateUI(null);
         }
-        return bytes;
+    }
+
+    public void updateUI(GoogleSignInAccount account) {
+        if(account == null) {
+            //account is null
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.navmenu_not_logged_in);
+        } else {
+            Log.i("account", account.getDisplayName());
+        }
+    }
+
+    public void handleOneTapSignInResult(@Nullable Intent data) {
+        try {
+            SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
+            String idToken = credential.getGoogleIdToken();
+            if (idToken !=  null) {
+                // Got an ID token from Google. Use it to authenticate
+                // with Firebase.
+                Log.d("idToken", "Got ID token.");
+            }
+        } catch (ApiException e) {
+            Log.d("exception", e.getMessage());
+        }
     }
 
     @Override

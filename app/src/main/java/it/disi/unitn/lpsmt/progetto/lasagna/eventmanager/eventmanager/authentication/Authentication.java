@@ -23,8 +23,8 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull String csrfToken) {
-        Call<JsonObject> auth = authentication.authentication(csrfToken);
+    public void login(@NonNull String csrfToken, @NonNull String googleJwt) {
+        Call<JsonObject> auth = authentication.authentication(csrfToken, googleJwt);
         UserInfo info = new UserInfo();
         auth.enqueue(new Callback<JsonObject>() {
 
@@ -40,6 +40,7 @@ public class Authentication {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    Log.i("response", String.valueOf(response.body()));
                     info.parseJSON(response.body());
                 } else {
                     Log.i("null", "Unsuccessful or null response");

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "666454225517",
+    "project_id": "eventmanager-cbe2d",
+    "storage_bucket": "eventmanager-cbe2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666454225517:android:05d3420d76b76092ac8564",
+        "android_client_info": {
+          "package_name": "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666454225517-itbjsj8g0hp5rq3hmbcg8ieg4mi9o5s3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRRSPKimxkLcheSlruahezHXeXmTJKkr0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666454225517-itbjsj8g0hp5rq3hmbcg8ieg4mi9o5s3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
