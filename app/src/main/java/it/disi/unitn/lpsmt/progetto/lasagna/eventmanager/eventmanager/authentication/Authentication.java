@@ -38,7 +38,7 @@ public class Authentication {
              * @param response
              */
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     Log.i("response", String.valueOf(response.body()));
                     info.parseJSON(response.body());
@@ -55,7 +55,7 @@ public class Authentication {
              * @param t
              */
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 try {
                     throw t;
                 } catch (Throwable e) {

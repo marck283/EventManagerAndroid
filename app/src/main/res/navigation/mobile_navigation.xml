@@ -32,9 +32,9 @@
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_logout.UserLogoutFragment"
         android:label="@string/menu_user_logout"
         tools:layout="@layout/fragment_user_logout" />
-    <fragment
+    <activity
         android:id="@+id/nav_login"
-        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.LoginFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity"
         android:label="@string/menu_user_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/activity_login" />
 </navigation>

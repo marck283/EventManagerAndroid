@@ -1,153 +1,114 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
+import android.view.MenuItem;
+import android.widget.TextView;
 
-import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.SignInCredential;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.googleSignInClient.GSignInClient;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityNavigationDrawerBinding binding;
     private GoogleSignInAccount account;
-    private View root;
-    private GSignInClient gsi;
-    private NavigationView navigationView;
-
-    private SignInClient oneTapClient;
-    private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
-    private static final int REQ_SIGN_IN = 3;
-    private boolean showOneTapUI = true;
+    private NavigationView navView;
+    private static final int REQ_SIGN_IN = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
-        root = binding.getRoot();
-        setContentView(root);
+        ActivityNavigationDrawerBinding binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
-        DrawerLayout drawer = binding.drawerLayout;
-        navigationView = binding.navView;
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_event_list, R.id.nav_user_calendar, R.id.nav_user_settings,
                 R.id.nav_user_profile, R.id.nav_logout)
-                .setOpenableLayout(drawer)
+                .setOpenableLayout(binding.drawerLayout)
                 .build();
 
-        //Reimplementare l'intero meccanismo di Google Sign In e aggiornamento dell'interfaccia utente
-        //facendo in modo che, al termine del metodo "onActivityResult()" il controllo sia ritornato
-        //all'Activity precedente (esclusa quella di login) e che il suo stato sia salvato. Per fare
-        //ciò, dovrò salvare lo stato dell'Activity nel Bundle della stessa (ripassare il ciclo di
-        //vita delle Activity prima di fare ciò).
-        gsi = new GSignInClient(this);
-        account = gsi.getAccount(this);
+        navView = binding.navView;
+        account = GoogleSignIn.getLastSignedInAccount(this.getApplicationContext());
+        updateUI(null);
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
             NavController navController = nhf.getNavController();
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-            NavigationUI.setupWithNavController(navigationView, navController);
+            NavigationUI.setupWithNavController(binding.navView, navController);
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+    private void updateUI(Intent data) {
+        navView.getMenu().clear();
         if(account == null) {
-            gsi.silentSignIn(this);
-        }
+            navView.inflateMenu(R.menu.navmenu_not_logged_in);
+            Log.i("info", "account null");
+        } else {
+            //User is logged in, display authenticated UI.
+            Log.i("profileName", data.getStringExtra("profileName"));
+            Log.i("email", data.getStringExtra("email"));
+            navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
+            TextView username = (TextView) navView.getHeaderView(R.id.profile_name);
 
-        //Chiamo il metodo di aggiornamento dell'interfaccia qui perché l'Activity
-        //ha già raggiunto lo stato di CREATED.
-        updateUI(account); //Qui c'è un errore perché silentSignIn() contiene una callback
+            //setText expects a resource name, but why does it interpret "profileName" and "email" as a null object reference?
+            username.setText(getString(R.string.profileName, data.getStringExtra("profileName")));
+
+            TextView email = (TextView) navView.getHeaderView(R.id.profile_email);
+            email.setText(getString(R.string.email, data.getStringExtra("email")));
+        }
+    }
+
+    /**
+     * Metodo chiamato quando si cerca di accedere al sistema.
+     * @param item Il MenuItem da cui far partire l'Activity di accesso.
+     */
+    public void startLogin(MenuItem item) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivityForResult(intent, REQ_SIGN_IN);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            case REQ_ONE_TAP: {
-                handleOneTapSignInResult(data);
-                break;
+        if(requestCode == REQ_SIGN_IN) {
+            switch(resultCode) {
+                case Activity.RESULT_OK: {
+                    //Autenticato con successo a Google, ora autentica al server e
+                    //mostra i dati del profilo richiesti
+                    account = data.getParcelableExtra("gAccount");
+                    updateUI(data);
+                    break;
+                }
+                case Activity.RESULT_CANCELED: {
+                    account = null;
+                    updateUI(null);
+                    break;
+                }
             }
-            case REQ_SIGN_IN: {
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                handleSignInResult(task);
-                break;
-            }
-        }
-    }
-
-    public void handleSignInResult(@NonNull Task<GoogleSignInAccount> task) {
-        try {
-            GoogleSignInAccount account = task.getResult(ApiException.class);
-
-            //Signed in successfully, authenticate to web server
-            gsi.serverLogin(account);
-
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("fail", "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
-    }
-
-    public void updateUI(GoogleSignInAccount account) {
-        if(account == null) {
-            //account is null
-            navigationView.getMenu().clear();
-            navigationView.inflateMenu(R.menu.navmenu_not_logged_in);
-        } else {
-            Log.i("account", account.getDisplayName());
-        }
-    }
-
-    public void handleOneTapSignInResult(@Nullable Intent data) {
-        try {
-            SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
-            String idToken = credential.getGoogleIdToken();
-            if (idToken !=  null) {
-                // Got an ID token from Google. Use it to authenticate
-                // with Firebase.
-                Log.d("idToken", "Got ID token.");
-            }
-        } catch (ApiException e) {
-            Log.d("exception", e.getMessage());
         }
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -14,6 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light"
         tools:targetApi="32">
+        <activity
+            android:name=".ui.user_login.ui.login.LoginActivity"
+            android:exported="false"
+            android:label="@string/title_activity_login" />
         <activity
             android:name=".NavigationDrawerActivity"
             android:exported="true"

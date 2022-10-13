@@ -1,5 +1,8 @@
 plugins {
     id 'com.android.application'
+
+    // Add the Google services Gradle plugin
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -28,7 +31,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-    namespace 'it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager'
 }
 
 task testClasses {
@@ -39,7 +41,7 @@ task testClasses {
 
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
-    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-auth:21.0.3'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation "com.google.android.material:material:1.6.1"
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
