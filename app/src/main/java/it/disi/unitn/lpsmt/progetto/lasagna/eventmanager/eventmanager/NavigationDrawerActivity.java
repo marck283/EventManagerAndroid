@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -51,7 +52,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         navView = binding.navView;
         account = GoogleSignIn.getLastSignedInAccount(this.getApplicationContext());
-        updateUI(null);
+        updateUI();
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
@@ -61,23 +62,28 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUI(Intent data) {
+    private void updateUI() {
         navView.getMenu().clear();
         if(account == null) {
             navView.inflateMenu(R.menu.navmenu_not_logged_in);
             Log.i("info", "account null");
         } else {
             //User is logged in, display authenticated UI.
-            Log.i("profileName", data.getStringExtra("profileName"));
-            Log.i("email", data.getStringExtra("email"));
+            Log.i("profileName", getString(R.string.profileName, account.getDisplayName()));
+            Log.i("email", account.getEmail());
+            LinearLayout l = navView.findViewById(R.id.lLayout);
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
-            TextView username = (TextView) navView.getHeaderView(R.id.profile_name);
 
-            //setText expects a resource name, but why does it interpret "profileName" and "email" as a null object reference?
-            username.setText(getString(R.string.profileName, data.getStringExtra("profileName")));
+            //Log.i("count", String.valueOf(navView.getHeaderCount())); //1 header soltanto... come mai?
 
-            TextView email = (TextView) navView.getHeaderView(R.id.profile_email);
-            email.setText(getString(R.string.email, data.getStringExtra("email")));
+            TextView username = l.findViewById(R.id.profile_name);
+
+            Log.i("null", String.valueOf(username == null)); //True... why?
+
+            username.setText(getString(R.string.profileName, account.getDisplayName()));
+
+            TextView email = l.findViewById(R.id.profile_email);
+            email.setText(getString(R.string.email, account.getEmail()));
         }
     }
 
@@ -99,13 +105,13 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 case Activity.RESULT_OK: {
                     //Autenticato con successo a Google, ora autentica al server e
                     //mostra i dati del profilo richiesti
-                    account = data.getParcelableExtra("gAccount");
-                    updateUI(data);
+                    account = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount");
+                    updateUI();
                     break;
                 }
                 case Activity.RESULT_CANCELED: {
                     account = null;
-                    updateUI(null);
+                    updateUI();
                     break;
                 }
             }

@@ -63,9 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     private Intent setUpIntent() {
         Intent intent = new Intent();
         intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
-        intent.putExtra("gAccount", account);
-        intent.putExtra("email", account.getEmail());
-        intent.putExtra("profileName", account.getDisplayName());
+        intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount", account);
         return intent;
     }
 

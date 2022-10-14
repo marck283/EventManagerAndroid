@@ -37,6 +37,6 @@
     <string name="title_activity_login" translatable="false">LoginActivity</string>
     <string name="menu_user_login" translatable="false">Login</string>
     <string name="server_client_id" translatable="false">22819640695-40ie511a43vdbh8p82o5uhm6b62529rm.apps.googleusercontent.com</string>
-    <string name="profileName" translatable="false">%1$s</string>
-    <string name="email" translatable="false">%1$s</string>
+    <string name="profileName">%1$s</string>
+    <string name="email">%1$s</string>
 </resources>
