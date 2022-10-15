@@ -2,7 +2,9 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
@@ -68,18 +72,26 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.navmenu_not_logged_in);
             Log.i("info", "account null");
         } else {
-            //User is logged in, display authenticated UI.
-            Log.i("profileName", getString(R.string.profileName, account.getDisplayName()));
-            Log.i("email", account.getEmail());
+            //L'utente è autenticato; mostra la UI aggiornata.
             LinearLayout l = navView.findViewById(R.id.lLayout);
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
 
-            //Log.i("count", String.valueOf(navView.getHeaderCount())); //1 header soltanto... come mai?
+            //NOTA: da qui in poi il codice non è ancora stato testato (nota da eliminare dopo
+            //il testing con successo del codice).
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+            ApiCSRFClass token = new ApiCSRFClass();
+            CsrfToken token1 = new CsrfToken();
+
+            //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
+            token1.getCsrfToken(token, prefs);
+
+            //Questa riga di codice restituisce 1 perché vi è un solo header a disposizione della
+            //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
+            //precedenti, si è cercato di creare un'istanza di LinearLayout.
+            //Log.i("count", String.valueOf(navView.getHeaderCount()));
 
             TextView username = l.findViewById(R.id.profile_name);
-
-            Log.i("null", String.valueOf(username == null)); //True... why?
-
             username.setText(getString(R.string.profileName, account.getDisplayName()));
 
             TextView email = l.findViewById(R.id.profile_email);

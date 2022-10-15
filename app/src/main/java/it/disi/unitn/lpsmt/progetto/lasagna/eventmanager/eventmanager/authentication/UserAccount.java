@@ -1,15 +1,15 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
-import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 public class UserAccount {
     private String token, email, id, self;
-    private Uri profilePic;
+    private Base64 profilePic;
 
-    public UserAccount(String token, String email, String id, String self, Uri profilePic) {
+    public UserAccount(String token, String email, String id, String self, Base64 profilePic) {
         this.token = token;
         this.email = email;
         this.id = id;

@@ -19,7 +19,7 @@ public class PubEvList {
         pubEvList = new ArrayList<>();
     }
 
-    private String fromJson(Gson gs1, JsonObject eo, String name) {
+    private String fromJson(@NonNull Gson gs1, @NonNull JsonObject eo, String name) {
         return gs1.fromJson(eo.get(name), String.class);
     }
 

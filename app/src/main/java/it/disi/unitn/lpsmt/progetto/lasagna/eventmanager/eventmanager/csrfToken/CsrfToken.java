@@ -1,9 +1,13 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken;
 
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,7 +26,8 @@ public class CsrfToken {
     }
 
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
-    public void getCsrfToken(ApiCSRFClass token) {
+    public void getCsrfToken(Object o, SharedPreferences s1) {
+        ApiCSRFClass token = new ApiCSRFClass();
         Call<JsonObject> call = csrfToken.getToken();
         call.enqueue(new Callback<JsonObject>() {
 
@@ -36,10 +41,17 @@ public class CsrfToken {
              * @param response
              */
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                //Handle the response
+            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     token.parseJSON(response.body());
+                    if(o instanceof Authentication) {
+                        //o1 non può essere null per i controlli effettuati dopo il login
+                        try {
+                            ((Authentication)o).login(token.getToken(), s1.getString("gToken", ""));
+                        } catch (Exception e) {
+                            Log.i("emptyString", e.getMessage());
+                        }
+                    }
                 } else {
                     Log.i("null", "Unsuccessful or null response");
                 }
@@ -53,7 +65,7 @@ public class CsrfToken {
              * @param t
              */
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 try {
                     throw t;
                 } catch (Throwable e) {

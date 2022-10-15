@@ -41,7 +41,7 @@ public class PublicEvents {
         mRecyclerView = layout.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(layout.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        l1 = new PubEvAdapter();
+        l1 = new PubEvAdapter(new PubEvCallback());
         mRecyclerView.setAdapter(l1);
     }
 
@@ -83,7 +83,8 @@ public class PublicEvents {
                         if(l2 != null) {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
-                            l1 = new PubEvAdapter(l2.getList(), l.getContext());
+                            l1 = new PubEvAdapter(new PubEvCallback(), l2.getList(), l.getContext());
+                            l1.submitList(l2.getList());
                             mRecyclerView.setAdapter(l1);
                         } else {
                             Log.e("null", "Public event list is null");

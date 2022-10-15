@@ -6,7 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,26 +15,33 @@ import java.util.List;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
 
-public class PubEvAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class PubEvAdapter extends ListAdapter<PublicEvent, ViewHolder> {
     private List<PublicEvent> evList;
     private Context mContext;
 
     /**
      * Il costruttore di default della classe
      */
-    public PubEvAdapter() {
+    /*public PubEvAdapter() {
         evList = new ArrayList<>();
         mContext = null;
-    }
+    }*/
 
     /**
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
      * @param pubL La lista di PublicEvent ottenuta da remoto
      * @param c Il contesto a cui agganciare le View che saranno originate usando i metodi di questa classe.
      */
-    public PubEvAdapter(List<PublicEvent> pubL, Context c) {
+    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<PublicEvent> diffCallback, List<PublicEvent> pubL, Context c) {
+        super(diffCallback);
         evList = pubL;
         mContext = c;
+    }
+
+    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<PublicEvent> diffCallback) {
+        super(diffCallback);
+        evList = new ArrayList<>();
+        mContext = null;
     }
 
     @NonNull

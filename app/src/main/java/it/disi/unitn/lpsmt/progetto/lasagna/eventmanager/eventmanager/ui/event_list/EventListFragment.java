@@ -1,6 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +16,23 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databindin
 public class EventListFragment extends Fragment {
 
     private FragmentEventListBinding binding;
+    private EventListViewModel eventListViewModel;
+    private View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        EventListViewModel eventListViewModel = new ViewModelProvider(this).get(EventListViewModel.class);
+        eventListViewModel = new ViewModelProvider(this).get(EventListViewModel.class);
         binding = FragmentEventListBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        //Ottieni gli eventi
-        eventListViewModel.getEvents(root);
+        root = binding.getRoot();
 
         return root;
+    }
+
+    public void onStart() {
+        super.onStart();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.requireActivity().getApplicationContext());
+        eventListViewModel.getEvents(root, prefs.getString("gToken", null));
     }
 
     @Override

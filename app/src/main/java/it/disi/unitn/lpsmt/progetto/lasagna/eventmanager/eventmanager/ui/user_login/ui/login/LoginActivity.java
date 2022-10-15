@@ -5,7 +5,9 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,6 +95,13 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = setUpIntent();
             setResult(Activity.RESULT_OK, intent);
             Log.i("info", String.valueOf(Activity.RESULT_OK));
+
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("gToken", account.getIdToken());
+            editor.apply();
+
+            finish();
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

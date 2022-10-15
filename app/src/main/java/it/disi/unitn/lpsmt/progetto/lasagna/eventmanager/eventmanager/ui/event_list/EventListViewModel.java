@@ -24,9 +24,9 @@ public class EventListViewModel extends ViewModel {
         peList.setValue(new ArrayList<>());
     }
 
-    public void getEvents(@NonNull View layout) {
+    public void getEvents(@NonNull View layout, String token) {
         pubEv = new PublicEvents(layout);
-        pubEv.getEvents((ConstraintLayout) layout, null, null, null, null, null, null);
+        pubEv.getEvents((ConstraintLayout) layout, token, null, null, null, null, null);
     }
 
     public LiveData<List<PublicEvent>> getEventList() {

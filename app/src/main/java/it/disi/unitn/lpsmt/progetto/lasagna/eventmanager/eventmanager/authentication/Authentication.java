@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -23,9 +24,11 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull String csrfToken, @NonNull String googleJwt) {
+    public void login(@NonNull String csrfToken, String googleJwt) throws Exception {
+        if(googleJwt == "") {
+            throw new Exception("Il token JWT di Google non può essere una stringa vuota");
+        }
         Call<JsonObject> auth = authentication.authentication(csrfToken, googleJwt);
-        UserInfo info = new UserInfo();
         auth.enqueue(new Callback<JsonObject>() {
 
             /**
@@ -40,10 +43,11 @@ public class Authentication {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    LoggedInUser info = new LoggedInUser();
                     Log.i("response", String.valueOf(response.body()));
-                    info.parseJSON(response.body());
+                    info = info.parseJSON(response.body());
                 } else {
-                    Log.i("null", "Unsuccessful or null response");
+                    Log.i("null1", "Unsuccessful or null response");
                 }
             }
 

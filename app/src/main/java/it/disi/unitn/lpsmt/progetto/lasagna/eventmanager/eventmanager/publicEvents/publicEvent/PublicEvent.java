@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 public class PublicEvent {
     private String id; //Tipo dell'evento
     private String eventid; //ID dell'evento
@@ -84,5 +86,18 @@ public class PublicEvent {
                 throw new Exception("No field using this name.");
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PublicEvent)) return false;
+        PublicEvent that = (PublicEvent) o;
+        return id.equals(that.id) && eventid.equals(that.eventid) && self.equals(that.self) && name.equals(that.name) && category.equals(that.category) && eventPic.equals(that.eventPic);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, eventid, self, name, category, eventPic);
     }
 }
