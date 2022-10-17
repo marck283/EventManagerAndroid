@@ -20,14 +20,6 @@ public class PubEvAdapter extends ListAdapter<PublicEvent, ViewHolder> {
     private Context mContext;
 
     /**
-     * Il costruttore di default della classe
-     */
-    /*public PubEvAdapter() {
-        evList = new ArrayList<>();
-        mContext = null;
-    }*/
-
-    /**
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
      * @param pubL La lista di PublicEvent ottenuta da remoto
      * @param c Il contesto a cui agganciare le View che saranno originate usando i metodi di questa classe.

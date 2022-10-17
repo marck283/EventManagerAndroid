@@ -20,7 +20,7 @@ public class Authentication {
 
     public Authentication() {
         Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://71ef-213-215-189-91.ngrok.io")
+                .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         authentication = retro.create(ServerAuthentication.class);

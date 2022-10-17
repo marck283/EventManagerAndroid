@@ -14,25 +14,25 @@ import android.view.ViewGroup;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
-public class UserLogoutFragment extends Fragment {
+public class LogoutFragment extends Fragment {
 
-    private UserLogoutFragmentViewModel mViewModel;
+    private LogoutViewModel mViewModel;
 
-    public static UserLogoutFragment newInstance() {
-        return new UserLogoutFragment();
+    public static LogoutFragment newInstance() {
+        return new LogoutFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_user_logout, container, false);
+        return inflater.inflate(R.layout.fragment_logout, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(UserLogoutFragmentViewModel.class);
-        // TODO: Use the ViewModel
+        mViewModel = new ViewModelProvider(this).get(LogoutViewModel.class);
+        mViewModel.userLogout(this);
     }
 
 }

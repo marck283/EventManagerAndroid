@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
@@ -82,10 +83,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
             //NOTA: da qui in poi il codice non è ancora stato testato (nota da eliminare dopo
             //il testing con successo del codice).
-
-            //Scambio dati con il fragment EventListFragment
-
-
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
             ApiCSRFClass token = new ApiCSRFClass();

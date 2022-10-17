@@ -32,7 +32,7 @@ public class PublicEvents {
      */
     public PublicEvents(@NonNull View layout) {
         Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://71ef-213-215-189-91.ngrok.io")
+                .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         pubEv = retro.create(PublicEventsInterface.class);
@@ -64,6 +64,7 @@ public class PublicEvents {
                           @Nullable String categoria, @Nullable String durata,
                           @Nullable String indirizzo, @Nullable String citta) {
         Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta);
+        //Log.i("geToken", token);
         call.enqueue(new Callback<JsonObject>() {
             /**
              * Invoked for a received HTTP response.

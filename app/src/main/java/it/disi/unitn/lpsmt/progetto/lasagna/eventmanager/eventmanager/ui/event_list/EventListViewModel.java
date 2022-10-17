@@ -30,7 +30,7 @@ public class EventListViewModel extends ViewModel {
         peList.setValue(new ArrayList<>());
     }
 
-    public void getEvents(@NonNull View layout, Fragment fragment) {
+    public void getEvents(@NonNull View layout, @NonNull Fragment fragment) {
         pubEv = new PublicEvents(layout);
 
         account.setValue(GoogleSignIn.getLastSignedInAccount(fragment.requireContext()));
@@ -38,6 +38,7 @@ public class EventListViewModel extends ViewModel {
             if(a == null) {
                 pubEv.getEvents((ConstraintLayout) layout, null, null, null, null, null, null);
             } else {
+                Log.i("token", a.getIdToken());
                 pubEv.getEvents((ConstraintLayout) layout, a.getIdToken(), null, null, null, null, null);
             }
         });
