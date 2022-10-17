@@ -56,7 +56,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         navView = binding.navView;
         account = GoogleSignIn.getLastSignedInAccount(this.getApplicationContext());
-        updateUI();
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
@@ -66,6 +65,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         }
     }
 
+    public void onStart() {
+        super.onStart();
+        updateUI();
+    }
+
     private void updateUI() {
         navView.getMenu().clear();
         if(account == null) {
@@ -73,11 +77,15 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             Log.i("info", "account null");
         } else {
             //L'utente è autenticato; mostra la UI aggiornata.
-            LinearLayout l = navView.findViewById(R.id.lLayout);
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
+            LinearLayout l = (LinearLayout) navView.getHeaderView(0);
 
             //NOTA: da qui in poi il codice non è ancora stato testato (nota da eliminare dopo
             //il testing con successo del codice).
+
+            //Scambio dati con il fragment EventListFragment
+
+
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
             ApiCSRFClass token = new ApiCSRFClass();

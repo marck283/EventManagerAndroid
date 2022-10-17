@@ -5,6 +5,8 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_event_list">
 
+    <!-- Qui dovrei cambiare l'inserimento del primo Fragment da statico a dinamico... probabilmente
+     dovrò anche gestirne l'inserimento nel menù di navigazione nella classe dell'Activity NavigationDrawerActivity...-->
     <fragment
         android:id="@+id/nav_event_list"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment"

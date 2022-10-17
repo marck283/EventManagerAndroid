@@ -1,12 +1,16 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.LiveData;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,19 +21,25 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEven
 public class EventListViewModel extends ViewModel {
 
     private MutableLiveData<List<PublicEvent>> peList;
+    private MutableLiveData<GoogleSignInAccount> account;
     private PublicEvents pubEv;
 
     public EventListViewModel() {
         peList = new MutableLiveData<>();
+        account = new MutableLiveData<>();
         peList.setValue(new ArrayList<>());
     }
 
-    public void getEvents(@NonNull View layout, String token) {
+    public void getEvents(@NonNull View layout, Fragment fragment) {
         pubEv = new PublicEvents(layout);
-        pubEv.getEvents((ConstraintLayout) layout, token, null, null, null, null, null);
-    }
 
-    public LiveData<List<PublicEvent>> getEventList() {
-        return peList;
+        account.setValue(GoogleSignIn.getLastSignedInAccount(fragment.requireContext()));
+        account.observe(fragment, a -> {
+            if(a == null) {
+                pubEv.getEvents((ConstraintLayout) layout, null, null, null, null, null, null);
+            } else {
+                pubEv.getEvents((ConstraintLayout) layout, a.getIdToken(), null, null, null, null, null);
+            }
+        });
     }
 }

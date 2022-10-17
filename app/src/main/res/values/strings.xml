@@ -39,4 +39,13 @@
     <string name="server_client_id" translatable="false">22819640695-40ie511a43vdbh8p82o5uhm6b62529rm.apps.googleusercontent.com</string>
     <string name="profileName">%1$s</string>
     <string name="email">%1$s</string>
+    <string name="title_activity_public_events">PublicEventsActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

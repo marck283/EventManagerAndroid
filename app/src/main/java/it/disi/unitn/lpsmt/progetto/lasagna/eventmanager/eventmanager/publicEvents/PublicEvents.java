@@ -32,7 +32,7 @@ public class PublicEvents {
      */
     public PublicEvents(@NonNull View layout) {
         Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
+                .baseUrl("https://71ef-213-215-189-91.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         pubEv = retro.create(PublicEventsInterface.class);
@@ -86,6 +86,7 @@ public class PublicEvents {
                             l1 = new PubEvAdapter(new PubEvCallback(), l2.getList(), l.getContext());
                             l1.submitList(l2.getList());
                             mRecyclerView.setAdapter(l1);
+                            l2.print();
                         } else {
                             Log.e("null", "Public event list is null");
                         }

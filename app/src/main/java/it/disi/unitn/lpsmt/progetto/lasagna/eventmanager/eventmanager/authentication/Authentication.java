@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
+import java.util.Objects;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,14 +20,14 @@ public class Authentication {
 
     public Authentication() {
         Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
+                .baseUrl("https://71ef-213-215-189-91.ngrok.io")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         authentication = retro.create(ServerAuthentication.class);
     }
 
     public void login(@NonNull String csrfToken, String googleJwt) throws Exception {
-        if(googleJwt == "") {
+        if(Objects.equals(googleJwt, "")) {
             throw new Exception("Il token JWT di Google non può essere una stringa vuota");
         }
         Call<JsonObject> auth = authentication.authentication(csrfToken, googleJwt);

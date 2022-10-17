@@ -42,4 +42,10 @@ public class PubEvList {
     public List<PublicEvent> getList() {
         return pubEvList;
     }
+
+    public void print() {
+        for(PublicEvent pe: pubEvList) {
+            pe.print();
+        }
+    }
 }
