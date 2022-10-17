@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class LogoutFragment extends Fragment {
@@ -32,7 +33,7 @@ public class LogoutFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(LogoutViewModel.class);
-        mViewModel.userLogout(this);
+        mViewModel.userLogout((NavigationDrawerActivity) this.requireActivity());
     }
 
 }

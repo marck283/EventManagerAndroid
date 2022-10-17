@@ -1,11 +1,15 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_logout;
 
-import androidx.fragment.app.Fragment;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.navigation.NavigationView;
+
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class LogoutViewModel extends ViewModel {
     private GoogleSignInClient gsi;
@@ -19,8 +23,14 @@ public class LogoutViewModel extends ViewModel {
                 .build();
     }
 
-    public void userLogout(Fragment f) {
-        gsi = GoogleSignIn.getClient(f.requireActivity().getApplicationContext(), gso);
-        gsi.signOut();
+    private void handleSignInResult(NavigationDrawerActivity f) {
+        NavigationView v = f.findViewById(R.id.nav_view);
+        v.getMenu().clear();
+        v.inflateMenu(R.menu.navmenu_not_logged_in);
+    }
+
+    public void userLogout(@NonNull NavigationDrawerActivity f) {
+        gsi = GoogleSignIn.getClient(f.getApplicationContext(), gso);
+        gsi.signOut().addOnSuccessListener(f, v -> handleSignInResult(f));
     }
 }
