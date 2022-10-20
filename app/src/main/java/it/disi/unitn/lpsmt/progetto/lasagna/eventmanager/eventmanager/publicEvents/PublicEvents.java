@@ -64,7 +64,6 @@ public class PublicEvents {
                           @Nullable String categoria, @Nullable String durata,
                           @Nullable String indirizzo, @Nullable String citta) {
         Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta);
-        //Log.i("geToken", token);
         call.enqueue(new Callback<JsonObject>() {
             /**
              * Invoked for a received HTTP response.

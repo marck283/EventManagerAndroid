@@ -39,15 +39,17 @@
             android:layout_marginStart="92dp"
             android:layout_marginTop="52dp"
             android:text="@string/event_name"
+            android:maxLines="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
             android:layout_marginTop="52dp"
+            android:ellipsize="end"
             app:layout_constraintStart_toEndOf="@+id/textView2"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
@@ -58,6 +60,7 @@
             android:layout_marginStart="84dp"
             android:layout_marginTop="16dp"
             android:text="@string/event_category_name"
+            android:ellipsize="end"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
 

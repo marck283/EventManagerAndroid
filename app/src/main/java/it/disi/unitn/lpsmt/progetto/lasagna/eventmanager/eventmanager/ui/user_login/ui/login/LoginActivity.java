@@ -5,29 +5,25 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private static final int REQ_SIGN_IN = 2;
-    private GoogleSignInClient gsi;
-    private GoogleSignInAccount account;
+    private GSignIn signIn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,18 +32,12 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestProfile()
-                .requestIdToken(getString(R.string.server_client_id))
-                .build();
-
-        gsi = GoogleSignIn.getClient(this, gso);
+        signIn = new GSignIn(this);
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null) {
+        //account = GoogleSignIn.getLastSignedInAccount(this);
+        if(signIn.getAccount() != null) {
             Intent intent = setUpIntent();
             setResult(Activity.RESULT_OK, intent);
             finish();
@@ -65,13 +55,12 @@ public class LoginActivity extends AppCompatActivity {
     private Intent setUpIntent() {
         Intent intent = new Intent();
         intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
-        intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount", account);
+        intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount", signIn.getAccount());
         return intent;
     }
 
-    public void signIn() {
-        Intent signInIntent = gsi.getSignInIntent();
-        startActivityForResult(signInIntent, REQ_SIGN_IN);
+    private void signIn() {
+        signIn.signIn(this, REQ_SIGN_IN);
     }
 
     @Override
@@ -89,25 +78,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
-            account = completedTask.getResult(ApiException.class);
+            signIn.getAccountFromCompletedTask(completedTask);
 
             // Signed in successfully, return to caller with the results
             Intent intent = setUpIntent();
             setResult(Activity.RESULT_OK, intent);
-            Log.i("info", String.valueOf(Activity.RESULT_OK));
-
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("gToken", account.getIdToken());
-            editor.apply();
-
             finish();
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("fail", "signInResult:failed code=" + e.getStatusCode());
             Log.w("fail", e.getMessage());
-            Log.i("info1", String.valueOf(account != null));
+            Log.i("info1", String.valueOf(signIn.getAccount() != null));
             //Not signed in, so return to caller with null results
             setResult(Activity.RESULT_CANCELED);
         }

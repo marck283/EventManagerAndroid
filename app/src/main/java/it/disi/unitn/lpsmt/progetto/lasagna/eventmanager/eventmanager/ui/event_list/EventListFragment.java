@@ -36,7 +36,11 @@ public class EventListFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-        eventListViewModel.getEvents(root, this);
+        eventListViewModel.getEvents(root, "");
+    }
+
+    public void getData(String accessToken) {
+        eventListViewModel.getEvents(root, accessToken);
     }
 
     @Override

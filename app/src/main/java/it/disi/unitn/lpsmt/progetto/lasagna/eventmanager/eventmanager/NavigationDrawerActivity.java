@@ -26,6 +26,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.AccessToken;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.JsonParser;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.TokenExchange;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
@@ -77,19 +80,37 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.navmenu_not_logged_in);
             Log.i("info", "account null");
         } else {
-            //L'utente è autenticato; mostra la UI aggiornata.
+            //L'utente è autenticato; ottieni il token di accesso al server e mostra la UI aggiornata.
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
             LinearLayout l = (LinearLayout) navView.getHeaderView(0);
 
-            //NOTA: da qui in poi il codice non è ancora stato testato (nota da eliminare dopo
-            //il testing con successo del codice).
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String authCode = account.getServerAuthCode();
+            TokenExchange ex = new TokenExchange();
+            JsonParser j1 = new JsonParser();
+            ex.getToken(authCode, j1);
 
-            ApiCSRFClass token = new ApiCSRFClass();
-            CsrfToken token1 = new CsrfToken();
+            AccessToken accessToken = j1.getToken();
+            accessToken.observe(this, v -> {
+                //NOTA: da qui in poi il codice non è ancora stato testato (nota da eliminare dopo
+                //il testing con successo del codice).
+                EventListFragment evl = (EventListFragment) getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
+                if (evl != null) {
+                    evl.getData(v);
+                } else {
+                    Log.i("null", "no fragment");
+                }
 
-            //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
-            token1.getCsrfToken(token, prefs);
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("gToken", v);
+                editor.apply();
+
+                ApiCSRFClass token = new ApiCSRFClass();
+                CsrfToken token1 = new CsrfToken();
+
+                //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
+                token1.getCsrfToken(token, prefs);
+            });
 
             //Questa riga di codice restituisce 1 perché vi è un solo header a disposizione della
             //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
