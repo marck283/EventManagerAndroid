@@ -72,7 +72,6 @@ public class LoginActivity extends AppCompatActivity {
             // The Task returned from this call is always completed, no need to attach a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
-            finish();
         }
     }
 
@@ -83,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
             // Signed in successfully, return to caller with the results
             Intent intent = setUpIntent();
             setResult(Activity.RESULT_OK, intent);
-            finish();
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -92,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("info1", String.valueOf(signIn.getAccount() != null));
             //Not signed in, so return to caller with null results
             setResult(Activity.RESULT_CANCELED);
+        } finally {
+            finish();
         }
     }
 }

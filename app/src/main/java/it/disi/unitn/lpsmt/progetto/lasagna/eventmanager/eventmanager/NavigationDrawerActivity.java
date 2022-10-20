@@ -91,8 +91,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
             AccessToken accessToken = j1.getToken();
             accessToken.observe(this, v -> {
-                //NOTA: da qui in poi il codice non è ancora stato testato (nota da eliminare dopo
-                //il testing con successo del codice).
+                //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
+                // senza, però, riuscirci.
                 EventListFragment evl = (EventListFragment) getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
                 if (evl != null) {
                     evl.getData(v);

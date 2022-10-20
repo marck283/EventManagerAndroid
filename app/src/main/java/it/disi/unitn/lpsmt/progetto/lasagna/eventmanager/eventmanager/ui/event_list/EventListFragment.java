@@ -28,9 +28,6 @@ public class EventListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
-
-        //Questo Fragment e NavigationDrawerActivity usano entrambi l'Activity come scope,
-        //quindi saranno associati allo stesso ViewModel.
         eventListViewModel = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
     }
 
@@ -39,6 +36,10 @@ public class EventListFragment extends Fragment {
         eventListViewModel.getEvents(root, "");
     }
 
+    /**
+     * Metodo per ottenere una nuova lista di eventi pubblici.
+     * @param accessToken Il token di accesso dell'utente
+     */
     public void getData(String accessToken) {
         eventListViewModel.getEvents(root, accessToken);
     }
