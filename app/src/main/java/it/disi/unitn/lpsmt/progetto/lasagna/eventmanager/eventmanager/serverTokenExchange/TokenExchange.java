@@ -23,6 +23,7 @@ public class TokenExchange {
     }
 
     public void getToken(@NonNull String code, @NonNull JsonParser t) {
+        Log.i("code", code);
         Call<JsonObject> call = stex.getAccessToken(code);
         call.enqueue(new Callback<JsonObject>() {
 
@@ -37,14 +38,16 @@ public class TokenExchange {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                Log.i("response", String.valueOf(response));
                 if(response.body() != null) {
                     if(response.isSuccessful()) {
                         t.parseJSON(response.body());
+                        Log.i("response", String.valueOf(response.body()));
                     } else {
                         Log.i("success", "Unsuccessful operation");
                     }
                 } else {
-                    Log.i("null", "response is null");
+                    Log.i("nullT", "response is null");
                 }
             }
 

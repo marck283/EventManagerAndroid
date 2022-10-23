@@ -85,7 +85,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
             LinearLayout l = (LinearLayout) navView.getHeaderView(0);
 
-            String authCode = account.getServerAuthCode();
+            //Questo è null perché l'accesso a Google appena l'app si avvia non è stato configurato per restituire un token di accesso.
+            //Pertanto sarò forzato ad implementare un meccanismo per salvare il token (magari criptato) su un database locale all'applicazione.
+            //Questo mi permetterebbe di ritrovarlo in modo molto semplice tramite una query apposita.
+            String authCode = account.getIdToken();
             TokenExchange ex = new TokenExchange();
             JsonParser j1 = new JsonParser();
             ex.getToken(authCode, j1);
@@ -96,6 +99,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
                 // senza, però, riuscirci.
                 //Perché acquisire la lista di eventi solo quando si modifica il token di accesso?
+                Log.i("token", accessToken.getToken());
                 EventListFragment evl = (EventListFragment) getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
                 if (evl != null) {
                     evl.getData(v);
