@@ -38,6 +38,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private GoogleSignInAccount account;
     private NavigationView navView;
     private static final int REQ_SIGN_IN = 2;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +91,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             ex.getToken(authCode, j1);
 
             AccessToken accessToken = j1.getToken();
+
             accessToken.observe(this, v -> {
                 //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
                 // senza, però, riuscirci.
+                //Perché acquisire la lista di eventi solo quando si modifica il token di accesso?
                 EventListFragment evl = (EventListFragment) getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
                 if (evl != null) {
                     evl.getData(v);
@@ -100,7 +103,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     Log.i("null", "no fragment");
                 }
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putString("gToken", v);
                 editor.apply();

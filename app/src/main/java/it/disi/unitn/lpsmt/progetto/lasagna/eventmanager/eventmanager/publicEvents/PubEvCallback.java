@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.Objects;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 
-public class PubEvCallback extends DiffUtil.ItemCallback<PublicEvent> {
+public class PubEvCallback extends DiffUtil.ItemCallback<Event> {
     @Override
-    public boolean areItemsTheSame(@NonNull PublicEvent oldItem, @NonNull PublicEvent newItem) {
+    public boolean areItemsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
         boolean eq = false;
 
         try {
@@ -22,7 +22,7 @@ public class PubEvCallback extends DiffUtil.ItemCallback<PublicEvent> {
     }
 
     @Override
-    public boolean areContentsTheSame(@NonNull PublicEvent oldItem, @NonNull PublicEvent newItem) {
+    public boolean areContentsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
         return oldItem.equals(newItem);
     }
 }

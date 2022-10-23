@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     private ImageView imgView;
@@ -29,7 +29,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bindData(PublicEvent dataModel, Context context) {
+    public void bindData(Event dataModel, Context context) {
         try {
             imgView.setImageBitmap(dataModel.decodeBase64());
             evName.setText(dataModel.getString("name"));

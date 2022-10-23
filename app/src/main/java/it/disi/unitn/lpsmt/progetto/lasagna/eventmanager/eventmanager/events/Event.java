@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class PublicEvent {
+public class Event {
     private String id; //Tipo dell'evento
     private String eventid; //ID dell'evento
     private String self; //URL dell'evento
@@ -26,7 +26,7 @@ public class PublicEvent {
      * @param c La categoria dell'evento
      * @param ep L'immagine dell'evento codificata come valore stringa base64
      */
-    public PublicEvent(@NotNull String id, @NotNull String idevent, @NotNull String s,
+    public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
                        @NotNull String n, @NotNull String c, @NotNull String ep) {
         this.id = id;
         eventid = idevent;
@@ -91,8 +91,8 @@ public class PublicEvent {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PublicEvent)) return false;
-        PublicEvent that = (PublicEvent) o;
+        if (!(o instanceof Event)) return false;
+        Event that = (Event) o;
         return id.equals(that.id) && eventid.equals(that.eventid) && self.equals(that.self) && name.equals(that.name) && category.equals(that.category) && eventPic.equals(that.eventPic);
     }
 

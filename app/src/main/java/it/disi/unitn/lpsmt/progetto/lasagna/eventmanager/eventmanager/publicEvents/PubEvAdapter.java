@@ -13,24 +13,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 
-public class PubEvAdapter extends ListAdapter<PublicEvent, ViewHolder> {
-    private List<PublicEvent> evList;
+public class PubEvAdapter extends ListAdapter<Event, ViewHolder> {
+    private List<Event> evList;
     private Context mContext;
 
     /**
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
-     * @param pubL La lista di PublicEvent ottenuta da remoto
+     * @param pubL La lista di eventi pubblici ottenuta da remoto
      * @param c Il contesto a cui agganciare le View che saranno originate usando i metodi di questa classe.
      */
-    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<PublicEvent> diffCallback, List<PublicEvent> pubL, Context c) {
+    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> pubL, Context c) {
         super(diffCallback);
         evList = pubL;
         mContext = c;
     }
 
-    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<PublicEvent> diffCallback) {
+    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
         evList = new ArrayList<>();
         mContext = null;

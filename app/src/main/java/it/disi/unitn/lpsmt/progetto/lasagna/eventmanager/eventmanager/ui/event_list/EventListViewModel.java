@@ -10,13 +10,12 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.PublicEvents;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PublicEvent;
 
 public class EventListViewModel extends ViewModel {
 
-    private MutableLiveData<List<PublicEvent>> peList;
+    private MutableLiveData<List<Event>> peList;
     private PublicEvents pubEv;
 
     public EventListViewModel() {

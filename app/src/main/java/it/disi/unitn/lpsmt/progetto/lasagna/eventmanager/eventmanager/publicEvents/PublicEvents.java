@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.publicEvent.PubEvList;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventList;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,7 +76,7 @@ public class PublicEvents {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                PubEvList l2 = new PubEvList();
+                EventList l2 = new EventList();
                 if (response.body() != null) {
                     if(response.isSuccessful()) {
                         l2 = l2.parseJSON(response.body());

@@ -37,7 +37,7 @@ public class EventListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         eventListViewModel.getEvents(root, "");
-        requireActivity().findViewById(R.id.action_settings).setOnClickListener(l -> showSettings());
+        //requireActivity().findViewById(R.id.action_settings).setOnClickListener(l -> showSettings());
     }
 
     public void showSettings() {
