@@ -17,15 +17,4 @@ public class MenuSettingsViewModel extends ViewModel {
     public MenuSettingsViewModel() {
         mText = new MutableLiveData<>();
     }
-
-    public void showSettings(View root) {
-        TextView t1 = new TextView(root.getContext());
-        t1.setText("Mostra numero di telefono");
-        ConstraintLayout l = root.findViewById(R.id.constraintLayout);
-        l.addView(t1);
-    }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
 }

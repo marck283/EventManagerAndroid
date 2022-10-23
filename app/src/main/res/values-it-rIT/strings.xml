@@ -28,4 +28,8 @@
     <string name="public_event_sign_up">Registrati</string>
     <string name="log_in">Accesso</string>
     <string name="log_in_text">Accedi per usare tutte le funzionalità dell\'applicazione!</string>
+    <string name="show_phone_number">Mostra numero di telefono in dettaglio profilo</string>
+    <string name="app_version">Versione applicazione</string>
+    <string name="settings_image">Immagine impostazioni</string>
+    <string name="not_implemented">Non implementato</string>
 </resources>

@@ -9,7 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentEventListBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment;
 
 public class EventListFragment extends Fragment {
 
@@ -34,6 +37,15 @@ public class EventListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         eventListViewModel.getEvents(root, "");
+        requireActivity().findViewById(R.id.action_settings).setOnClickListener(l -> showSettings());
+    }
+
+    public void showSettings() {
+        //Da rivedere
+        MenuSettingsFragment f = new MenuSettingsFragment();
+        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.constraintLayout, f)
+                .addToBackStack("settingsFragment")
+                .commit();
     }
 
     /**
