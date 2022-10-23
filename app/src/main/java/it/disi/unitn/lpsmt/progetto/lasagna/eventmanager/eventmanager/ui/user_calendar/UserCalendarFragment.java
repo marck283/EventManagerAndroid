@@ -38,7 +38,7 @@ public class UserCalendarFragment extends Fragment {
         CalendarView v = view.findViewById(R.id.calendarView);
         v.setOnDateChangeListener((v1, y, m, d) -> {
             //Click su un giorno del mese per mostrare gli eventi.
-            EventDialog dialog = new EventDialog(this, d, m, y);
+            EventDialog dialog = new EventDialog(this.requireContext(), d, m, y);
 
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this.requireActivity().getApplicationContext());
 

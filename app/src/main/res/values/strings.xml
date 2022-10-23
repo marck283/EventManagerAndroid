@@ -44,4 +44,5 @@
     <string name="app_version">App version</string>
     <string name="settings_image">Settings image</string>
     <string name="not_implemented">Not implemented</string>
+    <string name="dialog_day" translatable="false">%1$d/%2$d</string>
 </resources>
