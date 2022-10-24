@@ -1,14 +1,19 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase;
 
 import androidx.annotation.NonNull;
+import androidx.room.Database;
 import androidx.room.DatabaseConfiguration;
 import androidx.room.InvalidationTracker;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
+
 //NOTA: classe ed entità associate sono da implementare come qui indicato: https://developer.android.com/training/data-storage/room#java
 
-public class AppDatabase extends RoomDatabase {
+@Database(entities = {User.class}, version = 1)
+public abstract class AppDatabase extends RoomDatabase {
     /**
      * Creates the open helper to access the database. Generated class already implements this
      * method.
@@ -50,4 +55,6 @@ public class AppDatabase extends RoomDatabase {
     public void clearAllTables() {
 
     }
+
+    public abstract UserDAO getUserDAO();
 }
