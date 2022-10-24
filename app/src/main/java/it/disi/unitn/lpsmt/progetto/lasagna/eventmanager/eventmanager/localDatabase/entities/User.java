@@ -1,30 +1,59 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.converters.ListConverter;
+
 @Entity(tableName = "Users")
 public class User {
     @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "email")
     private String email = ""; //Chiave primaria
 
-    private String nome = "", profilePic = "";
-    private String gServerAuthCode = "", gToken = "";
+    @ColumnInfo(name = "nome")
+    private String nome = "";
+
+    @ColumnInfo(name = "profilePic")
+    private String profilePic = "";
+
+    @ColumnInfo(name = "gServerAuthCode")
+    private String gServerAuthCode = "";
+
+    @ColumnInfo(name = "gToken")
+    private String gToken = "";
+
+    @ColumnInfo(name = "tel")
     private String tel = "";
-    private List<String> eventiCreati = new ArrayList<>();
-    private List<String> eventiIscritto = new ArrayList<>();
-    private int numEvOrg = 0;
-    private double valutazioneMedia = 0.0;
+
+    @ColumnInfo(name = "eventiCreati")
+    @TypeConverters(ListConverter.class)
+    private final List<String> eventiCreati = new ArrayList<>();
+
+    @ColumnInfo(name = "eventiIscritto")
+    @TypeConverters(ListConverter.class)
+    private final List<String> eventiIscritto = new ArrayList<>();
+
+    @ColumnInfo(name = "numEvOrg")
+    private Integer numEvOrg = 0;
+
+    @ColumnInfo(name = "valutazioneMedia")
+    private Double valutazioneMedia = 0.0;
 
     //Getter e setter per permettere a Room di accedere ai campi
+    @NonNull
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String e) {
+    public void setEmail(@NonNull String e) {
         email = e;
     }
 
@@ -45,19 +74,19 @@ public class User {
         profilePic = val;
     }
 
-    public String getGoogleServerAuthCode() {
+    public String getGServerAuthCode() {
         return gServerAuthCode;
     }
 
-    public void setGoogleServerAuthCode(String code) {
+    public void setGServerAuthCode(String code) {
         gServerAuthCode = code;
     }
 
-    public String getGoogleToken() {
+    public String getGToken() {
         return gToken;
     }
 
-    public void setgToken(String token) {
+    public void setGToken(String token) {
         gToken = token;
     }
 
@@ -87,15 +116,19 @@ public class User {
         eventiIscritto.addAll(val);
     }
 
-    public int getNumEvOrg() {
+    public Integer getNumEvOrg() {
         return numEvOrg;
     }
 
-    public void setNumEvOrg() {
-        numEvOrg += 1;
+    public void setNumEvOrg(Integer val) {
+        numEvOrg = val;
     }
 
-    public double getValutazioneMedia() {
+    /**
+     * Ottiene la valutazione media di questo utente.
+     * @return La valutazione media di questo utente.
+     */
+    public Double getValutazioneMedia() {
         return valutazioneMedia;
     }
 
@@ -103,7 +136,7 @@ public class User {
      * Ricalcola la valutazione media di un utente, incrementandola tenendo conto del valore passato come parametro.
      * @param val Il valore di cui tenere conto per ricalcolare la valutazione media dell'utente.
      */
-    public void setValutazioneMedia(double val) {
+    public void setValutazioneMedia(Double val) {
         double temp = valutazioneMedia*numEvOrg;
         valutazioneMedia = (temp + val)/numEvOrg;
     }

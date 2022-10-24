@@ -1,14 +1,16 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs;
 
+import androidx.room.Dao;
 import androidx.room.Query;
 
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
 
+@Dao
 public interface UserDAO {
     @Query("SELECT U.gServerAuthCode FROM Users U WHERE U.email = :email")
-    User getServerAuthCode(String email);
+    String getServerAuthCode(String email);
 
     /**
      * Aggiorna il serverAuthCode e il token Google dell'utente.
@@ -25,7 +27,7 @@ public interface UserDAO {
     void updateGToken(String gToken, String email);
 
     @Query("SELECT U.email FROM Users U WHERE U.email = :email")
-    User getUserEmail(String email);
+    String getUserEmail(String email);
 
     @Query("SELECT U.profilePic, U.nome, U.email, U.tel, U.numEvOrg, U.valutazioneMedia FROM Users U WHERE U.email = :email")
     User getUser(String email);
