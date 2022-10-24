@@ -1,6 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs;
 
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
+import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
@@ -13,7 +15,7 @@ public interface UserDAO {
     String getServerAuthCode(String email);
 
     /**
-     * Aggiorna il serverAuthCode e il token Google dell'utente.
+     * Aggiorna il serverAuthCode dell'utente.
      * @param gServerAuthCode
      * @param email
      */
@@ -32,8 +34,6 @@ public interface UserDAO {
     @Query("SELECT U.profilePic, U.nome, U.email, U.tel, U.numEvOrg, U.valutazioneMedia FROM Users U WHERE U.email = :email")
     User getUser(String email);
 
-    @Query("INSERT INTO Users (email, nome, profilePic, gServerAuthCode, gToken, tel, eventiCreati, eventiIscritto, numEvOrg, valutazioneMedia)" +
-            "VALUES (:email, :nome, :profilePic, :gServerAuthCode, :gToken, :tel, :eventiCreati, :eventiIscritto, :numEvOrg, :valutazioneMedia)")
-    void insert(String email, String nome, String profilePic, String gServerAuthCode, String gToken, String tel, List<String> eventiCreati, List<String> eventiIscritto,
-                int numEvOrg, double valutazioneMedia);
+    @Insert
+    void insert(User u);
 }

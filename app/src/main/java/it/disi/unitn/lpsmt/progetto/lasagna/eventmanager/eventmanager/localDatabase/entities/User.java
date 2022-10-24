@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -22,15 +23,18 @@ public class User {
     private String nome = "";
 
     @ColumnInfo(name = "profilePic")
+    @Nullable
     private String profilePic = "";
 
     @ColumnInfo(name = "gServerAuthCode")
     private String gServerAuthCode = "";
 
     @ColumnInfo(name = "gToken")
+    @Nullable
     private String gToken = "";
 
     @ColumnInfo(name = "tel")
+    @Nullable
     private String tel = "";
 
     @ColumnInfo(name = "eventiCreati")

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -19,8 +18,7 @@ import com.google.android.gms.tasks.Task;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.AppDatabase;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBSignInThread;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -81,17 +79,11 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             signIn.getAccountFromCompletedTask(completedTask);
+            Log.i("serverAuthCode", signIn.getAccount().getServerAuthCode());
 
             // Signed in successfully, update the database and return to caller with the results
-            AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "EventManagerDB").build();
-            UserDAO user = db.getUserDAO();
-            if(user.getUserEmail(signIn.getAccount().getEmail()) != null) {
-                //Se esiste l'utente con l'email cercata
-                //aggiorno gServerAuthCode e token Google
-                user.updateUserServerAuthCode(signIn.getAccount().getServerAuthCode(), signIn.getAccount().getEmail());
-            } else {
-                //Se l'utente cercato non esiste, aggiungilo al database (ancora da implementare)
-            }
+            DBSignInThread db1 = new DBSignInThread(this, signIn);
+            new Thread(db1).start();
 
             Intent intent = setUpIntent();
             setResult(Activity.RESULT_OK, intent);

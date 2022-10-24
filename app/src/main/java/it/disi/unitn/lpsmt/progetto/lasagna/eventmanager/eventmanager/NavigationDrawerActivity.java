@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,13 +22,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.AccessToken;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.JsonParser;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.TokenExchange;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserThread;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
@@ -88,36 +82,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             //Questo è null perché l'accesso a Google appena l'app si avvia non è stato configurato per restituire un token di accesso.
             //Pertanto sarò forzato ad implementare un meccanismo per salvare il token (magari criptato) su un database locale all'applicazione.
             //Questo mi permetterebbe di ritrovarlo in modo molto semplice tramite una query apposita.
-            String authCode = account.getIdToken();
-            TokenExchange ex = new TokenExchange();
-            JsonParser j1 = new JsonParser();
-            ex.getToken(authCode, j1);
-
-            AccessToken accessToken = j1.getToken();
-
-            accessToken.observe(this, v -> {
-                //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
-                // senza, però, riuscirci.
-                //Perché acquisire la lista di eventi solo quando si modifica il token di accesso?
-                Log.i("token", accessToken.getToken());
-                EventListFragment evl = (EventListFragment) getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
-                if (evl != null) {
-                    evl.getData(v);
-                } else {
-                    Log.i("null", "no fragment");
-                }
-
-                prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("gToken", v);
-                editor.apply();
-
-                ApiCSRFClass token = new ApiCSRFClass();
-                CsrfToken token1 = new CsrfToken();
-
-                //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
-                token1.getCsrfToken(token, prefs);
-            });
+            DBUserThread ut = new DBUserThread(this, account);
+            new Thread(ut).start();
 
             //Questa riga di codice restituisce 1 perché vi è un solo header a disposizione della
             //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
