@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken;
 
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,7 @@ public class CsrfToken {
     }
 
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
-    public void getCsrfToken(Object o, SharedPreferences s1) {
+    public void getCsrfToken(Object o, String jwt) {
         ApiCSRFClass token = new ApiCSRFClass();
         Call<JsonObject> call = csrfToken.getToken();
         call.enqueue(new Callback<JsonObject>() {
@@ -47,7 +46,7 @@ public class CsrfToken {
                     if(o instanceof Authentication) {
                         //o1 non può essere null per i controlli effettuati dopo il login
                         try {
-                            ((Authentication)o).login(token.getToken(), s1.getString("gToken", ""));
+                            ((Authentication)o).login(token.getToken(), jwt);
                         } catch (Exception e) {
                             Log.i("emptyString", e.getMessage());
                         }

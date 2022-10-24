@@ -30,13 +30,14 @@ public class DBSignInThread extends DBThread {
         if(user.getUserEmail(account.getEmail()) != null) {
             //Se esiste l'utente con l'email cercata
             //aggiorno gServerAuthCode e token Google
-            user.updateUserServerAuthCode(account.getServerAuthCode(), account.getEmail());
+            //user.updateUserServerAuthCode(account.getServerAuthCode(), account.getEmail());
         } else {
             //Se l'utente cercato non esiste, aggiungilo al database (ancora da aggiungere: collegamento a People API)
             User u = new User();
             u.setEmail(account.getEmail());
             u.setNome(account.getGivenName());
-            u.setGServerAuthCode(account.getServerAuthCode());
+            //u.setGServerAuthCode(account.getServerAuthCode());
+            u.setGToken(account.getIdToken());
             u.setEventiCreati(new ArrayList<>());
             u.setEventiIscritto(new ArrayList<>());
             u.setNumEvOrg(0);

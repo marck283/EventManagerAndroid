@@ -16,7 +16,7 @@ public interface UserDAO {
 
     /**
      * Aggiorna il serverAuthCode dell'utente.
-     * @param gServerAuthCode
+     * @param //gServerAuthCode
      * @param email
      */
     @Query("UPDATE Users SET gServerAuthCode = :gServerAuthCode WHERE email = :email")
@@ -36,4 +36,7 @@ public interface UserDAO {
 
     @Insert
     void insert(User u);
+
+    @Query("SELECT U.gToken FROM Users U WHERE U.email = :email")
+    String getGToken(String email);
 }

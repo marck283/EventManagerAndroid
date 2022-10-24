@@ -2,7 +2,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,8 +22,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserThread;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
@@ -32,7 +35,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private GoogleSignInAccount account;
     private NavigationView navView;
     private static final int REQ_SIGN_IN = 2;
-    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,14 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
             //precedenti, si è cercato di creare un'istanza di LinearLayout.
             //Log.i("count", String.valueOf(navView.getHeaderCount()));
+
+            //Perché non riesco a trovare un'istanza di EventListFragment?
+            Fragment ef = getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
+            if(ef != null) {
+                ((EventListFragment)ef).getData(account.getIdToken());
+            } else {
+                Log.i("noFragment", "no fragment with that name");
+            }
 
             TextView username = l.findViewById(R.id.profile_name);
             username.setText(getString(R.string.profileName, account.getDisplayName()));

@@ -8,7 +8,7 @@ import androidx.room.Room;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.AppDatabase;
 
 public class DBThread extends Thread {
-    protected AppDatabase db;
+    protected static AppDatabase db;
 
     public DBThread(@NonNull Activity a) {
         db = Room.databaseBuilder(a.getApplicationContext(), AppDatabase.class, "EventManagerDB").build();
