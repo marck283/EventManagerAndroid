@@ -56,7 +56,6 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     @Override
     public void clearAllTables() {
-
     }
 
     public abstract UserDAO getUserDAO();

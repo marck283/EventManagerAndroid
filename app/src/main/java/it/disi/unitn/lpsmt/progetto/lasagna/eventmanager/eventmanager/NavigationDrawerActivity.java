@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +23,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBProfileImage;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserThread;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
@@ -99,8 +99,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 Log.i("noFragment", "no fragment with that name");
             }
 
-            ImageView v = l.findViewById(R.id.imageView);
-            v.setImageURI(account.getPhotoUrl());
+            DBProfileImage image = new DBProfileImage(this, account.getEmail());
+            new Thread(image).start();
 
             TextView username = l.findViewById(R.id.profile_name);
             username.setText(getString(R.string.profileName, account.getDisplayName()));

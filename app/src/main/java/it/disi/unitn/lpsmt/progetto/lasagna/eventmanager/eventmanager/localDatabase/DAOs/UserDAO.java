@@ -1,11 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
-
-import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
 
@@ -16,7 +14,7 @@ public interface UserDAO {
 
     /**
      * Aggiorna il serverAuthCode dell'utente.
-     * @param //gServerAuthCode
+     * @param gServerAuthCode
      * @param email
      */
     @Query("UPDATE Users SET gServerAuthCode = :gServerAuthCode WHERE email = :email")
@@ -24,6 +22,9 @@ public interface UserDAO {
 
     @Query("UPDATE Users SET profilePic = :profilePic WHERE email = :email")
     void updateProfilePic(String profilePic, String email);
+
+    @Query("SELECT U.profilePic FROM Users U WHERE U.email = :email")
+    String getProfilePic(@NonNull String email);
 
     @Query("UPDATE Users SET gToken = :gToken WHERE email = :email")
     void updateGToken(String gToken, String email);
