@@ -44,13 +44,10 @@ public class CsrfToken {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 synchronized(this) {
                     if (response.isSuccessful() && response.body() != null) {
-                        token.parseJSON(response.body());
+                        ApiCSRFClass token1 = token.parseJSON(response.body());
+                        Log.i("token1", String.valueOf(token1.getToken()));
                         if(o instanceof Authentication) {
-                            try {
-                                ((Authentication)o).login(a, token.getToken(), jwt);
-                            } catch (Exception e) {
-                                Log.i("emptyString", e.getMessage());
-                            }
+                            ((Authentication)o).login(a, token1.getToken(), jwt);
                         }
                     } else {
                         Log.i("null", "Unsuccessful or null response");

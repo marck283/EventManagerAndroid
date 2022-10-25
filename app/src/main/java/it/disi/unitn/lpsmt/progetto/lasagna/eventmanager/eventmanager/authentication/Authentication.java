@@ -28,11 +28,11 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull Activity a, @NonNull String csrfToken, String googleJwt) throws Exception {
+    public void login(@NonNull Activity a, @NonNull String csrfToken, String googleJwt) {
         if(Objects.equals(googleJwt, "")) {
-            throw new Exception("Il token JWT di Google non può essere una stringa vuota");
+            Log.i("gJwtNull", "Il token JWT di Google non può essere una stringa vuota");
         }
-        Call<JsonObject> auth = authentication.authentication(csrfToken, googleJwt);
+        Call<JsonObject> auth = authentication.authentication(new AuthObject(csrfToken, googleJwt));
         auth.enqueue(new Callback<JsonObject>() {
 
             /**
@@ -46,9 +46,9 @@ public class Authentication {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                Log.i("response", String.valueOf(response));
                 if (response.isSuccessful() && response.body() != null) {
                     LoggedInUser info = new LoggedInUser();
-                    Log.i("response", String.valueOf(response.body()));
                     info = info.parseJSON(response.body());
                     DBUserProfileUpdate up = new DBUserProfileUpdate(a, info.getEmail(), info.getProfilePic());
                     new Thread(up).start();

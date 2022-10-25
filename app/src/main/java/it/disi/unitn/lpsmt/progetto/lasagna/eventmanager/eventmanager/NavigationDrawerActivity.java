@@ -108,7 +108,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 Log.i("noFragment", "no fragment with that name");
             }
 
-            DBProfileImage image = new DBProfileImage(this, acc.getEmail());
+            DBProfileImage image = new DBProfileImage(this, acc.getEmail(), l);
             new Thread(image).start();
 
             TextView username = l.findViewById(R.id.profile_name);

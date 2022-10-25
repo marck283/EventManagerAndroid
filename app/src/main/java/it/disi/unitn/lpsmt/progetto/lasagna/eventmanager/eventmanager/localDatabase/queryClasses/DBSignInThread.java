@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
 import android.app.Activity;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
@@ -31,10 +32,15 @@ public class DBSignInThread extends DBThread {
             user.updateGToken(account.getIdToken(), account.getEmail());
         } else {
             //Se l'utente cercato non esiste, aggiungilo al database (ancora da aggiungere: collegamento a People API)
+            Uri photo = account.getPhotoUrl();
+
             User u = new User();
             u.setEmail(account.getEmail());
             u.setNome(account.getGivenName());
             u.setGToken(account.getIdToken());
+            if(photo != null) {
+                u.setProfilePic(photo.toString());
+            }
             u.setEventiCreati(new ArrayList<>());
             u.setEventiIscritto(new ArrayList<>());
             u.setNumEvOrg(0);
