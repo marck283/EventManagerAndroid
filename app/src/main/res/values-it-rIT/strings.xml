@@ -32,4 +32,6 @@
     <string name="app_version">Versione applicazione</string>
     <string name="settings_image">Immagine impostazioni</string>
     <string name="not_implemented">Non implementato</string>
+    <string name="no_session_title">Non sei autenticato!</string>
+    <string name="no_session_content">Nessuna sessione attiva. Vuoi autenticarti?</string>
 </resources>

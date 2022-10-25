@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
@@ -22,16 +23,22 @@ public class DBUserThread extends DBThread {
 
     @Override
     public void run() {
-        String authCode = user.getGToken(account.getEmail());
+            String authCode = user.getGToken(account.getEmail());
 
-        //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
-        // senza, però, riuscirci.
+            //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
+            // senza, però, riuscirci.
 
-        ApiCSRFClass token = new ApiCSRFClass();
-        CsrfToken token1 = new CsrfToken();
+            CsrfToken token1 = new CsrfToken();
 
-        //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
-        token1.getCsrfToken(a, token, authCode);
-        db.close();
+            //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
+            synchronized(this) {
+                token1.getCsrfToken(a, new Authentication(), authCode);
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            db.close();
     }
 }

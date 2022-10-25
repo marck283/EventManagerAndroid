@@ -34,7 +34,6 @@ public class DBSignInThread extends DBThread {
             User u = new User();
             u.setEmail(account.getEmail());
             u.setNome(account.getGivenName());
-            //u.setGServerAuthCode(account.getServerAuthCode());
             u.setGToken(account.getIdToken());
             u.setEventiCreati(new ArrayList<>());
             u.setEventiIscritto(new ArrayList<>());

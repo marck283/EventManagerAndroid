@@ -79,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             signIn.getAccountFromCompletedTask(completedTask);
-            Log.i("serverAuthCode", signIn.getAccount().getServerAuthCode());
 
             // Signed in successfully, update the database and return to caller with the results
             DBSignInThread db1 = new DBSignInThread(this, signIn);

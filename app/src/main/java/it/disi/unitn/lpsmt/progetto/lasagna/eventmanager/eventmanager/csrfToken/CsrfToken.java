@@ -42,18 +42,20 @@ public class CsrfToken {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    token.parseJSON(response.body());
-                    if(o instanceof Authentication) {
-                        //o1 non può essere null per i controlli effettuati dopo il login
-                        try {
-                            ((Authentication)o).login(a, token.getToken(), jwt);
-                        } catch (Exception e) {
-                            Log.i("emptyString", e.getMessage());
+                synchronized(this) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        token.parseJSON(response.body());
+                        if(o instanceof Authentication) {
+                            try {
+                                ((Authentication)o).login(a, token.getToken(), jwt);
+                            } catch (Exception e) {
+                                Log.i("emptyString", e.getMessage());
+                            }
                         }
+                    } else {
+                        Log.i("null", "Unsuccessful or null response");
                     }
-                } else {
-                    Log.i("null", "Unsuccessful or null response");
+                    notify();
                 }
             }
 

@@ -45,4 +45,6 @@
     <string name="settings_image">Settings image</string>
     <string name="not_implemented">Not implemented</string>
     <string name="dialog_day" translatable="false">%1$d/%2$d</string>
+    <string name="no_session_content">There is no existing session. Would you like to log in?</string>
+    <string name="no_session_title">You are not authenticated!</string>
 </resources>
