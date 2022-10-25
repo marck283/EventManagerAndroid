@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model;
 
-import android.util.Base64;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentica
  */
 public class LoggedInUser {
 
-    private String token, email, id, self;
+    private String token, email, id, self, profilePic;
 
     public String getToken() {
         return token;
@@ -32,6 +31,10 @@ public class LoggedInUser {
 
     public String getSelf() {
         return self;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
     }
 
     public LoggedInUser parseJSON(@NonNull JsonObject json) {

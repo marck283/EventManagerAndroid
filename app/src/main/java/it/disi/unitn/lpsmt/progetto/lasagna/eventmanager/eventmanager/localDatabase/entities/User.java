@@ -69,12 +69,13 @@ public class User {
         nome = n;
     }
 
+    @Nullable
     public String getProfilePic() {
         return profilePic;
     }
 
     //Non dovrebbe essere utilizzato se non in casi molto particolari.
-    public void setProfilePic(String val) {
+    public void setProfilePic(@Nullable String val) {
         profilePic = val;
     }
 
@@ -94,11 +95,12 @@ public class User {
         gToken = token;
     }
 
+    @Nullable
     public String getTel() {
         return tel;
     }
 
-    public void setTel(String val) {
+    public void setTel(@Nullable String val) {
         tel = val;
     }
 

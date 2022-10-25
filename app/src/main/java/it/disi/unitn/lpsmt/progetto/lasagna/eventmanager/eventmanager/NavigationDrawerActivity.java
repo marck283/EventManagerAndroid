@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -97,6 +98,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             } else {
                 Log.i("noFragment", "no fragment with that name");
             }
+
+            ImageView v = l.findViewById(R.id.imageView);
+            v.setImageURI(account.getPhotoUrl());
 
             TextView username = l.findViewById(R.id.profile_name);
             username.setText(getString(R.string.profileName, account.getDisplayName()));

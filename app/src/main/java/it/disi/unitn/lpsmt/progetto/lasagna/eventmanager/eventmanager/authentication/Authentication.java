@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import com.google.gson.JsonObject;
 
 import java.util.Objects;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserProfileUpdate;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,7 +28,7 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull String csrfToken, String googleJwt) throws Exception {
+    public void login(@NonNull Activity a, @NonNull String csrfToken, String googleJwt) throws Exception {
         if(Objects.equals(googleJwt, "")) {
             throw new Exception("Il token JWT di Google non può essere una stringa vuota");
         }
@@ -48,6 +50,8 @@ public class Authentication {
                     LoggedInUser info = new LoggedInUser();
                     Log.i("response", String.valueOf(response.body()));
                     info = info.parseJSON(response.body());
+                    DBUserProfileUpdate up = new DBUserProfileUpdate(a, info.getEmail(), info.getProfilePic());
+                    new Thread(up).start();
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
                 }

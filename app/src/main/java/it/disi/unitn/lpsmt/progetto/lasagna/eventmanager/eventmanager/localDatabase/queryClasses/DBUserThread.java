@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
@@ -12,13 +11,13 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 public class DBUserThread extends DBThread {
     private UserDAO user;
     private GoogleSignInAccount account;
-    private NavigationDrawerActivity a;
+    private Activity a;
 
     public DBUserThread(Activity a, GoogleSignInAccount account) {
         super(a);
         user = db.getUserDAO();
         this.account = account;
-        this.a = (NavigationDrawerActivity) a;
+        this.a = a;
     }
 
     @Override
@@ -32,6 +31,7 @@ public class DBUserThread extends DBThread {
         CsrfToken token1 = new CsrfToken();
 
         //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
-        token1.getCsrfToken(token, authCode);
+        token1.getCsrfToken(a, token, authCode);
+        db.close();
     }
 }
