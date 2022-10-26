@@ -8,8 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.UserAccount;
-
 /**
  * Data class that captures user information for logged in users
  */

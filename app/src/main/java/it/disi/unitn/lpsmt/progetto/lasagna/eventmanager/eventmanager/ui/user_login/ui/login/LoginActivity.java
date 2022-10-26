@@ -22,7 +22,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 
 public class LoginActivity extends AppCompatActivity {
 
-    private ActivityLoginBinding binding;
     private static final int REQ_SIGN_IN = 2;
     private GSignIn signIn;
 
@@ -30,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         signIn = new GSignIn(this);

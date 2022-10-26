@@ -1,16 +1,11 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.util.Base64;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -39,16 +34,6 @@ public class DBProfileImage extends DBThread {
                     wait();
                 }
                 if(a instanceof NavigationDrawerActivity) {
-                    /*String cleanImage;
-                    if(profilePic.contains("data:image/png;base64,")) {
-                        cleanImage = profilePic.replace("data:image/png;base64,", "");
-                    } else {
-                        cleanImage = profilePic.replace("data:image/jpeg;base64,","");
-                    }
-                    Log.i("pic", profilePic);
-                    byte[] decodedString = Base64.decode(profilePic, Base64.DEFAULT);
-                    Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);*/
-
                     ImageView v = l.findViewById(R.id.imageView);
                     v.setImageURI(Uri.parse(profilePic));
                 }

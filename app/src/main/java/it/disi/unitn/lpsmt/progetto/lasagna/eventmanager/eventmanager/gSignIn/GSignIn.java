@@ -24,7 +24,7 @@ public class GSignIn {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestProfile()
-                .requestIdToken(a.getString(R.string.server_client_id))
+                .requestServerAuthCode(a.getString(R.string.server_client_id))
                 .requestScopes(new Scope("https://www.googleapis.com/auth/userinfo.email"), new Scope("https://www.googleapis.com/auth/userinfo.profile"))
                 .build();
 
