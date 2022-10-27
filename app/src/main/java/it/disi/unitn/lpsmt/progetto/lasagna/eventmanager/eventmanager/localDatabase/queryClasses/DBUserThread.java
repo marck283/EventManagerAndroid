@@ -1,6 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
 import android.app.Activity;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
@@ -13,12 +16,16 @@ public class DBUserThread extends DBThread {
     private UserDAO user;
     private GoogleSignInAccount account;
     private Activity a;
+    private boolean gotResult = false;
 
-    private void threadWait() {
-        try {
-            wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private void threadWait(String authCode, @NonNull String email) {
+        while(authCode == null || authCode.equals("")) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            authCode = user.getGToken(email);
         }
     }
 
@@ -31,26 +38,20 @@ public class DBUserThread extends DBThread {
 
     @Override
     public void run() {
-        String email = account.getEmail();
-        String authCode = user.getGToken(email);
-
-        if(authCode == null) {
-            TokenExchange exchange = new TokenExchange();
-            exchange.getAccessToken(user.getServerAuthCode(email), a, email);
-            threadWait();
-            authCode = user.getGToken(email); //C'è un problema di sincronizzazione con questa istruzione. Perché non riesco mai a prendere il token Google?
-        }
-
-        //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
-        // senza, però, riuscirci.
-
-        CsrfToken token1 = new CsrfToken();
-
-        //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
         synchronized(this) {
-            token1.getCsrfToken(a, new Authentication(), authCode);
-            threadWait();
+            String email = account.getEmail();
+            String authCode = user.getServerAuthCode(email);
+
+            if(authCode == null || authCode.equals("")) {
+                Log.i("nullOrEmpty", "authCode is null or empty");
+            } else {
+                TokenExchange exchange = new TokenExchange();
+                exchange.getAccessToken(authCode, a, email);
+            }
         }
-        db.close();
+    }
+
+    public boolean result() {
+        return gotResult;
     }
 }

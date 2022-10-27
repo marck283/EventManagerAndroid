@@ -51,7 +51,7 @@ public class Authentication {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
                     DBUserProfileUpdate up = new DBUserProfileUpdate(a, info.getEmail(), info.getProfilePic());
-                    new Thread(up).start();
+                    up.start();
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
                 }

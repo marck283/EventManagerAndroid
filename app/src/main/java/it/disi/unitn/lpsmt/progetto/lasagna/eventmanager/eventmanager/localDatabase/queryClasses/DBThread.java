@@ -13,4 +13,8 @@ public class DBThread extends Thread {
     public DBThread(@NonNull Activity a) {
         db = Room.databaseBuilder(a.getApplicationContext(), AppDatabase.class, "EventManagerDB").build();
     }
+
+    public void close() {
+        db.close();
+    }
 }

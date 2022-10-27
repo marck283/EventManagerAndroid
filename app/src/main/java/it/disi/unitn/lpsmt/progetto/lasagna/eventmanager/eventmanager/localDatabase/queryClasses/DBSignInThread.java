@@ -46,7 +46,6 @@ public class DBSignInThread extends DBThread {
             u.setNumEvOrg(0);
             u.setValutazioneMedia(0.0);
             user.insert(u);
-            db.close(); //Chiude la connessione al database
         }
     }
 }

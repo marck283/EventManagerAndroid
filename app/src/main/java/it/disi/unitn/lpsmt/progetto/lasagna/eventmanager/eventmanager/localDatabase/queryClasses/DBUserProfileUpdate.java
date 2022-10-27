@@ -20,6 +20,5 @@ public class DBUserProfileUpdate extends DBThread {
     @Override
     public void run() {
         user.updateProfilePic(profilePic, userEmail);
-        db.close();
     }
 }

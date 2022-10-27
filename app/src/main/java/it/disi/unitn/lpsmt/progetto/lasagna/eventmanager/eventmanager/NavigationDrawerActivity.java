@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -26,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBProfileImage;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserThread;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
@@ -36,6 +36,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private GSignIn account;
     private NavigationView navView;
     private static final int REQ_SIGN_IN = 2;
+    private DBThread t1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         navView = binding.navView;
         account = new GSignIn(this);
+        t1 = new DBThread(this);
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
@@ -69,15 +71,18 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
-        account.silentSignIn((OnFailureListener) e -> {
+        account.silentSignIn(s -> {
+            account.setAccount(s);
+            updateUI();
+        }, e -> {
             AlertDialog d = new AlertDialog.Builder(this).create();
             d.setTitle(getString(R.string.no_session_title));
             d.setMessage(getString(R.string.no_session_content));
-            d.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN));
-            d.setButton(AlertDialog.BUTTON_NEUTRAL, "CANCEL", (dialog1, which) -> dialog1.dismiss());
+            d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN));
+            d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
             d.show();
+            updateUI();
         });
-        updateUI();
     }
 
     private void updateUI() {
@@ -90,32 +95,42 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
             LinearLayout l = (LinearLayout) navView.getHeaderView(0);
 
-            DBUserThread ut = new DBUserThread(this, account.getAccount());
-            new Thread(ut).start();
+            t1 = new DBUserThread(this, account.getAccount());
+            t1.start();
 
-            //Questa riga di codice restituisce 1 perché vi è un solo header a disposizione della
-            //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
-            //precedenti, si è cercato di creare un'istanza di LinearLayout.
-            //Log.i("count", String.valueOf(navView.getHeaderCount()));
+            synchronized(this) {
+                //Questa riga di codice restituisce 1 perché vi è un solo header a disposizione della
+                //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
+                //precedenti, si è cercato di creare un'istanza di LinearLayout.
+                //Log.i("count", String.valueOf(navView.getHeaderCount()));
 
-            GoogleSignInAccount acc = account.getAccount();
+                GoogleSignInAccount acc = account.getAccount();
 
-            //Perché non riesco a trovare un'istanza di EventListFragment?
-            Fragment ef = getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
-            if(ef != null) {
-                ((EventListFragment)ef).getData(acc.getIdToken());
-            } else {
-                Log.i("noFragment", "no fragment with that name");
+                //Perché non riesco a trovare un'istanza di EventListFragment?
+                Fragment ef = getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
+                if(ef != null) {
+                    ((EventListFragment)ef).getData(acc.getIdToken());
+                } else {
+                    Log.i("noFragment", "no fragment with that name");
+                }
+
+                TextView username = l.findViewById(R.id.profile_name);
+                username.setText(getString(R.string.profileName, acc.getDisplayName()));
+
+                TextView email = l.findViewById(R.id.profile_email);
+                email.setText(getString(R.string.email, acc.getEmail()));
+
+                while(((DBUserThread)t1).result()) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                t1 = new DBProfileImage(this, acc.getEmail(), l);
+                t1.start();
             }
-
-            DBProfileImage image = new DBProfileImage(this, acc.getEmail(), l);
-            new Thread(image).start();
-
-            TextView username = l.findViewById(R.id.profile_name);
-            username.setText(getString(R.string.profileName, acc.getDisplayName()));
-
-            TextView email = l.findViewById(R.id.profile_email);
-            email.setText(getString(R.string.email, acc.getEmail()));
         }
     }
 
@@ -164,5 +179,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_navigation_drawer);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        t1.close();
+        t1 = null;
     }
 }

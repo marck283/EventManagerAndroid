@@ -12,8 +12,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class GSignIn {
@@ -32,9 +34,9 @@ public class GSignIn {
         account = GoogleSignIn.getLastSignedInAccount(a);
     }
 
-    public void silentSignIn(OnFailureListener f) {
+    public void silentSignIn(OnSuccessListener<GoogleSignInAccount> s, OnFailureListener f) {
         Task<GoogleSignInAccount> task = gsi.silentSignIn();
-        task.addOnSuccessListener(s -> account = s);
+        task.addOnSuccessListener(s);
         task.addOnFailureListener(f);
     }
 

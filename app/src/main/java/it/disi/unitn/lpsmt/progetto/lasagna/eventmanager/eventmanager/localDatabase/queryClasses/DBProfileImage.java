@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localData
 
 import android.app.Activity;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -12,10 +13,10 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
 
 public class DBProfileImage extends DBThread {
-    private UserDAO user;
-    private String email;
-    private Activity a;
-    private LinearLayout l;
+    private final UserDAO user;
+    private final String email;
+    private final Activity a;
+    private final LinearLayout l;
 
     public DBProfileImage(@NonNull Activity a, @NonNull String email, @NonNull LinearLayout l) {
         super(a);
@@ -30,14 +31,17 @@ public class DBProfileImage extends DBThread {
         String profilePic = user.getProfilePic(email);
         synchronized (this) {
             try {
-                while(profilePic.equals("")) {
-                    wait();
+                if(profilePic != null) {
+                    while(profilePic.equals("")) {
+                        wait();
+                    }
+                    if(a instanceof NavigationDrawerActivity) {
+                        ImageView v = l.findViewById(R.id.imageView);
+                        v.setImageURI(Uri.parse(profilePic));
+                    }
+                } else {
+                    Log.i("noPicture", "No profile picture available right now.");
                 }
-                if(a instanceof NavigationDrawerActivity) {
-                    ImageView v = l.findViewById(R.id.imageView);
-                    v.setImageURI(Uri.parse(profilePic));
-                }
-                db.close();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

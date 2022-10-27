@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserAccessToken;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,20 +42,26 @@ public class TokenExchange {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                synchronized(this) {
-                    if(response.isSuccessful()) {
-                        if(response.body() != null) {
-                            GAccessToken token = new GAccessToken();
-                            token = token.parseJSON(response.body());
-                            DBUserAccessToken signIn = new DBUserAccessToken(a, token.getToken(), email);
-                            signIn.start();
-                        } else {
-                            Log.i("nullAuthResponse", "response is null");
-                        }
+                if(response.isSuccessful()) {
+                    if(response.body() != null) {
+                        GAccessToken token = new GAccessToken();
+                        token = token.parseJSON(response.body());
+                        DBUserAccessToken signIn = new DBUserAccessToken(a, token.getToken(), email);
+                        signIn.start();
+
+                        //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
+                        // senza, però, riuscirci.
+
+                        CsrfToken token1 = new CsrfToken();
+
+                        //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
+                        token1.getCsrfToken(a, new Authentication(), token.getToken());
                     } else {
-                        Log.i("noResponse", "Unsuccessful response. Error code: " + response.code());
+                        Log.i("nullAuthResponse", "response is null");
                     }
-                    notify();
+                } else {
+                    Log.i("noResponse", "Unsuccessful response. Error code: " + response.code());
+                    Log.i("noResponse", response.message());
                 }
             }
 
