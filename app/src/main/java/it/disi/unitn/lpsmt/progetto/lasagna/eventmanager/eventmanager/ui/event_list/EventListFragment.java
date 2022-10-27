@@ -19,6 +19,8 @@ public class EventListFragment extends Fragment {
     private EventListViewModel eventListViewModel;
     private View root;
 
+    //Problema: come porto l'access token dall'Activity del Fragment a qui per poterlo salvare nel Bundle quando il Fragment viene posto in secondo piano?
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEventListBinding.inflate(inflater, container, false);
@@ -33,9 +35,17 @@ public class EventListFragment extends Fragment {
         eventListViewModel = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
     }
 
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
+            eventListViewModel.getEvents(root, savedInstanceState.getString("accessToken"));
+        } else {
+            eventListViewModel.getEvents(root, "");
+        }
+    }
+
     public void onStart() {
         super.onStart();
-        eventListViewModel.getEvents(root, "");
         //requireActivity().findViewById(R.id.action_settings).setOnClickListener(l -> showSettings());
     }
 
@@ -47,12 +57,8 @@ public class EventListFragment extends Fragment {
                 .commit();
     }
 
-    /**
-     * Metodo per ottenere una nuova lista di eventi pubblici.
-     * @param accessToken Il token di accesso dell'utente
-     */
-    public void getData(String accessToken) {
-        eventListViewModel.getEvents(root, accessToken);
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+
     }
 
     @Override

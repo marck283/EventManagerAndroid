@@ -106,14 +106,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
                 GoogleSignInAccount acc = account.getAccount();
 
-                //Perché non riesco a trovare un'istanza di EventListFragment?
-                Fragment ef = getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
-                if(ef != null) {
-                    ((EventListFragment)ef).getData(acc.getIdToken());
-                } else {
-                    Log.i("noFragment", "no fragment with that name");
-                }
-
                 TextView username = l.findViewById(R.id.profile_name);
                 username.setText(getString(R.string.profileName, acc.getDisplayName()));
 

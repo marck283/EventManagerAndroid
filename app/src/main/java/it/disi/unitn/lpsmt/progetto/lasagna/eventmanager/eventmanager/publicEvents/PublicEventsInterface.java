@@ -8,7 +8,7 @@ import retrofit2.http.Header;
 
 public interface PublicEventsInterface {
     @GET("/api/v2/eventiCalendarioPubblico")
-    Call<JsonObject> pubEv(@Header("token") String token,
+    Call<JsonObject> pubEv(@Header("x-access-token") String token,
                            @Header("nomeAtt") String nomeAtt,
                            @Header("categoria") String categoria,
                            @Header("durata") String durata,
