@@ -17,7 +17,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TokenExchange {
-    private ServerTokenExchange tokenExchange;
+    private final ServerTokenExchange tokenExchange;
 
     public TokenExchange() {
         Retrofit retro = new Retrofit.Builder()

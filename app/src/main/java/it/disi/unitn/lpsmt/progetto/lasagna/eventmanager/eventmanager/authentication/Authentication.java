@@ -1,14 +1,17 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 
 import java.util.Objects;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserProfileUpdate;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import retrofit2.Call;
@@ -54,6 +57,10 @@ public class Authentication {
                     up.start();
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
+                    if(response.body() != null && response.code() == 401) {
+                        GSignIn signIn = new GSignIn(a);
+                        signIn.signIn(a, 2);
+                    }
                 }
             }
 
