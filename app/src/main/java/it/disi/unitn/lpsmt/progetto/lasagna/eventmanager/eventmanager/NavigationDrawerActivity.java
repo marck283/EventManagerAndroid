@@ -14,7 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -106,13 +106,17 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
                 GoogleSignInAccount acc = account.getAccount();
 
+                /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.nav_event_list, EventListFragment.newInstance(acc.getIdToken()));
+                ft.commit();*/
+
                 TextView username = l.findViewById(R.id.profile_name);
                 username.setText(getString(R.string.profileName, acc.getDisplayName()));
 
                 TextView email = l.findViewById(R.id.profile_email);
                 email.setText(getString(R.string.email, acc.getEmail()));
 
-                while(((DBUserThread)t1).result()) {
+                while(!((DBUserThread)t1).result()) {
                     try {
                         wait();
                     } catch (InterruptedException e) {

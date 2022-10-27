@@ -18,13 +18,28 @@ public class EventListFragment extends Fragment {
     private FragmentEventListBinding binding;
     private EventListViewModel eventListViewModel;
     private View root;
+    private String idToken;
 
-    //Problema: come porto l'access token dall'Activity del Fragment a qui per poterlo salvare nel Bundle quando il Fragment viene posto in secondo piano?
+
+    /*@NonNull
+    public static EventListFragment newInstance(@NonNull String token) {
+        //La chiamata a questo metodo, in questo caso, serve semplicemente a portare l'access token di Google all'interno dello
+        //scope di questo Fragment.
+        EventListFragment f = new EventListFragment();
+        Bundle b = new Bundle();
+        b.putString("accessToken", token);
+        f.setArguments(b);
+        return f;
+    }*/
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEventListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
+
+        if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
+            idToken = savedInstanceState.getString("accessToken");
+        }
 
         return root;
     }
@@ -58,7 +73,7 @@ public class EventListFragment extends Fragment {
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
-
+        outState.putString("accessToken", idToken);
     }
 
     @Override

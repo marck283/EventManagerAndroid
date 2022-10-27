@@ -22,16 +22,19 @@
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_menu_settings" />
+
     <fragment
         android:id="@+id/nav_user_profile"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile.UserProfileFragment"
         android:label="@string/user_profile"
         tools:layout="@layout/fragment_user_profile" />
+
     <fragment
         android:id="@+id/nav_logout"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_logout.LogoutFragment"
         android:label="@string/menu_user_logout"
         tools:layout="@layout/fragment_logout" />
+
     <activity
         android:id="@+id/nav_login"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity"
