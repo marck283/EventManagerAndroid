@@ -40,14 +40,17 @@ public class DBUserThread extends DBThread {
     public void run() {
         synchronized(this) {
             String email = account.getEmail();
-            String authCode = user.getServerAuthCode(email);
+            String authCode = account.getIdToken();
 
-            if(authCode == null || authCode.equals("")) {
+            CsrfToken csrf = new CsrfToken();
+            csrf.getCsrfToken(a, new Authentication(), authCode);
+
+            /*if(authCode == null || authCode.equals("")) {
                 Log.i("nullOrEmpty", "authCode is null or empty");
             } else {
                 TokenExchange exchange = new TokenExchange();
                 exchange.getAccessToken(authCode, a, email);
-            }
+            }*/
         }
     }
 
