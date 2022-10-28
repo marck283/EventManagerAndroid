@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -96,23 +95,26 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     private void updateUI() {
         navView.getMenu().clear();
+
+        LinearLayout l = (LinearLayout) navView.getHeaderView(0);
+        TextView username = l.findViewById(R.id.profile_name);
+        TextView email = l.findViewById(R.id.profile_email);
+
         if(account.getAccount() == null) {
             navView.inflateMenu(R.menu.navmenu_not_logged_in);
+            username.setText("");
+            email.setText("");
             Log.i("info", "account null");
         } else {
             //L'utente è autenticato; ottieni il token di accesso al server e mostra la UI aggiornata.
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
-            LinearLayout l = (LinearLayout) navView.getHeaderView(0);
 
             GoogleSignInAccount acc = account.getAccount();
 
             t1 = new DBUserThread(this, acc);
             t1.start();
 
-            TextView username = l.findViewById(R.id.profile_name);
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
-
-            TextView email = l.findViewById(R.id.profile_email);
             email.setText(getString(R.string.email, acc.getEmail()));
 
             t1 = new DBProfileImage(this, acc.getEmail(), l);
@@ -124,8 +126,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     public void revokeAccess(MenuItem item) {
         Task<Void> t = account.signOut();
-        t.addOnSuccessListener(s -> updateUI());
         t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
+        t.addOnCompleteListener(c -> {
+            account.setAccount(null);
+            updateUI();
+        });
     }
 
     /**
