@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -122,7 +123,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     public void revokeAccess(MenuItem item) {
-        //account.getAccount().
+        Task<Void> t = account.signOut();
+        t.addOnSuccessListener(s -> updateUI());
+        t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
     }
 
     /**

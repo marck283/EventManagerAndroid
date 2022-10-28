@@ -54,4 +54,8 @@ public class GSignIn {
     public void setAccount(GoogleSignInAccount a) {
         account = a;
     }
+
+    public Task<Void> signOut() {
+        return gsi.signOut();
+    }
 }
