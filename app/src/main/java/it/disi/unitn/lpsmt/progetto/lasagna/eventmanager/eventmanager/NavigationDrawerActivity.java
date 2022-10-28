@@ -168,6 +168,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
         t.addOnCompleteListener(c -> {
             account.setAccount(null);
+            vm.setToken("");
             updateUI();
         });
     }
