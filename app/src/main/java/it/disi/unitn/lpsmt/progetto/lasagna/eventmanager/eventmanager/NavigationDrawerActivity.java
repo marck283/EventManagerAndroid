@@ -3,13 +3,17 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +27,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
@@ -97,6 +107,23 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         return vm;
     }
 
+    private Bitmap getImageBitmap(String uri) {
+        Bitmap bm = null;
+        try {
+            URL aURL = new URL(uri);
+            URLConnection conn = aURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();
+        } catch (IOException e) {
+            Log.e("IOException", "Error getting bitmap", e);
+        }
+        return bm;
+    }
+
     private void updateUI() {
         navView.getMenu().clear();
 
@@ -121,9 +148,16 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
             email.setText(getString(R.string.email, acc.getEmail()));
 
-            t1 = new DBProfileImage(this, acc.getEmail(), l);
+            t1 = new DBProfileImage(this, acc.getEmail());
             t1.start();
-            while(t1.getState().compareTo(Thread.State.WAITING) == 0);
+
+            ((DBProfileImage)t1).getProfilePic().observe(this, o -> {
+                Log.i("valueChanged", o);
+                Bitmap bm = getImageBitmap(o);
+                ImageView v = l.findViewById(R.id.imageView);
+                v.setImageBitmap(bm);
+            });
+
             t1.close();
         }
     }
@@ -156,8 +190,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     //Autenticato con successo a Google, ora autentica al server e
                     //mostra i dati del profilo richiesti
 
-                    //Riscrivere questa parte cercando di ottenere i dati da qualcos'altro, se possibile.
-                    account.setAccount(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount"));
+                    if(data != null && data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
+                        account.setAccount(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount"));
+                    } else {
+                        account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
+                    }
                     updateUI();
                     break;
                 }

@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localData
 
 import android.app.Activity;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -39,7 +40,10 @@ public class DBSignInThread extends DBThread {
             u.setNome(account.getGivenName());
             u.setGToken(account.getIdToken());
             if(photo != null) {
+                Log.i("photo", photo.toString());
                 u.setProfilePic(photo.toString());
+            } else {
+                Log.i("photo", "null");
             }
             u.setEventiCreati(new ArrayList<>());
             u.setEventiIscritto(new ArrayList<>());

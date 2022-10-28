@@ -35,7 +35,6 @@ public class GSignIn {
 
     public void silentSignIn(OnCompleteListener<GoogleSignInAccount> s, OnFailureListener f) {
         Task<GoogleSignInAccount> task = gsi.silentSignIn();
-        //task.addOnSuccessListener(s);
         task.addOnFailureListener(f);
         task.addOnCompleteListener(s);
     }
