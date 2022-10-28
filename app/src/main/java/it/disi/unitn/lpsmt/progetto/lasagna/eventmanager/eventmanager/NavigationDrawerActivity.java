@@ -14,7 +14,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import androidx.fragment.app.FragmentTransaction;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -27,7 +28,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GS
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBProfileImage;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserThread;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
@@ -37,6 +38,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private NavigationView navView;
     private static final int REQ_SIGN_IN = 2;
     private DBThread t1;
+    private NavigationSharedViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
+
+        vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -85,6 +89,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         });
     }
 
+    public NavigationSharedViewModel getViewModel() {
+        return vm;
+    }
+
     private void updateUI() {
         navView.getMenu().clear();
         if(account.getAccount() == null) {
@@ -95,39 +103,26 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
             LinearLayout l = (LinearLayout) navView.getHeaderView(0);
 
-            t1 = new DBUserThread(this, account.getAccount());
+            GoogleSignInAccount acc = account.getAccount();
+
+            t1 = new DBUserThread(this, acc);
             t1.start();
 
-            synchronized(this) {
-                //Questa riga di codice restituisce 1 perché vi è un solo header a disposizione della
-                //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
-                //precedenti, si è cercato di creare un'istanza di LinearLayout.
-                //Log.i("count", String.valueOf(navView.getHeaderCount()));
+            TextView username = l.findViewById(R.id.profile_name);
+            username.setText(getString(R.string.profileName, acc.getDisplayName()));
 
-                GoogleSignInAccount acc = account.getAccount();
+            TextView email = l.findViewById(R.id.profile_email);
+            email.setText(getString(R.string.email, acc.getEmail()));
 
-                /*FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.nav_event_list, EventListFragment.newInstance(acc.getIdToken()));
-                ft.commit();*/
-
-                TextView username = l.findViewById(R.id.profile_name);
-                username.setText(getString(R.string.profileName, acc.getDisplayName()));
-
-                TextView email = l.findViewById(R.id.profile_email);
-                email.setText(getString(R.string.email, acc.getEmail()));
-
-                while(!((DBUserThread)t1).result()) {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                t1 = new DBProfileImage(this, acc.getEmail(), l);
-                t1.start();
-            }
+            t1 = new DBProfileImage(this, acc.getEmail(), l);
+            t1.start();
+            while(t1.getState().compareTo(Thread.State.WAITING) == 0);
+            t1.close();
         }
+    }
+
+    public void revokeAccess(MenuItem item) {
+        //account.getAccount().
     }
 
     /**
@@ -179,7 +174,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     public void onDestroy() {
         super.onDestroy();
-        t1.close();
         t1 = null;
     }
 }

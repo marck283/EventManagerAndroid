@@ -1,16 +1,15 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 
 import java.util.Objects;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserProfileUpdate;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
@@ -55,6 +54,9 @@ public class Authentication {
                     info = info.parseJSON(response.body());
                     DBUserProfileUpdate up = new DBUserProfileUpdate(a, info.getEmail(), info.getProfilePic());
                     up.start();
+                    if(a instanceof NavigationDrawerActivity) {
+                        ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
+                    }
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
                     if(response.body() != null && response.code() == 401) {

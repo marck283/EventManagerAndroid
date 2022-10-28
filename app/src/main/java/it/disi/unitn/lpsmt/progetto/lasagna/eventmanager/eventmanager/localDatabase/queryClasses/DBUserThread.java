@@ -16,18 +16,6 @@ public class DBUserThread extends DBThread {
     private UserDAO user;
     private GoogleSignInAccount account;
     private Activity a;
-    private boolean gotResult = false;
-
-    private void threadWait(String authCode, @NonNull String email) {
-        while(authCode == null || authCode.equals("")) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            authCode = user.getGToken(email);
-        }
-    }
 
     public DBUserThread(Activity a, GoogleSignInAccount account) {
         super(a);
@@ -39,22 +27,10 @@ public class DBUserThread extends DBThread {
     @Override
     public void run() {
         synchronized(this) {
-            String email = account.getEmail();
             String authCode = account.getIdToken();
 
             CsrfToken csrf = new CsrfToken();
             csrf.getCsrfToken(a, new Authentication(), authCode);
-
-            /*if(authCode == null || authCode.equals("")) {
-                Log.i("nullOrEmpty", "authCode is null or empty");
-            } else {
-                TokenExchange exchange = new TokenExchange();
-                exchange.getAccessToken(authCode, a, email);
-            }*/
         }
-    }
-
-    public boolean result() {
-        return gotResult;
     }
 }

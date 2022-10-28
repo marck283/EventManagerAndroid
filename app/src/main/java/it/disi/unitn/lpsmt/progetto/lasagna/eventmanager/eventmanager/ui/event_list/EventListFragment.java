@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,28 +19,26 @@ public class EventListFragment extends Fragment {
     private FragmentEventListBinding binding;
     private EventListViewModel eventListViewModel;
     private View root;
-    private String idToken;
+    private String idToken = "";
+    private NavigationSharedViewModel vm;
 
-
-    /*@NonNull
-    public static EventListFragment newInstance(@NonNull String token) {
-        //La chiamata a questo metodo, in questo caso, serve semplicemente a portare l'access token di Google all'interno dello
-        //scope di questo Fragment.
-        EventListFragment f = new EventListFragment();
-        Bundle b = new Bundle();
-        b.putString("accessToken", token);
-        f.setArguments(b);
-        return f;
-    }*/
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if(args != null && args.getString("accessToken") != null) {
+            idToken = args.getString("accessToken");
+            Log.i("token3", idToken);
+        } else {
+            if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
+                idToken = savedInstanceState.getString("accessToken");
+            }
+        }
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEventListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-
-        if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
-            idToken = savedInstanceState.getString("accessToken");
-        }
 
         return root;
     }
@@ -47,25 +46,21 @@ public class EventListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View v, Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
+        vm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
         eventListViewModel = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
-    }
-
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
-            eventListViewModel.getEvents(root, savedInstanceState.getString("accessToken"));
-        } else {
-            eventListViewModel.getEvents(root, "");
-        }
     }
 
     public void onStart() {
         super.onStart();
-        //requireActivity().findViewById(R.id.action_settings).setOnClickListener(l -> showSettings());
+        vm.getToken().observe(requireActivity(), o -> {
+            idToken = o;
+            eventListViewModel.getEvents(root, idToken);
+        });
+        eventListViewModel.getEvents(root, "");
     }
 
     public void showSettings() {
-        //Da rivedere
+        //Da rivedere perché sarebbe di competenza dell'Activity NavigationDrawerActivity
         MenuSettingsFragment f = new MenuSettingsFragment();
         requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.constraintLayout, f)
                 .addToBackStack("settingsFragment")

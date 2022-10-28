@@ -20,6 +20,7 @@ public class UserCalendarFragment extends Fragment {
 
     private FragmentUserCalendarBinding binding;
     private View view;
+    private String idToken;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -28,6 +29,9 @@ public class UserCalendarFragment extends Fragment {
 
         binding = FragmentUserCalendarBinding.inflate(inflater, container, false);
         view = binding.getRoot();
+
+        //Questo è per dopo
+        //idToken = getArguments().getString("accessToken");
 
         return view;
     }
