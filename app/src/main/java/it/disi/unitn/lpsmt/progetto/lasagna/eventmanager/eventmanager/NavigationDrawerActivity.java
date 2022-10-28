@@ -163,6 +163,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     public void revokeAccess(MenuItem item) {
+        //Prima di eseguire la disconnessione da Google dovrei eseguire la disconnessione dell'utente dal mio server... o no?
         Task<Void> t = account.signOut();
         t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
         t.addOnCompleteListener(c -> {
