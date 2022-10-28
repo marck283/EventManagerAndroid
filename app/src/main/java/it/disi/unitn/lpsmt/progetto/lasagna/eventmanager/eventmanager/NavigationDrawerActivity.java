@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -76,8 +77,12 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         account.silentSignIn(s -> {
-            account.setAccount(s);
-            updateUI();
+            try {
+                account.setAccount(s.getResult(ApiException.class));
+                updateUI();
+            } catch(ApiException ex) {
+                Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
+            }
         }, e -> {
             AlertDialog d = new AlertDialog.Builder(this).create();
             d.setTitle(getString(R.string.no_session_title));
@@ -85,7 +90,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN));
             d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
             d.show();
-            updateUI();
         });
     }
 
@@ -158,7 +162,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     break;
                 }
                 case Activity.RESULT_CANCELED: {
-                    account = null;
+                    account.setAccount(null);
                     updateUI();
                     break;
                 }

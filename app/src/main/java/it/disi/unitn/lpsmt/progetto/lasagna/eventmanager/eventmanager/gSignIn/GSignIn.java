@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,10 +33,11 @@ public class GSignIn {
         account = GoogleSignIn.getLastSignedInAccount(a);
     }
 
-    public void silentSignIn(OnSuccessListener<GoogleSignInAccount> s, OnFailureListener f) {
+    public void silentSignIn(OnCompleteListener<GoogleSignInAccount> s, OnFailureListener f) {
         Task<GoogleSignInAccount> task = gsi.silentSignIn();
-        task.addOnSuccessListener(s);
+        //task.addOnSuccessListener(s);
         task.addOnFailureListener(f);
+        task.addOnCompleteListener(s);
     }
 
     public GoogleSignInAccount getAccount() {

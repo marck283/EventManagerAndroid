@@ -1,12 +1,20 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -26,6 +34,23 @@ public class DBProfileImage extends DBThread {
         this.l = l;
     }
 
+    private Bitmap getImageBitmap(String uri) {
+        Bitmap bm = null;
+        try {
+            URL aURL = new URL(uri);
+            URLConnection conn = aURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();
+        } catch (IOException e) {
+            Log.e("IOException", "Error getting bitmap", e);
+        }
+        return bm;
+    }
+
     @Override
     public void run() {
         String profilePic = user.getProfilePic(email);
@@ -36,8 +61,9 @@ public class DBProfileImage extends DBThread {
                         wait();
                     }
                     if(a instanceof NavigationDrawerActivity) {
+                        Bitmap bm = getImageBitmap(profilePic);
                         ImageView v = l.findViewById(R.id.imageView);
-                        v.setImageURI(Uri.parse(profilePic));
+                        v.setImageBitmap(bm);
                     }
                 } else {
                     Log.i("noPicture", "No profile picture available right now.");
