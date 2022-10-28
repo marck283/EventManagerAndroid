@@ -84,7 +84,6 @@ public class PublicEvents {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
                             l1 = new PubEvAdapter(new PubEvCallback(), l2.getList(), l.getContext());
-                            l1.submitList(l2.getList());
                             mRecyclerView.setAdapter(l1);
                             l2.print();
                         } else {
@@ -94,7 +93,10 @@ public class PublicEvents {
                         Log.i("success", "Unsuccessful operation");
                     }
                 } else {
-                    Log.d("null", "response is null");
+                    Log.d("nullResponse", "response body is null");
+                    l1 = new PubEvAdapter(new PubEvCallback(), new EventList().getList(), l.getContext());
+                    l1.clearEventList();
+                    mRecyclerView.setAdapter(l1);
                 }
             }
 

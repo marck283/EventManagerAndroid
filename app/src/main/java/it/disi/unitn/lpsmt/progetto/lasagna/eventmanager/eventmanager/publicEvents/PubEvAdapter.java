@@ -53,6 +53,13 @@ public class PubEvAdapter extends ListAdapter<Event, ViewHolder> {
         holder.bindData(evList.get(position), mContext);
     }
 
+    public void clearEventList() {
+        if(evList.size() > 0) {
+            evList.clear();
+            notifyDataSetChanged();
+        }
+    }
+
     /**
      * Returns the total number of items in the data set held by the adapter.
      *

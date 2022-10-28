@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;

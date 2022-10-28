@@ -10,8 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.Objects;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentEventListBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment;
 
 public class EventListFragment extends Fragment {
@@ -40,6 +43,10 @@ public class EventListFragment extends Fragment {
         binding = FragmentEventListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
+        if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
+            idToken = savedInstanceState.getString("accessToken");
+        }
+
         return root;
     }
 
@@ -52,11 +59,12 @@ public class EventListFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
+
         vm.getToken().observe(requireActivity(), o -> {
             idToken = o;
             eventListViewModel.getEvents(root, idToken);
+            requireActivity().findViewById(R.id.recycler_view).invalidate();
         });
-        eventListViewModel.getEvents(root, "");
     }
 
     public void showSettings() {
