@@ -15,8 +15,8 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
 
 public class DBSignInThread extends DBThread {
-    private UserDAO user;
-    private GSignIn signIn;
+    private final UserDAO user;
+    private final GSignIn signIn;
 
     public DBSignInThread(@NonNull Activity a, GSignIn signIn) {
         super(a);
@@ -27,30 +27,32 @@ public class DBSignInThread extends DBThread {
     @Override
     public void run() {
         GoogleSignInAccount account = signIn.getAccount();
-        if(user.getUserEmail(account.getEmail()) != null) {
-            //Se esiste l'utente con l'email cercata
-            //aggiorno gServerAuthCode e token Google
-            user.updateUserServerAuthCode(account.getServerAuthCode(), account.getEmail());
-        } else {
-            //Se l'utente cercato non esiste, aggiungilo al database (ancora da aggiungere: collegamento a People API)
-            Uri photo = account.getPhotoUrl();
-
-            User u = new User();
-            u.setEmail(account.getEmail());
-            u.setNome(account.getGivenName());
-            u.setGToken(account.getIdToken());
-            if(photo != null) {
-                Log.i("photo", photo.toString());
-                u.setProfilePic(photo.toString());
+        synchronized(this) {
+            if(user.getUserEmail(account.getEmail()) != null) {
+                //Se esiste l'utente con l'email cercata
+                //aggiorno gServerAuthCode e token Google
+                user.updateUserServerAuthCode(account.getServerAuthCode(), account.getEmail());
             } else {
-                Log.i("photo", "null");
+                //Se l'utente cercato non esiste, aggiungilo al database (ancora da aggiungere: collegamento a People API)
+                Uri photo = account.getPhotoUrl();
+
+                User u = new User();
+                u.setEmail(account.getEmail());
+                u.setNome(account.getGivenName());
+                u.setGToken(account.getIdToken());
+                if(photo != null) {
+                    Log.i("photo", photo.toString());
+                    u.setProfilePic(photo.toString());
+                } else {
+                    Log.i("photo", "null");
+                }
+                u.setEventiCreati(new ArrayList<>());
+                u.setEventiIscritto(new ArrayList<>());
+                u.setNumEvOrg(0);
+                u.setValutazioneMedia(0.0);
+                user.insert(u);
+                close();
             }
-            u.setEventiCreati(new ArrayList<>());
-            u.setEventiIscritto(new ArrayList<>());
-            u.setNumEvOrg(0);
-            u.setValutazioneMedia(0.0);
-            user.insert(u);
-            close();
         }
     }
 }

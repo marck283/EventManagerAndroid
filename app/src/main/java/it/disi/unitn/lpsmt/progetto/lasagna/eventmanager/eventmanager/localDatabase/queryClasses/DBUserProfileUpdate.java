@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
 
 public class DBUserProfileUpdate extends DBThread {
-    private UserDAO user;
-    private String profilePic, userEmail;
+    private final UserDAO user;
+    private final String profilePic, userEmail;
 
     public DBUserProfileUpdate(@NonNull Activity a, String profilePic, String email) {
         super(a);
@@ -19,7 +19,9 @@ public class DBUserProfileUpdate extends DBThread {
 
     @Override
     public void run() {
-        user.updateProfilePic(profilePic, userEmail);
-        close();
+        synchronized(this) {
+            user.updateProfilePic(profilePic, userEmail);
+            close();
+        }
     }
 }
