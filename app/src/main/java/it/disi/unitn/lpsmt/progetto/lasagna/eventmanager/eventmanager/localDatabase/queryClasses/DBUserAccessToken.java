@@ -22,6 +22,7 @@ public class DBUserAccessToken extends DBThread {
     public void run() {
         synchronized(this) {
             user.updateGToken(gToken, userEmail);
+            close();
         }
     }
 }

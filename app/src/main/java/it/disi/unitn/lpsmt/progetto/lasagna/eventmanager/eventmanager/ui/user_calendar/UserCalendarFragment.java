@@ -22,10 +22,11 @@ public class UserCalendarFragment extends Fragment {
     private View view;
     private String idToken;
     private NavigationSharedViewModel vm;
+    private UserCalendarViewModel userCalendarViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        UserCalendarViewModel userCalendarViewModel =
+        userCalendarViewModel =
                 new ViewModelProvider(this).get(UserCalendarViewModel.class);
 
         binding = FragmentUserCalendarBinding.inflate(inflater, container, false);
@@ -42,18 +43,18 @@ public class UserCalendarFragment extends Fragment {
         super.onStart();
 
         CalendarView v = view.findViewById(R.id.calendarView);
-        v.setOnDateChangeListener((v1, y, m, d) -> {
-            //Click su un giorno del mese per mostrare gli eventi.
-            EventDialog dialog = new EventDialog(this.requireContext(), d, m, y);
-
-            vm.getToken().observe(requireActivity(), o -> idToken = o);
+        v.setOnDateChangeListener((v1, y, m, d) -> vm.getToken().observe(requireActivity(), o -> {
+            idToken = o;
             if(idToken != null && !idToken.equals("")) {
-                dialog.getEvents(idToken);
+                userCalendarViewModel.getEvents(idToken, d, m, y, requireActivity().findViewById(R.id.constraintLayout));
+
+                //Click su un giorno del mese per mostrare gli eventi.
+                EventDialog dialog = new EventDialog(requireContext(), d, m);
                 dialog.showDialog();
             } else {
                 Log.i("noToken", "no user token");
             }
-        });
+        }));
     }
 
     @Override

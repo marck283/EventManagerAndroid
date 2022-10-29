@@ -23,6 +23,7 @@ public class DBProfileImage extends DBThread {
     @Override
     public void run() {
         profilePic = new MutableLiveData<>(user.getProfilePic(email));
+        close();
     }
 
     public LiveData<String> getProfilePic() {

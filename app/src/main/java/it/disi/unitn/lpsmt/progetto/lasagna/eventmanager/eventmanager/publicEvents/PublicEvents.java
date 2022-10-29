@@ -84,6 +84,7 @@ public class PublicEvents {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
                             l1 = new PubEvAdapter(new PubEvCallback(), l2.getList(), l.getContext());
+                            l1.submitList(l2.getList()); //Questa riga di codice potrebbe causare problemi alla lista da visualizzare...
                             mRecyclerView.setAdapter(l1);
                             l2.print();
                         } else {

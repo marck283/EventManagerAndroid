@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import java.util.Objects;
+import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentEventListBinding;
@@ -63,7 +62,10 @@ public class EventListFragment extends Fragment {
         vm.getToken().observe(requireActivity(), o -> {
             idToken = o;
             eventListViewModel.getEvents(root, idToken);
-            requireActivity().findViewById(R.id.recycler_view).invalidate();
+            RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+            if(rv != null) {
+                rv.invalidate();
+            }
         });
     }
 
