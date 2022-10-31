@@ -1,11 +1,15 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange;
 
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserAccessToken;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -13,18 +17,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TokenExchange {
-    private ServerTokenExchange stex;
+    private final ServerTokenExchange tokenExchange;
+
     public TokenExchange() {
         Retrofit retro = new Retrofit.Builder()
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        stex = retro.create(ServerTokenExchange.class);
+        tokenExchange = retro.create(ServerTokenExchange.class);
     }
 
-    public void getToken(@NonNull String code, @NonNull JsonParser t) {
-        Call<JsonObject> call = stex.getAccessToken(code);
-        call.enqueue(new Callback<JsonObject>() {
+    public void getAccessToken(@NonNull String code, @NonNull Activity a, @NonNull String email) {
+        Call<JsonObject> json = tokenExchange.getAccessTokenFromServer(code);
+        json.enqueue(new Callback<JsonObject>() {
 
             /**
              * Invoked for a received HTTP response.
@@ -37,14 +42,26 @@ public class TokenExchange {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if(response.body() != null) {
-                    if(response.isSuccessful()) {
-                        t.parseJSON(response.body());
+                if(response.isSuccessful()) {
+                    if(response.body() != null) {
+                        GAccessToken token = new GAccessToken();
+                        token = token.parseJSON(response.body());
+                        DBUserAccessToken signIn = new DBUserAccessToken(a, token.getToken(), email);
+                        signIn.start();
+
+                        //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
+                        // senza, però, riuscirci.
+
+                        CsrfToken token1 = new CsrfToken();
+
+                        //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
+                        token1.getCsrfToken(a, new Authentication(), token.getToken());
                     } else {
-                        Log.i("success", "Unsuccessful operation");
+                        Log.i("nullAuthResponse", "response is null");
                     }
                 } else {
-                    Log.i("null", "response is null");
+                    Log.i("noResponse", "Unsuccessful response. Error code: " + response.code());
+                    Log.i("noResponse", response.message());
                 }
             }
 
@@ -59,8 +76,8 @@ public class TokenExchange {
             public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
                 try {
                     throw t;
-                } catch(Throwable e) {
-                    e.printStackTrace();
+                } catch(Throwable ex) {
+                    Log.i("exception", ex.getMessage());
                 }
             }
         });

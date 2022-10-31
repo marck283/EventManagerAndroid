@@ -1,6 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken;
 
-import android.content.SharedPreferences;
+import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,7 +26,7 @@ public class CsrfToken {
     }
 
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
-    public void getCsrfToken(Object o, SharedPreferences s1) {
+    public void getCsrfToken(@NonNull Activity a, Object o, String jwt) {
         ApiCSRFClass token = new ApiCSRFClass();
         Call<JsonObject> call = csrfToken.getToken();
         call.enqueue(new Callback<JsonObject>() {
@@ -42,18 +42,17 @@ public class CsrfToken {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    token.parseJSON(response.body());
-                    if(o instanceof Authentication) {
-                        //o1 non può essere null per i controlli effettuati dopo il login
-                        try {
-                            ((Authentication)o).login(token.getToken(), s1.getString("gToken", ""));
-                        } catch (Exception e) {
-                            Log.i("emptyString", e.getMessage());
+                synchronized(this) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        ApiCSRFClass token1 = token.parseJSON(response.body());
+                        Log.i("token1", String.valueOf(token1.getToken()));
+                        if(o instanceof Authentication) {
+                            ((Authentication)o).login(a, token1.getToken(), jwt);
                         }
+                    } else {
+                        Log.i("null", "Unsuccessful or null response");
                     }
-                } else {
-                    Log.i("null", "Unsuccessful or null response");
+                    notify();
                 }
             }
 

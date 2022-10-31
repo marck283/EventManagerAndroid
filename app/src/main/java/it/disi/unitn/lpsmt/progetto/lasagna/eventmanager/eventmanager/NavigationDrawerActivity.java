@@ -1,21 +1,26 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -23,22 +28,29 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.ApiCSRFClass;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.AccessToken;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.JsonParser;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.serverTokenExchange.TokenExchange;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBProfileImage;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private GoogleSignInAccount account;
+    private GSignIn account;
     private NavigationView navView;
     private static final int REQ_SIGN_IN = 2;
-    private SharedPreferences prefs;
+    private DBThread t1;
+    private NavigationSharedViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +63,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show());
 
+        vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -60,7 +74,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 .build();
 
         navView = binding.navView;
-        account = GoogleSignIn.getLastSignedInAccount(this.getApplicationContext());
+        account = new GSignIn(this);
+        t1 = new DBThread(this);
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
@@ -72,60 +87,91 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
-        updateUI();
+        account.silentSignIn(s -> {
+            try {
+                account.setAccount(s.getResult(ApiException.class));
+                updateUI();
+            } catch(ApiException ex) {
+                Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
+            }
+        }, e -> {
+            AlertDialog d = new AlertDialog.Builder(this).create();
+            d.setTitle(getString(R.string.no_session_title));
+            d.setMessage(getString(R.string.no_session_content));
+            d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN));
+            d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
+            d.show();
+        });
+    }
+
+    public NavigationSharedViewModel getViewModel() {
+        return vm;
+    }
+
+    private Bitmap getImageBitmap(String uri) {
+        Bitmap bm = null;
+        try {
+            URL aURL = new URL(uri);
+            URLConnection conn = aURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();
+        } catch (IOException e) {
+            Log.e("IOException", "Error getting bitmap", e);
+        }
+        return bm;
     }
 
     private void updateUI() {
         navView.getMenu().clear();
-        if(account == null) {
+
+        LinearLayout l = (LinearLayout) navView.getHeaderView(0);
+        TextView username = l.findViewById(R.id.profile_name);
+        TextView email = l.findViewById(R.id.profile_email);
+
+        if(account.getAccount() == null) {
             navView.inflateMenu(R.menu.navmenu_not_logged_in);
+            username.setText("");
+            email.setText("");
             Log.i("info", "account null");
         } else {
             //L'utente è autenticato; ottieni il token di accesso al server e mostra la UI aggiornata.
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
-            LinearLayout l = (LinearLayout) navView.getHeaderView(0);
 
-            String authCode = account.getServerAuthCode();
-            TokenExchange ex = new TokenExchange();
-            JsonParser j1 = new JsonParser();
-            ex.getToken(authCode, j1);
+            GoogleSignInAccount acc = account.getAccount();
+            String authCode = acc.getIdToken();
+            CsrfToken csrf = new CsrfToken();
+            csrf.getCsrfToken(this, new Authentication(), authCode);
 
-            AccessToken accessToken = j1.getToken();
+            username.setText(getString(R.string.profileName, acc.getDisplayName()));
+            email.setText(getString(R.string.email, acc.getEmail()));
 
-            accessToken.observe(this, v -> {
-                //NOTA: da qui in poi il codice cerca di ottenere una nuova lista di eventi dal server e di aggiornare l'UI
-                // senza, però, riuscirci.
-                //Perché acquisire la lista di eventi solo quando si modifica il token di accesso?
-                EventListFragment evl = (EventListFragment) getSupportFragmentManager().findFragmentById(R.id.nav_event_list);
-                if (evl != null) {
-                    evl.getData(v);
-                } else {
-                    Log.i("null", "no fragment");
-                }
+            t1 = new DBProfileImage(this, acc.getEmail());
+            t1.start();
 
-                prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("gToken", v);
-                editor.apply();
-
-                ApiCSRFClass token = new ApiCSRFClass();
-                CsrfToken token1 = new CsrfToken();
-
-                //Ottiene il token CSRF necessario per l'autenticazione e autentica l'utente al server.
-                token1.getCsrfToken(token, prefs);
+            ((DBProfileImage)t1).getProfilePic().observe(this, o -> {
+                Log.i("valueChanged", o);
+                Bitmap bm = getImageBitmap(o);
+                ImageView v = l.findViewById(R.id.imageView);
+                v.setImageBitmap(bm);
             });
 
-            //Questa riga di codice restituisce 1 perché vi è un solo header a disposizione della
-            //NavigationView: il LinearLayout. Questo è il motivo per cui, nelle righe di codice
-            //precedenti, si è cercato di creare un'istanza di LinearLayout.
-            //Log.i("count", String.valueOf(navView.getHeaderCount()));
-
-            TextView username = l.findViewById(R.id.profile_name);
-            username.setText(getString(R.string.profileName, account.getDisplayName()));
-
-            TextView email = l.findViewById(R.id.profile_email);
-            email.setText(getString(R.string.email, account.getEmail()));
+            t1.close();
         }
+    }
+
+    public void revokeAccess(MenuItem item) {
+        //Prima di eseguire la disconnessione da Google dovrei eseguire la disconnessione dell'utente dal mio server... o no?
+        Task<Void> t = account.signOut();
+        t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
+        t.addOnCompleteListener(c -> {
+            account.setAccount(null);
+            vm.setToken("");
+            updateUI();
+        });
     }
 
     /**
@@ -146,12 +192,17 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 case Activity.RESULT_OK: {
                     //Autenticato con successo a Google, ora autentica al server e
                     //mostra i dati del profilo richiesti
-                    account = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount");
+
+                    if(data != null && data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
+                        account.setAccount(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount"));
+                    } else {
+                        account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
+                    }
                     updateUI();
                     break;
                 }
                 case Activity.RESULT_CANCELED: {
-                    account = null;
+                    account.setAccount(null);
                     updateUI();
                     break;
                 }
@@ -171,5 +222,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_navigation_drawer);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        t1 = null;
     }
 }

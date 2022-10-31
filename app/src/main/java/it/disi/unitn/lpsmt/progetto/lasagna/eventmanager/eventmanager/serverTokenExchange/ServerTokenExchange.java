@@ -8,5 +8,5 @@ import retrofit2.http.Query;
 
 public interface ServerTokenExchange {
     @GET("/api/v2/GoogleToken")
-    Call<JsonObject> getAccessToken(@Query("code") String code);
+    Call<JsonObject> getAccessTokenFromServer(@Query("code") String code);
 }

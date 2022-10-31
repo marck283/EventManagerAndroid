@@ -18,21 +18,24 @@ import com.google.android.gms.tasks.Task;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBSignInThread;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private ActivityLoginBinding binding;
     private static final int REQ_SIGN_IN = 2;
     private GSignIn signIn;
+    private DBThread t2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         signIn = new GSignIn(this);
+        t2 = new DBThread(this);
 
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
@@ -79,7 +82,10 @@ public class LoginActivity extends AppCompatActivity {
         try {
             signIn.getAccountFromCompletedTask(completedTask);
 
-            // Signed in successfully, return to caller with the results
+            // Signed in successfully, update the database and return to caller with the results
+            t2 = new DBSignInThread(this, signIn);
+            t2.start();
+
             Intent intent = setUpIntent();
             setResult(Activity.RESULT_OK, intent);
         } catch (ApiException e) {
@@ -91,7 +97,12 @@ public class LoginActivity extends AppCompatActivity {
             //Not signed in, so return to caller with null results
             setResult(Activity.RESULT_CANCELED);
         } finally {
+            t2.close();
             finish();
         }
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

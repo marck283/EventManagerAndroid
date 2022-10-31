@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEv
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.gson.JsonObject;
 
@@ -26,7 +27,7 @@ public class PrivateEvents {
         //Qui imposta la RecyclerView e il LayoutManager
     }
 
-    public void getPersonalEvents(String authToken, String data) {
+    public void getPersonalEvents(String authToken, String data, ConstraintLayout l) {
         Call<JsonObject> json = privEv.privEv(authToken, data);
         json.enqueue(new Callback<JsonObject>() {
 
