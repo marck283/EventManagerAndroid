@@ -44,7 +44,7 @@ public class UserCalendarFragment extends Fragment {
         v.setOnDateChangeListener((v1, d, m, y) -> {
             FragmentManager m1 = getChildFragmentManager();
             FragmentTransaction t = m1.beginTransaction();
-            EventDialog e = EventDialog.newInstance(new GSignIn(requireActivity()).getAccount().getIdToken(), d, m + 1, y);
+            EventDialog e = EventDialog.newInstance(vm.getToken().getValue(), d, m + 1, y);
             t.add(e, "");
             t.commit();
         });

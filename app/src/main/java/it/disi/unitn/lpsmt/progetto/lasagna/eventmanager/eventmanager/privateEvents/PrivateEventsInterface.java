@@ -9,5 +9,5 @@ import retrofit2.http.Path;
 
 public interface PrivateEventsInterface {
     @GET("/api/v2/eventiCalendarioPersonale/{data}")
-    Call<JsonObject> privEv(@Header("token") String token, @Path("data") String data);
+    Call<JsonObject> privEv(@Header("x-access-token") String token, @Path("data") String data);
 }

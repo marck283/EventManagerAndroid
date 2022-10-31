@@ -73,6 +73,7 @@ public class PrivateEvents {
                     }
                 } else {
                     Log.i("null", "response is null");
+                    Log.i("response", String.valueOf(response));
                     p1 = new PrivEvAdapter(new EventCallback(), new EventList().getList());
                     p1.clearEventList();
                     mRecyclerView.setAdapter(p1);
