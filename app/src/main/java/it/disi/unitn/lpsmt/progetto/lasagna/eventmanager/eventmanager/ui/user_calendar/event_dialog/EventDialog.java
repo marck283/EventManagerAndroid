@@ -57,12 +57,4 @@ public class EventDialog extends DialogFragment {
         super.onStart();
         vm.getEvents(idToken, d, m, y, root.findViewById(R.id.dialog_constraintLayout));
     }
-
-    public void showDialog(FragmentTransaction t) {
-        show(t, "UserCalendarDialog");
-    }
-
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        setArguments(null);
-    }
 }
