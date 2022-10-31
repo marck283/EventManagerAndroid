@@ -29,7 +29,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bindData(Event dataModel, Context context) {
+    public void bindData(Event dataModel) {
         try {
             imgView.setImageBitmap(dataModel.decodeBase64());
             evName.setText(dataModel.getString("name"));

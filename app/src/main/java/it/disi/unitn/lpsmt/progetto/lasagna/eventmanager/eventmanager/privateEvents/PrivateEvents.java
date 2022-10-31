@@ -1,12 +1,17 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,15 +21,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PrivateEvents {
     private PrivateEventsInterface privEv;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager lm;
+    private PrivEvAdapter p1;
 
-    public PrivateEvents() {
+    public PrivateEvents(@NonNull View layout) {
         Retrofit retro = new Retrofit.Builder()
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         privEv = retro.create(PrivateEventsInterface.class);
 
-        //Qui imposta la RecyclerView e il LayoutManager
+        //Qui imposta la RecyclerView, il LayoutManager e l'Adapter
+        mRecyclerView = layout.findViewById(R.id.personal_recycler_view);
+        lm = new LinearLayoutManager(layout.getContext());
+        mRecyclerView.setLayoutManager(lm);
+        p1 = new PrivEvAdapter(new EventCallback());
+        mRecyclerView.setAdapter(p1);
     }
 
     public void getPersonalEvents(String authToken, String data, ConstraintLayout l) {
@@ -48,11 +61,21 @@ public class PrivateEvents {
                         ev = ev.parseJSON(response.body());
 
                         //Qui serviti della RecyclerView per impostare l'Adapter.
+                        if(ev != null && ev.getList().size() > 0) {
+                            p1 = new PrivEvAdapter(new EventCallback(), ev.getList());
+                            p1.submitList(ev.getList());
+                            mRecyclerView.setAdapter(p1);
+                        } else {
+                            Log.i("nullP", "Event list is null");
+                        }
                     } else {
                         Log.i("noSuccess", "Unsuccessful operation");
                     }
                 } else {
                     Log.i("null", "response is null");
+                    p1 = new PrivEvAdapter(new EventCallback(), new EventList().getList());
+                    p1.clearEventList();
+                    mRecyclerView.setAdapter(p1);
                 }
             }
 

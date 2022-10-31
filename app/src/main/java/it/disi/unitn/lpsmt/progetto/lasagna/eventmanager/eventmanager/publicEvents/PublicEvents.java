@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +42,7 @@ public class PublicEvents {
         mRecyclerView = layout.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(layout.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        l1 = new PubEvAdapter(new PubEvCallback());
+        l1 = new PubEvAdapter(new EventCallback());
         mRecyclerView.setAdapter(l1);
     }
 
@@ -83,7 +84,7 @@ public class PublicEvents {
                         if(l2 != null) {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
-                            l1 = new PubEvAdapter(new PubEvCallback(), l2.getList(), l.getContext());
+                            l1 = new PubEvAdapter(new EventCallback(), l2.getList());
                             l1.submitList(l2.getList()); //Questa riga di codice potrebbe causare problemi alla lista da visualizzare...
                             mRecyclerView.setAdapter(l1);
                             l2.print();
@@ -95,7 +96,7 @@ public class PublicEvents {
                     }
                 } else {
                     Log.d("nullResponse", "response body is null");
-                    l1 = new PubEvAdapter(new PubEvCallback(), new EventList().getList(), l.getContext());
+                    l1 = new PubEvAdapter(new EventCallback(), new EventList().getList());
                     l1.clearEventList();
                     mRecyclerView.setAdapter(l1);
                 }

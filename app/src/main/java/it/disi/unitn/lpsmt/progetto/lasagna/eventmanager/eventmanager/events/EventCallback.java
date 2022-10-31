@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 
-public class PubEvCallback extends DiffUtil.ItemCallback<Event> {
+public class EventCallback extends DiffUtil.ItemCallback<Event> {
     @Override
     public boolean areItemsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
         boolean eq = false;

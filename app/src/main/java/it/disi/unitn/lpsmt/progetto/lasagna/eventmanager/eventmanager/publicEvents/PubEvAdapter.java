@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,23 +16,19 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 
 public class PubEvAdapter extends ListAdapter<Event, ViewHolder> {
     private List<Event> evList;
-    private Context mContext;
 
     /**
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
      * @param pubL La lista di eventi pubblici ottenuta da remoto
-     * @param c Il contesto a cui agganciare le View che saranno originate usando i metodi di questa classe.
      */
-    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> pubL, Context c) {
+    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> pubL) {
         super(diffCallback);
         evList = pubL;
-        mContext = c;
     }
 
     public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
         evList = new ArrayList<>();
-        mContext = null;
     }
 
     @NonNull
@@ -50,7 +45,7 @@ public class PubEvAdapter extends ListAdapter<Event, ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bindData(evList.get(position), mContext);
+        holder.bindData(evList.get(position));
     }
 
     public void clearEventList() {

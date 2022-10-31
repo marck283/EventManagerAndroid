@@ -1,7 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_calendar;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +8,13 @@ import android.widget.CalendarView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentUserCalendarBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_calendar.event_dialog.EventDialog;
 
@@ -20,14 +22,10 @@ public class UserCalendarFragment extends Fragment {
 
     private FragmentUserCalendarBinding binding;
     private View view;
-    private String idToken;
     private NavigationSharedViewModel vm;
-    private UserCalendarViewModel userCalendarViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        userCalendarViewModel =
-                new ViewModelProvider(this).get(UserCalendarViewModel.class);
 
         binding = FragmentUserCalendarBinding.inflate(inflater, container, false);
         view = binding.getRoot();
@@ -43,18 +41,13 @@ public class UserCalendarFragment extends Fragment {
         super.onStart();
 
         CalendarView v = view.findViewById(R.id.calendarView);
-        v.setOnDateChangeListener((v1, y, m, d) -> vm.getToken().observe(requireActivity(), o -> {
-            idToken = o;
-            if(idToken != null && !idToken.equals("")) {
-                userCalendarViewModel.getEvents(idToken, d, m, y, requireActivity().findViewById(R.id.constraintLayout));
-
-                //Click su un giorno del mese per mostrare gli eventi.
-                EventDialog dialog = new EventDialog(requireContext(), d, m);
-                dialog.showDialog();
-            } else {
-                Log.i("noToken", "no user token");
-            }
-        }));
+        v.setOnDateChangeListener((v1, d, m, y) -> {
+            FragmentManager m1 = getChildFragmentManager();
+            FragmentTransaction t = m1.beginTransaction();
+            EventDialog e = EventDialog.newInstance(new GSignIn(requireActivity()).getAccount().getIdToken(), d, m + 1, y);
+            t.add(e, "");
+            t.commit();
+        });
     }
 
     @Override
