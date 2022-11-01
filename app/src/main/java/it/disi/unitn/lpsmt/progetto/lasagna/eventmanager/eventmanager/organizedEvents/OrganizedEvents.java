@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventList;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents.PrivEvAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrganizedEvents {
     private final OrganizedEventsInterface orgEv;
-    private final RecyclerView rv;
+    private final RecyclerView mRecyclerView;
     private final RecyclerView.LayoutManager lm;
     private OrgEvAdapter p1;
 
@@ -31,11 +30,11 @@ public class OrganizedEvents {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         orgEv = retro.create(OrganizedEventsInterface.class);
-        rv = layout.findViewById(R.id.organizer_recycler_view);
+        mRecyclerView = layout.findViewById(R.id.organizer_recycler_view);
         lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL, false);
-        rv.setLayoutManager(lm);
+        mRecyclerView.setLayoutManager(lm);
         p1 = new OrgEvAdapter(new EventCallback());
-        rv.setAdapter(p1);
+        mRecyclerView.setAdapter(p1);
     }
 
     public void getOrgEvents(String authToken, String data) {
@@ -61,7 +60,7 @@ public class OrganizedEvents {
                         if(ev != null && ev.getList().size() > 0) {
                             p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                             p1.submitList(ev.getList());
-                            rv.setAdapter(p1);
+                            mRecyclerView.setAdapter(p1);
                         } else {
                             Log.i("nullP", "Event list is null");
                         }
@@ -72,7 +71,7 @@ public class OrganizedEvents {
                     Log.i("noResponse", "response is null");
                     p1 = new OrgEvAdapter(new EventCallback(), new EventList().getList());
                     p1.clearEventList();
-                    rv.setAdapter(p1);
+                    mRecyclerView.setAdapter(p1);
                 }
             }
 
