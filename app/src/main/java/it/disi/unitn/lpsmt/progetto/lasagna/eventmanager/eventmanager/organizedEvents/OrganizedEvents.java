@@ -57,6 +57,7 @@ public class OrganizedEvents {
                 if(response.body() != null) {
                     if(response.isSuccessful()) {
                         ev = ev.parseJSON(response.body());
+                        Log.i("orgEvResponse", String.valueOf(response.body()));
                         if(ev != null && ev.getList().size() > 0) {
                             p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                             p1.submitList(ev.getList());

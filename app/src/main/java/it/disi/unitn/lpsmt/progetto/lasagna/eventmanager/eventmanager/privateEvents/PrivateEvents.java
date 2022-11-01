@@ -4,7 +4,6 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,9 +19,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PrivateEvents {
-    private PrivateEventsInterface privEv;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager lm;
+    private final PrivateEventsInterface privEv;
+    private final RecyclerView mRecyclerView;
+    private final RecyclerView.LayoutManager lm;
     private PrivEvAdapter p1;
 
     public PrivateEvents(@NonNull View layout) {
