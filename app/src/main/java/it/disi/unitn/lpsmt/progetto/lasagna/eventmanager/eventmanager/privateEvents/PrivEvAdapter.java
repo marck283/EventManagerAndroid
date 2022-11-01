@@ -15,15 +15,13 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.ViewHolder;
 
-public class PrivEvAdapter extends ListAdapter<Event, ViewHolder> {
+public class PrivEvAdapter extends ListAdapter<Event, PrivEvViewHolder> {
     private List<Event> evList;
 
     public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
         super(diffCallback);
-        this.evList = new ArrayList<>();
-        this.evList.addAll(evList);
+        this.evList = evList;
     }
 
     protected PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
@@ -52,12 +50,12 @@ public class PrivEvAdapter extends ListAdapter<Event, ViewHolder> {
      */
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PrivEvViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.event_dialog_text_view, parent, false);
         // Return a new view holder
 
-        return new ViewHolder(view);
+        return new PrivEvViewHolder(view);
     }
 
     /**
@@ -81,13 +79,14 @@ public class PrivEvAdapter extends ListAdapter<Event, ViewHolder> {
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PrivEvViewHolder holder, int position) {
         holder.bindData(evList.get(position));
     }
 
     public void clearEventList() {
-        if(evList != null) {
+        if(evList != null && evList.size() > 0) {
             evList.clear();
+            notifyDataSetChanged();
         }
     }
 }

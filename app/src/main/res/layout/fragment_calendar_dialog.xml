@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     android:id="@+id/dialog_constraintLayout">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="382dp"
-        android:layout_height="242dp"
-        android:layout_marginTop="72dp"
+        android:layout_height="442dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,21 +24,21 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/organizer_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="91dp"
+            android:layout_height="wrap_content"
             android:translationY="25dp" />
 
         <TextView
             android:id="@+id/textView23"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
             android:text="@string/events_participate_text_view"
-            android:translationY="125dp" />
+            android:textAlignment="center"
+            android:translationY="225dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/personal_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="91dp"
-            android:translationY="150dp" />
-    </androidx.cardview.widget.CardView>
+            android:layout_height="wrap_content"
+            android:translationY="250dp" />
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

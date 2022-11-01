@@ -22,7 +22,6 @@ public class EventDialogViewModel extends ViewModel {
 
     public void getEvents(String authToken, int d, int m, int y, ConstraintLayout l) {
         PrivateEvents privEv = new PrivateEvents(l);
-        Log.i("date", padStart(String.valueOf(m)) + "-" + padStart(String.valueOf(y)) + "-" + d);
         privEv.getPersonalEvents(authToken, padStart(String.valueOf(m)) + "-" + padStart(String.valueOf(y)) + "-" + d, l);
     }
 }

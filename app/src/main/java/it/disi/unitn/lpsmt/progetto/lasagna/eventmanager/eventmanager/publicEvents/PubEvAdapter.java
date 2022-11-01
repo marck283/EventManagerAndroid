@@ -49,7 +49,7 @@ public class PubEvAdapter extends ListAdapter<Event, ViewHolder> {
     }
 
     public void clearEventList() {
-        if(evList.size() > 0) {
+        if(evList != null && evList.size() > 0) {
             evList.clear();
             notifyDataSetChanged();
         }

@@ -34,7 +34,7 @@ public class PrivateEvents {
 
         //Qui imposta la RecyclerView, il LayoutManager e l'Adapter
         mRecyclerView = layout.findViewById(R.id.personal_recycler_view);
-        lm = new LinearLayoutManager(layout.getContext());
+        lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(lm);
         p1 = new PrivEvAdapter(new EventCallback());
         mRecyclerView.setAdapter(p1);
@@ -59,6 +59,7 @@ public class PrivateEvents {
                 if(response.body() != null) {
                     if(response.isSuccessful()) {
                         ev = ev.parseJSON(response.body());
+                        Log.i("response", String.valueOf(response.body()));
 
                         //Qui serviti della RecyclerView per impostare l'Adapter.
                         if(ev != null && ev.getList().size() > 0) {
@@ -73,7 +74,6 @@ public class PrivateEvents {
                     }
                 } else {
                     Log.i("null", "response is null");
-                    Log.i("response", String.valueOf(response));
                     p1 = new PrivEvAdapter(new EventCallback(), new EventList().getList());
                     p1.clearEventList();
                     mRecyclerView.setAdapter(p1);
