@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -14,13 +13,12 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 
-public class PrivEvAdapter extends EventAdapter {
-
-    public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
+public class OrgEvAdapter extends EventAdapter {
+    public OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
         super(diffCallback, evList);
     }
 
-    protected PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+    protected OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
     }
 
@@ -43,13 +41,13 @@ public class PrivEvAdapter extends EventAdapter {
      * @return A new ViewHolder that holds a View of the given view type.
      * @see #getItemViewType(int)
      */
-    @Override
     @NonNull
-    public PrivEvViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    @Override
+    public OrgEvViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.event_dialog_text_view, parent, false);
         // Return a new view holder
 
-        return new PrivEvViewHolder(view);
+        return new OrgEvViewHolder(view);
     }
 }

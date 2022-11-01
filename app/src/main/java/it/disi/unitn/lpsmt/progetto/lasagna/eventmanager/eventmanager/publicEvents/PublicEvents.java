@@ -22,8 +22,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PublicEvents {
     private final PublicEventsInterface pubEv;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private final RecyclerView mRecyclerView;
+    private final RecyclerView.LayoutManager mLayoutManager;
     private PubEvAdapter l1;
 
     /**
@@ -85,7 +85,7 @@ public class PublicEvents {
                             //Poiché i risultati vengono ricevuti su un thread secondario, non posso
                             //aggiornare l'interfaccia utente all'interno di questo metodo.
                             l1 = new PubEvAdapter(new EventCallback(), l2.getList());
-                            l1.submitList(l2.getList()); //Questa riga di codice potrebbe causare problemi alla lista da visualizzare...
+                            l1.submitList(l2.getList());
                             mRecyclerView.setAdapter(l1);
                             l2.print();
                         } else {

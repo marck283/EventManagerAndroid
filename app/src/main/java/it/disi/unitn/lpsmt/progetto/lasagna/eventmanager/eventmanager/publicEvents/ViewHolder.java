@@ -1,20 +1,19 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
-public class ViewHolder extends RecyclerView.ViewHolder {
-    private ImageView imgView;
-    private TextView evName, catName; //TextView per il nome dell'evento e la sua categoria
+public class ViewHolder extends EventHolder {
+    private final ImageView imgView;
+    private final TextView evName, catName; //TextView per il nome dell'evento e la sua categoria
 
     public ViewHolder(@NonNull View itemView) {
         super(itemView);

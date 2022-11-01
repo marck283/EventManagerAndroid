@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents;
 
 import android.util.Log;
 import android.view.View;
@@ -10,10 +10,10 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
-public class PrivEvViewHolder extends EventHolder {
+public class OrgEvViewHolder extends EventHolder {
     private final TextView t;
 
-    public PrivEvViewHolder(@NonNull View itemView) {
+    public OrgEvViewHolder(@NonNull View itemView) {
         super(itemView);
         t = itemView.findViewById(R.id.event_name_text_view);
         t.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -22,6 +22,7 @@ public class PrivEvViewHolder extends EventHolder {
         });
     }
 
+    @Override
     public void bindData(Event dataModel) {
         try {
             t.setText(dataModel.getString("name"));
