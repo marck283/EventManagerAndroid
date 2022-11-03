@@ -72,6 +72,12 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.show();
     }
 
+    private void showCreaEvento() {
+        Intent i = new Intent(this, EventCreationActivity.class);
+        i.putExtra("accessToken", account.getAccount().getIdToken());
+        startActivity(i);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +89,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> {
             if(account.getAccount() == null) {
                 setAlertDialog();
+            } else {
+                showCreaEvento();
             }
         });
 
@@ -239,9 +247,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             if(requestCode == REQ_SIGN_IN_EV_CREATION) {
                 signInCheck(resultCode, data);
                 if(resultCode == Activity.RESULT_OK) {
-                    Intent i = new Intent(this, EventCreationActivity.class);
-                    i.putExtra("accessToken", account.getAccount().getIdToken());
-                    startActivity(i);
+                    showCreaEvento();
                 }
             }
         }
