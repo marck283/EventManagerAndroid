@@ -23,10 +23,14 @@
             android:name=".ui.event_creation.EventCreationActivity"
             android:exported="false"
             android:label="@string/title_activity_event_creation"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:parentActivityName="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity">
             <meta-data
                 android:name="access_token"
                 android:value="" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="NavigationDrawerActivity" />
         </activity>
 
         <meta-data

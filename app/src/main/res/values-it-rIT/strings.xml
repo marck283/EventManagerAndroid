@@ -38,4 +38,5 @@
     <string name="events_participate_text_view">Eventi a cui parteciperai</string>
     <string name="no_connection">Nessuna connessione Internet disponibile</string>
     <string name="no_connection_message">Nessuna connessione Internet disponibile.</string>
+    <string name="title_activity_event_creation">Creazione eventi</string>
 </resources>
