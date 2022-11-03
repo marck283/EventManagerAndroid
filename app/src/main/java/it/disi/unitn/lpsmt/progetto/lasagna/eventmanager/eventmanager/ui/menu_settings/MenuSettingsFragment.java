@@ -12,19 +12,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.BuildConfig;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentMenuSettingsBinding;
 
 public class MenuSettingsFragment extends Fragment {
-
-    public static MenuSettingsFragment newInstance() {
-        return new MenuSettingsFragment();
-    }
+    private FragmentMenuSettingsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         MenuSettingsViewModel menuSettingsViewModel =
                 new ViewModelProvider(this).get(MenuSettingsViewModel.class);
 
-        return inflater.inflate(R.layout.fragment_menu_settings, container, false);
+        binding = FragmentMenuSettingsBinding.inflate(inflater, container, false);
+
+        return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
