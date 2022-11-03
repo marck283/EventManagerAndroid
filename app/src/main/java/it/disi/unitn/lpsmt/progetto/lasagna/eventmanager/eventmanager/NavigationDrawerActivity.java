@@ -132,6 +132,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     private void navigate(int resId) {
+        //Per navigare tra i Fragment di una stessa Activity, in realtà, basta dire all'applicazione
+        //di spostare ogni volta il NavController sul Fragment di destinazione...
         Navigation.findNavController(findViewById(R.id.nav_host_fragment_content_navigation_drawer)).navigate(resId);
     }
 
