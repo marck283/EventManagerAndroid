@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -49,9 +50,27 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private GSignIn account;
     private NavigationView navView;
-    private static final int REQ_SIGN_IN = 2;
+    private static final int REQ_SIGN_IN = 2, REQ_SIGN_IN_EV_CREATION = 3;
     private DBThread t1;
     private NavigationSharedViewModel vm;
+
+    private void setAlertDialog() {
+        AlertDialog d = new AlertDialog.Builder(this).create();
+        d.setTitle(getString(R.string.no_session_title));
+        d.setMessage(getString(R.string.no_session_content));
+        d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN_EV_CREATION));
+        d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
+        d.setOnDismissListener(d1 -> {
+            account.setAccount(null);
+            updateUI();
+        });
+        d.setOnCancelListener(d1 -> {
+            account.setAccount(null);
+            updateUI();
+        });
+        d.setCanceledOnTouchOutside(true);
+        d.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +81,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> {
-            Intent i = new Intent(this, EventCreationActivity.class);
-            i.putExtra("accessToken", account.getAccount().getIdToken());
-            startActivity(i);
+            if(account.getAccount() == null) {
+                setAlertDialog();
+            }
         });
 
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
@@ -98,19 +117,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             } catch(ApiException ex) {
                 Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
             }
-        }, e -> {
-            AlertDialog d = new AlertDialog.Builder(this).create();
-            d.setTitle(getString(R.string.no_session_title));
-            d.setMessage(getString(R.string.no_session_content));
-            d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN));
-            d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
-            d.setOnDismissListener(d1 -> {
-                account.setAccount(null);
-                updateUI();
-            });
-            d.setCanceledOnTouchOutside(true);
-            d.show();
-        });
+        }, e -> setAlertDialog());
     }
 
     public NavigationSharedViewModel getViewModel() {
@@ -200,28 +207,41 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         startActivityForResult(intent, REQ_SIGN_IN);
     }
 
+    private void signInCheck(int resultCode, @NonNull Intent data) {
+        switch(resultCode) {
+            case Activity.RESULT_OK: {
+                //Autenticato con successo a Google, ora autentica al server e
+                //mostra i dati del profilo richiesti
+
+                if(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
+                    account.setAccount(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount"));
+                } else {
+                    account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
+                }
+                updateUI();
+                break;
+            }
+            case Activity.RESULT_CANCELED: {
+                account.setAccount(null);
+                updateUI();
+                break;
+            }
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQ_SIGN_IN) {
-            switch(resultCode) {
-                case Activity.RESULT_OK: {
-                    //Autenticato con successo a Google, ora autentica al server e
-                    //mostra i dati del profilo richiesti
-
-                    if(data != null && data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
-                        account.setAccount(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount"));
-                    } else {
-                        account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
-                    }
-                    updateUI();
-                    break;
-                }
-                case Activity.RESULT_CANCELED: {
-                    account.setAccount(null);
-                    updateUI();
-                    break;
+            signInCheck(resultCode, data);
+        } else {
+            if(requestCode == REQ_SIGN_IN_EV_CREATION) {
+                signInCheck(resultCode, data);
+                if(resultCode == Activity.RESULT_OK) {
+                    Intent i = new Intent(this, EventCreationActivity.class);
+                    i.putExtra("accessToken", account.getAccount().getIdToken());
+                    startActivity(i);
                 }
             }
         }
