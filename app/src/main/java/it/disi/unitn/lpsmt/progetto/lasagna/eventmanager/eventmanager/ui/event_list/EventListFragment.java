@@ -1,5 +1,10 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
+import static android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentEventListBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment;
 
 public class EventListFragment extends Fragment {
 
@@ -61,20 +66,24 @@ public class EventListFragment extends Fragment {
 
         vm.getToken().observe(requireActivity(), o -> {
             idToken = o;
+
+            NetworkRequest req = new NetworkRequest.Builder()
+                    .addCapability(NET_CAPABILITY_INTERNET)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    .build();
+            NetworkCallback nc = new NetworkCallback(requireActivity());
+            ConnectivityManager connectivityManager = requireActivity().getSystemService(ConnectivityManager.class);
+            connectivityManager.registerNetworkCallback(req, nc);
+
             eventListViewModel.getEvents(root, idToken);
             RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
             if(rv != null) {
                 rv.invalidate();
             }
-        });
-    }
 
-    public void showSettings() {
-        //Da rivedere perché sarebbe di competenza dell'Activity NavigationDrawerActivity
-        MenuSettingsFragment f = new MenuSettingsFragment();
-        requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.constraintLayout, f)
-                .addToBackStack("settingsFragment")
-                .commit();
+            connectivityManager.unregisterNetworkCallback(nc);
+        });
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {

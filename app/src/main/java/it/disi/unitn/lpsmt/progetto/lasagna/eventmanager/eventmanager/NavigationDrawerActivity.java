@@ -18,7 +18,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -41,6 +40,8 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GS
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBProfileImage;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
@@ -60,8 +61,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
-        binding.appBarNavigationDrawer.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show());
+        binding.appBarNavigationDrawer.fab.setOnClickListener(view -> {
+            Intent i = new Intent(this, EventCreationActivity.class);
+            i.putExtra("accessToken", account.getAccount().getIdToken());
+            startActivity(i);
+        });
 
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
 
@@ -100,12 +104,25 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             d.setMessage(getString(R.string.no_session_content));
             d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN));
             d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
+            d.setOnDismissListener(d1 -> {
+                account.setAccount(null);
+                updateUI();
+            });
+            d.setCanceledOnTouchOutside(true);
             d.show();
         });
     }
 
     public NavigationSharedViewModel getViewModel() {
         return vm;
+    }
+
+    public void showSettings() {
+        //Da rivedere perché sarebbe di competenza dell'Activity NavigationDrawerActivity
+        MenuSettingsFragment f = new MenuSettingsFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.constraintLayout, f)
+                .addToBackStack("settingsFragment")
+                .commit();
     }
 
     private Bitmap getImageBitmap(String uri) {
@@ -131,7 +148,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
         TextView username = l.findViewById(R.id.profile_name);
         TextView email = l.findViewById(R.id.profile_email);
-
+        Log.i("account", String.valueOf(account.getAccount()));
         if(account.getAccount() == null) {
             navView.inflateMenu(R.menu.navmenu_not_logged_in);
             username.setText("");
