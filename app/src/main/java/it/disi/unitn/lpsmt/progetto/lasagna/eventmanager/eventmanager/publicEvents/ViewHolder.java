@@ -13,13 +13,13 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 
 public class ViewHolder extends EventHolder {
     private final ImageView imgView;
-    private final TextView evName, catName; //TextView per il nome dell'evento e la sua categoria
+    private final TextView evName, orgName, firstDate, firstHour; //TextView per le informazioni sull'evento
 
     public ViewHolder(@NonNull View itemView) {
         super(itemView);
         imgView = itemView.findViewById(R.id.imageView2);
         evName = itemView.findViewById(R.id.textView3);
-        catName = itemView.findViewById(R.id.textView5);
+        orgName = itemView.findViewById(R.id.textView5);
 
         itemView.setOnClickListener(l -> {
             //Avvia un'altra Activity che richiede le informazioni sull'evento
@@ -32,7 +32,6 @@ public class ViewHolder extends EventHolder {
         try {
             imgView.setImageBitmap(dataModel.decodeBase64());
             evName.setText(dataModel.getString("name"));
-            catName.setText(dataModel.getString("category"));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -12,7 +12,6 @@
     <string name="user_profile">Profilo</string>
     <string name="menu_user_logout">Esci</string>
     <string name="event_name">"Attività: "</string>
-    <string name="event_category_name">"Categoria: "</string>
     <string name="event_duration">"Durata: "</string>
     <string name="event_address">Indirizzo:</string>
     <string name="event_city">"Città: "</string>
@@ -39,4 +38,7 @@
     <string name="no_connection">Nessuna connessione Internet disponibile</string>
     <string name="no_connection_message">Nessuna connessione Internet disponibile.</string>
     <string name="title_activity_event_creation">Creazione eventi</string>
+    <string name="event_time">Ora inizio:</string>
+    <string name="event_day">Data:</string>
+    <string name="organizer_name">Organizzatore:</string>
 </resources>
