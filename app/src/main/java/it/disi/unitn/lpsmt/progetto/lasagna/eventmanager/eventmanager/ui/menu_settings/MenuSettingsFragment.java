@@ -15,6 +15,10 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class MenuSettingsFragment extends Fragment {
 
+    public static MenuSettingsFragment newInstance() {
+        return new MenuSettingsFragment();
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         MenuSettingsViewModel menuSettingsViewModel =

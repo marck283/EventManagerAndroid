@@ -13,22 +13,18 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentUserCalendarBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_calendar.event_dialog.EventDialog;
 
 public class UserCalendarFragment extends Fragment {
 
-    private FragmentUserCalendarBinding binding;
     private View view;
     private NavigationSharedViewModel vm;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentUserCalendarBinding.inflate(inflater, container, false);
-        view = binding.getRoot();
+        view = inflater.inflate(R.layout.fragment_user_calendar, container, false);
 
         return view;
     }
@@ -48,11 +44,5 @@ public class UserCalendarFragment extends Fragment {
             t.add(e, "");
             t.commit();
         });
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }
