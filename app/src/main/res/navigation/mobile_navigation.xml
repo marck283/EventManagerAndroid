@@ -9,13 +9,36 @@
         android:id="@+id/nav_event_list"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment"
         android:label="@string/menu_event_list"
-        tools:layout="@layout/fragment_event_list" />
+        tools:layout="@layout/fragment_event_list" >
+        <action
+            android:id="@+id/action_nav_event_list_to_nav_user_calendar"
+            app:destination="@id/nav_user_calendar" />
+        <action
+            android:id="@+id/action_nav_event_list_to_nav_user_settings"
+            app:destination="@id/nav_user_settings" />
+        <action
+            android:id="@+id/action_nav_event_list_to_nav_user_profile"
+            app:destination="@id/nav_user_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_user_calendar"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_calendar.UserCalendarFragment"
         android:label="@string/menu_user_calendar"
-        tools:layout="@layout/fragment_user_calendar" />
+        tools:layout="@layout/fragment_user_calendar" >
+        <action
+            android:id="@+id/action_nav_user_calendar_to_user_calendar_dialog"
+            app:destination="@id/user_calendar_dialog" />
+        <action
+            android:id="@+id/action_nav_user_calendar_to_nav_event_list"
+            app:destination="@id/nav_event_list" />
+        <action
+            android:id="@+id/action_nav_user_calendar_to_nav_user_settings"
+            app:destination="@id/nav_user_settings" />
+        <action
+            android:id="@+id/action_nav_user_calendar_to_nav_user_profile"
+            app:destination="@id/nav_user_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/user_calendar_dialog"
@@ -27,12 +50,32 @@
         android:id="@+id/nav_user_settings"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment"
         android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_menu_settings" />
+        tools:layout="@layout/fragment_menu_settings" >
+        <action
+            android:id="@+id/action_nav_user_settings_to_nav_event_list"
+            app:destination="@id/nav_event_list" />
+        <action
+            android:id="@+id/action_nav_user_settings_to_nav_user_calendar"
+            app:destination="@id/nav_user_calendar" />
+        <action
+            android:id="@+id/action_nav_user_settings_to_nav_user_profile"
+            app:destination="@id/nav_user_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_user_profile"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile.UserProfileFragment"
         android:label="@string/user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        tools:layout="@layout/fragment_user_profile" >
+        <action
+            android:id="@+id/action_nav_user_profile_to_nav_user_settings"
+            app:destination="@id/nav_user_settings" />
+        <action
+            android:id="@+id/action_nav_user_profile_to_nav_event_list"
+            app:destination="@id/nav_event_list" />
+        <action
+            android:id="@+id/action_nav_user_profile_to_nav_user_calendar"
+            app:destination="@id/nav_user_calendar" />
+    </fragment>
 
 </navigation>

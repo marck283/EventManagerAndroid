@@ -6,7 +6,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +16,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentEventListBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 
 public class EventListFragment extends Fragment {
 
-    private FragmentEventListBinding binding;
     private EventListViewModel eventListViewModel;
     private View root;
     private String idToken = "";
@@ -34,7 +31,6 @@ public class EventListFragment extends Fragment {
         Bundle args = getArguments();
         if(args != null && args.getString("accessToken") != null) {
             idToken = args.getString("accessToken");
-            Log.i("token3", idToken);
         } else {
             if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
                 idToken = savedInstanceState.getString("accessToken");
@@ -44,8 +40,7 @@ public class EventListFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentEventListBinding.inflate(inflater, container, false);
-        root = binding.getRoot();
+        root = inflater.inflate(R.layout.fragment_event_list, container, false);
 
         if(savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
             idToken = savedInstanceState.getString("accessToken");
@@ -88,11 +83,5 @@ public class EventListFragment extends Fragment {
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString("accessToken", idToken);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }

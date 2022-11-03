@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -42,7 +44,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
@@ -53,6 +54,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private static final int REQ_SIGN_IN = 2, REQ_SIGN_IN_EV_CREATION = 3;
     private DBThread t1;
     private NavigationSharedViewModel vm;
+    private ActivityNavigationDrawerBinding binding;
 
     private void setAlertDialog() {
         AlertDialog d = new AlertDialog.Builder(this).create();
@@ -61,10 +63,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN_EV_CREATION));
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
-            account.setAccount(null);
-            updateUI();
-        });
-        d.setOnCancelListener(d1 -> {
             account.setAccount(null);
             updateUI();
         });
@@ -82,7 +80,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityNavigationDrawerBinding binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
+        binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
@@ -111,6 +109,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
             NavController navController = nhf.getNavController();
+            navController.setGraph(R.navigation.mobile_navigation);
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(binding.navView, navController);
         }
@@ -132,12 +131,28 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         return vm;
     }
 
-    public void showSettings() {
-        //Da rivedere perché sarebbe di competenza dell'Activity NavigationDrawerActivity
-        MenuSettingsFragment f = new MenuSettingsFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.constraintLayout, f)
-                .addToBackStack("settingsFragment")
-                .commit();
+    private void navigate(int resId) {
+        Navigation.findNavController(findViewById(R.id.nav_host_fragment_content_navigation_drawer)).navigate(resId);
+    }
+
+    public void hideAllFragments(@NonNull MenuItem item) {
+        FragmentManager fm = getSupportFragmentManager();
+        NavHostFragment helper = (NavHostFragment) fm.findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
+
+        int itemId = item.getItemId();
+        DrawerLayout d = findViewById(R.id.drawer_layout);
+
+        if(helper != null) {
+            if(itemId == R.id.nav_user_settings || itemId == R.id.action_settings) {
+                navigate(R.id.nav_user_settings);
+            } else {
+                navigate(itemId);
+            }
+        } else {
+            Log.i("noFragment", "no fragment with that id");
+        }
+
+        d.closeDrawers();
     }
 
     private Bitmap getImageBitmap(String uri) {
@@ -196,7 +211,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     public void revokeAccess(MenuItem item) {
-        //Prima di eseguire la disconnessione da Google dovrei eseguire la disconnessione dell'utente dal mio server... o no?
         Task<Void> t = account.signOut();
         t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
         t.addOnCompleteListener(c -> {
