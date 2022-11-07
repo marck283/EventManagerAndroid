@@ -72,4 +72,12 @@
     <string name="event_day">Day:</string>
     <string name="organizer_name">Organizer:</string>
     <string name="organizer_name_value" translatable="false">%1$s</string>
+    <string name="event_creation_title">Create an event</string>
+    <string name="event_name_text_view">Event name</string>
+    <string name="speak">Speak</string>
+    <string name="insert_event_name">Insert event name</string>
+    <string name="category_selection">Category selection</string>
+    <string name="category_selection_text_view">Category: </string>
+    <string name="private_event_creation">Private event</string>
+    <string name="event_creation_next">Next</string>
 </resources>

@@ -41,4 +41,12 @@
     <string name="event_time">Ora inizio:</string>
     <string name="event_day">Data:</string>
     <string name="organizer_name">Organizzatore:</string>
+    <string name="event_creation_title">Crea un evento</string>
+    <string name="event_name_text_view">Nome dell\'evento</string>
+    <string name="speak">Parla</string>
+    <string name="insert_event_name">Inserisci nome evento</string>
+    <string name="category_selection">Selezione categoria</string>
+    <string name="category_selection_text_view">"Categoria: "</string>
+    <string name="private_event_creation">Evento privato</string>
+    <string name="event_creation_next">Continua</string>
 </resources>

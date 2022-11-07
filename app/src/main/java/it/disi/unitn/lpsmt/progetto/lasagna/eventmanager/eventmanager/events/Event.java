@@ -16,6 +16,9 @@ public class Event {
     private String eventid; //ID dell'evento
     private String self; //URL dell'evento
     private String name, category, eventPic; //Informazioni sull'evento
+    private String orgName;
+    private String[] days;
+    private String hours;
 
     /**
      * Costruisce l'oggetto PublicEvent. NOTA: nessuno dei seguenti parametri pu&ograve; essere null.
@@ -27,13 +30,17 @@ public class Event {
      * @param ep L'immagine dell'evento codificata come valore stringa base64
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
-                       @NotNull String n, @NotNull String c, @NotNull String ep) {
+                       @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,
+                 @NotNull String[] days, @NotNull String hours) {
         this.id = id;
         eventid = idevent;
         self = s;
         name = n;
         category = c;
         eventPic = ep;
+        this.orgName = orgName;
+        this.days = days;
+        this.hours = hours;
     }
 
     //Metodo di stampa per il debug
@@ -53,6 +60,14 @@ public class Event {
                 .replace("data:image/png;base64,", "")
                 .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
         return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+    }
+
+    public String[] getDays() {
+        return days;
+    }
+
+    public String getHours() {
+        return hours;
     }
 
     /**
@@ -80,6 +95,9 @@ public class Event {
             }
             case "eventPic": {
                 return eventPic;
+            }
+            case "orgName": {
+                return orgName;
             }
             default: {
                 Log.i("field", field);

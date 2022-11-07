@@ -21,4 +21,11 @@
     <string name="scrollview" translatable="false">ScrollView</string>
     <string name="scroll_view">ScrollView</string>
     <string name="organizer_name">Organizer:</string>
+    <string name="event_creation_title">Create an event</string>
+    <string name="event_name_text_view">Event name</string>
+    <string name="speak">Speak</string>
+    <string name="category_selection">Category selection</string>
+    <string name="category_selection_text_view">"Categoria: "</string>
+    <string name="private_event_creation">Private event</string>
+    <string name="event_creation_next">Next</string>
 </resources>

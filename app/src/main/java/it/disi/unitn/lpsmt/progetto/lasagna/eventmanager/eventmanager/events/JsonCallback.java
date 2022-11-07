@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
@@ -54,7 +55,7 @@ public class JsonCallback implements Callback<JsonObject> {
      * @param response
      */
     @Override
-    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+    public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
         EventList ev = new EventList();
         if(response.body() != null) {
             if(response.isSuccessful()) {
@@ -62,6 +63,9 @@ public class JsonCallback implements Callback<JsonObject> {
                 Log.i("orgEvResponse", String.valueOf(response.body()));
                 if(ev != null && ev.getList().size() > 0) {
                     initAdapter(ev);
+                    if(p1 instanceof OrgEvAdapter) {
+                        Log.i("count", String.valueOf(p1.getItemCount()));
+                    }
                     p1.submitList(ev.getList());
                     mRecyclerView.setAdapter(p1);
                 } else {
@@ -86,7 +90,7 @@ public class JsonCallback implements Callback<JsonObject> {
      * @param t
      */
     @Override
-    public void onFailure(Call<JsonObject> call, Throwable t) {
+    public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
         try {
             throw t;
         } catch (Throwable e) {

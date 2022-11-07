@@ -19,7 +19,9 @@ public class ViewHolder extends EventHolder {
         super(itemView);
         imgView = itemView.findViewById(R.id.imageView2);
         evName = itemView.findViewById(R.id.textView3);
-        orgName = itemView.findViewById(R.id.textView5);
+        orgName = itemView.findViewById(R.id.organizerName);
+        firstDate = itemView.findViewById(R.id.dayTextView);
+        firstHour = itemView.findViewById(R.id.firstHour);
 
         itemView.setOnClickListener(l -> {
             //Avvia un'altra Activity che richiede le informazioni sull'evento
@@ -32,6 +34,9 @@ public class ViewHolder extends EventHolder {
         try {
             imgView.setImageBitmap(dataModel.decodeBase64());
             evName.setText(dataModel.getString("name"));
+            orgName.setText(dataModel.getString("orgName"));
+            firstDate.setText(dataModel.getDays()[0]);
+            firstHour.setText(dataModel.getHours());
         } catch (Exception e) {
             e.printStackTrace();
         }
