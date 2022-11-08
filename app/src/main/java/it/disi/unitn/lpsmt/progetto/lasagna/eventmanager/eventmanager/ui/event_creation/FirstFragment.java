@@ -31,7 +31,10 @@ public class FirstFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        //Richiedo un'istanza di Spinner (menù dropdown). Maggiori informazioni qui:
+        // https://developer.android.com/develop/ui/views/components/spinner#java
         Spinner spinner = requireActivity().findViewById(R.id.planets_spinner);
+
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.category_spinner_array, android.R.layout.simple_spinner_item);
@@ -41,6 +44,12 @@ public class FirstFragment extends Fragment {
 
         // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+
+        SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
+        spinner.setOnItemSelectedListener(itemSelected);
+        itemSelected.getItem().observe(requireActivity(), o -> {
+            //Aggiornamento di qualche valore nel ViewModel da organizzare per la creazione dell'evento?
+        });
     }
 
     @Override

@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -51,6 +49,9 @@ public class EventCreationActivity extends AppCompatActivity {
             NavController navController = nhf.getNavController();
             NavigationUI.setupWithNavController(binding.toolbar, navController);
         }
+
+        //Controllo di che siano stati garantiti i permessi necessari a registrare la voce dell'utente
+        //Se i peressi non sono garantiti, allora chiamo checkPermission().
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
             checkPermission();
         }
@@ -73,6 +74,7 @@ public class EventCreationActivity extends AppCompatActivity {
     }
 
     private void checkPermission() {
+        //Richiedo i permessi per la registrazione della voce dell'utente
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 23);
     }
 
@@ -83,6 +85,12 @@ public class EventCreationActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    /**
+     * Controlla il risultato della richiesta di permessi effettuata.
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
