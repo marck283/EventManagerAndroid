@@ -5,6 +5,8 @@ import android.speech.SpeechRecognizer;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 public class SpeechOnTouchListener implements View.OnTouchListener {
     private final SpeechRecognizer speechRecognizer;
     private final Intent speechRecognizerIntent;
@@ -24,7 +26,7 @@ public class SpeechOnTouchListener implements View.OnTouchListener {
      * @return True if the listener has consumed the event, false otherwise.
      */
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View v, @NonNull MotionEvent event) {
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 return performClick();
