@@ -49,4 +49,12 @@
     <string name="category_selection_text_view">"Categoria: "</string>
     <string name="private_event_creation">Evento privato</string>
     <string name="event_creation_next">Continua</string>
+    <string name="second_fragment_title">Inserisci data d\'inizio, ora d\'inizio e numero di posti</string>
+    <string name="begin_date">Data d\'inizio</string>
+    <string name="first_fragment_label">Creazione evento</string>
+    <string name="starts_at">Inizia alle</string>
+    <string name="venue">Luogo dell\'evento</string>
+    <string name="total_seats">Posti totali</string>
+    <string name="add_row">Aggiungi riga</string>
+    <string name="second_fragment_label">Creazione evento</string>
 </resources>

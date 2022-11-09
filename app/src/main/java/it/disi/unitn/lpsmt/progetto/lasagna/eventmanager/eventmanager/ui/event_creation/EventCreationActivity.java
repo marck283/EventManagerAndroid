@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -22,9 +23,8 @@ import androidx.navigation.ui.NavigationUI;
 
 import java.util.Locale;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding;
 
 public class EventCreationActivity extends AppCompatActivity {
 
@@ -33,6 +33,7 @@ public class EventCreationActivity extends AppCompatActivity {
     private String idToken;
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
+    private EventViewModel evm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,8 @@ public class EventCreationActivity extends AppCompatActivity {
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
         speechRecognizer.setRecognitionListener(new EventRecognitionListener(this));
+
+        evm = new ViewModelProvider(this).get(EventViewModel.class);
     }
 
     @SuppressLint("ClickableViewAccessibility")

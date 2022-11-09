@@ -10,6 +10,8 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentFirstBinding;
@@ -17,6 +19,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databindin
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
+    private EventViewModel evm;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,10 +30,13 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.button5.setOnClickListener(c -> NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment));
     }
 
     public void onStart() {
         super.onStart();
+
+        evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
 
         //Richiedo un'istanza di Spinner (menù dropdown). Maggiori informazioni qui:
         // https://developer.android.com/develop/ui/views/components/spinner#java
@@ -51,6 +57,7 @@ public class FirstFragment extends Fragment {
         itemSelected.getItem().observe(requireActivity(), o -> {
             //Aggiornamento di qualche valore nel ViewModel da organizzare per la creazione dell'evento?
             Log.i("newValue", (String) o);
+            evm.setCategoria((String) o);
         });
     }
 

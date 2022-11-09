@@ -25,21 +25,44 @@
         android:layout_width="268dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:layout_toEndOf="@id/event_name_text_view"
         android:autofillHints="name"
         android:hint="@string/insert_event_name"
         android:inputType="text"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_name_text_view" />
+
+    <TextView
+        android:id="@+id/event_name_text_view2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/category_selection_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text" />
+
+    <Spinner
+        android:id="@+id/planets_spinner"
+        android:layout_width="265dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@string/category_selection"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/event_name_text_view2" />
 
     <TextView
         android:id="@+id/event_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="32dp"
         android:text="@string/event_name_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,33 +80,14 @@
         app:layout_constraintEnd_toEndOf="@+id/text"
         app:layout_constraintTop_toTopOf="@+id/text" />
 
-    <TextView
-        android:id="@+id/event_name_text_view2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:text="@string/category_selection_text_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
-
-    <Spinner
-        android:id="@+id/planets_spinner"
-        android:layout_width="265dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="12dp"
-        android:contentDescription="@string/category_selection"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_name_text_view2" />
-
     <CheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="28dp"
         android:text="@string/private_event_creation"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/planets_spinner" />
 
@@ -91,9 +95,10 @@
         android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/event_creation_next"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/checkBox" />
 

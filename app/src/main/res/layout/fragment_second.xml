@@ -4,16 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SecondFragment">
+    tools:context=".ui.event_creation.SecondFragment">
 
     <TextView
-        android:id="@+id/textview_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/button_second"
+        android:id="@+id/second_fragment_title"
+        android:layout_width="252dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/second_fragment_title"
+        android:textAlignment="center"
+        android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/second_fragment_title">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                android:id="@+id/textView28"
+                android:layout_width="92dp"
+                android:text="@string/begin_date" />
+
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                android:id="@+id/textView27"
+                android:layout_width="92dp"
+                android:text="@string/starts_at" />
+
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                android:id="@+id/textView25"
+                android:layout_width="92dp"
+                android:text="@string/venue" />
+
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                android:id="@+id/textView26"
+                android:layout_width="92dp"
+                android:text="@string/total_seats" />
+        </TableRow>
+
+        <View
+            android:layout_height="2dip"
+            android:background="#FF909090" />
+
+    </TableLayout>
 
     <Button
         android:id="@+id/button_second"
@@ -22,6 +66,19 @@
         android:text="@string/previous"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_second" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="40dp"
+        android:clickable="true"
+        android:contentDescription="@string/add_row"
+        android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:focusable="true" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
