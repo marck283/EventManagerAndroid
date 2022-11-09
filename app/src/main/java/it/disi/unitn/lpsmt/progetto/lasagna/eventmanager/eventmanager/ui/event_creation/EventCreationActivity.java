@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -68,12 +69,19 @@ public class EventCreationActivity extends AppCompatActivity {
         evm = new ViewModelProvider(this).get(EventViewModel.class);
     }
 
+    public EventViewModel getViewModel() {
+        return evm;
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public void onStart() {
         super.onStart();
 
         ImageButton button = findViewById(R.id.imageButton6);
         button.setOnTouchListener(new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent));
+
+        CheckBox box = findViewById(R.id.checkBox);
+        box.setOnCheckedChangeListener((buttonView, isChecked) -> evm.setPrivEvent(isChecked));
     }
 
     private void checkPermission() {

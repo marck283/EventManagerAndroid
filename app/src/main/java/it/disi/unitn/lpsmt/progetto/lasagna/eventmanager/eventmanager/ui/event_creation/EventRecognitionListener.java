@@ -5,6 +5,8 @@ import android.speech.RecognitionListener;
 import android.speech.SpeechRecognizer;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -47,10 +49,11 @@ public class EventRecognitionListener implements RecognitionListener {
     }
 
     @Override
-    public void onResults(Bundle results) {
+    public void onResults(@NonNull Bundle results) {
         TextView v = a.findViewById(R.id.text);
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         v.setText(data.get(0));
+        a.getViewModel().setNomeAtt(data.get(0));
     }
 
     @Override

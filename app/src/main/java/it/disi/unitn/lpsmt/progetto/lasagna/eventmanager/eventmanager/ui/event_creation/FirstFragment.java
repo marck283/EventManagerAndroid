@@ -1,7 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,11 +53,7 @@ public class FirstFragment extends Fragment {
 
         SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
         spinner.setOnItemSelectedListener(itemSelected);
-        itemSelected.getItem().observe(requireActivity(), o -> {
-            //Aggiornamento di qualche valore nel ViewModel da organizzare per la creazione dell'evento?
-            Log.i("newValue", (String) o);
-            evm.setCategoria((String) o);
-        });
+        itemSelected.getItem().observe(requireActivity(), o -> evm.setCategoria((String) o));
     }
 
     @Override
