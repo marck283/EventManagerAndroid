@@ -8,11 +8,12 @@
 
     <TextView
         android:id="@+id/second_fragment_title"
-        android:layout_width="252dp"
+        android:layout_width="351dp"
         android:layout_height="42dp"
         android:layout_marginTop="16dp"
         android:text="@string/second_fragment_title"
         android:textAlignment="center"
+        android:textSize="9pt"
         android:textStyle="bold|italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
