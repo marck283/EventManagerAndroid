@@ -9,12 +9,12 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager"
         minSdk 24
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
