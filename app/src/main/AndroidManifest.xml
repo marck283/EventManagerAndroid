@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light"
-        tools:targetApi="32">
+        tools:targetApi="33">
         <activity
             android:name=".ui.event_creation.EventCreationActivity"
             android:exported="false"
@@ -53,7 +53,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/fb_login_protocol_scheme" />
+                <data android:scheme="32029c7c252db41bdde3411e6504ae4c" />
             </intent-filter>
         </activity>
         <activity
