@@ -3,9 +3,11 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,11 +58,17 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private NavigationSharedViewModel vm;
     private ActivityNavigationDrawerBinding binding;
 
-    private void setAlertDialog() {
+    private void setAlertDialog(boolean eventCreation) {
         AlertDialog d = new AlertDialog.Builder(this).create();
         d.setTitle(getString(R.string.no_session_title));
         d.setMessage(getString(R.string.no_session_content));
-        d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> account.signIn(this, REQ_SIGN_IN_EV_CREATION));
+        d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+            if(eventCreation) {
+                account.signIn(this, REQ_SIGN_IN_EV_CREATION);
+            } else {
+                account.signIn(this, REQ_SIGN_IN);
+            }
+        });
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
             account.setAccount(null);
@@ -86,7 +94,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> {
             if(account.getAccount() == null) {
-                setAlertDialog();
+                setAlertDialog(false);
             } else {
                 showCreaEvento();
             }
@@ -106,6 +114,14 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         account = new GSignIn(this);
         t1 = new DBThread(this);
 
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        if(dm.heightPixels > dm.widthPixels) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
+
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
             NavController navController = nhf.getNavController();
@@ -124,7 +140,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             } catch(ApiException ex) {
                 Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
             }
-        }, e -> setAlertDialog());
+        }, e -> setAlertDialog(false));
     }
 
     public NavigationSharedViewModel getViewModel() {
