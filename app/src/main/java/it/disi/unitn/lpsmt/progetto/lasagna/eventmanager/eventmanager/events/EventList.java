@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -38,6 +40,9 @@ public class EventList {
         JsonArray arr = response.get("eventi").getAsJsonArray();
         for(JsonElement e: arr) {
             JsonObject eo = e.getAsJsonObject();
+
+            Log.i("info", String.valueOf(fromJson(gs1, eo, "orgName") == null));
+
             Event pe = new Event(fromJson(gs1, eo, "id"),
                     fromJson(gs1, eo, "idevent"),
                     fromJson(gs1, eo, "self"),

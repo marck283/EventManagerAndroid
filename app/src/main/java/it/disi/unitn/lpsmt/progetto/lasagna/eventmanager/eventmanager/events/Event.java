@@ -45,10 +45,11 @@ public class Event {
 
     //Metodo di stampa per il debug
     public void print() {
-        Log.i("info", String.valueOf(id));
-        Log.i("info", String.valueOf(eventid));
-        Log.i("info", String.valueOf(self));
-        Log.i("info", String.valueOf(name));
+        Log.i("info", id);
+        Log.i("info", eventid);
+        Log.i("info", self);
+        Log.i("info", name);
+        Log.i("info", orgName);
     }
 
     /**
