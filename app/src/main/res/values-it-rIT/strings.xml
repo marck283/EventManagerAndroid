@@ -64,4 +64,5 @@
     <string name="insert_venue">Inserisci luogo evento...</string>
     <string name="seats">"Posti: "</string>
     <string name="insert_seats">Inserisci numero di posti...</string>
+    <string name="incorrect_seats_format">Formato campo posti non corretto</string>
 </resources>

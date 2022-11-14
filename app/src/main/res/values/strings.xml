@@ -92,4 +92,5 @@
     <string name="insert_venue">Insert venue...</string>
     <string name="seats">Seats:</string>
     <string name="insert_seats">Insert number of seats...</string>
+    <string name="incorrect_seats_format">Incorrect seats format</string>
 </resources>
