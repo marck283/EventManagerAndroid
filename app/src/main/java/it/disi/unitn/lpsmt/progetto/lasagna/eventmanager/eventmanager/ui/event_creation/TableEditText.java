@@ -5,26 +5,25 @@ import android.util.AttributeSet;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatEditText;
 
-public class TableTextView extends androidx.appcompat.widget.AppCompatTextView {
-
-    public TableTextView(@NonNull Context context) {
+public class TableEditText extends AppCompatEditText {
+    public TableEditText(@NonNull Context context) {
         super(context);
         init();
     }
 
-    public TableTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public TableEditText(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public TableTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public TableEditText(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     private void init() {
-        setPadding(15, 0, 15, 0);
         setTextAlignment(TEXT_ALIGNMENT_CENTER);
     }
 }

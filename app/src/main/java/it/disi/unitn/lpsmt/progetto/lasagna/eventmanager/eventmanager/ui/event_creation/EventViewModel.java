@@ -54,6 +54,10 @@ public class EventViewModel extends ViewModel {
         this.dataOra.setValue(dataOra);
     }
 
+    public void addDate(Pair<String, String> dataOra) {
+        this.dataOra.getValue().add(dataOra);
+    }
+
     /**
      * Ritorna una coppia di elementi (data, ora).
      * @return

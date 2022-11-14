@@ -85,4 +85,11 @@
     <string name="venue">Venue</string>
     <string name="total_seats">Seats</string>
     <string name="add_row">Add row</string>
+    <string name="confirm">Confirm</string>
+    <string name="insert_date">Insert date...</string>
+    <string name="insert_hour">Insert time...</string>
+    <string name="venue_text_view">Venue:</string>
+    <string name="insert_venue">Insert venue...</string>
+    <string name="seats">Seats:</string>
+    <string name="insert_seats">Insert number of seats...</string>
 </resources>

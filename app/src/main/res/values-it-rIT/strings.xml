@@ -53,8 +53,15 @@
     <string name="begin_date">Data d\'inizio</string>
     <string name="first_fragment_label">Creazione evento</string>
     <string name="starts_at">Inizia alle</string>
-    <string name="venue">Luogo dell\'evento</string>
-    <string name="total_seats">Posti totali</string>
+    <string name="venue">Luogo</string>
+    <string name="total_seats">Posti</string>
     <string name="add_row">Aggiungi riga</string>
     <string name="second_fragment_label">Creazione evento</string>
+    <string name="confirm">Conferma</string>
+    <string name="insert_date">Inserisci data...</string>
+    <string name="insert_hour">Inserisci ora...</string>
+    <string name="venue_text_view">"Luogo: "</string>
+    <string name="insert_venue">Inserisci luogo evento...</string>
+    <string name="seats">"Posti: "</string>
+    <string name="insert_seats">Inserisci numero di posti...</string>
 </resources>

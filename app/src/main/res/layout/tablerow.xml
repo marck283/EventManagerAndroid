@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+        android:id="@+id/textView32"
+        android:layout_width="92dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:layout_height="wrap_content" />
+
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+        android:id="@+id/textView30"
+        android:layout_width="92dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:layout_height="wrap_content" />
+
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+        android:id="@+id/textView31"
+        android:layout_width="92dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:layout_height="wrap_content" />
+
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+        android:id="@+id/textView29"
+        android:layout_width="92dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:layout_height="wrap_content" />
+</TableRow>

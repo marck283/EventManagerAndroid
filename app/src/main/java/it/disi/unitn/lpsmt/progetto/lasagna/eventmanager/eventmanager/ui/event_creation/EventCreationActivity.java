@@ -28,6 +28,8 @@ import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.EventRecognitionListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpeechOnTouchListener;
 
 public class EventCreationActivity extends AppCompatActivity {
 
@@ -37,6 +39,7 @@ public class EventCreationActivity extends AppCompatActivity {
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
     private EventViewModel evm;
+    private int countRows = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
