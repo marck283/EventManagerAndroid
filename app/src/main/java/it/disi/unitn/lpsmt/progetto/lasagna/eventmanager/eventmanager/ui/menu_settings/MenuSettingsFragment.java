@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.BuildConfig;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -31,7 +33,8 @@ public class MenuSettingsFragment extends Fragment {
         //Ancora da implementare: schermata dettaglio profilo e abilitazione visualizzazione
         //numero di telefono in dettaglio profilo tramite lo switch presente nel layout di questo
         //Fragment.
-        view.findViewById(R.id.button2).setOnClickListener(v -> showNotImplementedDialog());
+        view.findViewById(R.id.button2).setOnClickListener(v -> Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment_content_navigation_drawer))
+                .navigate(R.id.action_nav_user_settings_to_nav_user_profile));
         view.findViewById(R.id.button4).setOnClickListener(v -> showInfo());
     }
 
