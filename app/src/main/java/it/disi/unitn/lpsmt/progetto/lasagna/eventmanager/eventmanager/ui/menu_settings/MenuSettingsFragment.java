@@ -42,14 +42,6 @@ public class MenuSettingsFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void showNotImplementedDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(this.requireContext()).create();
-        dialog.setTitle(R.string.not_implemented);
-        dialog.setMessage(getString(R.string.not_implemented));
-        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
-    }
-
     private void showInfo() {
         AlertDialog dialog = new AlertDialog.Builder(this.requireContext()).create();
         dialog.setTitle(R.string.app_version);
