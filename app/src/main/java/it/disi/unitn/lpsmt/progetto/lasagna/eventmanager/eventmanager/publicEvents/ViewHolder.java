@@ -35,7 +35,11 @@ public class ViewHolder extends EventHolder {
             imgView.setImageBitmap(dataModel.decodeBase64());
             evName.setText(dataModel.getString("name"));
             orgName.setText(dataModel.getString("orgName"));
-            firstDate.setText(dataModel.getDays()[0]);
+
+            String[] firstDate1 = dataModel.getDays()[0].split("T")[0].split("-");
+
+            String firstDate2 = firstDate1[2] + "/" + firstDate1[1] + "/" + firstDate1[0];
+            firstDate.setText(firstDate2);
             firstHour.setText(dataModel.getHours());
         } catch (Exception e) {
             e.printStackTrace();

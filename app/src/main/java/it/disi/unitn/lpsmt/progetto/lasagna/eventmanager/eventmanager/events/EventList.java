@@ -50,8 +50,7 @@ public class EventList {
                     fromJson(gs1, eo, "category"),
                     fromJson(gs1, eo, "eventPic"),
                     fromJson(gs1, eo, "orgName"),
-                    fromJsonArr(gs1, eo, "days"),
-                    fromJson(gs1, eo, "hours"));
+                    fromJsonArr(gs1, eo, "dataOra"));
             pubEvList.add(pe);
         }
         return this;

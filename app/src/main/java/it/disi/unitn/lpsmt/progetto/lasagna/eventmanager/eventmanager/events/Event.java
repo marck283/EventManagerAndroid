@@ -30,8 +30,8 @@ public class Event {
      * @param ep L'immagine dell'evento codificata come valore stringa base64
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
-                       @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,
-                 @NotNull String[] days, @NotNull String hours) {
+                 @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,
+                 @NotNull String[] daysHours) {
         this.id = id;
         eventid = idevent;
         self = s;
@@ -39,8 +39,8 @@ public class Event {
         category = c;
         eventPic = ep;
         this.orgName = orgName;
-        this.days = days;
-        this.hours = hours;
+        this.days = daysHours;
+        this.hours = daysHours[0].split("T")[1].substring(0, 5);
     }
 
     //Metodo di stampa per il debug
