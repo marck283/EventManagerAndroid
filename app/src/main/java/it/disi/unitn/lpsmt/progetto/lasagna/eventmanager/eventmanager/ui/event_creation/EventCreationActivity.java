@@ -30,6 +30,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.EventRecognitionListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.NewDateViewModel;
 
 public class EventCreationActivity extends AppCompatActivity {
 
@@ -40,6 +41,7 @@ public class EventCreationActivity extends AppCompatActivity {
     private Intent speechRecognizerIntent;
     private EventViewModel evm;
     private int countRows = 0;
+    private NewDateViewModel nd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,8 @@ public class EventCreationActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
         idToken = getIntent().getStringExtra("access_token");
+
+        nd = new ViewModelProvider(this).get(NewDateViewModel.class);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -128,5 +132,6 @@ public class EventCreationActivity extends AppCompatActivity {
         super.onDestroy();
         speechRecognizer.destroy();
         speechRecognizerIntent = null;
+        nd = null;
     }
 }

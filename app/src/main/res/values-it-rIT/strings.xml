@@ -65,4 +65,13 @@
     <string name="seats">"Posti: "</string>
     <string name="insert_seats">Inserisci numero di posti...</string>
     <string name="incorrect_seats_format">Formato campo posti non corretto</string>
+    <string name="incorrect_date_format">Formato data scorretto. Il formato corretto è GG-MM-AAAA.</string>
+    <string name="no_value">Alcuni campi sono vuoti.</string>
+    <string name="incorrect_date_format_title">Formato data scorretto</string>
+    <string name="no_value_title">Alcuni campi sono vuoti</string>
+    <string name="incorrect_hour_format_title">Formato ora non corretto</string>
+    <string name="incorrect_hour_format">Formato ora non corretto.</string>
+    <string name="required_format_warning">Il formato richiesto per il campo soprastante è \"nomeVia\", \"numero civico\", CAP, \"Comune\", \"provincia\" (due lettere).</string>
+    <string name="incorrect_location_format_title">Formato campo \"luogo\" non corretto</string>
+    <string name="incorrect_location_format">Formato campo \"luogo\" non corretto.</string>
 </resources>

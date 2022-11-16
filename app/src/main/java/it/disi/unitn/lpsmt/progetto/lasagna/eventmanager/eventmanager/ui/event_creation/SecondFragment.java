@@ -10,15 +10,20 @@ import android.widget.TableRow;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentSecondBinding;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.NewDateFragment;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.NewDateViewModel;
 
 public class SecondFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
     private int countRows;
+    private NewDateViewModel nd;
+    private View view;
 
     @Override
     public View onCreateView(
@@ -26,24 +31,37 @@ public class SecondFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        view = inflater.inflate(R.layout.fragment_second, container, false);
         countRows = 0;
-        return binding.getRoot();
+        return view;
 
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(view1 -> NavHostFragment.findNavController(SecondFragment.this)
+        view.findViewById(R.id.button_second).setOnClickListener(view1 -> NavHostFragment.findNavController(SecondFragment.this)
                 .navigate(R.id.action_SecondFragment_to_FirstFragment));
-        binding.floatingActionButton.setOnClickListener(c -> addInfo(binding.getRoot()));
+
+        nd = new ViewModelProvider(requireActivity()).get(NewDateViewModel.class);
+    }
+
+    public void onStart() {
+        super.onStart();
+
+        view.findViewById(R.id.floatingActionButton).setOnClickListener(c -> {
+            FragmentManager fm = getChildFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            NewDateFragment ndf = NewDateFragment.newInstance();
+            ft.add(ndf, "NewDateFragment");
+            ft.commit();
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        nd = null;
     }
 
     public void addInfo(@NonNull View view) {
