@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout3"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.event_creation.newDate.EventLocationFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="384dp"
+        android:layout_height="357dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView38"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:text="@string/insert_venue_address"
+                android:textAlignment="center"
+                android:textSize="9pt"
+                android:textStyle="bold|italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView37"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/address"
+                app:layout_constraintStart_toStartOf="@+id/tableEditText"
+                app:layout_constraintTop_toTopOf="@+id/tableEditText" />
+
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
+                android:id="@+id/tableEditText"
+                android:layout_width="347dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="32dp"
+                android:hint="@string/insert_address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.513"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView38" />
+
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
+                android:id="@+id/tableEditText2"
+                android:layout_width="346dp"
+                android:layout_height="64dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableEditText" />
+
+            <TextView
+                android:id="@+id/textView39"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/city"
+                app:layout_constraintStart_toStartOf="@+id/tableEditText2"
+                app:layout_constraintTop_toTopOf="@+id/tableEditText2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,7 +29,6 @@
     <string name="duration">Duration: </string>
     <string name="organizer">Organizer: </string>
     <string name="event_address_info">Event address</string>
-    <string name="city">City: </string>
     <string name="time">Time: </string>
     <string name="public_event_sign_up">Sign up</string>
     <string name="log_in">Log In</string>
@@ -99,7 +98,10 @@
     <string name="no_value_title">Some fields are empty</string>
     <string name="incorrect_hour_format_title">Incorrect hour format</string>
     <string name="incorrect_hour_format">Incorrect hour format.</string>
-    <string name="required_format_warning">The required format for the above field is "alleyName", "House number", "postalCode", "city", "two-initials code for the province".</string>
     <string name="incorrect_location_format_title">Incorrect location format</string>
     <string name="incorrect_location_format">Incorrect location format.</string>
+    <string name="insert_venue_address">Insert venue address</string>
+    <string name="address">Address</string>
+    <string name="insert_address">Insert address...</string>
+    <string name="city">City</string>
 </resources>

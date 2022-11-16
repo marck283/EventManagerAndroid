@@ -12,6 +12,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +52,11 @@ public class NewDateFragment extends DialogFragment {
             int substr = Integer.parseInt(beginDate.substring(6));
             if(substr%400 == 0 || (substr%100 == 0 && substr%4 != 0)) {
                 //Anno bisestile
-                pattern = Pattern.compile("(([1-29]-2)|([1-30]-(4|6|9|11))|([1-31]-(1|3|5|7|8|10|12)))-[1-9][0-9]{3}"); //Non compila
+                pattern = Pattern.compile("(([1-29]-2)|([1-30]-(4|6|9|11))|([1-31]-(1|3|5|7|8|10|12)))-[1-9][0-9]{3}");
             } else {
-                pattern = Pattern.compile("(([1-28]-2)|([1-30]-(4|6|9|11))|([1-31]-(1|3|5|7|8|10|12)))-[1-9][0-9]{3}"); //Non compila
+                pattern = Pattern.compile("(([1-28]-2)|([1-30]-(4|6|9|11))|([1-31]-(1|3|5|7|8|10|12)))-[1-9][0-9]{3}");
             }
-            if(pattern.matcher(beginDate).matches()) {
+            if(pattern.matcher(beginDate).find()) {
                 mViewModel.setData(beginDate);
             } else {
                 setAlertDialog(R.string.incorrect_date_format_title, getString(R.string.incorrect_date_format));
@@ -73,10 +75,16 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private void setAddress(@NonNull List<Address> addresses, LuogoEv luogo) {
-        if(addresses.contains(luogo)) {
-            mViewModel.setLuogo(luogo.toString());
-        } else {
-            setAlertDialog(R.string.incorrect_location_format_title, getString(R.string.incorrect_location_format));
+        int i = 0;
+        for(Address a: addresses) {
+            Log.i("addresses", addresses.toString());
+            if(a.getAddressLine(i).contains(luogo.toString())) {
+                mViewModel.setLuogo(luogo.toString());
+                break;
+            } else {
+                ++i;
+                setAlertDialog(R.string.incorrect_location_format_title, getString(R.string.incorrect_location_format));
+            }
         }
     }
 
@@ -84,7 +92,7 @@ public class NewDateFragment extends DialogFragment {
         String location = String.valueOf(t2.getText());
         Geocoder geocoder = new Geocoder(getContext());
         Pattern pattern = Pattern.compile("[a-zA-Z]+, [1-9]+[a-z]*, [1-9]{5}, [a-zA-Z]+, [A-Z]{2}");
-        if(pattern.matcher(location).matches()) {
+        if(pattern.matcher(location).find()) {
             try {
                 String[] split = location.split(", ");
                 LuogoEv luogo = new LuogoEv(split[0], split[3], split[1], split[4], Integer.parseInt(split[2]));
@@ -96,8 +104,11 @@ public class NewDateFragment extends DialogFragment {
                         public void run() {
                             List<Address> addresses;
                             try {
-                                addresses = geocoder.getFromLocation(luogo.getLatitude(), luogo.getLongitude(), 5);
+                                addresses = geocoder.getFromLocationName(String.valueOf(t2.getText()), 5);
+                                Looper.prepare();
                                 setAddress(addresses, luogo);
+                                Looper.loop();
+                                Looper.getMainLooper().quitSafely();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -145,6 +156,7 @@ public class NewDateFragment extends DialogFragment {
                 parseBeginHour(t1);
                 parseLocation(t2);
                 parseSeats(t3);
+
             } else {
                 setAlertDialog(R.string.no_value, getString(R.string.no_value_title));
             }

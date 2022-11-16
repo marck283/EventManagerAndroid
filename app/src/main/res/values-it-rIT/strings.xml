@@ -14,7 +14,7 @@
     <string name="event_name">"Attività: "</string>
     <string name="event_duration">"Durata: "</string>
     <string name="event_address">Indirizzo:</string>
-    <string name="event_city">"Città: "</string>
+    <string name="event_city">"Comune: "</string>
     <string name="scroll_view">ScrollView</string>
     <string name="event_picture">Immagine evento</string>
     <string name="date">Data e ora</string>
@@ -22,7 +22,6 @@
     <string name="duration">"Durata evento: "</string>
     <string name="organizer">Organizzatore</string>
     <string name="event_address_info">Luogo evento</string>
-    <string name="city">"Comune: "</string>
     <string name="time">"Orario: "</string>
     <string name="public_event_sign_up">Registrati</string>
     <string name="log_in">Accesso</string>
@@ -71,7 +70,10 @@
     <string name="no_value_title">Alcuni campi sono vuoti</string>
     <string name="incorrect_hour_format_title">Formato ora non corretto</string>
     <string name="incorrect_hour_format">Formato ora non corretto.</string>
-    <string name="required_format_warning">Il formato richiesto per il campo soprastante è \"nomeVia\", \"numero civico\", CAP, \"Comune\", \"provincia\" (due lettere).</string>
     <string name="incorrect_location_format_title">Formato campo \"luogo\" non corretto</string>
     <string name="incorrect_location_format">Formato campo \"luogo\" non corretto.</string>
+    <string name="insert_venue_address">Inserisci indirizzo</string>
+    <string name="address">Indirizzo</string>
+    <string name="insert_address">Inserisci indirizzo...</string>
+    <string name="city">Comune</string>
 </resources>

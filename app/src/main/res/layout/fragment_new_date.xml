@@ -8,8 +8,8 @@
     tools:context=".ui.event_creation.newDate.NewDateFragment">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="388dp"
-        android:layout_height="498dp"
+        android:layout_width="387dp"
+        android:layout_height="402dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,19 +22,19 @@
                 android:id="@+id/textView34"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="36dp"
                 android:text="@string/begin_date"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.17" />
+                app:layout_constraintVertical_bias="0.185" />
 
             <TextView
                 android:id="@+id/textView33"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="44dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="72dp"
                 android:text="@string/starts_at"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />
@@ -54,8 +54,8 @@
 
             <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
                 android:id="@+id/begin_date"
-                android:layout_width="208dp"
-                android:layout_height="51dp"
+                android:layout_width="204dp"
+                android:layout_height="52dp"
                 android:layout_marginTop="48dp"
                 android:hint="@string/insert_date"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -63,18 +63,16 @@
                 app:layout_constraintStart_toEndOf="@+id/textView34"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/venue_value"
-                android:layout_width="204dp"
-                android:layout_height="54dp"
-                android:layout_marginTop="28dp"
-                android:hint="@string/insert_venue"
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="44dp"
+                android:text="@string/confirm"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.378"
-                app:layout_constraintStart_toEndOf="@+id/textView35"
-                app:layout_constraintTop_toBottomOf="@+id/begin_time"
-                app:layout_constraintVertical_bias="0.006" />
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
                 android:id="@+id/seats_value"
@@ -84,57 +82,22 @@
                 android:hint="@string/insert_seats"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.338"
+                app:layout_constraintHorizontal_bias="0.451"
                 app:layout_constraintStart_toEndOf="@+id/textView36"
-                app:layout_constraintTop_toBottomOf="@+id/venue_value"
-                app:layout_constraintVertical_bias="0.36" />
-
-            <TextView
-                android:id="@+id/textView35"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="44dp"
-                android:layout_marginTop="60dp"
-                android:text="@string/venue_text_view"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView33"
-                app:layout_constraintVertical_bias="0.005" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:text="@string/confirm"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.489"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/begin_time"
+                app:layout_constraintVertical_bias="0.036" />
 
             <TextView
                 android:id="@+id/textView36"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:layout_marginTop="60dp"
+                android:layout_marginStart="56dp"
+                android:layout_marginBottom="144dp"
                 android:text="@string/seats"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView35"
-                app:layout_constraintVertical_bias="0.329" />
-
-            <TextView
-                android:id="@+id/textView37"
-                android:layout_width="359dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="32dp"
-                android:text="@string/required_format_warning"
-                android:textAlignment="center"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView35" />
+                app:layout_constraintTop_toBottomOf="@+id/textView33"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
