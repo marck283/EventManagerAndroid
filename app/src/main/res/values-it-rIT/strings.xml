@@ -76,4 +76,12 @@
     <string name="address">Indirizzo</string>
     <string name="insert_address">Inserisci indirizzo...</string>
     <string name="city">Comune</string>
+    <string name="insert_city">Inserisci comune...</string>
+    <string name="insert_postal_code">Inserisci codice postale...</string>
+    <string name="zipcode">Codice postale</string>
+    <string name="forward">Continua</string>
+    <string name="insert_event_start_info">Inserisci la data e l\'ora d\'inizio dell\'evento e il numero di posti disponibili</string>
+    <string name="insert_house_number">Inserisci numero civico...</string>
+    <string name="house_number">Numero civico</string>
+    <string name="province">Provincia</string>
 </resources>

@@ -27,4 +27,8 @@ public class TableTextView extends androidx.appcompat.widget.AppCompatTextView {
         setPadding(15, 0, 15, 0);
         setTextAlignment(TEXT_ALIGNMENT_CENTER);
     }
+
+    public void setText(String text) {
+        super.setText(text);
+    }
 }

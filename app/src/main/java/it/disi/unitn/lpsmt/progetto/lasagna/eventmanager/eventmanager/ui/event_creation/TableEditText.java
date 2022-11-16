@@ -26,4 +26,8 @@ public class TableEditText extends AppCompatEditText {
     private void init() {
         setTextAlignment(TEXT_ALIGNMENT_CENTER);
     }
+
+    public void setText(String text) {
+        super.setText(text);
+    }
 }

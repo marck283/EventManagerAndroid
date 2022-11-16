@@ -26,5 +26,23 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_SecondFragment_to_newDateFragment"
+            app:destination="@id/newDateFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/newDateFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.NewDateFragment"
+        android:label="fragment_new_date"
+        tools:layout="@layout/fragment_new_date" >
+        <action
+            android:id="@+id/action_newDateFragment_to_eventLocationFragment"
+            app:destination="@id/eventLocationFragment"
+            app:launchSingleTop="true" />
+    </dialog>
+    <dialog
+        android:id="@+id/eventLocationFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.EventLocationFragment"
+        android:label="fragment_event_location"
+        tools:layout="@layout/fragment_event_location" />
 </navigation>

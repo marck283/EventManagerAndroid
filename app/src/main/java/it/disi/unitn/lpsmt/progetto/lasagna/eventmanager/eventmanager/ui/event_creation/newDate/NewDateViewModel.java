@@ -31,6 +31,7 @@ public class NewDateViewModel extends ViewModel {
         return ora;
     }
 
+    //Il campo "luogo" è composto da: <nome via>, <numero civico>, <CAP>, <comune>, <sigla a due lettere per la provincia>
     public void setLuogo(String indirizzo) {
         luogo.setValue(indirizzo);
     }

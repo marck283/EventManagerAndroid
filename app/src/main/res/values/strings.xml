@@ -104,4 +104,12 @@
     <string name="address">Address</string>
     <string name="insert_address">Insert address...</string>
     <string name="city">City</string>
+    <string name="insert_city">Insert city...</string>
+    <string name="insert_postal_code">Insert postal code...</string>
+    <string name="zipcode">Zipcode</string>
+    <string name="forward">Continue</string>
+    <string name="insert_event_start_info">Insert the event\'s starting date, time and number of seats</string>
+    <string name="insert_house_number">Insert House number...</string>
+    <string name="house_number">House number</string>
+    <string name="province">Province</string>
 </resources>

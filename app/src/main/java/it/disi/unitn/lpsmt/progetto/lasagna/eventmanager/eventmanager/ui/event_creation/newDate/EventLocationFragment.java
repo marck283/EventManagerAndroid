@@ -7,20 +7,23 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.DropdownSpinnerAdapter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
 
 public class EventLocationFragment extends DialogFragment {
 
     private EventLocationViewModel mViewModel;
-    private NewDateViewModel nd;
 
     @NonNull
     @Contract(" -> new")
@@ -35,8 +38,35 @@ public class EventLocationFragment extends DialogFragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(EventLocationViewModel.class);
-        nd = new ViewModelProvider(requireActivity()).get(NewDateViewModel.class);
+        NewDateViewModel nd = new ViewModelProvider(requireActivity()).get(NewDateViewModel.class);
+        mViewModel = new EventLocationViewModel(this, nd);
+
+        Button b = view.findViewById(R.id.button6);
+        b.setOnClickListener(c -> {
+            EditText t = view.findViewById(R.id.location_address);
+            EditText t1 = view.findViewById(R.id.house_number);
+            EditText t2 = view.findViewById(R.id.location_city);
+            EditText t3 = view.findViewById(R.id.zipcode);
+            EditText t4 = view.findViewById(R.id.province);
+            mViewModel.parseAddress(t, t1, t2, t3, t4);
+        });
+    }
+
+    public void onStart() {
+        super.onStart();
+
+        Spinner spinner = requireActivity().findViewById(R.id.province);
+
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        DropdownSpinnerAdapter a = DropdownSpinnerAdapter.create(requireContext(),
+                R.array.category_spinner_array, android.R.layout.simple_spinner_item,
+                android.R.layout.simple_spinner_dropdown_item);
+
+        // Apply the adapter to the spinner
+        spinner.setAdapter(a);
+
+        SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
+        spinner.setOnItemSelectedListener(itemSelected);
     }
 
 }
