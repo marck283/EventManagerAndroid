@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -18,10 +19,12 @@ import java.util.regex.Pattern;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
 
 public class EventLocationViewModel extends ViewModel {
     private final DialogFragment f;
     private final NewDateViewModel nd;
+    private String provincia;
 
     public EventLocationViewModel(DialogFragment f, NewDateViewModel nd) {
         this.f = f;
@@ -50,10 +53,141 @@ public class EventLocationViewModel extends ViewModel {
         }
     }
 
-    public void parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4, @NonNull EditText t5, @NonNull EditText t6) {
-        String location = t2.getText() + ", " + t3.getText() + ", " + t4.getText() + ", " + t5.getText() + ", " + t6.getText();
+    private String parseProvince() {
+        if(provincia != null && !provincia.equals("")) {
+            switch(provincia) {
+                case "Agrigento": return "AG";
+                case "Alessandria": return "AL";
+                case "Ancona": return "AN";
+                case "Aosta": return "AO";
+                case "Arezzo": return "AR";
+                case "Ascoli Piceno": return "AP";
+                case "Asti": return "AT";
+                case "Avellino": return "AV";
+                case "Bari": return "BA";
+                case "Barletta - Andria - Trani": return "BT";
+                case "Belluno": return "BL";
+                case "Benevento": return "BN";
+                case "Bergamo": return "BG";
+                case "Biella": return "BI";
+                case "Bologna": return "BO";
+                case "Bolzano": return "BZ";
+                case "Brescia": return "BS";
+                case "Brindisi": return "BR";
+                case "Cagliari": return "CA";
+                case "Caltanissetta": return "CL";
+                case "Campobasso": return "CB";
+                case "Carbonia-Iglesias": return "CI";
+                case "Caserta": return "CE";
+                case "Catania": return "CT";
+                case "Catanzaro": return "CZ";
+                case "Chieti": return "CH";
+                case "Como": return "CO";
+                case "Cosenza": return "CS";
+                case "Cremona": return "CR";
+                case "Crotone": return "KR";
+                case "Cuneo": return "CN";
+                case "Enna": return "EN";
+                case "Fermo": return "FM";
+                case "Ferrara": return "FE";
+                case "Firenze": return "FI";
+                case "Foggia": return "FG";
+                case "Forlì-Cesena": return "FC";
+                case "Frosinone": return "FR";
+                case "Genova": return "GE";
+                case "Gorizia": return "GO";
+                case "Grosseto": return "GR";
+                case "Imperia": return "IM";
+                case "Isernia": return "IS";
+                case "L'Aquila": return "AQ";
+                case "La Spezia": return "SP";
+                case "Latina": return "LT";
+                case "Lecce": return "LE";
+                case "Livorno": return "LI";
+                case "Lodi": return "LO";
+                case "Lucca": return "LU";
+                case "Macerata": return "MC";
+                case "Mantova": return "MN";
+                case "Massa e Carrara": return "MS";
+                case "Matera": return "MT";
+                case "Medio Campidano": return "VS";
+                case "Messina": return "ME";
+                case "Milano": return "MI";
+                case "Modena": return "MO";
+                case "Monza e Brianza": return "MB";
+                case "Napoli": return "NA";
+                case "Novara": return "NO";
+                case "Nuoro": return "NU";
+                case "Ogliastra": return "OG";
+                case "Olbia-Tempio": return "OT";
+                case "Oristano": return "OR";
+                case "Padova": return "PD";
+                case "Palermo": return "PA";
+                case "Parma": return "PR";
+                case "Pavia": return "PV";
+                case "Perugia": return "PG";
+                case "Pesaro e Urbino": return "PU";
+                case "Pescara": return "PE";
+                case "Piacenza": return "PC";
+                case "Pisa": return "PI";
+                case "Pistoia": return "PT";
+                case "Pordenone": return "PN";
+                case "Potenza": return "PZ";
+                case "Prato": return "PO";
+                case "Ragusa": return "RG";
+                case "Ravenna": return "RA";
+                case "Reggio Calabria": return "RC";
+                case "Reggio Emilia": return "RE";
+                case "Rieti": return "RI";
+                case "Rimini": return "RN";
+                case "Roma": return "RM";
+                case "Rovigo": return "RO";
+                case "Salerno": return "SA";
+                case "Sassari": return "SS";
+                case "Savona": return "SV";
+                case "Siena": return "SI";
+                case "Siracusa": return "SR";
+                case "Sondrio": return "SO";
+                case "Sud Sardegna": return "SU";
+                case "Taranto": return "TA";
+                case "Teramo": return "TE";
+                case "Terni": return "TR";
+                case "Torino": return "TO";
+                case "Trapani": return "TP";
+                case "Trento": return "TN";
+                case "Treviso": return "TV";
+                case "Trieste": return "TS";
+                case "Udine": return "UD";
+                case "Varese": return "VA";
+                case "Venezia": return "VE";
+                case "Verbano-Cusio-Ossola": return "VB";
+                case "Vercelli": return "VC";
+                case "Verona": return "VR";
+                case "Vibo Valentia": return "VV";
+                case "Vicenza": return "VI";
+                case "Viterbo": return "VT";
+                default: return "Nessuna provincia italiana nota con quel nome.";
+            }
+        }
+        return provincia;
+    }
+
+    public void parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4, @NonNull EditText t5, @NonNull Spinner t6) {
+        SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
+        t6.setOnItemSelectedListener(itemSelected);
+        itemSelected.getItem().observe(f.requireActivity(), o -> provincia = (String) o);
+
+        if(provincia == null || provincia.equals("")) {
+            setAlertDialog(R.string.incorrect_province_format_title, f.getString(R.string.incorrect_province_format));
+            return;
+        }
+
+        //Prima di eseguire questa istruzione devo assicurarmi di aver convertito la provincia nella sua sigla a due lettere corrispondente!
+        String location = t2.getText() + "," + t3.getText() + "," + t4.getText() + "," + t5.getText() + "," + parseProvince();
         Geocoder geocoder = new Geocoder(f.getContext());
-        Pattern pattern = Pattern.compile("[a-zA-Z]+, [1-9]+[a-z]*, [1-9]{5}, [a-zA-Z]+, [A-Z]{2}");
+
+        //Ddevo proprio usare un'espressione regolare? Potrei semplicemente
+        Pattern pattern = Pattern.compile("[a-zA-Z]+,[1-9]+[a-z]*,[1-9]{5},[a-zA-Z]+,[A-Z]{2}");
         if(pattern.matcher(location).find()) {
             try {
                 String[] split = location.split(", ");
@@ -70,7 +204,11 @@ public class EventLocationViewModel extends ViewModel {
                             try {
                                 addresses = geocoder.getFromLocationName(String.valueOf(t2.getText()), 5);
                                 Looper.prepare();
-                                setAddress(addresses, luogo);
+                                if(addresses != null && !addresses.isEmpty()) {
+                                    setAddress(addresses, luogo);
+                                } else {
+                                    setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result));
+                                }
                                 Looper.loop();
                                 Looper.getMainLooper().quitSafely();
                                 f.dismiss();

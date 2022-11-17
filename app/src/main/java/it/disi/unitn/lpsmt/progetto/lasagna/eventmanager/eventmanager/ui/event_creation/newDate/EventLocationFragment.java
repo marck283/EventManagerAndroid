@@ -50,7 +50,7 @@ public class EventLocationFragment extends DialogFragment {
             EditText t1 = view.findViewById(R.id.house_number);
             EditText t2 = view.findViewById(R.id.location_city);
             EditText t3 = view.findViewById(R.id.zipcode);
-            EditText t4 = view.findViewById(R.id.province);
+            Spinner t4 = view.findViewById(R.id.province);
             mViewModel.parseAddress(t, t1, t2, t3, t4);
         });
     }

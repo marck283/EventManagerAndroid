@@ -84,4 +84,8 @@
     <string name="insert_house_number">Inserisci numero civico...</string>
     <string name="house_number">Numero civico</string>
     <string name="province">Provincia</string>
+    <string name="incorrect_province_format_title">Valore o formato non corretti per il campo \"provincia\"</string>
+    <string name="incorrect_province_format">Valore o formato non corretti per il campo \"provincia\".</string>
+    <string name="no_location_result_title">Nessun risultato trovato per l\'indirizzo fornito</string>
+    <string name="no_location_result">Nessun risultato trovato per l\'indirizzo fornito.</string>
 </resources>

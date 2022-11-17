@@ -112,4 +112,8 @@
     <string name="insert_house_number">Insert House number...</string>
     <string name="house_number">House number</string>
     <string name="province">Province</string>
+    <string name="incorrect_province_format_title">Incorrect province format or value</string>
+    <string name="incorrect_province_format">Incorrect province format or value.</string>
+    <string name="no_location_result_title">No location found for the given address</string>
+    <string name="no_location_result">No location found for the given address.</string>
 </resources>
