@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -24,6 +25,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_c
 public class EventLocationFragment extends DialogFragment {
 
     private EventLocationViewModel mViewModel;
+    private View view;
 
     @NonNull
     @Contract(" -> new")
@@ -34,7 +36,8 @@ public class EventLocationFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_event_location, container, false);
+        view = inflater.inflate(R.layout.fragment_event_location, container, false);
+        return view;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -55,12 +58,12 @@ public class EventLocationFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-        Spinner spinner = requireActivity().findViewById(R.id.province);
+        Spinner spinner = view.findViewById(R.id.province);
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        DropdownSpinnerAdapter a = DropdownSpinnerAdapter.create(requireContext(),
-                R.array.category_spinner_array, android.R.layout.simple_spinner_item,
-                android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(requireContext(),
+                R.array.province_spinner_array, android.R.layout.simple_spinner_item);
+        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // Apply the adapter to the spinner
         spinner.setAdapter(a);

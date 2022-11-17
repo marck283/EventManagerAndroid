@@ -29,7 +29,7 @@ public class DropdownSpinnerAdapter extends ArrayAdapter<CharSequence> {
      *                           instantiating views.
      * @param textViewResourceId The id of the TextView within the layout resource to be populated
      */
-    private DropdownSpinnerAdapter(@NonNull Context context, int resource, int textViewResourceId) {
+    public DropdownSpinnerAdapter(@NonNull Context context, int resource, int textViewResourceId) {
         super(context, resource, textViewResourceId);
     }
 
@@ -85,11 +85,7 @@ public class DropdownSpinnerAdapter extends ArrayAdapter<CharSequence> {
         super(context, resource, textViewResourceId, objects);
     }
 
-    @NonNull
-    public static DropdownSpinnerAdapter create(Context c, @ArrayRes int textArrayResId,
-                                                @LayoutRes int textViewResId, @LayoutRes int textLayoutViewId) {
-        DropdownSpinnerAdapter a = new DropdownSpinnerAdapter(c, textArrayResId, textViewResId);
-        a.setDropDownViewResource(textLayoutViewId);
-        return a;
+    public void create(@LayoutRes int textLayoutViewId) {
+        setDropDownViewResource(textLayoutViewId);
     }
 }
