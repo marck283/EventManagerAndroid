@@ -292,7 +292,6 @@ public class EventLocationViewModel extends ViewModel {
             return;
         }
 
-        //Prima di eseguire questa istruzione devo assicurarmi di aver convertito la provincia nella sua sigla a due lettere corrispondente!
         String location = t2.getText() + ", " + t3.getText() + ", " + t4.getText() + ", " + t5.getText() + ", " + parseProvince();
         Geocoder geocoder = new Geocoder(f.getContext());
 
@@ -300,7 +299,6 @@ public class EventLocationViewModel extends ViewModel {
             String[] split = location.split(", ");
             LuogoEv luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]));
 
-            //Nessun risultato senza controllare anche la nazione...
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> setAddress(addresses, luogo));
             } else {
