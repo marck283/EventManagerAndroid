@@ -33,7 +33,7 @@ public class NewDateViewModel extends ViewModel {
 
     //Il campo "luogo" è composto da: <nome via>, <numero civico>, <CAP>, <comune>, <sigla a due lettere per la provincia>
     public void setLuogo(String indirizzo) {
-        luogo.setValue(indirizzo);
+        luogo.postValue(indirizzo);
     }
 
     public LiveData<String> getLuogo() {

@@ -41,6 +41,6 @@ public class LuogoEv extends Address {
 
     @NonNull
     public String toString() {
-        return address + ", " + civNum + ", " + cap + " " + city + " " + province + ", " + getCountryName();
+        return address + ", " + civNum + ", " + cap + " " + city + " " + province;
     }
 }

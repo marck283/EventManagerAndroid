@@ -19,7 +19,6 @@ import android.widget.Spinner;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.DropdownSpinnerAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
 
 public class EventLocationFragment extends DialogFragment {
@@ -51,7 +50,13 @@ public class EventLocationFragment extends DialogFragment {
             EditText t2 = view.findViewById(R.id.location_city);
             EditText t3 = view.findViewById(R.id.zipcode);
             Spinner t4 = view.findViewById(R.id.province);
-            mViewModel.parseAddress(t, t1, t2, t3, t4);
+
+            SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
+            t4.setOnItemSelectedListener(itemSelected);
+
+            //Perché qui il valore non viene sempre aggiornato?
+            itemSelected.getItem().observe(requireActivity(), o -> mViewModel.setProvincia((String) o));
+            mViewModel.parseAddress(t, t1, t2, t3);
         });
     }
 
