@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -51,7 +52,7 @@ public class OnlineUserInfo {
 
                         //Imposta la schermata del profilo dell'utente
                         ImageView iv = v.findViewById(R.id.profilePic);
-                        iv.setImageBitmap(userInfo.decodeBase64(userInfo.getString("profilePic")));
+                        Glide.with(f.requireActivity()).load(userInfo.getString("profilePic")).circleCrop().into(iv);
 
                         TextView username = v.findViewById(R.id.username);
                         username.setText(userInfo.getString("nome"));

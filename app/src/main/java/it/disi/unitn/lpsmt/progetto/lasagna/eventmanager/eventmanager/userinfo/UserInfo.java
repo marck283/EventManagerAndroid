@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -10,13 +11,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import java.util.Arrays;
+
 public class UserInfo {
     private String profilePic, nome, email, tel;
     private Integer numEvOrg;
     private Double valutazioneMedia;
 
     public UserInfo() {
-        //Costruttore vuoto
         numEvOrg = 0;
         valutazioneMedia = 0.0;
     }
@@ -36,13 +38,26 @@ public class UserInfo {
      * @return Il valore decodificato in tipo Bitmap
      */
     public Bitmap decodeBase64(@NonNull String profilePic) {
+        Bitmap bitmap = null;
         if(!profilePic.equals("")) {
-            byte[] decodedImg = Base64.decode(profilePic
-                    .replace("data:image/png;base64,", "")
-                    .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-            return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+            Log.i("profilePic", profilePic);
+            byte[] decodedImg = null;
+            try {
+                decodedImg = Base64.decode(profilePic
+                        .replace("data:image/png;base64,", "")
+                        .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
+            } catch(IllegalArgumentException ex) {
+                decodedImg = profilePic.getBytes();
+            } finally {
+                Log.i("decodedBytes", Arrays.toString(decodedImg));
+                if(decodedImg != null) {
+                    bitmap = BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+                } else {
+                    Log.i("nullImg", "Nessuna immagine");
+                }
+            }
         }
-        return null;
+        return bitmap;
     }
 
     public String getString(@NonNull String string) {

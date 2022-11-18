@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.bumptech.glide.Glide;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.helpers.UserInfo;
@@ -95,7 +97,7 @@ public class DBUser extends DBThread {
 
                     //Imposta la schermata del profilo dell'utente
                     ImageView iv = v.findViewById(R.id.profilePic);
-                    iv.setImageBitmap(decodeBase64(userPic));
+                    Glide.with(f.requireActivity()).load(userPic).circleCrop().into(iv);
 
                     TextView username = v.findViewById(R.id.username);
                     username.setText(u.getString("nome"));
