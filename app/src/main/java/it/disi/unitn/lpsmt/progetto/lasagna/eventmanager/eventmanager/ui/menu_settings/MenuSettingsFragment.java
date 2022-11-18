@@ -11,17 +11,20 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.BuildConfig;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentMenuSettingsBinding;
 
 public class MenuSettingsFragment extends Fragment {
     private FragmentMenuSettingsBinding binding;
+    private MenuSettingsViewModel menuSettingsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        MenuSettingsViewModel menuSettingsViewModel =
-                new ViewModelProvider(this).get(MenuSettingsViewModel.class);
+        menuSettingsViewModel =
+                new ViewModelProvider(requireActivity()).get(MenuSettingsViewModel.class);
 
         binding = FragmentMenuSettingsBinding.inflate(inflater, container, false);
 
@@ -35,6 +38,7 @@ public class MenuSettingsFragment extends Fragment {
         view.findViewById(R.id.button2).setOnClickListener(v -> Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment_content_navigation_drawer))
                 .navigate(R.id.action_nav_user_settings_to_nav_user_profile));
         view.findViewById(R.id.button4).setOnClickListener(v -> showInfo());
+        ((SwitchMaterial)view.findViewById(R.id.switch1)).setOnCheckedChangeListener((c, c1) -> menuSettingsViewModel.setChecked(c.isChecked()));
     }
 
     @Override

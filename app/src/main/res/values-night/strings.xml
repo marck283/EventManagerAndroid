@@ -92,7 +92,7 @@
     <string name="seats">Seats:</string>
     <string name="insert_seats">Insert number of seats...</string>
     <string name="incorrect_seats_format">Incorrect seats format</string>
-    <string name="incorrect_date_format">Incorrect date format. The correct date format is GG-MM-AAAA.</string>
+    <string name="incorrect_date_format">Incorrect date format. The correct date format is GG/MM/AAAA.</string>
     <string name="incorrect_date_format_title">Incorrect date format</string>
     <string name="no_value">Some fields are empty.</string>
     <string name="no_value_title">Some fields are empty</string>
@@ -116,4 +116,10 @@
     <string name="incorrect_province_format">Incorrect province format or value.</string>
     <string name="no_location_result_title">No location found for the given address</string>
     <string name="no_location_result">No location found for the given address.</string>
+    <string name="profile_image">Profile image</string>
+    <string name="user_email">Email:</string>
+    <string name="phone">Phone:</string>
+    <string name="numEvOrg">You organized %1$d events</string>
+    <string name="manage_your_events">Manage your events</string>
+    <string name="average_rating_button">See your average rating</string>
 </resources>

@@ -11,7 +11,7 @@ import java.util.Objects;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUserProfileUpdate;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,7 +52,7 @@ public class Authentication {
                 if (response.isSuccessful() && response.body() != null) {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
-                    DBUserProfileUpdate up = new DBUserProfileUpdate(a, info.getEmail(), info.getProfilePic());
+                    DBUser up = new DBUser(a, info.getEmail(), "updateProfilePic", info);
                     up.start();
                     if(a instanceof NavigationDrawerActivity) {
                         ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());

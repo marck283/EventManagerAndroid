@@ -64,7 +64,7 @@
     <string name="seats">"Posti: "</string>
     <string name="insert_seats">Inserisci numero di posti...</string>
     <string name="incorrect_seats_format">Formato campo posti non corretto</string>
-    <string name="incorrect_date_format">Formato data scorretto. Il formato corretto è GG-MM-AAAA.</string>
+    <string name="incorrect_date_format">Formato data scorretto. Il formato corretto è GG/MM/AAAA.</string>
     <string name="no_value">Alcuni campi sono vuoti.</string>
     <string name="incorrect_date_format_title">Formato data scorretto</string>
     <string name="no_value_title">Alcuni campi sono vuoti</string>
@@ -88,4 +88,9 @@
     <string name="incorrect_province_format">Valore o formato non corretti per il campo \"provincia\".</string>
     <string name="no_location_result_title">Nessun risultato trovato per l\'indirizzo fornito</string>
     <string name="no_location_result">Nessun risultato trovato per l\'indirizzo fornito.</string>
+    <string name="profile_image">Immagine profilo</string>
+    <string name="phone">"Telefono: "</string>
+    <string name="numEvOrg">Hai organizzato %1$d eventi</string>
+    <string name="manage_your_events">Gestisci i tuoi eventi</string>
+    <string name="average_rating_button">Visualizza la tua valutazione media</string>
 </resources>

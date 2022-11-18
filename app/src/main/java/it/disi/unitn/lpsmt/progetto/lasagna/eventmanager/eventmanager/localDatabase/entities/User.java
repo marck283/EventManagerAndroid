@@ -46,7 +46,7 @@ public class User {
     private final List<String> eventiIscritto = new ArrayList<>();
 
     @ColumnInfo(name = "numEvOrg")
-    private Integer numEvOrg = 0;
+    private Integer numEvOrg = eventiCreati.size();
 
     @ColumnInfo(name = "valutazioneMedia")
     private Double valutazioneMedia = 0.0;

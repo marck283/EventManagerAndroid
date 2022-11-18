@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.helpers.UserInfo;
 
 @Dao
 public interface UserDAO {
@@ -33,7 +34,7 @@ public interface UserDAO {
     String getUserEmail(String email);
 
     @Query("SELECT U.profilePic, U.nome, U.email, U.tel, U.numEvOrg, U.valutazioneMedia FROM Users U WHERE U.email = :email")
-    User getUser(String email);
+    UserInfo getUser(String email);
 
     @Insert
     void insert(User u);

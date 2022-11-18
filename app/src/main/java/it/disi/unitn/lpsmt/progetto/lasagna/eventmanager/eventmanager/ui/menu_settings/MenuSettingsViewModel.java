@@ -1,20 +1,22 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings;
 
-import android.view.View;
-import android.widget.TextView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-
 public class MenuSettingsViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<Boolean> phoneChecked;
 
     public MenuSettingsViewModel() {
-        mText = new MutableLiveData<>();
+        phoneChecked = new MutableLiveData<>();
+    }
+
+    public void setChecked(boolean val) {
+        phoneChecked.setValue(val);
+    }
+
+    public LiveData<Boolean> getChecked() {
+        return phoneChecked;
     }
 }

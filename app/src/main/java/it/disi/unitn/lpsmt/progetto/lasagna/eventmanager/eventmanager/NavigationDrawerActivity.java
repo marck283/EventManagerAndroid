@@ -42,10 +42,11 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentica
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBProfileImage;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class NavigationDrawerActivity extends AppCompatActivity {
@@ -56,6 +57,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private static final int REQ_SIGN_IN = 2, REQ_SIGN_IN_EV_CREATION = 3;
     private DBThread t1;
     private NavigationSharedViewModel vm;
+    private MenuSettingsViewModel ms;
     private ActivityNavigationDrawerBinding binding;
 
     private void setAlertDialog(boolean eventCreation) {
@@ -101,6 +103,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         });
 
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
+        ms = new ViewModelProvider(this).get(MenuSettingsViewModel.class);
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -214,17 +217,15 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
             email.setText(getString(R.string.email, acc.getEmail()));
 
-            t1 = new DBProfileImage(this, acc.getEmail());
+            t1 = new DBUser(this, acc.getEmail(), "getProfilePic");
             t1.start();
 
-            ((DBProfileImage)t1).getProfilePic().observe(this, o -> {
+            ((DBUser)t1).getProfilePic().observe(this, o -> {
                 Log.i("valueChanged", o);
                 Bitmap bm = getImageBitmap(o);
                 ImageView v = l.findViewById(R.id.imageView);
                 v.setImageBitmap(bm);
             });
-
-            t1.close();
         }
     }
 

@@ -1,10 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
-import static android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET;
-
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
-import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,22 +57,20 @@ public class EventListFragment extends Fragment {
         vm.getToken().observe(requireActivity(), o -> {
             idToken = o;
 
-            NetworkRequest req = new NetworkRequest.Builder()
-                    .addCapability(NET_CAPABILITY_INTERNET)
-                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-                    .build();
-            NetworkCallback nc = new NetworkCallback(requireActivity());
-            ConnectivityManager connectivityManager = requireActivity().getSystemService(ConnectivityManager.class);
-            connectivityManager.registerNetworkCallback(req, nc);
+            NetworkCallback nc = new NetworkCallback(requireActivity(), this);
+            nc.registerNetworkCallback();
 
-            eventListViewModel.getEvents(root, idToken);
+            if(nc.isOnline(requireActivity())) {
+                eventListViewModel.getEvents(root, idToken);
+            } else {
+                //Ottieni i dati dal database
+            }
             RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
             if(rv != null) {
                 rv.invalidate();
             }
 
-            connectivityManager.unregisterNetworkCallback(nc);
+            nc.unregisterNetworkCallback();
         });
     }
 
