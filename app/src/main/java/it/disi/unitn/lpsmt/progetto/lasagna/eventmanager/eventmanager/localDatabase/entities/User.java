@@ -7,35 +7,39 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.converters.ListConverter;
 
 @Entity(tableName = "Users")
-public class User {
-    @PrimaryKey
+public class User implements Serializable {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id", defaultValue = "0")
+    private int id = 0;
+
     @NonNull
     @ColumnInfo(name = "email")
-    private String email = ""; //Chiave primaria
+    private String email = "";
 
     @ColumnInfo(name = "nome")
-    private String nome = "";
+    private String nome;
 
     @ColumnInfo(name = "profilePic")
     @Nullable
-    private String profilePic = "";
+    private String profilePic;
 
     @ColumnInfo(name = "gServerAuthCode")
-    private String gServerAuthCode = "";
+    private String gServerAuthCode;
 
     @ColumnInfo(name = "gToken")
     @Nullable
-    private String gToken = "";
+    private String gToken;
 
     @ColumnInfo(name = "tel")
     @Nullable
-    private String tel = "";
+    private String tel;
 
     @ColumnInfo(name = "eventiCreati")
     @TypeConverters(ListConverter.class)
@@ -52,6 +56,14 @@ public class User {
     private Double valutazioneMedia = 0.0;
 
     //Getter e setter per permettere a Room di accedere ai campi
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     @NonNull
     public String getEmail() {
         return email;

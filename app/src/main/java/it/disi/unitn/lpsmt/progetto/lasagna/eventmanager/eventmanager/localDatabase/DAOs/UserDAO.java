@@ -41,4 +41,10 @@ public interface UserDAO {
 
     @Query("SELECT U.gToken FROM Users U WHERE U.email = :email")
     String getGToken(String email);
+
+    @Query("UPDATE Users SET nome = :nome WHERE email = :email")
+    void setUsername(@NonNull String nome, @NonNull String email);
+
+    @Query("UPDATE Users SET email = :newEmail WHERE email = :oldEmail")
+    void setUserEmail(@NonNull String newEmail, @NonNull String oldEmail);
 }

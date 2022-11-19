@@ -1,7 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo;
 
+import android.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -52,7 +55,8 @@ public class OnlineUserInfo {
 
                         //Imposta la schermata del profilo dell'utente
                         ImageView iv = v.findViewById(R.id.profilePic);
-                        Glide.with(f.requireActivity()).load(userInfo.getString("profilePic")).circleCrop().into(iv);
+                        Glide.with(f.requireActivity()).load(userInfo.getString("profilePic"))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
 
                         TextView username = v.findViewById(R.id.username);
                         username.setText(userInfo.getString("nome"));
@@ -66,12 +70,21 @@ public class OnlineUserInfo {
                         TextView numEvOrg = v.findViewById(R.id.numEvOrg);
                         numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
 
+                        Button rating = v.findViewById(R.id.rating);
                         if(userInfo.getNumEvOrg() == 0) {
-                            v.findViewById(R.id.rating).setEnabled(false);
-                            v.findViewById(R.id.rating).setVisibility(View.INVISIBLE);
+                            rating.setEnabled(false);
+                            rating.setVisibility(View.INVISIBLE);
                         } else {
-                            v.findViewById(R.id.rating).setEnabled(true);
-                            v.findViewById(R.id.rating).setVisibility(View.VISIBLE);
+                            rating.setEnabled(true);
+                            rating.setVisibility(View.VISIBLE);
+                            final double meanRating = userInfo.getValutazioneMedia();
+                            rating.setOnClickListener(c -> {
+                                AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
+                                ad.setTitle(R.string.personal_rating);
+                                ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
+                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
+                                ad.show();
+                            });
                         }
                     } else {
                         Log.i("onlineResponse", "Utente non trovato");

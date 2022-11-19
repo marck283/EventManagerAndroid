@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class NavigationSharedViewModel extends ViewModel {
-    private MutableLiveData<String> idToken = new MutableLiveData<>();
+    private final MutableLiveData<String> idToken = new MutableLiveData<>();
 
     public void setToken(@NonNull String token) {
         idToken.setValue(token);

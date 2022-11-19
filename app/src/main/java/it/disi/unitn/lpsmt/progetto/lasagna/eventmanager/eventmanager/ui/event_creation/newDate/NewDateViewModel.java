@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class NewDateViewModel extends ViewModel {
-    private MutableLiveData<String> data, ora, luogo;
-    private MutableLiveData<Integer> posti;
+    private final MutableLiveData<String> data;
+    private final MutableLiveData<String> ora;
+    private final MutableLiveData<String> luogo;
+    private final MutableLiveData<Integer> posti;
 
     public NewDateViewModel() {
         data = new MutableLiveData<>();

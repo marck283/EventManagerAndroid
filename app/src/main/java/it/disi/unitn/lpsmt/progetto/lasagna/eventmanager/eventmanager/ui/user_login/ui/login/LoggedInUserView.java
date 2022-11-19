@@ -4,7 +4,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_l
  * Class exposing authenticated user details to the UI.
  */
 class LoggedInUserView {
-    private String displayName;
+    private final String displayName;
     //... other data fields that may be accessible to the UI
 
     LoggedInUserView(String displayName) {

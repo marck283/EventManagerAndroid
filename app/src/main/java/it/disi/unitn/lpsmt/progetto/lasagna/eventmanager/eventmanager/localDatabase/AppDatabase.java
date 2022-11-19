@@ -14,7 +14,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 
 //NOTA: classe ed entità associate sono da implementare come qui indicato: https://developer.android.com/training/data-storage/room#java
 
-@Database(entities = {User.class}, version = 1)
+@Database(entities = {User.class}, version = 2)
 @TypeConverters({ListConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     /**
@@ -27,8 +27,8 @@ public abstract class AppDatabase extends RoomDatabase {
      */
     @NonNull
     @Override
-    protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration config) {
-        return null;
+    protected SupportSQLiteOpenHelper createOpenHelper(@NonNull DatabaseConfiguration config) {
+        return config.sqliteOpenHelperFactory.create(SupportSQLiteOpenHelper.Configuration.builder(config.context).build());
     }
 
     /**

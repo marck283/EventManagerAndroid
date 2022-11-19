@@ -1,10 +1,12 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +23,10 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 
 public class DBUser extends DBThread {
-    private String action, email, gToken;
-    private UserDAO user;
+    private final String action;
+    private final String email;
+    private String gToken;
+    private final UserDAO user;
     private MutableLiveData<String> profilePic;
     private View v;
     private Fragment f;
@@ -41,6 +45,8 @@ public class DBUser extends DBThread {
         this.action = action;
         this.v = v;
         this.f = f;
+        user = db.getUserDAO();
+        profilePic = new MutableLiveData<>();
     }
 
     public DBUser(@NonNull Activity a, @NonNull String email, @NonNull String action, @NonNull String gToken) {
@@ -61,7 +67,7 @@ public class DBUser extends DBThread {
     }
 
     /**
-     * Decodifica il valore della stringa che rappresenta l'immagine dell'evento in Bitmap.
+     * Decodifica il valore della stringa base64 che rappresenta l'immagine dell'evento in Bitmap.
      * @return Il valore decodificato in tipo Bitmap
      */
     public Bitmap decodeBase64(@NonNull String profilePic) {
@@ -111,15 +117,29 @@ public class DBUser extends DBThread {
                     TextView numEvOrg = v.findViewById(R.id.numEvOrg);
                     numEvOrg.setText(f.getString(R.string.numEvOrg, u.getNumEvOrg()));
 
+                    Button rating = v.findViewById(R.id.rating);
                     if(u.getNumEvOrg() == 0) {
-                        v.findViewById(R.id.rating).setEnabled(false);
-                        v.findViewById(R.id.rating).setVisibility(View.INVISIBLE);
+                        rating.setEnabled(false);
+                        rating.setVisibility(View.INVISIBLE);
                     } else {
-                        v.findViewById(R.id.rating).setEnabled(true);
-                        v.findViewById(R.id.rating).setVisibility(View.VISIBLE);
+                        rating.setEnabled(true);
+                        rating.setVisibility(View.VISIBLE);
+                        final double meanRating = u.getValutazioneMedia();
+                        rating.setOnClickListener(c -> {
+                            AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
+                            ad.setTitle(R.string.personal_rating);
+                            ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
+                            ad.show();
+                        });
                     }
 
                     break;
+                }
+                case "setAll": {
+                    UserInfo ui = user.getUser(email);
+
+                    //Aggiorna la riga dell'utente nel database
                 }
             }
             close();

@@ -5,7 +5,18 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.user_profile.UserProfileFragment" >
+    tools:context=".ui.user_profile.UserProfileFragment">
+
+    <TextView
+        android:id="@+id/username_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/username"
+        app:layout_constraintEnd_toStartOf="@+id/username"
+        app:layout_constraintHorizontal_bias="0.746"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePic" />
 
     <ImageView
         android:id="@+id/profilePic"
@@ -23,8 +34,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:textStyle="italic"
         android:textAlignment="center"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +45,7 @@
         android:id="@+id/email_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="36dp"
         android:text="@string/user_email"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +59,7 @@
         android:textAlignment="center"
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.131"
+        app:layout_constraintHorizontal_bias="0.245"
         app:layout_constraintStart_toEndOf="@+id/email_text_view"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
@@ -56,7 +67,7 @@
         android:id="@+id/phone_text_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="152dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="32dp"
         android:text="@string/phone"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +79,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintHorizontal_bias="0.231"
         app:layout_constraintStart_toEndOf="@+id/phone_text_box"
         app:layout_constraintTop_toBottomOf="@+id/email_value" />
 

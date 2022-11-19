@@ -15,8 +15,8 @@ import java.util.Arrays;
 
 public class UserInfo {
     private String profilePic, nome, email, tel;
-    private Integer numEvOrg;
-    private Double valutazioneMedia;
+    private final Integer numEvOrg;
+    private final Double valutazioneMedia;
 
     public UserInfo() {
         numEvOrg = 0;

@@ -1,7 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 public class AuthObject {
-    private String csrfToken, googleJwt;
+    private final String csrfToken;
+    private final String googleJwt;
 
     public AuthObject(String ct, String jwt) {
         csrfToken = ct;

@@ -12,13 +12,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class Event {
-    private String id; //Tipo dell'evento
-    private String eventid; //ID dell'evento
-    private String self; //URL dell'evento
-    private String name, category, eventPic; //Informazioni sull'evento
-    private String orgName;
-    private String[] days;
-    private String hours;
+    private final String id; //Tipo dell'evento
+    private final String eventid; //ID dell'evento
+    private final String self; //URL dell'evento
+    private final String name;
+    private final String category;
+    private final String eventPic; //Informazioni sull'evento
+    private final String orgName;
+    private final String[] days;
+    private final String hours;
 
     /**
      * Costruisce l'oggetto PublicEvent. NOTA: nessuno dei seguenti parametri pu&ograve; essere null.

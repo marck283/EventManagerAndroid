@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class SpinnerOnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-    private MutableLiveData<Object> item = new MutableLiveData<>();
+    private final MutableLiveData<Object> item = new MutableLiveData<>();
 
     /**
      * <p>Callback method to be invoked when an item in this view has been

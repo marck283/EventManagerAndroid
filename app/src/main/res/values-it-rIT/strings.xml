@@ -93,4 +93,7 @@
     <string name="numEvOrg">Hai organizzato %1$d eventi</string>
     <string name="manage_your_events">Gestisci i tuoi eventi</string>
     <string name="average_rating_button">Visualizza la tua valutazione media</string>
+    <string name="personal_rating">Valutazione media</string>
+    <string name="personal_rating_message">La tua valutazione corrente è %1$.4f.</string>
+    <string name="username">Nome utente:</string>
 </resources>

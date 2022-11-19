@@ -40,7 +40,7 @@ public class EventCreationActivity extends AppCompatActivity {
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
     private EventViewModel evm;
-    private int countRows = 0;
+    private final int countRows = 0;
     private NewDateViewModel nd;
 
     @Override

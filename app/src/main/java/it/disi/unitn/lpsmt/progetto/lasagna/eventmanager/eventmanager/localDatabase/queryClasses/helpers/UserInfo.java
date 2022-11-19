@@ -3,9 +3,12 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localData
 import androidx.annotation.NonNull;
 
 public class UserInfo {
-    private String profilePic, nome, email, tel;
-    private Integer numEvOrg;
-    private Double valutazioneMedia;
+    private final String profilePic;
+    private final String nome;
+    private final String email;
+    private final String tel;
+    private final Integer numEvOrg;
+    private final Double valutazioneMedia;
 
     public UserInfo(@NonNull String profilePic, @NonNull String nome, @NonNull String email, @NonNull String tel,
                     @NonNull Integer numEvOrg, @NonNull Double valutazioneMedia) {

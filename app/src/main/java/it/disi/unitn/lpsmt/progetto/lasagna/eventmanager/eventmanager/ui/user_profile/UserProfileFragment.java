@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_p
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import org.jetbrains.annotations.Contract;
 

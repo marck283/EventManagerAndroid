@@ -6,8 +6,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 public class UserAccount {
-    private String token, email, id, self;
-    private Base64 profilePic;
+    private final String token;
+    private final String email;
+    private final String id;
+    private final String self;
+    private final Base64 profilePic;
 
     public UserAccount(String token, String email, String id, String self, Base64 profilePic) {
         this.token = token;

@@ -122,4 +122,7 @@
     <string name="numEvOrg">You organized %1$d events</string>
     <string name="manage_your_events">Manage your events</string>
     <string name="average_rating_button">See your average rating</string>
+    <string name="personal_rating">Personal rating</string>
+    <string name="personal_rating_message">Your current rating is %1$.4f.</string>
+    <string name="username">"Username: "</string>
 </resources>
