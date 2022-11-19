@@ -4,13 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MenuSettingsViewModel extends ViewModel {
-
-    private final MutableLiveData<Boolean> phoneChecked;
-
-    public MenuSettingsViewModel() {
-        phoneChecked = new MutableLiveData<>();
-    }
+    @NotNull
+    private final MutableLiveData<Boolean> phoneChecked = new MutableLiveData<>(false);
 
     public void setChecked(boolean val) {
         phoneChecked.setValue(val);

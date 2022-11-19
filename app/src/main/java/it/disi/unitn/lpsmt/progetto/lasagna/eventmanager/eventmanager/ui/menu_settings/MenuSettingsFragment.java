@@ -15,10 +15,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.BuildConfig;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentMenuSettingsBinding;
 
 public class MenuSettingsFragment extends Fragment {
-    private FragmentMenuSettingsBinding binding;
     private MenuSettingsViewModel menuSettingsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -26,19 +24,20 @@ public class MenuSettingsFragment extends Fragment {
         menuSettingsViewModel =
                 new ViewModelProvider(requireActivity()).get(MenuSettingsViewModel.class);
 
-        binding = FragmentMenuSettingsBinding.inflate(inflater, container, false);
-
-        return binding.getRoot();
+        return inflater.inflate(R.layout.fragment_menu_settings, container, false);
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        //Ancora da implementare: schermata dettaglio profilo e abilitazione visualizzazione
-        //numero di telefono in dettaglio profilo tramite lo switch presente nel layout di questo
-        //Fragment.
         view.findViewById(R.id.button2).setOnClickListener(v -> Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment_content_navigation_drawer))
                 .navigate(R.id.action_nav_user_settings_to_nav_user_profile));
         view.findViewById(R.id.button4).setOnClickListener(v -> showInfo());
-        ((SwitchMaterial)view.findViewById(R.id.switch1)).setOnCheckedChangeListener((c, c1) -> menuSettingsViewModel.setChecked(c.isChecked()));
+        ((SwitchMaterial)view.findViewById(R.id.switch1)).setOnCheckedChangeListener((c, c1) -> menuSettingsViewModel.setChecked(c1));
+        if(savedInstanceState != null) {
+            ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(savedInstanceState.getBoolean("checked"));
+        } else {
+            ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(menuSettingsViewModel.getChecked().getValue());
+        }
     }
 
     @Override
@@ -52,5 +51,9 @@ public class MenuSettingsFragment extends Fragment {
         dialog.setMessage(getString(R.string.app_version) + ": " + BuildConfig.VERSION_NAME);
         dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", (dialog1, which) -> dialog1.dismiss());
         dialog.show();
+    }
+
+    public void onSaveInstanceState(@NonNull Bundle b) {
+        b.putBoolean("checked", menuSettingsViewModel.getChecked().getValue());
     }
 }
