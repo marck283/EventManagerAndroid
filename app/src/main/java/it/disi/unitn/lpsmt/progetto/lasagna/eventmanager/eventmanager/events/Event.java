@@ -55,7 +55,7 @@ public class Event {
     }
 
     /**
-     * Decodifica il valore della stringa che rappresenta l'immagine dell'evento in Bitmap.
+     * Decodifica il valore della stringa base64 che rappresenta l'immagine dell'evento in Bitmap.
      * @return Il valore decodificato in tipo Bitmap
      */
     public Bitmap decodeBase64() {

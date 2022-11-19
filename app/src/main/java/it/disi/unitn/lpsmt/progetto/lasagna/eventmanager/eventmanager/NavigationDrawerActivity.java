@@ -11,10 +11,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -212,7 +214,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             GoogleSignInAccount acc = account.getAccount();
             String authCode = acc.getIdToken();
             CsrfToken csrf = new CsrfToken();
-            csrf.getCsrfToken(this, new Authentication(), authCode);
+            View v1 = findViewById(R.id.lLayout);
+            csrf.getCsrfToken(this, new Authentication(), authCode, navView);
 
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
             email.setText(getString(R.string.email, acc.getEmail()));
@@ -224,7 +227,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 Log.i("valueChanged", o);
                 Bitmap bm = getImageBitmap(o);
                 ImageView v = l.findViewById(R.id.imageView);
-                v.setImageBitmap(bm);
+                Glide.with(this).load(bm).into(v);
             });
         }
     }

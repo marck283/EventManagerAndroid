@@ -55,7 +55,7 @@ public class LoggedInUser {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
         LoggedInUser user = new LoggedInUser(fromJson(gs1, "token", json), fromJson(gs1, "email", json),
-        fromJson(gs1, "profilePic", json), fromJson(gs1, "id", json), fromJson(gs1, "self", json));
+                fromJson(gs1, "id", json), fromJson(gs1, "self", json), fromJson(gs1, "profilePic", json));
         Log.i("OK", json.toString());
         return user;
     }

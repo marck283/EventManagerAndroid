@@ -1,15 +1,22 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
 
-import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
@@ -30,12 +37,12 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull Activity a, @NonNull String csrfToken, String googleJwt) {
-        if(Objects.equals(googleJwt, "")) {
+    public void login(@NonNull Activity a, @NonNull String csrfToken, @NonNull String googleJwt, @NonNull NavigationView v) {
+        if(googleJwt.equals("")) {
             Log.i("gJwtNull", "Il token JWT di Google non può essere una stringa vuota");
         }
         Call<JsonObject> auth = authentication.authentication(new AuthObject(csrfToken, googleJwt));
-        auth.enqueue(new Callback<JsonObject>() {
+        auth.enqueue(new Callback<>() {
 
             /**
              * Invoked for a received HTTP response.
@@ -54,12 +61,15 @@ public class Authentication {
                     info = info.parseJSON(response.body());
                     DBUser up = new DBUser(a, info.getEmail(), "updateProfilePic", info);
                     up.start();
-                    if(a instanceof NavigationDrawerActivity) {
-                        ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
+                    if (a instanceof NavigationDrawerActivity) {
+                        ((NavigationDrawerActivity) a).getViewModel().setToken(info.getToken());
+                        ImageView image = v.getHeaderView(0).findViewById(R.id.imageView);
+                        Log.i("userPic", info.getProfilePic());
+                        Glide.with(v.getContext()).load(info.getProfilePic()).circleCrop().into(image);
                     }
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
-                    if(response.body() != null && response.code() == 401) {
+                    if (response.body() != null && response.code() == 401) {
                         GSignIn signIn = new GSignIn(a);
                         signIn.signIn(a, 2);
                     }
