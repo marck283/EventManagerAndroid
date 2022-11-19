@@ -1,19 +1,14 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.FutureTarget;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
-
-import java.util.concurrent.ExecutionException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
