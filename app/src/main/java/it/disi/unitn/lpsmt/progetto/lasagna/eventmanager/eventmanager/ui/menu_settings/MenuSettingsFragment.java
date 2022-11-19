@@ -18,13 +18,15 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class MenuSettingsFragment extends Fragment {
     private MenuSettingsViewModel menuSettingsViewModel;
+    private View v;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         menuSettingsViewModel =
                 new ViewModelProvider(requireActivity()).get(MenuSettingsViewModel.class);
 
-        return inflater.inflate(R.layout.fragment_menu_settings, container, false);
+        v = inflater.inflate(R.layout.fragment_menu_settings, container, false);
+        return v;
     }
 
     @Override
@@ -36,7 +38,11 @@ public class MenuSettingsFragment extends Fragment {
         if(savedInstanceState != null) {
             ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(savedInstanceState.getBoolean("checked"));
         } else {
-            ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(menuSettingsViewModel.getChecked().getValue());
+            if(menuSettingsViewModel.getChecked().getValue() != null) {
+                ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(menuSettingsViewModel.getChecked().getValue());
+            } else {
+                ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(false);
+            }
         }
     }
 
@@ -54,6 +60,9 @@ public class MenuSettingsFragment extends Fragment {
     }
 
     public void onSaveInstanceState(@NonNull Bundle b) {
+        if(menuSettingsViewModel.getChecked().getValue() == null) {
+            menuSettingsViewModel.setChecked(((SwitchMaterial)v.findViewById(R.id.switch1)).isChecked());
+        }
         b.putBoolean("checked", menuSettingsViewModel.getChecked().getValue());
     }
 }
