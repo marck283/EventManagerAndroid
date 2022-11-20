@@ -73,20 +73,27 @@ public class LoginActivity extends AppCompatActivity {
             //Inoltre devo proprio acquisire il profilo qui? Non potrei farlo direttamente dal server web
             //passando solo il token CSRF?
             LoginManager loginManager = LoginManager.getInstance();
-            loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this, List.of("public_profile", "email")));
+
+            loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this,
+                    List.of("public_profile", "email")));
             loginButton.registerCallback(callbackManager, new FacebookCallback<>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     AccessToken accessToken = loginResult.getAccessToken();
                     Intent i = setUpIntent("facebook", accessToken);
-                    GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
+
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id,name,picture,email");
+                    GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
                         if(jsonObject != null) {
                             Profile p = new Profile(jsonObject);
                             i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
                             setResult(Activity.RESULT_OK, i);
                             finish();
                         }
-                    }).executeAsync();
+                    });
+                    req.setParameters(parameters);
+                    req.executeAsync();
                 }
 
                 @Override
