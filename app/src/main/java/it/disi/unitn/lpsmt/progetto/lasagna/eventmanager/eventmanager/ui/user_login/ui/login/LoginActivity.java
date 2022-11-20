@@ -16,6 +16,7 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -72,12 +73,20 @@ public class LoginActivity extends AppCompatActivity {
             //Inoltre devo proprio acquisire il profilo qui? Non potrei farlo direttamente dal server web
             //passando solo il token CSRF?
             LoginManager loginManager = LoginManager.getInstance();
-            loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this, List.of("public_profile")));
+            loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this, List.of("public_profile", "email")));
             loginButton.registerCallback(callbackManager, new FacebookCallback<>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
-                    setResult(Activity.RESULT_OK, setUpIntent("facebook", loginResult.getAccessToken()));
-                    finish();
+                    AccessToken accessToken = loginResult.getAccessToken();
+                    Intent i = setUpIntent("facebook", accessToken);
+                    GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
+                        if(jsonObject != null) {
+                            Profile p = new Profile(jsonObject);
+                            i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
+                            setResult(Activity.RESULT_OK, i);
+                            finish();
+                        }
+                    }).executeAsync();
                 }
 
                 @Override
@@ -109,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount", signIn.getAccount());
         } else {
             Log.i("profileNull", accessToken.getToken());
-            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", Profile.getCurrentProfile());
+            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", accessToken);
         }
         return intent;
     }
