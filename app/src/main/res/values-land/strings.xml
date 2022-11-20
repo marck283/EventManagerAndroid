@@ -125,4 +125,7 @@
     <string name="personal_rating">Personal rating</string>
     <string name="personal_rating_message">Your current rating is %1$.4f.</string>
     <string name="username">"Username: "</string>
+    <string name="facebook_user">Facebook user</string>
+    <string name="facebook_login_error">There was an error with your Facebook login. Try again later.</string>
+    <string name="facebook_login_error_title">Login error</string>
 </resources>

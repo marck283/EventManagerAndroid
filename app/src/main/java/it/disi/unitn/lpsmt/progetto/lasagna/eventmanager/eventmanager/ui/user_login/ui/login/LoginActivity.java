@@ -4,16 +4,28 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding;
@@ -26,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQ_SIGN_IN = 2;
     private GSignIn signIn;
     private DBThread t2;
+    private CallbackManager callbackManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         //account = GoogleSignIn.getLastSignedInAccount(this);
         if(signIn.getAccount() != null) {
-            Intent intent = setUpIntent();
+            Intent intent = setUpIntent("google", null);
             setResult(Activity.RESULT_OK, intent);
             finish();
         } else {
@@ -51,14 +64,53 @@ public class LoginActivity extends AppCompatActivity {
                     signIn();
                 }
             });
+
+            callbackManager = CallbackManager.Factory.create();
+            LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
+
+            //Come mai all'utente viene richiesto di eseguire due volte il login senza mai ottenere il profilo?
+            //Inoltre devo proprio acquisire il profilo qui? Non potrei farlo direttamente dal server web
+            //passando solo il token CSRF?
+            LoginManager loginManager = LoginManager.getInstance();
+            loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this, List.of("public_profile")));
+            loginButton.registerCallback(callbackManager, new FacebookCallback<>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    setResult(Activity.RESULT_OK, setUpIntent("facebook", loginResult.getAccessToken()));
+                    finish();
+                }
+
+                @Override
+                public void onCancel() {
+                    setResult(Activity.RESULT_CANCELED);
+                    finish();
+                }
+
+                @Override
+                public void onError(@NonNull FacebookException e) {
+                    AlertDialog dialog = new AlertDialog.Builder(getApplicationContext()).create();
+                    dialog.setTitle(R.string.facebook_login_error_title);
+                    dialog.setMessage(getString(R.string.facebook_login_error));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                        dialog1.dismiss();
+                        finish();
+                    });
+                    dialog.show();
+                }
+            });
         }
     }
 
     @NonNull
-    private Intent setUpIntent() {
+    private Intent setUpIntent(@NonNull String which, @Nullable AccessToken accessToken) {
         Intent intent = new Intent();
         intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
-        intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount", signIn.getAccount());
+        if(which.equals("google")) {
+            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount", signIn.getAccount());
+        } else {
+            Log.i("profileNull", accessToken.getToken());
+            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", Profile.getCurrentProfile());
+        }
         return intent;
     }
 
@@ -67,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
@@ -86,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
             t2 = new DBSignInThread(this, signIn);
             t2.start();
 
-            Intent intent = setUpIntent();
+            Intent intent = setUpIntent("google", null);
             setResult(Activity.RESULT_OK, intent);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.

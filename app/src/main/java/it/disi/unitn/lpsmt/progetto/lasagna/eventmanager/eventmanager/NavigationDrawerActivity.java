@@ -11,12 +11,15 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -24,6 +27,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -39,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
@@ -61,22 +66,26 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private NavigationSharedViewModel vm;
     private MenuSettingsViewModel ms;
     private ActivityNavigationDrawerBinding binding;
+    private AccessToken accessToken;
+    private Profile profile;
+    private AccessTokenTracker tracker;
 
     private void setAlertDialog(boolean eventCreation) {
         AlertDialog d = new AlertDialog.Builder(this).create();
         d.setTitle(getString(R.string.no_session_title));
         d.setMessage(getString(R.string.no_session_content));
         d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+            Intent intent = new Intent(this, LoginActivity.class);
             if(eventCreation) {
-                account.signIn(this, REQ_SIGN_IN_EV_CREATION);
+                startActivityForResult(intent, REQ_SIGN_IN_EV_CREATION);
             } else {
-                account.signIn(this, REQ_SIGN_IN);
+                startActivityForResult(intent, REQ_SIGN_IN);
             }
         });
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
             account.setAccount(null);
-            updateUI();
+            updateUI("logout");
         });
         d.setCanceledOnTouchOutside(true);
         d.show();
@@ -84,7 +93,13 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     private void showCreaEvento() {
         Intent i = new Intent(this, EventCreationActivity.class);
-        i.putExtra("accessToken", account.getAccount().getIdToken());
+        if(account != null && account.getAccount() != null) {
+            //L'utente è autenticato con Google
+            i.putExtra("accessToken", account.getAccount().getIdToken());
+        } else {
+            //L'utente è autenticato con Facebook
+            i.putExtra("accessToken", accessToken.getToken());
+        }
         startActivity(i);
     }
 
@@ -96,8 +111,15 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
+        tracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(@Nullable AccessToken accessToken2, @Nullable AccessToken accessToken1) {
+                accessToken = accessToken1;
+            }
+        };
+        tracker.startTracking();
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> {
-            if(account.getAccount() == null) {
+            if(account.getAccount() == null && profile == null) {
                 setAlertDialog(false);
             } else {
                 showCreaEvento();
@@ -106,6 +128,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
         ms = new ViewModelProvider(this).get(MenuSettingsViewModel.class);
+        accessToken = AccessToken.getCurrentAccessToken();
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -138,14 +161,28 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
-        account.silentSignIn(s -> {
-            try {
-                account.setAccount(s.getResult(ApiException.class));
-                updateUI();
-            } catch(ApiException ex) {
-                Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
+        profile = Profile.getCurrentProfile();
+        if(profile == null) {
+            account.silentSignIn(s -> {
+                try {
+                    account.setAccount(s.getResult(ApiException.class));
+                    updateUI("login");
+                } catch(ApiException ex) {
+                    Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
+                    updateUI("logout");
+                }
+            }, e -> {
+                if(profile == null) {
+                    Log.i("profileNull", "Profile null");
+                    setAlertDialog(false);
+                }
+            });
+        } else {
+            if(accessToken.isExpired()) {
+                LoginManager.getInstance().logInWithReadPermissions(this, List.of("public_profile"));
             }
-        }, e -> setAlertDialog(false));
+            updateUI("login");
+        }
     }
 
     public NavigationSharedViewModel getViewModel() {
@@ -195,7 +232,14 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         return bm;
     }
 
-    private void updateUI() {
+    private void showNotLoggedIn(@NonNull TextView username, @NonNull TextView email) {
+        navView.inflateMenu(R.menu.navmenu_not_logged_in);
+        username.setText("");
+        email.setText("");
+        Log.i("info", "account null");
+    }
+
+    private void updateUI(String request) {
         navView.getMenu().clear();
 
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
@@ -203,18 +247,32 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         TextView email = l.findViewById(R.id.profile_email);
         Log.i("account", String.valueOf(account.getAccount()));
         if(account.getAccount() == null) {
-            navView.inflateMenu(R.menu.navmenu_not_logged_in);
-            username.setText("");
-            email.setText("");
-            Log.i("info", "account null");
+            if(Profile.getCurrentProfile() == null) {
+                showNotLoggedIn(username, email);
+            } else {
+                if(request.equals("logout")) {
+                    LoginManager.getInstance().logOut();
+                    showNotLoggedIn(username, email);
+                } else {
+                    //L'utente è autenticato con Google; ottieni il token di accesso al server e mostra la UI aggiornata.
+                    navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
+
+                    //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
+                    profile = Profile.getCurrentProfile();
+                    Log.i("id", profile.getId());
+                    username.setText(getString(R.string.profileName, profile.getName()));
+                    email.setText(getString(R.string.email, getString(R.string.facebook_user)));
+
+                    //Ora autentica l'utente al sistema, poi aggiorna l'immagine del profilo nel menù di navigazione...
+                }
+            }
         } else {
-            //L'utente è autenticato; ottieni il token di accesso al server e mostra la UI aggiornata.
+            //L'utente è autenticato con Google; ottieni il token di accesso al server e mostra la UI aggiornata.
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
 
             GoogleSignInAccount acc = account.getAccount();
             String authCode = acc.getIdToken();
             CsrfToken csrf = new CsrfToken();
-            View v1 = findViewById(R.id.lLayout);
             csrf.getCsrfToken(this, new Authentication(), authCode, navView);
 
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
@@ -238,7 +296,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         t.addOnCompleteListener(c -> {
             account.setAccount(null);
             vm.setToken("");
-            updateUI();
+            updateUI("logout");
         });
     }
 
@@ -251,23 +309,34 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         startActivityForResult(intent, REQ_SIGN_IN);
     }
 
-    private void signInCheck(int resultCode, @NonNull Intent data) {
+    private void signInCheck(int resultCode, @NonNull Intent data, @NonNull String which) {
         switch(resultCode) {
             case Activity.RESULT_OK: {
-                //Autenticato con successo a Google, ora autentica al server e
+                //Autenticato con successo a Google o Facebook, ora autentica al server e
                 //mostra i dati del profilo richiesti
 
-                if(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
-                    account.setAccount(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount"));
+                if(which.equals("google")) {
+                    //Google login
+                    GoogleSignInAccount gSignIn = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount");
+                    if(gSignIn != null) {
+                        account.setAccount(gSignIn);
+                    } else {
+                        account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
+                    }
                 } else {
-                    account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
+                    //Facebook login
+                    AccessToken pFacebook = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken");
+                    if(pFacebook != null) {
+                        profile = Profile.getCurrentProfile();
+                    }
                 }
-                updateUI();
+
+                updateUI("login");
                 break;
             }
             case Activity.RESULT_CANCELED: {
                 account.setAccount(null);
-                updateUI();
+                updateUI("logout");
                 break;
             }
         }
@@ -277,15 +346,15 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_SIGN_IN) {
-            signInCheck(resultCode, data);
-        } else {
-            if(requestCode == REQ_SIGN_IN_EV_CREATION) {
-                signInCheck(resultCode, data);
-                if(resultCode == Activity.RESULT_OK) {
-                    showCreaEvento();
-                }
+        if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) {
+            if(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
+                signInCheck(resultCode, data, "google");
+            } else {
+                signInCheck(resultCode, data, "facebook");
             }
+        }
+        if(requestCode == REQ_SIGN_IN_EV_CREATION && resultCode == Activity.RESULT_OK) {
+            showCreaEvento();
         }
     }
 
@@ -306,5 +375,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         t1 = null;
+        account = null;
+        accessToken = null;
+        profile = null;
+        tracker.stopTracking();
     }
 }

@@ -96,4 +96,7 @@
     <string name="personal_rating">Valutazione media</string>
     <string name="personal_rating_message">La tua valutazione corrente è %1$.4f.</string>
     <string name="username">Nome utente:</string>
+    <string name="facebook_user">Utente Facebook</string>
+    <string name="facebook_login_error">Si è verificato un errore con il login Facebook. Riprova più tardi.</string>
+    <string name="facebook_login_error_title">Accesso non effettuato</string>
 </resources>

@@ -38,6 +38,7 @@ public class MenuSettingsFragment extends Fragment {
         if(savedInstanceState != null) {
             ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(savedInstanceState.getBoolean("checked"));
         } else {
+            //Da salvare nelle SharedPreferences per condividerne il valore tra più esecuzioni dell'applicazione
             if(menuSettingsViewModel.getChecked().getValue() != null) {
                 ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(menuSettingsViewModel.getChecked().getValue());
             } else {
