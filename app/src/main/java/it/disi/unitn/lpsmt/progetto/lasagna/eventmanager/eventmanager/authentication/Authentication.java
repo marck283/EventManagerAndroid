@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
@@ -32,11 +33,22 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull Activity a, @NonNull String csrfToken, @NonNull String googleJwt, @NonNull NavigationView v) {
-        if(googleJwt.equals("")) {
-            Log.i("gJwtNull", "Il token JWT di Google non può essere una stringa vuota");
+    public void login(@NonNull Activity a, @NonNull String csrfToken, @Nullable String googleJwt, @Nullable String fbJwt, @NonNull NavigationView v, @NonNull String which) {
+        Call<JsonObject> auth;
+        if(which.equals("google")) {
+            if(googleJwt == null || googleJwt.equals("")) {
+                Log.i("gJwtNull", "Il token JWT di Google non può essere null o una stringa vuota");
+                return;
+            }
+            auth = authentication.authentication(new AuthObject(csrfToken, googleJwt));
+        } else {
+            if(fbJwt == null || fbJwt.equals("")) {
+                Log.i("fbJwtNull", "L'Access Token di Facebook non può essere null o una stringa vuota");
+                return;
+            }
+            Log.i("fbJwt", fbJwt);
+            auth = authentication.fbAuth(new AuthObject(csrfToken, fbJwt));
         }
-        Call<JsonObject> auth = authentication.authentication(new AuthObject(csrfToken, googleJwt));
         auth.enqueue(new Callback<>() {
 
             /**
@@ -64,7 +76,7 @@ public class Authentication {
                     }
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
-                    if (response.body() != null && response.code() == 401) {
+                    if (response.body() != null && response.code() == 401 && which.equals("google")) {
                         GSignIn signIn = new GSignIn(a);
                         signIn.signIn(a, 2);
                     }

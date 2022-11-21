@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
+import com.facebook.GraphRequest;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,6 +39,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONException;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -85,7 +89,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
             account.setAccount(null);
-            updateUI("logout");
+            updateUI("logout", null, null);
         });
         d.setCanceledOnTouchOutside(true);
         d.show();
@@ -115,6 +119,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             @Override
             protected void onCurrentAccessTokenChanged(@Nullable AccessToken accessToken2, @Nullable AccessToken accessToken1) {
                 accessToken = accessToken1;
+                if(accessToken != null) {
+                    vm.setToken(accessToken.getToken());
+                } else {
+                    vm.setToken("");
+                }
             }
         };
         tracker.startTracking();
@@ -166,23 +175,41 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             account.silentSignIn(s -> {
                 try {
                     account.setAccount(s.getResult(ApiException.class));
-                    updateUI("login");
+                    updateUI("login", null, null);
                 } catch(ApiException ex) {
                     Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
-                    updateUI("logout");
+                    updateUI("logout", null, null);
                 }
             }, e -> {
                 if(profile == null) {
                     Log.i("profileNull", "Profile null");
                     setAlertDialog(false);
+                } else {
+                    makeEmailRequestAndUpdate();
                 }
             });
         } else {
             if(accessToken.isExpired()) {
-                LoginManager.getInstance().logInWithReadPermissions(this, List.of("public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(this, List.of("public_profile", "email"));
             }
-            updateUI("login");
+            makeEmailRequestAndUpdate();
         }
+    }
+
+    private void makeEmailRequestAndUpdate() {
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,picture,email");
+        GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
+            if(jsonObject != null) {
+                try {
+                    updateUI("login", jsonObject.getString("email"), jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        req.setParameters(parameters);
+        req.executeAsync();
     }
 
     public NavigationSharedViewModel getViewModel() {
@@ -239,7 +266,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         Log.i("info", "account null");
     }
 
-    private void updateUI(String request) {
+    private void updateUI(@NonNull String request, @Nullable String emailF, @Nullable String picture) {
         navView.getMenu().clear();
 
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
@@ -258,12 +285,15 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
 
                     //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
-                    profile = Profile.getCurrentProfile();
                     Log.i("id", profile.getId());
                     username.setText(getString(R.string.profileName, profile.getName()));
-                    email.setText(getString(R.string.email, getString(R.string.facebook_user)));
+                    if(emailF != null && !emailF.equals("")) {
+                        email.setText(getString(R.string.email, emailF));
+                    }
 
                     //Ora autentica l'utente al sistema, poi aggiorna l'immagine del profilo nel menù di navigazione...
+                    CsrfToken csrf = new CsrfToken();
+                    csrf.getCsrfToken(this, new Authentication(), null, accessToken.getToken(), navView, "facebook");
                 }
             }
         } else {
@@ -273,7 +303,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             GoogleSignInAccount acc = account.getAccount();
             String authCode = acc.getIdToken();
             CsrfToken csrf = new CsrfToken();
-            csrf.getCsrfToken(this, new Authentication(), authCode, navView);
+            csrf.getCsrfToken(this, new Authentication(), authCode, null, navView, "google");
 
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
             email.setText(getString(R.string.email, acc.getEmail()));
@@ -291,13 +321,18 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     public void revokeAccess(MenuItem item) {
-        Task<Void> t = account.signOut();
-        t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
-        t.addOnCompleteListener(c -> {
-            account.setAccount(null);
+        if(account != null) {
+            Task<Void> t = account.signOut();
+            t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
+            t.addOnCompleteListener(c -> {
+                account.setAccount(null);
+                vm.setToken("");
+                updateUI("logout", null, null);
+            });
+        } else {
+            accessToken = null;
             vm.setToken("");
-            updateUI("logout");
-        });
+        }
     }
 
     /**
@@ -323,20 +358,27 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     } else {
                         account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
                     }
+                    updateUI("login", null, null);
                 } else {
                     //Facebook login
-                    AccessToken pFacebook = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken");
-                    if(pFacebook != null) {
-                        profile = Profile.getCurrentProfile();
+                    accessToken = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken");
+                    if(accessToken != null) {
+                        vm.setToken(accessToken.getToken());
+                        profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
+                    }
+                    String email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
+                    Uri picture = profile.getPictureUri();
+                    if(picture != null) {
+                        updateUI("login", email, profile.getPictureUri().toString());
+                    } else {
+                        updateUI("login", email, null);
                     }
                 }
-
-                updateUI("login");
                 break;
             }
             case Activity.RESULT_CANCELED: {
                 account.setAccount(null);
-                updateUI("logout");
+                updateUI("logout", null, null);
                 break;
             }
         }

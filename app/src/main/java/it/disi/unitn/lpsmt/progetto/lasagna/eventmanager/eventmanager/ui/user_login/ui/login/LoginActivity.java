@@ -26,6 +26,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -86,10 +88,15 @@ public class LoginActivity extends AppCompatActivity {
                     parameters.putString("fields", "id,name,picture,email");
                     GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
                         if(jsonObject != null) {
-                            Profile p = new Profile(jsonObject);
-                            i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
-                            setResult(Activity.RESULT_OK, i);
-                            finish();
+                            try {
+                                Profile p = new Profile(jsonObject);
+                                i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
+                                i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail", jsonObject.getString("email"));
+                                setResult(Activity.RESULT_OK, i);
+                                finish();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     req.setParameters(parameters);

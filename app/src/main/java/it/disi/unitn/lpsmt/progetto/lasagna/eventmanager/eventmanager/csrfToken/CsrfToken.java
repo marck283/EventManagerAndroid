@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
@@ -27,10 +28,10 @@ public class CsrfToken {
     }
 
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
-    public void getCsrfToken(@NonNull Activity a, Object o, String jwt, @NonNull NavigationView v) {
+    public void getCsrfToken(@NonNull Activity a, Object o, @Nullable String gJwt, @Nullable String fbJwt, @NonNull NavigationView v, @NonNull String which) {
         ApiCSRFClass token = new ApiCSRFClass();
         Call<JsonObject> call = csrfToken.getToken();
-        call.enqueue(new Callback<JsonObject>() {
+        call.enqueue(new Callback<>() {
 
             /**
              * Invoked for a received HTTP response.
@@ -43,12 +44,12 @@ public class CsrfToken {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                synchronized(this) {
+                synchronized (this) {
                     if (response.isSuccessful() && response.body() != null) {
                         ApiCSRFClass token1 = token.parseJSON(response.body());
                         Log.i("token1", String.valueOf(token1.getToken()));
-                        if(o instanceof Authentication) {
-                            ((Authentication)o).login(a, token1.getToken(), jwt, v);
+                        if (o instanceof Authentication) {
+                            ((Authentication) o).login(a, token1.getToken(), gJwt, fbJwt, v, which);
                         }
                     } else {
                         Log.i("null", "Unsuccessful or null response");
