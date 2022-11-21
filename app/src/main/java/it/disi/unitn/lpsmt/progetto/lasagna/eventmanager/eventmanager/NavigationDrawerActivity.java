@@ -151,14 +151,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         account = new GSignIn(this);
         t1 = new DBThread(this);
 
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        if(dm.heightPixels > dm.widthPixels) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        }
-
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
             NavController navController = nhf.getNavController();
@@ -294,6 +286,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     //Ora autentica l'utente al sistema, poi aggiorna l'immagine del profilo nel menù di navigazione...
                     CsrfToken csrf = new CsrfToken();
                     csrf.getCsrfToken(this, new Authentication(), null, accessToken.getToken(), navView, "facebook");
+
+                    //Ora continuare (dopo un'atuenticazione corretta) con l'impostazione dell'UI...
                 }
             }
         } else {
