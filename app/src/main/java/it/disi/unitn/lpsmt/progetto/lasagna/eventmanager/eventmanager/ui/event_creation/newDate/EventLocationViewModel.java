@@ -286,6 +286,11 @@ public class EventLocationViewModel extends ViewModel {
         provincia = val;
     }
 
+    private void dismiss() {
+
+        f.dismiss();
+    }
+
     public void parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4, @NonNull EditText t5) {
         if (provincia == null || provincia.equals("")) {
             setAlertDialog(R.string.incorrect_province_format_title, f.getString(R.string.incorrect_province_format));
@@ -301,6 +306,7 @@ public class EventLocationViewModel extends ViewModel {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> setAddress(addresses, luogo));
+                dismiss();
             } else {
                 Thread t1 = new Thread() {
                     @Override
@@ -318,7 +324,7 @@ public class EventLocationViewModel extends ViewModel {
                             }
 
                             //Qui potrebbe essere opportuno utilizzare la navigazione offerta dal Navigation Graph di Android...
-                            f.dismiss();
+                            dismiss();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
