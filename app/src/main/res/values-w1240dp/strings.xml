@@ -48,7 +48,7 @@
     <string name="no_session_title">You are not authenticated!</string>
     <string name="facebook_app_id" translatable="false">1143189906271722</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb1234</string>
-    <string name="facebook_client_token" translatable="false">32029c7c252db41bdde3411e6504ae4c</string>
+    <string name="facebook_client_token" translatable="false">d1000d7e9d1e66a5a81886fa17b1b62b</string>
     <string name="events_organized_text_view">Events that you organized</string>
     <string name="events_participate_text_view">Events to which you will participate</string>
     <string name="no_connection">No Internet connection available</string>

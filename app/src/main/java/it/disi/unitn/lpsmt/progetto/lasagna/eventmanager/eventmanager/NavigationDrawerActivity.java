@@ -264,7 +264,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         TextView email = l.findViewById(R.id.profile_email);
         Log.i("account", String.valueOf(account.getAccount()));
         if(account.getAccount() == null) {
-            if(Profile.getCurrentProfile() == null) {
+            if(Profile.getCurrentProfile() == null || accessToken.isExpired()) {
                 showNotLoggedIn(username, email);
             } else {
                 if(request.equals("logout")) {
@@ -285,7 +285,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     CsrfToken csrf = new CsrfToken();
                     csrf.getCsrfToken(this, new Authentication(), null, accessToken.getToken(), navView, "facebook");
 
-                    //Ora continuare (dopo un'atuenticazione corretta) con l'impostazione dell'UI...
+                    //Ora continuare (dopo un'autenticazione corretta) con l'impostazione dell'UI...
                 }
             }
         } else {
@@ -323,6 +323,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             });
         } else {
             accessToken = null;
+            LoginManager.getInstance().logOut();
             vm.setToken("");
         }
     }
