@@ -128,4 +128,6 @@
     <string name="facebook_user">Facebook user</string>
     <string name="facebook_login_error">There was an error with your Facebook login. Try again later.</string>
     <string name="facebook_login_error_title">Login error</string>
+    <string name="connect_facebook_account">An account with that email already exists. Would you like to connect your Facebook account?</string>
+    <string name="email_conflict_facebook">Email address already registered</string>
 </resources>

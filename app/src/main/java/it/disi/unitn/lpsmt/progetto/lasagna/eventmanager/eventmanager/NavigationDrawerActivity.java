@@ -283,7 +283,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
                     //Ora autentica l'utente al sistema, poi aggiorna l'immagine del profilo nel menù di navigazione...
                     CsrfToken csrf = new CsrfToken();
-                    csrf.getCsrfToken(this, new Authentication(), null, accessToken.getToken(), navView, "facebook");
+                    csrf.getCsrfToken(this, new Authentication(), null, accessToken, navView, "facebook");
 
                     //Ora continuare (dopo un'autenticazione corretta) con l'impostazione dell'UI...
                 }

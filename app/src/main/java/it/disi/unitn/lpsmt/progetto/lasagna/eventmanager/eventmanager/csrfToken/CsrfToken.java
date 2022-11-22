@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.facebook.AccessToken;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
 
@@ -28,7 +29,7 @@ public class CsrfToken {
     }
 
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
-    public void getCsrfToken(@NonNull Activity a, Object o, @Nullable String gJwt, @Nullable String fbJwt, @NonNull NavigationView v, @NonNull String which) {
+    public void getCsrfToken(@NonNull Activity a, Object o, @Nullable String gJwt, @Nullable AccessToken fbJwt, @NonNull NavigationView v, @NonNull String which) {
         ApiCSRFClass token = new ApiCSRFClass();
         Call<JsonObject> call = csrfToken.getToken();
         call.enqueue(new Callback<>() {

@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.facebook.AccessToken;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
 
@@ -33,21 +35,21 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull Activity a, @NonNull String csrfToken, @Nullable String googleJwt, @Nullable String fbJwt, @NonNull NavigationView v, @NonNull String which) {
+    public void login(@NonNull Activity a, @NonNull String csrfToken, @Nullable String googleJwt, @Nullable AccessToken fbJwt, @NonNull NavigationView v, @NonNull String which) {
         Call<JsonObject> auth;
         if(which.equals("google")) {
             if(googleJwt == null || googleJwt.equals("")) {
                 Log.i("gJwtNull", "Il token JWT di Google non può essere null o una stringa vuota");
                 return;
             }
-            auth = authentication.authentication(new AuthObject(csrfToken, googleJwt));
+            auth = authentication.authentication(new AuthObject(csrfToken, googleJwt, null));
         } else {
             if(fbJwt == null || fbJwt.equals("")) {
                 Log.i("fbJwtNull", "L'Access Token di Facebook non può essere null o una stringa vuota");
                 return;
             }
-            Log.i("fbJwt", fbJwt);
-            auth = authentication.fbAuth(new AuthObject(csrfToken, fbJwt));
+            Log.i("fbJwt", fbJwt.getToken());
+            auth = authentication.fbAuth(new AuthObject(csrfToken, fbJwt.getToken(), fbJwt.getUserId()));
         }
         auth.enqueue(new Callback<>() {
 
@@ -76,6 +78,16 @@ public class Authentication {
                     }
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
+                    if(response.code() == 409 && which.equals("facebook")) {
+                        AlertDialog dialog = new AlertDialog.Builder(a).create();
+                        dialog.setTitle(R.string.email_conflict_facebook);
+                        dialog.setMessage(a.getString(R.string.connect_facebook_account));
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> {
+                            //Qualcosa
+                        });
+                        dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
+                        dialog.show();
+                    }
                     if (response.body() != null && response.code() == 401 && which.equals("google")) {
                         GSignIn signIn = new GSignIn(a);
                         signIn.signIn(a, 2);

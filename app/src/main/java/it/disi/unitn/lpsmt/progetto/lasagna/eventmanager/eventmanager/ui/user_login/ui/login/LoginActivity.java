@@ -17,6 +17,7 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
+import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
@@ -27,6 +28,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -83,24 +85,31 @@ public class LoginActivity extends AppCompatActivity {
                 public void onSuccess(LoginResult loginResult) {
                     AccessToken accessToken = loginResult.getAccessToken();
                     Intent i = setUpIntent("facebook", accessToken);
+                    accessToken.getUserId();
 
                     Bundle parameters = new Bundle();
                     parameters.putString("fields", "id,name,picture,email");
-                    GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
-                        if(jsonObject != null) {
-                            try {
+                    GraphRequest req1 = new GraphRequest(accessToken, accessToken.getUserId(),
+                            null, HttpMethod.GET, graphResponse -> {
+                        try {
+                            JSONObject jsonObject = graphResponse.getJSONObject();
+                            if(jsonObject != null) {
                                 Profile p = new Profile(jsonObject);
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail", jsonObject.getString("email"));
                                 setResult(Activity.RESULT_OK, i);
                                 finish();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            } else {
+                                Log.i("nullResult", "Risposta null");
+                                setResult(Activity.RESULT_CANCELED);
+                                finish();
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    });
-                    req.setParameters(parameters);
-                    req.executeAsync();
+                            });
+                    req1.setParameters(parameters);
+                    req1.executeAsync();
                 }
 
                 @Override
