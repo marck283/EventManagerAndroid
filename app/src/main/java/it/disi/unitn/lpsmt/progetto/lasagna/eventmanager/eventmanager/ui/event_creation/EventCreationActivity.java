@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.DisplayMetrics;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -30,6 +31,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.EventRecognitionListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.EventLocationViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.NewDateViewModel;
 
 public class EventCreationActivity extends AppCompatActivity {
@@ -42,6 +44,7 @@ public class EventCreationActivity extends AppCompatActivity {
     private EventViewModel evm;
     private final int countRows = 0;
     private NewDateViewModel nd;
+    private EventLocationViewModel elvm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +87,7 @@ public class EventCreationActivity extends AppCompatActivity {
         speechRecognizer.setRecognitionListener(new EventRecognitionListener(this));
 
         evm = new ViewModelProvider(this).get(EventViewModel.class);
+        elvm = new ViewModelProvider(this).get(EventLocationViewModel.class);
     }
 
     public EventViewModel getViewModel() {
@@ -99,6 +103,8 @@ public class EventCreationActivity extends AppCompatActivity {
 
         CheckBox box = findViewById(R.id.checkBox);
         box.setOnCheckedChangeListener((buttonView, isChecked) -> evm.setPrivEvent(isChecked));
+
+        Button toSecondFragment = findViewById(R.id.button5);
     }
 
     private void checkPermission() {

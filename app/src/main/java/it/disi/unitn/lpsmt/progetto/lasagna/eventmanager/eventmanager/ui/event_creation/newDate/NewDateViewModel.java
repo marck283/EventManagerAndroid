@@ -7,13 +7,11 @@ import androidx.lifecycle.ViewModel;
 public class NewDateViewModel extends ViewModel {
     private final MutableLiveData<String> data;
     private final MutableLiveData<String> ora;
-    private final MutableLiveData<String> luogo;
     private final MutableLiveData<Integer> posti;
 
     public NewDateViewModel() {
         data = new MutableLiveData<>();
         ora = new MutableLiveData<>();
-        luogo = new MutableLiveData<>();
         posti = new MutableLiveData<>();
     }
 
@@ -31,15 +29,6 @@ public class NewDateViewModel extends ViewModel {
 
     public LiveData<String> getOra() {
         return ora;
-    }
-
-    //Il campo "luogo" è composto da: <nome via>, <numero civico>, <CAP>, <comune>, <sigla a due lettere per la provincia>
-    public void setLuogo(String indirizzo) {
-        luogo.postValue(indirizzo);
-    }
-
-    public LiveData<String> getLuogo() {
-        return luogo;
     }
 
     public void setPosti(int posti) {

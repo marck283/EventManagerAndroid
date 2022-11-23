@@ -51,7 +51,7 @@ public class EventRecognitionListener implements RecognitionListener {
 
     @Override
     public void onResults(@NonNull Bundle results) {
-        TextView v = a.findViewById(R.id.text);
+        TextView v = a.findViewById(R.id.nomeAtt);
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         v.setText(data.get(0));
         a.getViewModel().setNomeAtt(data.get(0));

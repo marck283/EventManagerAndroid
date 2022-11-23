@@ -40,28 +40,8 @@ public class EventLocationFragment extends DialogFragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        NewDateViewModel nd = new ViewModelProvider(requireActivity()).get(NewDateViewModel.class);
-        mViewModel = new EventLocationViewModel(this, nd);
-
-        Button b = view.findViewById(R.id.button6);
-        b.setOnClickListener(c -> {
-            EditText t = view.findViewById(R.id.location_address);
-            EditText t1 = view.findViewById(R.id.house_number);
-            EditText t2 = view.findViewById(R.id.location_city);
-            EditText t3 = view.findViewById(R.id.zipcode);
-            Spinner t4 = view.findViewById(R.id.province);
-
-            SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
-            t4.setOnItemSelectedListener(itemSelected);
-
-            //Perché qui il valore non viene sempre aggiornato?
-            itemSelected.getItem().observe(requireActivity(), o -> mViewModel.setProvincia((String) o));
-            mViewModel.parseAddress(t, t1, t2, t3);
-        });
-    }
-
-    public void onStart() {
-        super.onStart();
+        mViewModel = new ViewModelProvider(requireActivity()).get(EventLocationViewModel.class);
+        mViewModel.setDialogFragment(this);
 
         Spinner spinner = view.findViewById(R.id.province);
 
@@ -75,6 +55,23 @@ public class EventLocationFragment extends DialogFragment {
 
         SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
         spinner.setOnItemSelectedListener(itemSelected);
+
+        Button b = view.findViewById(R.id.button6);
+        b.setOnClickListener(c -> {
+            EditText t = view.findViewById(R.id.location_address);
+            EditText t1 = view.findViewById(R.id.house_number);
+            EditText t2 = view.findViewById(R.id.location_city);
+            EditText t3 = view.findViewById(R.id.zipcode);
+
+            spinner.setOnItemSelectedListener(itemSelected);
+
+            itemSelected.getItem().observe(requireActivity(), o -> mViewModel.setProvincia((String) o));
+            mViewModel.parseAddress(t, t1, t2, t3);
+        });
+    }
+
+    public void onStart() {
+        super.onStart();
     }
 
 }

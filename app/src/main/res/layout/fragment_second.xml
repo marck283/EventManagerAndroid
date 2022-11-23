@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.event_creation.SecondFragment">
+    tools:context=".ui.event_creation.SecondFragment"
+    android:id="@+id/constraintTableLayout">
 
     <TextView
         android:id="@+id/second_fragment_title"

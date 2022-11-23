@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.util.regex.Pattern;
 
@@ -96,11 +97,12 @@ public class NewDateFragment extends DialogFragment {
             EditText t3 = view.findViewById(R.id.seats_value);
             if(t.getText() != null && t1.getText() != null && t3.getText() != null) {
                 if(parseBeginDate(t) && parseBeginHour(t1) && parseSeats(t3)) {
-                    FragmentManager fm = getChildFragmentManager();
+                    NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
+                    /*FragmentManager fm = getChildFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     EventLocationFragment el = EventLocationFragment.newInstance();
                     ft.add(el, "EventLocationFragment");
-                    ft.commit();
+                    ft.commit();*/
                 }
             } else {
                 setAlertDialog(R.string.no_value_title, getString(R.string.no_value));

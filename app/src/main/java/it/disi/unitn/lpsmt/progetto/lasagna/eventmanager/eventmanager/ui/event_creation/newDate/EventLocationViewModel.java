@@ -11,6 +11,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModel;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,13 +20,13 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.LuogoEv;
 
 public class EventLocationViewModel extends ViewModel {
-    private final DialogFragment f;
-    private final NewDateViewModel nd;
+    private DialogFragment f;
     private String provincia;
+    private String luogo;
+    private boolean ok = false;
 
-    public EventLocationViewModel(DialogFragment f, NewDateViewModel nd) {
+    public void setDialogFragment(DialogFragment f) {
         this.f = f;
-        this.nd = nd;
     }
 
     private void setAlertDialog(int title, String message) {
@@ -36,12 +37,21 @@ public class EventLocationViewModel extends ViewModel {
         ad.show();
     }
 
+    //Il campo "luogo" è composto da: <nome via>, <numero civico>, <CAP>, <comune>, <sigla a due lettere per la provincia>
+    public void setLuogo(String indirizzo) {
+        luogo = indirizzo;
+    }
+
+    public String getLuogo() {
+        return luogo;
+    }
+
     private void setAddress(@NonNull List<Address> addresses, LuogoEv luogo) {
         int i = 0;
         for (Address a : addresses) {
             Log.i("addresses", addresses.toString());
             if (a.getAddressLine(i).contains(luogo.toString())) {
-                nd.setLuogo(luogo.toString());
+                setLuogo(luogo.toString());
                 break;
             } else {
                 ++i;
@@ -286,9 +296,13 @@ public class EventLocationViewModel extends ViewModel {
         provincia = val;
     }
 
-    private void dismiss() {
+    public boolean getOk() {
+        return ok;
+    }
 
-        f.dismiss();
+    //Perché questo metodo non esegue la navigazione alla pressione del tasto "Continua"?
+    private void dismiss() {
+        NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment);
     }
 
     public void parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4, @NonNull EditText t5) {
@@ -305,8 +319,11 @@ public class EventLocationViewModel extends ViewModel {
             LuogoEv luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]));
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                geocoder.getFromLocationName(location, 5, addresses -> setAddress(addresses, luogo));
-                dismiss();
+                geocoder.getFromLocationName(location, 5, addresses -> {
+                    setAddress(addresses, luogo);
+                    ok = true;
+                    dismiss();
+                });
             } else {
                 Thread t1 = new Thread() {
                     @Override
@@ -317,6 +334,7 @@ public class EventLocationViewModel extends ViewModel {
                             Looper.prepare();
                             if (addresses != null && !addresses.isEmpty()) {
                                 setAddress(addresses, luogo);
+                                ok = true;
                             } else {
                                 setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result));
                                 Looper.loop();

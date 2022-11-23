@@ -5,11 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -30,7 +33,10 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.button5.setOnClickListener(c -> NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.action_FirstFragment_to_SecondFragment));
+        binding.button5.setOnClickListener(c -> {
+            evm.setNomeAtt(((EditText)requireActivity().findViewById(R.id.nomeAtt)).getText().toString());
+            Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
+        });
     }
 
     public void onStart() {

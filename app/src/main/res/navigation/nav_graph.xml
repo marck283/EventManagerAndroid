@@ -44,5 +44,9 @@
         android:id="@+id/eventLocationFragment"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.EventLocationFragment"
         android:label="fragment_event_location"
-        tools:layout="@layout/fragment_event_location" />
+        tools:layout="@layout/fragment_event_location" >
+        <action
+            android:id="@+id/action_eventLocationFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </dialog>
 </navigation>

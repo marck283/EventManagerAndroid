@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/text"
+        android:id="@+id/nomeAtt"
         android:layout_width="268dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text" />
+        app:layout_constraintTop_toBottomOf="@+id/nomeAtt" />
 
     <Spinner
         android:id="@+id/planets_spinner"
@@ -77,8 +77,8 @@
         android:background="@color/white"
         android:contentDescription="@string/speak"
         android:src="@drawable/ic_record_voice"
-        app:layout_constraintEnd_toEndOf="@+id/text"
-        app:layout_constraintTop_toTopOf="@+id/text" />
+        app:layout_constraintEnd_toEndOf="@+id/nomeAtt"
+        app:layout_constraintTop_toTopOf="@+id/nomeAtt" />
 
     <CheckBox
         android:id="@+id/checkBox"
