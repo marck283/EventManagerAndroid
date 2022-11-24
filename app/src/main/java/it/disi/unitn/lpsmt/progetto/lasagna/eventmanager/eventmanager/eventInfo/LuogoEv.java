@@ -13,7 +13,7 @@ import java.util.Locale;
 
 public class LuogoEv extends Address {
     private String indirizzo, civNum, citta, provincia, data, ora;
-    private int cap, maxPers;
+    private int cap, maxPers, numPartecipanti, postiRimanenti;
 
     /**
      * Constructs a new Address object set to the given Locale and with all
@@ -33,12 +33,16 @@ public class LuogoEv extends Address {
         return ora;
     }
 
+    public int getPostiRimanenti() {
+        return postiRimanenti;
+    }
+
     public int getMaxPers() {
         return maxPers;
     }
 
     public LuogoEv(@NonNull String indirizzo, @NonNull String civNum, int cap, @NonNull String citta,
-                   @NonNull String provincia, int maxPers, @NonNull String data, @NonNull String ora) {
+                   @NonNull String provincia, int maxPers, @NonNull String data, @NonNull String ora, int numPosti) {
         super(Locale.getDefault());
         this.indirizzo = indirizzo;
         this.civNum = civNum;
@@ -57,6 +61,8 @@ public class LuogoEv extends Address {
     @NonNull
     public static LuogoEv parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
+
+        //Da correggere aggiungendo il numero di posti rimanenti come ultimo argomento
         return new LuogoEv(fromJsonString(gs1, json.get("indirizzo")),
                 fromJsonString(gs1, json.get("civNum")),
                 Integer.parseInt(fromJsonString(gs1, json.get("cap"))),
