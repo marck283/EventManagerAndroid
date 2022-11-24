@@ -97,7 +97,7 @@ public class NewDateFragment extends DialogFragment {
             EditText t3 = view.findViewById(R.id.seats_value);
             if(t.getText() != null && t1.getText() != null && t3.getText() != null) {
                 if(parseBeginDate(t) && parseBeginHour(t1) && parseSeats(t3)) {
-                    NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
+                    mViewModel.setOk(true);
                     /*FragmentManager fm = getChildFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     EventLocationFragment el = EventLocationFragment.newInstance();

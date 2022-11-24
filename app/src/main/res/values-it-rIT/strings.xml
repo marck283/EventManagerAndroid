@@ -21,7 +21,7 @@
     <string name="day">"Giorno: "</string>
     <string name="duration">"Durata evento: "</string>
     <string name="organizer">Organizzatore</string>
-    <string name="event_address_info">Luogo evento</string>
+    <string name="event_info">Informazioni evento</string>
     <string name="time">"Orario: "</string>
     <string name="public_event_sign_up">Registrati</string>
     <string name="log_in">Accesso</string>

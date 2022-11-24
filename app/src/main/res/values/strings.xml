@@ -28,7 +28,7 @@
     <string name="day">Day: </string>
     <string name="duration">Duration: </string>
     <string name="organizer">Organizer: </string>
-    <string name="event_address_info">Event address</string>
+    <string name="event_info">Event information</string>
     <string name="time">Time: </string>
     <string name="public_event_sign_up">Sign up</string>
     <string name="log_in">Log In</string>

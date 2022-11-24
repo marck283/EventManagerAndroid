@@ -24,15 +24,6 @@ public class EventList {
         return gs1.fromJson(eo.get(name), String.class);
     }
 
-    @NonNull
-    private String[] fromJsonArr(@NonNull Gson gs1, @NonNull JsonObject eo, String name) {
-        ArrayList<String> arr1 = new ArrayList<>();
-        for(JsonElement s: eo.getAsJsonArray(name)) {
-            arr1.add(gs1.fromJson(s, String.class));
-        }
-        return arr1.toArray(new String[0]);
-    }
-
     public EventList parseJSON(@NonNull JsonObject response) {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
@@ -50,7 +41,8 @@ public class EventList {
                     fromJson(gs1, eo, "category"),
                     fromJson(gs1, eo, "eventPic"),
                     fromJson(gs1, eo, "orgName"),
-                    fromJsonArr(gs1, eo, "dataOra"));
+                    fromJson(gs1, eo.get("luogoEv").getAsJsonObject().get("data").getAsJsonObject(), "data"),
+                    fromJson(gs1, eo.get("luogoEv").getAsJsonObject().get("ora").getAsJsonObject(), "ora"));
             pubEvList.add(pe);
         }
         return this;

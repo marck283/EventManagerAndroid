@@ -80,9 +80,11 @@ public class SecondFragment extends Fragment {
             ft.commit();*/
         });
 
-        if(elvm.getOk()) {
-            addInfo(requireActivity().findViewById(R.id.constraintTableLayout));
-        }
+        elvm.getOk().observe(this, o -> {
+            if(o) {
+                addInfo(requireActivity().findViewById(R.id.constraintTableLayout));
+            }
+        });
     }
 
     @Override

@@ -19,7 +19,7 @@ public class Event {
     private final String category;
     private final String eventPic; //Informazioni sull'evento
     private final String orgName;
-    private final String[] days;
+    private final String day;
     private final String hours;
 
     /**
@@ -33,7 +33,7 @@ public class Event {
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
                  @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,
-                 @NotNull String[] daysHours) {
+                 @NotNull String day, @NotNull String time) {
         this.id = id;
         eventid = idevent;
         self = s;
@@ -41,8 +41,8 @@ public class Event {
         category = c;
         eventPic = ep;
         this.orgName = orgName;
-        this.days = daysHours;
-        this.hours = daysHours[0].split("T")[1].substring(0, 5);
+        this.day = day;
+        this.hours = time;
     }
 
     //Metodo di stampa per il debug
@@ -65,8 +65,8 @@ public class Event {
         return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
     }
 
-    public String[] getDays() {
-        return days;
+    public String getDay() {
+        return day;
     }
 
     public String getHours() {

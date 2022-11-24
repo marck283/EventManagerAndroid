@@ -9,15 +9,20 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -103,8 +108,18 @@ public class EventCreationActivity extends AppCompatActivity {
 
         CheckBox box = findViewById(R.id.checkBox);
         box.setOnCheckedChangeListener((buttonView, isChecked) -> evm.setPrivEvent(isChecked));
+    }
 
-        Button toSecondFragment = findViewById(R.id.button5);
+    public void navigate(@NonNull View view) {
+        if(view.getId() == R.id.button3) {
+            nd.getOk().observe(this, o -> {
+                if(o) {
+                    Navigation.findNavController(findViewById(R.id.nav_host_fragment_content_event_creation)).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
+                }
+            });
+        } else {
+            Navigation.findNavController(findViewById(R.id.nav_host_fragment_content_event_creation)).navigate(R.id.action_eventLocationFragment_to_SecondFragment);
+        }
     }
 
     private void checkPermission() {

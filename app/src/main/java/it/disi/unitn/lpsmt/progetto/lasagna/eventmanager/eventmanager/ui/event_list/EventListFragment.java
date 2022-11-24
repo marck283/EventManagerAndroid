@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 
 public class EventListFragment extends Fragment {
@@ -57,20 +56,10 @@ public class EventListFragment extends Fragment {
         vm.getToken().observe(requireActivity(), o -> {
             idToken = o;
 
-            NetworkCallback nc = new NetworkCallback(requireActivity(), this);
-            nc.registerNetworkCallback();
-
-            if(nc.isOnline(requireActivity())) {
-                eventListViewModel.getEvents(root, idToken);
-            } else {
-                //Ottieni i dati dal database
-            }
             RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
             if(rv != null) {
                 rv.invalidate();
             }
-
-            nc.unregisterNetworkCallback();
         });
     }
 

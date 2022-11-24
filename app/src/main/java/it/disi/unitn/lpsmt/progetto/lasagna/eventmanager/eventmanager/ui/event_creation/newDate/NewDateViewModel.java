@@ -5,14 +5,15 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class NewDateViewModel extends ViewModel {
-    private final MutableLiveData<String> data;
-    private final MutableLiveData<String> ora;
+    private final MutableLiveData<String> data, ora;
     private final MutableLiveData<Integer> posti;
+    private final MutableLiveData<Boolean> ok;
 
     public NewDateViewModel() {
         data = new MutableLiveData<>();
         ora = new MutableLiveData<>();
         posti = new MutableLiveData<>();
+        ok = new MutableLiveData<>(false);
     }
 
     public void setData(String data) {
@@ -37,5 +38,13 @@ public class NewDateViewModel extends ViewModel {
 
     public LiveData<Integer> getPosti() {
         return posti;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok.setValue(ok);
+    }
+
+    public LiveData<Boolean> getOk() {
+        return ok;
     }
 }

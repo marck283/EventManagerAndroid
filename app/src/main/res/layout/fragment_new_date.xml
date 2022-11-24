@@ -68,7 +68,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:onClick="navigate" />
 
             <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
                 android:id="@+id/seats_value"

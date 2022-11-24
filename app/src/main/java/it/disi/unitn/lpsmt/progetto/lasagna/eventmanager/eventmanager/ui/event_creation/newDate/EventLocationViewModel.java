@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -20,12 +22,16 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.LuogoEv;
 
 public class EventLocationViewModel extends ViewModel {
-    private DialogFragment f;
+    private EventLocationFragment f;
     private String provincia;
     private String luogo;
-    private boolean ok = false;
+    private final MutableLiveData<Boolean> ok;
 
-    public void setDialogFragment(DialogFragment f) {
+    public EventLocationViewModel() {
+        ok = new MutableLiveData<>(false);
+    }
+
+    public void setDialogFragment(EventLocationFragment f) {
         this.f = f;
     }
 
@@ -296,7 +302,7 @@ public class EventLocationViewModel extends ViewModel {
         provincia = val;
     }
 
-    public boolean getOk() {
+    public LiveData<Boolean> getOk() {
         return ok;
     }
 
@@ -321,8 +327,8 @@ public class EventLocationViewModel extends ViewModel {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> {
                     setAddress(addresses, luogo);
-                    ok = true;
-                    dismiss();
+                    ok.setValue(true);
+                    f.dismiss();
                 });
             } else {
                 Thread t1 = new Thread() {
@@ -334,7 +340,7 @@ public class EventLocationViewModel extends ViewModel {
                             Looper.prepare();
                             if (addresses != null && !addresses.isEmpty()) {
                                 setAddress(addresses, luogo);
-                                ok = true;
+                                ok.setValue(true);
                             } else {
                                 setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result));
                                 Looper.loop();
@@ -342,16 +348,19 @@ public class EventLocationViewModel extends ViewModel {
                             }
 
                             //Qui potrebbe essere opportuno utilizzare la navigazione offerta dal Navigation Graph di Android...
-                            dismiss();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 };
                 t1.start();
+                t1.join();
             }
+            f.dismiss();
         } catch (NumberFormatException ex) {
             setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
