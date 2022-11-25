@@ -11,7 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AccountIntegration {
-    private IntegrationInterface integrationInterface;
+    private final IntegrationInterface integrationInterface;
 
     public AccountIntegration() {
         Retrofit retro = new Retrofit.Builder()
