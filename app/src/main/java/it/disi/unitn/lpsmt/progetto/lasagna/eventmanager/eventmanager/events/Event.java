@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Event {
@@ -19,8 +20,7 @@ public class Event {
     private final String category;
     private final String eventPic; //Informazioni sull'evento
     private final String orgName;
-    private final String day;
-    private final String hours;
+    private final ArrayList<LuogoEv> luogo;
 
     /**
      * Costruisce l'oggetto PublicEvent. NOTA: nessuno dei seguenti parametri pu&ograve; essere null.
@@ -33,7 +33,7 @@ public class Event {
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
                  @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,
-                 @NotNull String day, @NotNull String time) {
+                 @NotNull ArrayList<LuogoEv> luogo) {
         this.id = id;
         eventid = idevent;
         self = s;
@@ -41,8 +41,7 @@ public class Event {
         category = c;
         eventPic = ep;
         this.orgName = orgName;
-        this.day = day;
-        this.hours = time;
+        this.luogo = luogo;
     }
 
     //Metodo di stampa per il debug
@@ -65,12 +64,12 @@ public class Event {
         return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
     }
 
-    public String getDay() {
-        return day;
+    public ArrayList<LuogoEv> getAllLuogo() {
+        return luogo;
     }
 
-    public String getHours() {
-        return hours;
+    public LuogoEv getLuogo(int i) {
+        return luogo.get(i);
     }
 
     /**

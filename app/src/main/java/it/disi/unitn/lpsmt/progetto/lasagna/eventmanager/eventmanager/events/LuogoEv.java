@@ -1,11 +1,13 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
 import android.location.Address;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -55,21 +57,23 @@ public class LuogoEv extends Address {
         postiRimanenti = maxPers - numPosti;
     }
 
-    public static String fromJsonString(@NonNull Gson gs1, @NonNull JsonElement eo) {
-        return gs1.fromJson(eo.getAsString(), String.class);
+    public static String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject eo, @NonNull String name) {
+        return gs1.fromJson(eo.get(name), String.class);
     }
 
     @NonNull
     public static LuogoEv parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
+        int maxPers = Integer.parseInt(fromJsonString(gs1, json, "maxPers"));
 
-        return new LuogoEv(fromJsonString(gs1, json.get("indirizzo")),
-                fromJsonString(gs1, json.get("civNum")),
-                Integer.parseInt(fromJsonString(gs1, json.get("cap"))),
-                fromJsonString(gs1, json.get("citta")), fromJsonString(gs1, json.get("provincia")),
-                Integer.parseInt(fromJsonString(gs1, json.get("maxPers"))),
-                fromJsonString(gs1, json.get("data")), fromJsonString(gs1, json.get("ora")),
-                Integer.parseInt(fromJsonString(gs1, json.get("numPostiRimanenti"))));
+        Log.i("numPostiRimanenti1", String.valueOf(json.getAsJsonArray("partecipantiID").size()));
+        return new LuogoEv(fromJsonString(gs1, json, "indirizzo"),
+                fromJsonString(gs1, json, "civNum"),
+                Integer.parseInt(fromJsonString(gs1, json, "cap")),
+                fromJsonString(gs1, json, "citta"), fromJsonString(gs1, json, "provincia"),
+                maxPers,
+                fromJsonString(gs1, json, "data"), fromJsonString(gs1, json, "ora"),
+                maxPers - json.getAsJsonArray("partecipantiID").size());
     }
 
     @NonNull

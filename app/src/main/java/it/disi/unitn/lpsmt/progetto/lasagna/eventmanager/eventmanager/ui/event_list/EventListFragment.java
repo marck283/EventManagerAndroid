@@ -60,6 +60,7 @@ public class EventListFragment extends Fragment {
             if(rv != null) {
                 rv.invalidate();
             }
+            eventListViewModel.getEvents(root, idToken);
         });
     }
 

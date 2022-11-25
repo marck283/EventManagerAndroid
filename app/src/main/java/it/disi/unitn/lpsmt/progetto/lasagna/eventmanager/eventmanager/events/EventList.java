@@ -24,6 +24,18 @@ public class EventList {
         return gs1.fromJson(eo.get(name), String.class);
     }
 
+    @NonNull
+    private ArrayList<LuogoEv> fromJsonArr(@NonNull JsonArray json) {
+        ArrayList<LuogoEv> larr = new ArrayList<>();
+        Log.i("luogoEv", String.valueOf(json));
+        for(int i = 0; i < json.size(); i++) {
+            Log.i("numPostiRimanenti", String.valueOf(json.get(i).getAsJsonObject().get("numPostiRimanenti")));
+            larr.add(LuogoEv.parseJSON(json.get(i).getAsJsonObject()));
+        }
+
+        return larr;
+    }
+
     public EventList parseJSON(@NonNull JsonObject response) {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
@@ -32,8 +44,6 @@ public class EventList {
         for(JsonElement e: arr) {
             JsonObject eo = e.getAsJsonObject();
 
-            Log.i("info", String.valueOf(fromJson(gs1, eo, "orgName") == null));
-
             Event pe = new Event(fromJson(gs1, eo, "id"),
                     fromJson(gs1, eo, "idevent"),
                     fromJson(gs1, eo, "self"),
@@ -41,8 +51,7 @@ public class EventList {
                     fromJson(gs1, eo, "category"),
                     fromJson(gs1, eo, "eventPic"),
                     fromJson(gs1, eo, "orgName"),
-                    fromJson(gs1, eo.get("luogoEv").getAsJsonObject().get("data").getAsJsonObject(), "data"),
-                    fromJson(gs1, eo.get("luogoEv").getAsJsonObject().get("ora").getAsJsonObject(), "ora"));
+                    fromJsonArr(eo.getAsJsonArray("luogoEv")));
             pubEvList.add(pe);
         }
         return this;

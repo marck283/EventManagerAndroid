@@ -34,10 +34,10 @@ public class ViewHolder extends EventHolder {
             evName.setText(dataModel.getString("name"));
             orgName.setText(dataModel.getString("orgName"));
 
-            String[] firstDate1 = dataModel.getDay().split("-");
+            String[] firstDate1 = dataModel.getLuogo(0).getData().split("-");
             String firstDate2 = firstDate1[2] + "/" + firstDate1[1] + "/" + firstDate1[0];
             firstDate.setText(firstDate2);
-            firstHour.setText(dataModel.getHours());
+            firstHour.setText(dataModel.getLuogo(0).getOra());
         } catch (Exception e) {
             e.printStackTrace();
         }

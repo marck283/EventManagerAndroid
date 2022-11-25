@@ -59,8 +59,8 @@ public class JsonCallback implements Callback<JsonObject> {
         EventList ev = new EventList();
         if(response.body() != null) {
             if(response.isSuccessful()) {
-                ev = ev.parseJSON(response.body());
                 Log.i("orgEvResponse", String.valueOf(response.body()));
+                ev = ev.parseJSON(response.body());
                 if(ev != null && ev.getList().size() > 0) {
                     initAdapter(ev);
                     if(p1 instanceof OrgEvAdapter) {
