@@ -27,9 +27,8 @@ public class EventList {
     @NonNull
     private ArrayList<LuogoEv> fromJsonArr(@NonNull JsonArray json) {
         ArrayList<LuogoEv> larr = new ArrayList<>();
-        Log.i("luogoEv", String.valueOf(json));
+
         for(int i = 0; i < json.size(); i++) {
-            Log.i("numPostiRimanenti", String.valueOf(json.get(i).getAsJsonObject().get("numPostiRimanenti")));
             larr.add(LuogoEv.parseJSON(json.get(i).getAsJsonObject()));
         }
 

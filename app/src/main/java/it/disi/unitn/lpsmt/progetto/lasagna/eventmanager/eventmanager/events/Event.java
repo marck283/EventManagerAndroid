@@ -30,6 +30,8 @@ public class Event {
      * @param n Il nome dell'evento
      * @param c La categoria dell'evento
      * @param ep L'immagine dell'evento codificata come valore stringa base64
+     * @param orgName Il nome dell'utente organizzatore
+     * @param luogo La lista di luoghi in cui si terrà l'evento
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
                  @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,

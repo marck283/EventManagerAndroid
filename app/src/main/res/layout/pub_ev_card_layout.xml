@@ -15,7 +15,6 @@
     android:clickable="true"
     android:focusable="true"> <!-- Prossimo passo: l'evento onClick su una card reindirizza ad
      una videata di informazioni su quell'evento in base a se l'utente è iscritto o meno. -->
-    <!-- Tuttavia perché il marginTop non funziona? -->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"

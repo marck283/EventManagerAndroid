@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.jetbrains.annotations.Contract;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class EventDetailsFragment extends Fragment {
@@ -24,19 +22,21 @@ public class EventDetailsFragment extends Fragment {
     private String screenType;
     private String eventId;
 
-    public EventDetailsFragment(String type, String eventId) {
-        screenType = type;
-        this.eventId = eventId;
-    }
+
 
     @NonNull
-    public static EventDetailsFragment newInstance(String type, String eventId) {
-        return new EventDetailsFragment(type, eventId);
+    public static EventDetailsFragment newInstance() {
+        return new EventDetailsFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        Bundle b = getArguments();
+        if(b != null) {
+            screenType = b.getString("eventType");
+            eventId = b.getString("eventId");
+        }
         switch(screenType) {
             case "pub": {
                 return inflater.inflate(R.layout.public_event_info, container, false);
@@ -59,7 +59,7 @@ public class EventDetailsFragment extends Fragment {
 
         switch(screenType) {
             case "pub": {
-                mViewModel.getEventInfo("pub", eventId);
+                mViewModel.getEventInfo("pub", eventId, view, this);
                 break;
             }
             case "iscr": {

@@ -19,8 +19,8 @@
     <string name="event_picture">Immagine evento</string>
     <string name="date">Data e ora</string>
     <string name="day">"Giorno: "</string>
-    <string name="duration">"Durata evento: "</string>
-    <string name="organizer">Organizzatore</string>
+    <string name="duration">Durata:</string>
+    <string name="organizer">Organizzatore:</string>
     <string name="event_info">Informazioni evento</string>
     <string name="time">"Orario: "</string>
     <string name="public_event_sign_up">Registrati</string>
@@ -101,4 +101,6 @@
     <string name="facebook_login_error_title">Accesso non effettuato</string>
     <string name="connect_facebook_account">Un account con l\'email indicata esiste già. Si desidera associare il proprio account Facebook?</string>
     <string name="email_conflict_facebook">Indirizzo email già registrato</string>
+    <string name="registrations_closed">Registrazioni chiuse!</string>
+    <string name="event_details_fragment">Dettagli evento</string>
 </resources>

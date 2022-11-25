@@ -6,12 +6,11 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Locale;
 
-public class LuogoEv extends Address {
+public class LuogoEvento extends Address {
     private String indirizzo, civNum, citta, provincia, data, ora;
     private int cap, maxPers, postiRimanenti;
 
@@ -21,7 +20,7 @@ public class LuogoEv extends Address {
      *
      * @param locale
      */
-    public LuogoEv(Locale locale) {
+    public LuogoEvento(Locale locale) {
         super(locale);
     }
 
@@ -41,8 +40,8 @@ public class LuogoEv extends Address {
         return maxPers;
     }
 
-    public LuogoEv(@NonNull String indirizzo, @NonNull String civNum, int cap, @NonNull String citta,
-                   @NonNull String provincia, int maxPers, @NonNull String data, @NonNull String ora, int numPosti) {
+    public LuogoEvento(@NonNull String indirizzo, @NonNull String civNum, int cap, @NonNull String citta,
+                       @NonNull String provincia, int maxPers, @NonNull String data, @NonNull String ora, int numPosti) {
         super(Locale.getDefault());
         this.indirizzo = indirizzo;
         this.civNum = civNum;
@@ -55,21 +54,23 @@ public class LuogoEv extends Address {
         postiRimanenti = maxPers - numPosti;
     }
 
-    public static String fromJsonString(@NonNull Gson gs1, @NonNull JsonElement eo) {
-        return gs1.fromJson(eo.getAsString(), String.class);
+    public static String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject eo, @NonNull String name) {
+        return gs1.fromJson(eo.get(name), String.class);
     }
 
     @NonNull
-    public static LuogoEv parseJSON(@NonNull JsonObject json) {
+    public static LuogoEvento parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
+        int maxPers = Integer.parseInt(fromJsonString(gs1, json, "maxPers"));
 
-        return new LuogoEv(fromJsonString(gs1, json.get("indirizzo")),
-                fromJsonString(gs1, json.get("civNum")),
-                Integer.parseInt(fromJsonString(gs1, json.get("cap"))),
-                fromJsonString(gs1, json.get("citta")), fromJsonString(gs1, json.get("provincia")),
-                Integer.parseInt(fromJsonString(gs1, json.get("maxPers"))),
-                fromJsonString(gs1, json.get("data")), fromJsonString(gs1, json.get("ora")),
-                Integer.parseInt(fromJsonString(gs1, json.get("numPostiRimanenti"))));
+        return new LuogoEvento(fromJsonString(gs1, json, "indirizzo"),
+                fromJsonString(gs1, json, "civNum"),
+                Integer.parseInt(fromJsonString(gs1, json, "cap")),
+                fromJsonString(gs1, json, "citta"),
+                fromJsonString(gs1, json, "provincia"),
+                maxPers,
+                fromJsonString(gs1, json, "data"), fromJsonString(gs1, json, "ora"),
+                maxPers - json.getAsJsonArray("partecipantiID").size());
     }
 
     @NonNull

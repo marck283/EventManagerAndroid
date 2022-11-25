@@ -1,9 +1,29 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo;
 
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.gson.JsonObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,7 +41,7 @@ public class EventInfoCall {
         evInterface = retro.create(EventInfoInterface.class);
     }
 
-    public void getEventInfo(@NonNull String which, @NonNull String eventId) {
+    public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View v, @NonNull Fragment f) {
         Call<JsonObject> call = evInterface.getEventInfo(eventId);
         call.enqueue(new Callback<>() {
 
@@ -38,9 +58,60 @@ public class EventInfoCall {
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 if(response.body() != null && response.isSuccessful()) {
                     EventInfo ei = new EventInfo();
-                    ei = ei.parseJSON(response.body());
+                    Log.i("responseBody", String.valueOf(response.body()));
+                    final EventInfo ei1 = ei.parseJSON(response.body());
 
                     //Ora imposta il layout in base alla schermata visualizzata
+                    ImageView imgView = v.findViewById(R.id.eventPicture);
+                    imgView.setImageBitmap(ei1.decodeBase64());
+
+                    TextView title = v.findViewById(R.id.title);
+                    title.setText(ei1.getNomeAtt());
+
+                    TextView organizerName = v.findViewById(R.id.organizerName);
+                    organizerName.setText(ei1.getOrgName());
+
+                    TextView durata = v.findViewById(R.id.duration);
+                    durata.setText(String.valueOf(ei1.getDurata()));
+
+                    ArrayList<String> dateArr = ei1.getLuoghi();
+                    ArrayAdapter<CharSequence> ad = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
+                    ad.addAll(dateArr);
+
+                    Spinner spinner = v.findViewById(R.id.spinner), spinner1 = v.findViewById(R.id.dateArray);
+                    spinner.setAdapter(ad);
+
+                    SpinnerOnItemSelectedListener l = new SpinnerOnItemSelectedListener(), l1 = new SpinnerOnItemSelectedListener();
+                    spinner.setOnItemSelectedListener(l);
+                    l.getItem().observe(f, o -> {
+                        ArrayList<String> orariArr = ei1.getOrari((String) o);
+                        ArrayAdapter<CharSequence> ad1 = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
+                        ad1.addAll(orariArr);
+                        spinner1.setAdapter(ad1);
+                        spinner1.setOnItemSelectedListener(l1);
+                        l1.getItem().observe(f, o1 -> {
+                            LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
+                            TextView indirizzo = v.findViewById(R.id.event_address);
+                            indirizzo.setText(le.toString());
+                            indirizzo.setOnClickListener(c -> {
+                                //Questo dovrebbe aprire Google Maps (vedi report progetto per sapere come fare)
+                            });
+
+                            try {
+                                SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+                                GregorianCalendar curr = new GregorianCalendar();
+
+                                Date d = sdformat.parse(), toCheck = sdformat.parse(le.getData());
+                                if(le.getPostiRimanenti() == 0) {
+                                    Button b = v.findViewById(R.id.sign_up_button);
+                                    b.setEnabled(false);
+                                    b.setText(f.getString(R.string.registrations_closed));
+                                }
+                            } catch(ParseException ex) {
+
+                            }
+                        });
+                    });
                 }
             }
 

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 
 public class PubEvAdapter extends EventAdapter {
+    private Fragment f;
 
     /**
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
@@ -25,6 +27,10 @@ public class PubEvAdapter extends EventAdapter {
 
     public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
+    }
+
+    public void setFragment(Fragment fragment) {
+        f = fragment;
     }
 
     @NonNull
