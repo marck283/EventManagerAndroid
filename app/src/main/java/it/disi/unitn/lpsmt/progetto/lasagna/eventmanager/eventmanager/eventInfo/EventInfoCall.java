@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.gson.JsonObject;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -99,16 +99,29 @@ public class EventInfoCall {
 
                             try {
                                 SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-                                GregorianCalendar curr = new GregorianCalendar();
+                                boolean over = false;
+                                Date toCheck = sdformat.parse(le.getData());
 
-                                Date d = sdformat.parse(), toCheck = sdformat.parse(le.getData());
-                                if(le.getPostiRimanenti() == 0) {
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                    LocalDateTime ldt = LocalDateTime.now();
+                                    if(toCheck != null && sdformat.format(ldt).compareTo(sdformat.format(toCheck)) > 0) {
+                                        over = true;
+                                    }
+                                } else {
+                                    Date d = new Date();
+                                    String formattedDate = sdformat.format(d);
+                                    if(toCheck != null && formattedDate.compareTo(sdformat.format(toCheck)) > 0) {
+                                        over = true;
+                                    }
+                                }
+
+                                if(over || le.getPostiRimanenti() == 0) {
                                     Button b = v.findViewById(R.id.sign_up_button);
                                     b.setEnabled(false);
                                     b.setText(f.getString(R.string.registrations_closed));
                                 }
                             } catch(ParseException ex) {
-
+                                Log.i("ParseException", "ParseException");
                             }
                         });
                     });

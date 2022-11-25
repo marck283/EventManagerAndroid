@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -49,6 +48,7 @@ import java.net.URLConnection;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration.AccountIntegration;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
@@ -338,7 +338,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         startActivityForResult(intent, REQ_SIGN_IN);
     }
 
-    private void signInCheck(int resultCode, @NonNull Intent data, @NonNull String which) {
+    private void signInCheck(int resultCode, @NonNull Intent data, @NonNull String which, int requestCode) {
         switch(resultCode) {
             case Activity.RESULT_OK: {
                 //Autenticato con successo a Google o Facebook, ora autentica al server e
@@ -352,7 +352,16 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     } else {
                         account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
                     }
-                    updateUI("login", null, null);
+                    if(requestCode == 4) {
+                        AccountIntegration integration = new AccountIntegration();
+                        if(account != null && account.getAccount() != null && account.getAccount().getIdToken() != null) {
+                            integration.googleIntegrate(account.getAccount().getIdToken());
+                        } else {
+                            Log.i("gToken", "Nessun authToken Google valido");
+                        }
+                    } else {
+                        updateUI("login", null, null);
+                    }
                 } else {
                     //Facebook login
                     accessToken = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken");
@@ -382,11 +391,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) {
+        if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION || requestCode == 4) {
             if(data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
-                signInCheck(resultCode, data, "google");
+                signInCheck(resultCode, data, "google", requestCode);
             } else {
-                signInCheck(resultCode, data, "facebook");
+                signInCheck(resultCode, data, "facebook", requestCode);
             }
         }
         if(requestCode == REQ_SIGN_IN_EV_CREATION && resultCode == Activity.RESULT_OK) {

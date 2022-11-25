@@ -71,11 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             });
 
             callbackManager = CallbackManager.Factory.create();
-            LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
-
-            //Come mai all'utente viene richiesto di eseguire due volte il login senza mai ottenere il profilo?
-            //Inoltre devo proprio acquisire il profilo qui? Non potrei farlo direttamente dal server web
-            //passando solo il token CSRF?
+            LoginButton loginButton = findViewById(R.id.login_button);
             LoginManager loginManager = LoginManager.getInstance();
 
             loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this,

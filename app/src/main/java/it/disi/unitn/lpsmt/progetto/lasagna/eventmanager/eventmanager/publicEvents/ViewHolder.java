@@ -36,14 +36,12 @@ public class ViewHolder extends EventHolder {
             orgName.setText(dataModel.getString("orgName"));
 
             String[] firstDate1 = dataModel.getLuogo(0).getData().split("-");
-            String firstDate2 = firstDate1[2] + "/" + firstDate1[1] + "/" + firstDate1[0];
+            String firstDate2 = firstDate1[1] + "/" + firstDate1[0] + "/" + firstDate1[2];
             firstDate.setText(firstDate2);
             firstHour.setText(dataModel.getLuogo(0).getOra());
 
             itemView.setOnClickListener(l -> {
                 try {
-                    //Avvia un'altro Fragment che richiede le informazioni sull'evento
-                    //Passare l'ID dell'evento tramite il metodo newInstance
                     Bundle b = new Bundle();
                     b.putString("eventType", "pub");
                     b.putString("eventId", dataModel.getString("eventid"));
