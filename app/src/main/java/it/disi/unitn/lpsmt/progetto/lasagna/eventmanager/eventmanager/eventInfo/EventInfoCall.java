@@ -9,7 +9,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
 import com.google.gson.JsonObject;
 
@@ -17,13 +16,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +39,7 @@ public class EventInfoCall {
         evInterface = retro.create(EventInfoInterface.class);
     }
 
-    public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View v, @NonNull Fragment f) {
+    public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View v, @NonNull EventDetailsFragment f) {
         Call<JsonObject> call = evInterface.getEventInfo(eventId);
         call.enqueue(new Callback<>() {
 
@@ -83,13 +81,13 @@ public class EventInfoCall {
 
                     SpinnerOnItemSelectedListener l = new SpinnerOnItemSelectedListener(), l1 = new SpinnerOnItemSelectedListener();
                     spinner.setOnItemSelectedListener(l);
-                    l.getItem().observe(f, o -> {
+                    l.getItem().observe(f.getViewLifecycleOwner(), o -> {
                         ArrayList<String> orariArr = ei1.getOrari((String) o);
                         ArrayAdapter<CharSequence> ad1 = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
                         ad1.addAll(orariArr);
                         spinner1.setAdapter(ad1);
                         spinner1.setOnItemSelectedListener(l1);
-                        l1.getItem().observe(f, o1 -> {
+                        l1.getItem().observe(f.getViewLifecycleOwner(), o1 -> {
                             LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
                             TextView indirizzo = v.findViewById(R.id.event_address);
                             indirizzo.setText(le.toString());

@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -103,8 +102,7 @@ public class SecondFragment extends Fragment {
         //Crea una riga della tabella
         TableLayout l = view.findViewById(R.id.tableLayout);
         LayoutInflater inflater = (LayoutInflater)requireActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        TableRow t = (TableRow) inflater.inflate(R.layout.tablerow, null);
-        l.addView(t);
+        inflater.inflate(R.layout.tablerow, l);
         ++countRows;
     }
 }
