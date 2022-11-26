@@ -25,13 +25,11 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_ca
 
 public class NetworkCallback extends ConnectivityManager.NetworkCallback {
     private final Activity a;
-    private final Fragment f;
     private final NetworkRequest req;
     private final ConnectivityManager connectivityManager;
 
-    public NetworkCallback(@NonNull Activity a, @NonNull Fragment f) {
+    public NetworkCallback(@NonNull Activity a) {
         this.a = a;
-        this.f = f;
         req = new NetworkRequest.Builder()
                 .addCapability(NET_CAPABILITY_INTERNET)
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -54,16 +52,6 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
         alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
         alert.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         alert.show();
-
-        if(a instanceof NavigationDrawerActivity) {
-            if(f instanceof EventListFragment) {
-                //Search for public events the user is not subscribed to in the local database
-            } else {
-                if(f instanceof EventDialog) {
-                    //Search for events the user is subscribed to or has organized in the local database...
-                }
-            }
-        }
     }
 
     @Override
@@ -86,16 +74,6 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
         alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
         alert.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         alert.show();
-
-        if(a instanceof NavigationDrawerActivity) {
-            if(f instanceof EventListFragment) {
-                //Search for public events the user is not subscribed to in the local database
-            } else {
-                if(f instanceof EventDialog) {
-                    //Search for events the user is subscribed to or has organized in the local database...
-                }
-            }
-        }
     }
 
     public boolean isOnline(Context ctx) {

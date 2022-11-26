@@ -132,4 +132,6 @@
     <string name="email_conflict_facebook">Email address already registered</string>
     <string name="registrations_closed">Registrations closed!</string>
     <string name="event_details_fragment">Event details</string>
+    <string name="login_error_title">Internet connection missing</string>
+    <string name="login_error">Your internet connection is missing. We invite you to try again later.</string>
 </resources>

@@ -15,7 +15,7 @@ public class UserProfileViewModel extends ViewModel {
     public void getUserInfo(@NonNull Fragment f, @NonNull String accessToken, @NonNull ConstraintLayout l) {
         //Ottiene le informazioni personali dell'utente e le memorizza in un database, oppure, se la connessione Internet non
         //è disponibile, cerca tali informazioni nel database stesso.
-        NetworkCallback nc = new NetworkCallback(f.requireActivity(), f);
+        NetworkCallback nc = new NetworkCallback(f.requireActivity());
         if(nc.isOnline(f.requireActivity())) {
             OnlineUserInfo onlineUserInfo = new OnlineUserInfo();
             onlineUserInfo.getUserInfo(accessToken, l, f);

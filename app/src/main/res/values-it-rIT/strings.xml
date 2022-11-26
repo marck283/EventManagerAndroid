@@ -103,4 +103,6 @@
     <string name="email_conflict_facebook">Indirizzo email già registrato</string>
     <string name="registrations_closed">Registrazioni chiuse!</string>
     <string name="event_details_fragment">Dettagli evento</string>
+    <string name="login_error_title">Connessione internet mancante</string>
+    <string name="login_error">Connessione ad Internet assente. Ti invitiamo a riprovare più tardi.</string>
 </resources>
