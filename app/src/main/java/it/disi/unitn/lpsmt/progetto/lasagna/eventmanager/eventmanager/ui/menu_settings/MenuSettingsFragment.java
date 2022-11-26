@@ -1,5 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +37,15 @@ public class MenuSettingsFragment extends Fragment {
         view.findViewById(R.id.button2).setOnClickListener(v -> Navigation.findNavController(requireActivity().findViewById(R.id.nav_host_fragment_content_navigation_drawer))
                 .navigate(R.id.action_nav_user_settings_to_nav_user_profile));
         view.findViewById(R.id.button4).setOnClickListener(v -> showInfo());
-        ((SwitchMaterial)view.findViewById(R.id.switch1)).setOnCheckedChangeListener((c, c1) -> menuSettingsViewModel.setChecked(c1));
+        ((SwitchMaterial)view.findViewById(R.id.switch1)).setOnCheckedChangeListener((c, c1) -> {
+            menuSettingsViewModel.setChecked(c1);
+            SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            if(menuSettingsViewModel != null && menuSettingsViewModel.getChecked().getValue() != null) {
+                editor.putBoolean("showTel", menuSettingsViewModel.getChecked().getValue());
+                editor.apply();
+            }
+        });
         if(savedInstanceState != null) {
             ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(savedInstanceState.getBoolean("checked"));
         } else {
@@ -42,7 +53,8 @@ public class MenuSettingsFragment extends Fragment {
             if(menuSettingsViewModel.getChecked().getValue() != null) {
                 ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(menuSettingsViewModel.getChecked().getValue());
             } else {
-                ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(false);
+                SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", MODE_PRIVATE);
+                ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(sp.getBoolean("showTel", false));
             }
         }
     }

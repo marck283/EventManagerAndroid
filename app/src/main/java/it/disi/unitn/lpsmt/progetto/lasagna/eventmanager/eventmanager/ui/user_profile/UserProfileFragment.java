@@ -2,7 +2,8 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_p
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import org.jetbrains.annotations.Contract;
 
@@ -61,6 +61,15 @@ public class UserProfileFragment extends Fragment {
                 v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
             }
         });
+
+        SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", Context.MODE_PRIVATE);
+        if(sp.getBoolean("showTel", false)) {
+            v.findViewById(R.id.phone_text_box).setVisibility(View.VISIBLE);
+            v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
+        } else {
+            v.findViewById(R.id.phone_text_box).setVisibility(View.INVISIBLE);
+            v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
+        }
     }
 
 }
