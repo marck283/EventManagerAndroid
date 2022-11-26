@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EventManager</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title" translatable="false">Android Studio</string>
-    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -14,15 +10,8 @@
     <string name="user_profile">User profile</string>
     <string name="menu_user_logout">Logout</string>
     <string name="floating_action_button">Create event</string>
-    <string name="event_name">Activity: </string>
     <string name="event_time">Begins at: </string>
-    <string name="event_duration">Duration: </string>
     <string name="event_address">Address: </string>
-    <string name="event_city">City: </string>
-    <string name="scrollview" translatable="false">ScrollView</string>
-    <string name="scroll_view">ScrollView</string>
-    <string name="imageview" translatable="false">ImageView</string>
-    <string name="linearLayout" translatable="false">LinearLayout</string>
     <string name="event_picture">Event picture</string>
     <string name="date">Date</string>
     <string name="day">Day: </string>
@@ -34,20 +23,15 @@
     <string name="log_in">Log In</string>
     <string name="log_in_text">Log in to unlock all the system\'s features!</string>
     <string name="title_activity_login" translatable="false">LoginActivity</string>
-    <string name="menu_user_login" translatable="false">Login</string>
     <string name="server_client_id" translatable="false">22819640695-40ie511a43vdbh8p82o5uhm6b62529rm.apps.googleusercontent.com</string>
     <string name="profileName" translatable="false">%1$s</string>
     <string name="email" translatable="false">%1$s</string>
-    <string name="title_activity_public_events" translatable="false">PublicEventsActivity</string>
     <string name="show_phone_number">Show phone number in profile details</string>
     <string name="app_version">App version</string>
     <string name="settings_image">Settings image</string>
-    <string name="not_implemented">Not implemented</string>
-    <string name="dialog_day" translatable="false">%1$d/%2$d</string>
     <string name="no_session_content">There is no existing session. Would you like to log in?</string>
     <string name="no_session_title">You are not authenticated!</string>
     <string name="facebook_app_id" translatable="false">1143189906271722</string>
-    <string name="fb_login_protocol_scheme" translatable="false">fb1234</string>
     <string name="facebook_client_token" translatable="false">d1000d7e9d1e66a5a81886fa17b1b62b</string>
     <string name="events_organized_text_view">Events that you organized</string>
     <string name="events_participate_text_view">Events to which you will participate</string>
@@ -59,17 +43,9 @@
     <string name="second_fragment_label">Event creation</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="event_day">Day:</string>
     <string name="organizer_name">Organizer:</string>
-    <string name="organizer_name_value" translatable="false">%1$s</string>
     <string name="event_creation_title">Create an event</string>
     <string name="event_name_text_view">Event name</string>
     <string name="speak">Speak</string>
@@ -87,8 +63,6 @@
     <string name="confirm">Confirm</string>
     <string name="insert_date">Insert date...</string>
     <string name="insert_hour">Insert time...</string>
-    <string name="venue_text_view">Venue:</string>
-    <string name="insert_venue">Insert venue...</string>
     <string name="seats">Seats:</string>
     <string name="insert_seats">Insert number of seats...</string>
     <string name="incorrect_seats_format">Incorrect seats format</string>
@@ -101,16 +75,12 @@
     <string name="incorrect_location_format_title">Incorrect location format</string>
     <string name="incorrect_location_format">Incorrect location format.</string>
     <string name="insert_venue_address">Insert venue address</string>
-    <string name="address">Address</string>
     <string name="insert_address">Insert address...</string>
-    <string name="city">City</string>
     <string name="insert_city">Insert city...</string>
     <string name="insert_postal_code">Insert postal code...</string>
-    <string name="zipcode">Zipcode</string>
     <string name="forward">Continue</string>
     <string name="insert_event_start_info">Insert the event\'s starting date, time and number of seats</string>
     <string name="insert_house_number">Insert House number...</string>
-    <string name="house_number">House number</string>
     <string name="province">Province</string>
     <string name="incorrect_province_format_title">Incorrect province format or value</string>
     <string name="incorrect_province_format">Incorrect province format or value.</string>
@@ -125,7 +95,6 @@
     <string name="personal_rating">Personal rating</string>
     <string name="personal_rating_message">Your current rating is %1$.4f.</string>
     <string name="username">"Username: "</string>
-    <string name="facebook_user">Facebook user</string>
     <string name="facebook_login_error">There was an error with your Facebook login. Try again later.</string>
     <string name="facebook_login_error_title">Login error</string>
     <string name="connect_facebook_account">An account with that email already exists. Would you like to connect your Facebook account?</string>

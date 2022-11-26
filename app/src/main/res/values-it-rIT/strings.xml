@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">EventManager</string>
     <string name="action_settings">Impostazioni</string>
-    <string name="navigation_drawer_open">Apri menù di navigazione</string>
-    <string name="navigation_drawer_close">Chiudi menù di navigazione</string>
     <string name="nav_header_desc">Menù di navigazione</string>
     <string name="floating_action_button">Crea evento</string>
     <string name="menu_event_list">Lista eventi</string>
@@ -11,11 +9,7 @@
     <string name="menu_settings">Impostazioni</string>
     <string name="user_profile">Profilo</string>
     <string name="menu_user_logout">Esci</string>
-    <string name="event_name">"Attività: "</string>
-    <string name="event_duration">"Durata: "</string>
     <string name="event_address">Indirizzo:</string>
-    <string name="event_city">"Comune: "</string>
-    <string name="scroll_view">ScrollView</string>
     <string name="event_picture">Immagine evento</string>
     <string name="date">Data e ora</string>
     <string name="day">"Giorno: "</string>
@@ -29,7 +23,6 @@
     <string name="show_phone_number">Mostra numero di telefono in dettaglio profilo</string>
     <string name="app_version">Versione applicazione</string>
     <string name="settings_image">Immagine impostazioni</string>
-    <string name="not_implemented">Non implementato</string>
     <string name="no_session_title">Non sei autenticato!</string>
     <string name="no_session_content">Nessuna sessione attiva. Vuoi autenticarti?</string>
     <string name="events_organized_text_view">Eventi che hai organizzato</string>
@@ -59,8 +52,6 @@
     <string name="confirm">Conferma</string>
     <string name="insert_date">Inserisci data...</string>
     <string name="insert_hour">Inserisci ora...</string>
-    <string name="venue_text_view">"Luogo: "</string>
-    <string name="insert_venue">Inserisci luogo evento...</string>
     <string name="seats">"Posti: "</string>
     <string name="insert_seats">Inserisci numero di posti...</string>
     <string name="incorrect_seats_format">Formato campo posti non corretto</string>
@@ -73,16 +64,12 @@
     <string name="incorrect_location_format_title">Formato campo \"luogo\" non corretto</string>
     <string name="incorrect_location_format">Formato campo \"luogo\" non corretto.</string>
     <string name="insert_venue_address">Inserisci indirizzo</string>
-    <string name="address">Indirizzo</string>
     <string name="insert_address">Inserisci indirizzo...</string>
-    <string name="city">Comune</string>
     <string name="insert_city">Inserisci comune...</string>
     <string name="insert_postal_code">Inserisci CAP...</string>
-    <string name="zipcode">Codice postale</string>
     <string name="forward">Continua</string>
     <string name="insert_event_start_info">Inserisci la data e l\'ora d\'inizio dell\'evento e il numero di posti disponibili</string>
     <string name="insert_house_number">Inserisci numero civico...</string>
-    <string name="house_number">Numero civico</string>
     <string name="province">Provincia</string>
     <string name="incorrect_province_format_title">Valore o formato non corretti per il campo \"provincia\"</string>
     <string name="incorrect_province_format">Valore o formato non corretti per il campo \"provincia\".</string>
@@ -96,7 +83,6 @@
     <string name="personal_rating">Valutazione media</string>
     <string name="personal_rating_message">La tua valutazione corrente è %1$.4f.</string>
     <string name="username">Nome utente:</string>
-    <string name="facebook_user">Utente Facebook</string>
     <string name="facebook_login_error">Si è verificato un errore con il login Facebook. Riprova più tardi.</string>
     <string name="facebook_login_error_title">Accesso non effettuato</string>
     <string name="connect_facebook_account">Un account con l\'email indicata esiste già. Si desidera associare il proprio account Facebook?</string>
