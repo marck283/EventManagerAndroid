@@ -142,8 +142,8 @@ public class DBUser extends DBThread {
                         TextView username = v.findViewById(R.id.username);
                         username.setText(u.getString("nome"));
 
-                        TextView email = v.findViewById(R.id.email_value);
-                        email.setText(u.getString("email"));
+                        TextView email = v.findViewById(R.id.email);
+                        email.setText(f.getString(R.string.user_email, u.getString("email")));
 
                         TextView phone = v.findViewById(R.id.phone_value);
                         phone.setText(u.getString("tel"));

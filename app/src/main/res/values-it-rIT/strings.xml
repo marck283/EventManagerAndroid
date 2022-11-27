@@ -9,12 +9,12 @@
     <string name="menu_settings">Impostazioni</string>
     <string name="user_profile">Profilo</string>
     <string name="menu_user_logout">Esci</string>
-    <string name="event_address">Indirizzo:</string>
+    <string name="event_address">Indirizzo: %1$s</string>
     <string name="event_picture">Immagine evento</string>
     <string name="date">Data e ora</string>
     <string name="day">Giorno:</string>
-    <string name="duration">Durata:</string>
-    <string name="organizer">Organizzatore:</string>
+    <string name="duration">Durata: %1$d</string>
+    <string name="organizer">Organizzatore: %1$s</string>
     <string name="event_info">Informazioni evento</string>
     <string name="time">Orario:</string>
     <string name="public_event_sign_up">Registrati</string>
@@ -52,7 +52,7 @@
     <string name="confirm">Conferma</string>
     <string name="insert_date">Inserisci data...</string>
     <string name="insert_hour">Inserisci ora...</string>
-    <string name="seats">"Posti: "</string>
+    <string name="seats">Posti</string>
     <string name="insert_seats">Inserisci numero di posti...</string>
     <string name="incorrect_seats_format">Formato campo posti non corretto</string>
     <string name="incorrect_date_format">Formato data scorretto. Il formato corretto è GG/MM/AAAA.</string>
@@ -76,13 +76,13 @@
     <string name="no_location_result_title">Nessun risultato trovato per l\'indirizzo fornito</string>
     <string name="no_location_result">Nessun risultato trovato per l\'indirizzo fornito.</string>
     <string name="profile_image">Immagine profilo</string>
-    <string name="phone">"Telefono: "</string>
+    <string name="phone">Telefono: %1$s</string>
     <string name="numEvOrg">Hai organizzato %1$d eventi</string>
     <string name="manage_your_events">Gestisci i tuoi eventi</string>
     <string name="average_rating_button">Visualizza la tua valutazione media</string>
     <string name="personal_rating">Valutazione media</string>
     <string name="personal_rating_message">La tua valutazione corrente è %1$.4f.</string>
-    <string name="username">Nome utente:</string>
+    <string name="username">Nome utente: %1$s</string>
     <string name="facebook_login_error">Si è verificato un errore con il login Facebook. Riprova più tardi.</string>
     <string name="facebook_login_error_title">Accesso non effettuato</string>
     <string name="connect_facebook_account">Un account con l\'email indicata esiste già. Si desidera associare il proprio account Facebook?</string>
@@ -97,4 +97,10 @@
     <string name="qr_code_svg">QR code SVG</string>
     <string name="write_reviews">Scrivi una recensione</string>
     <string name="withdraw_subscription">Elimina la tua iscrizione</string>
+    <string name="info_on_event">Informazioni sull\'evento %1$s</string>
+    <string name="day_not_selectable">Giorno: %1$s</string>
+    <string name="time_not_selectable">Orario: %1$s</string>
+    <string name="scan_qr_code">Scansiona biglietto</string>
+    <string name="event_over">Termina evento</string>
+    <string name="cancel_event">Annulla evento</string>
 </resources>

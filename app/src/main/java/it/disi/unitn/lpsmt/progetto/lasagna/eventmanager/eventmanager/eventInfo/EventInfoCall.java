@@ -67,10 +67,10 @@ public class EventInfoCall {
                     title.setText(ei1.getNomeAtt());
 
                     TextView organizerName = v.findViewById(R.id.organizerName);
-                    organizerName.setText(ei1.getOrgName());
+                    organizerName.setText(f.getString(R.string.organizer, ei1.getOrgName()));
 
                     TextView durata = v.findViewById(R.id.duration);
-                    durata.setText(String.valueOf(ei1.getDurata()));
+                    durata.setText(String.valueOf(f.getString(R.string.duration, ei1.getDurata())));
 
                     ArrayList<String> dateArr = ei1.getLuoghi();
                     ArrayAdapter<CharSequence> ad = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
@@ -90,7 +90,7 @@ public class EventInfoCall {
                         l1.getItem().observe(f.getViewLifecycleOwner(), o1 -> {
                             LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
                             TextView indirizzo = v.findViewById(R.id.event_address);
-                            indirizzo.setText(le.toString());
+                            indirizzo.setText(f.getString(R.string.event_address, le.toString()));
                             indirizzo.setOnClickListener(c -> {
                                 //Questo dovrebbe aprire Google Maps (vedi report progetto per sapere come fare)
                             });

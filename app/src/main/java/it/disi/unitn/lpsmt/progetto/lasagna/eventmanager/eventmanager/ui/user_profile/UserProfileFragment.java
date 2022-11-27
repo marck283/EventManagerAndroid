@@ -54,20 +54,16 @@ public class UserProfileFragment extends Fragment {
 
         ms.getChecked().observe(requireActivity(), o -> {
             if(!((boolean) o)) {
-                v.findViewById(R.id.phone_text_box).setVisibility(View.INVISIBLE);
                 v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
             } else {
-                v.findViewById(R.id.phone_text_box).setVisibility(View.VISIBLE);
                 v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
             }
         });
 
         SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", Context.MODE_PRIVATE);
         if(sp.getBoolean("showTel", false)) {
-            v.findViewById(R.id.phone_text_box).setVisibility(View.VISIBLE);
             v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
         } else {
-            v.findViewById(R.id.phone_text_box).setVisibility(View.INVISIBLE);
             v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
         }
     }

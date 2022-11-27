@@ -59,13 +59,13 @@ public class OnlineUserInfo {
                                 .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
 
                         TextView username = v.findViewById(R.id.username);
-                        username.setText(userInfo.getString("nome"));
+                        username.setText(f.getString(R.string.username, userInfo.getString("nome")));
 
-                        TextView email = v.findViewById(R.id.email_value);
-                        email.setText(userInfo.getString("email"));
+                        TextView email = v.findViewById(R.id.email);
+                        email.setText(f.getString(R.string.user_email, userInfo.getString("email")));
 
                         TextView phone = v.findViewById(R.id.phone_value);
-                        phone.setText(userInfo.getString("tel"));
+                        phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
 
                         TextView numEvOrg = v.findViewById(R.id.numEvOrg);
                         numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));

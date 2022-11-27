@@ -11,12 +11,12 @@
     <string name="menu_user_logout">Logout</string>
     <string name="floating_action_button">Create event</string>
     <string name="event_time">Begins at: </string>
-    <string name="event_address">Address: </string>
+    <string name="event_address">Address: %1$s</string>
     <string name="event_picture">Event picture</string>
     <string name="date">Date</string>
     <string name="day">Day: </string>
-    <string name="duration">Duration: </string>
-    <string name="organizer">Organizer: </string>
+    <string name="duration">Duration: %1$d</string>
+    <string name="organizer">Organizer: %1$s</string>
     <string name="event_info">Event information</string>
     <string name="time">Time: </string>
     <string name="public_event_sign_up">Sign up</string>
@@ -87,14 +87,14 @@
     <string name="no_location_result_title">No location found for the given address</string>
     <string name="no_location_result">No location found for the given address.</string>
     <string name="profile_image">Profile image</string>
-    <string name="user_email">Email:</string>
-    <string name="phone">Phone:</string>
+    <string name="user_email">Email: %1$s</string>
+    <string name="phone">Phone: %1$s</string>
     <string name="numEvOrg">You organized %1$d events</string>
     <string name="manage_your_events">Manage your events</string>
     <string name="average_rating_button">See your average rating</string>
     <string name="personal_rating">Personal rating</string>
     <string name="personal_rating_message">Your current rating is %1$.4f.</string>
-    <string name="username">"Username: "</string>
+    <string name="username">Username: %1$s</string>
     <string name="facebook_login_error">There was an error with your Facebook login. Try again later.</string>
     <string name="facebook_login_error_title">Login error</string>
     <string name="connect_facebook_account">An account with that email already exists. Would you like to connect your Facebook account?</string>
@@ -108,4 +108,10 @@
     <string name="qr_code_svg">QR code SVG</string>
     <string name="write_reviews">Write a review</string>
     <string name="withdraw_subscription">Delete event subscription</string>
+    <string name="info_on_event">Information on the event %1$s</string>
+    <string name="day_not_selectable">Day: %1$s</string>
+    <string name="time_not_selectable">Time: %1$s</string>
+    <string name="scan_qr_code">Scan QR code</string>
+    <string name="event_over">End event</string>
+    <string name="cancel_event">Cancel event</string>
 </resources>
