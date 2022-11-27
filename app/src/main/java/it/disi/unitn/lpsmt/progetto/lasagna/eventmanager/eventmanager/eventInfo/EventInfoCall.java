@@ -99,18 +99,9 @@ public class EventInfoCall {
                                 SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
                                 boolean over = false;
                                 Date toCheck = sdformat.parse(le.getData());
-
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                    LocalDateTime ldt = LocalDateTime.now();
-                                    if(toCheck != null && sdformat.format(ldt).compareTo(sdformat.format(toCheck)) > 0) {
-                                        over = true;
-                                    }
-                                } else {
-                                    Date d = new Date();
-                                    String formattedDate = sdformat.format(d);
-                                    if(toCheck != null && formattedDate.compareTo(sdformat.format(toCheck)) > 0) {
-                                        over = true;
-                                    }
+                                Date d = new Date();
+                                if(toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
+                                    over = true;
                                 }
 
                                 if(over || le.getPostiRimanenti() == 0) {

@@ -91,4 +91,6 @@
     <string name="event_details_fragment">Dettagli evento</string>
     <string name="login_error_title">Connessione internet mancante</string>
     <string name="login_error">Connessione ad Internet assente. Ti invitiamo a riprovare più tardi.</string>
+    <string name="previous">Precedente</string>
+    <string name="show_reviews">Mostra recensioni</string>
 </resources>

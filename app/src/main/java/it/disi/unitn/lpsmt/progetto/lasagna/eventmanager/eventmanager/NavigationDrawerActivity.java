@@ -308,6 +308,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             LoginManager.getInstance().logOut();
             vm.setToken("");
         }
+
+        navigate(R.id.nav_event_list);
     }
 
     /**

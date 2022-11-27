@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.JsonObject;
 
@@ -35,7 +36,9 @@ public class AccountIntegration {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                if(response.body() != null && response.isSuccessful()) {
 
+                }
             }
 
             /**
