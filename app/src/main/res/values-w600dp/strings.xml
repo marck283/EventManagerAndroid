@@ -104,4 +104,8 @@
     <string name="login_error_title">Internet connection missing</string>
     <string name="login_error">Your internet connection is missing. We invite you to try again later.</string>
     <string name="show_reviews">Show reviews</string>
+    <string name="show_ticket">Show ticket</string>
+    <string name="qr_code_svg">QR code SVG</string>
+    <string name="write_reviews">Write a review</string>
+    <string name="withdraw_subscription">Delete event subscription</string>
 </resources>

@@ -12,11 +12,11 @@
     <string name="event_address">Indirizzo:</string>
     <string name="event_picture">Immagine evento</string>
     <string name="date">Data e ora</string>
-    <string name="day">"Giorno: "</string>
+    <string name="day">Giorno:</string>
     <string name="duration">Durata:</string>
     <string name="organizer">Organizzatore:</string>
     <string name="event_info">Informazioni evento</string>
-    <string name="time">"Orario: "</string>
+    <string name="time">Orario:</string>
     <string name="public_event_sign_up">Registrati</string>
     <string name="log_in">Accesso</string>
     <string name="log_in_text">Accedi per usare tutte le funzionalità dell\'applicazione!</string>
@@ -93,4 +93,8 @@
     <string name="login_error">Connessione ad Internet assente. Ti invitiamo a riprovare più tardi.</string>
     <string name="previous">Precedente</string>
     <string name="show_reviews">Mostra recensioni</string>
+    <string name="show_ticket">Mostra biglietto</string>
+    <string name="qr_code_svg">QR code SVG</string>
+    <string name="write_reviews">Scrivi una recensione</string>
+    <string name="withdraw_subscription">Elimina la tua iscrizione</string>
 </resources>
