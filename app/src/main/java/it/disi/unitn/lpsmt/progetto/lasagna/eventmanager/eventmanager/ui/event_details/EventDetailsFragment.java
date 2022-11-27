@@ -42,7 +42,7 @@ public class EventDetailsFragment extends Fragment {
                 return inflater.inflate(R.layout.public_event_info, container, false);
             }
             case "iscr": {
-                //Qualcosa
+                return inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
             }
             case "org": {
                 //Qualcosa
