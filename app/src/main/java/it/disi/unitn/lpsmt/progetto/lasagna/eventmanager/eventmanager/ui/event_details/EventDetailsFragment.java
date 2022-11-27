@@ -45,7 +45,7 @@ public class EventDetailsFragment extends Fragment {
                 return inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
             }
             case "org": {
-                //Qualcosa
+                return inflater.inflate(R.layout.dettagli_evento_organizzatore, container, false);
             }
         }
 
