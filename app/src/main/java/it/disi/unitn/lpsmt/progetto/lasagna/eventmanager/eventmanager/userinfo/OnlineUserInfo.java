@@ -65,7 +65,11 @@ public class OnlineUserInfo {
                         email.setText(f.getString(R.string.user_email, userInfo.getString("email")));
 
                         TextView phone = v.findViewById(R.id.phone_value);
-                        phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
+                        if(userInfo.getString("tel") != null && !userInfo.getString("tel").equals("")) {
+                            phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
+                        } else {
+                            phone.setText(f.getString(R.string.phone, "non presente"));
+                        }
 
                         TextView numEvOrg = v.findViewById(R.id.numEvOrg);
                         numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
