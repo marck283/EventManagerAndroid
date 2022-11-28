@@ -73,11 +73,11 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setTitle(getString(R.string.no_session_title));
         d.setMessage(getString(R.string.no_session_content));
         d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-            Intent intent = new Intent(this, LoginActivity.class);
             if(eventCreation) {
+                Intent intent = new Intent(this, LoginActivity.class);
                 startActivityForResult(intent, REQ_SIGN_IN_EV_CREATION);
             } else {
-                startActivityForResult(intent, REQ_SIGN_IN);
+                startLogin(null);
             }
         });
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
@@ -123,7 +123,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         tracker.startTracking();
         binding.appBarNavigationDrawer.fab.setOnClickListener(view -> {
             if(account.getAccount() == null && profile == null) {
-                setAlertDialog(false);
+                setAlertDialog(true);
             } else {
                 showCreaEvento();
             }

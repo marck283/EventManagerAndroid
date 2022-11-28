@@ -3,10 +3,21 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_even
 import androidx.annotation.NonNull;
 
 public class EventDayHour {
-    private String day, hour;
+    @NonNull
+    private final String data, ora;
 
     public EventDayHour(@NonNull String day, @NonNull String hour) {
-        this.day = day;
-        this.hour = hour;
+        this.data = day;
+        this.ora = hour;
+    }
+
+    @NonNull
+    public String getDay() {
+        return data;
+    }
+
+    @NonNull
+    public String getHour() {
+        return ora;
     }
 }

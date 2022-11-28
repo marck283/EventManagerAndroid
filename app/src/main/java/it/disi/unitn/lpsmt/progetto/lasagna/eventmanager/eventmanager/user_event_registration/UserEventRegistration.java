@@ -28,24 +28,44 @@ public class UserEventRegistration {
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
                              @NonNull String time, @NonNull EventDetailsFragment f) {
+        Log.i("day", day);
+        Log.i("time", time);
         Call<JsonObject> call = ueInterface.registerUser(eventId, accessToken, new EventDayHour(day, time));
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if(response.body() != null && response.code() == 201) {
-                    //Successo
-                    AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-                    ad.setTitle(R.string.event_registration_success_title);
-                    ad.setMessage(f.getString(R.string.event_registration_success));
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    ad.show();
-                } else {
-                    //Interpretare la risposta di errore (si ricordi che il messaggio di errore è
-                    //contenuto nel campo "error" della risposta).
-                    if(response.code() == 400) {
+                //Interpretare la risposta di errore (si ricordi che il messaggio di errore è
+                //contenuto nel campo "error" della risposta).
+                //Log.i("response", String.valueOf(response.body()));
+                switch(response.code()) {
+                    case 201: {
+                        //Successo
+                        AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
+                        ad.setTitle(R.string.event_registration_success_title);
+                        ad.setMessage(f.getString(R.string.event_registration_success));
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        ad.show();
+                        break;
+                    }
+                    case 400: {
                         Log.i("malformed", "Richiesta malformata");
-                    } else {
-                        //Continuare interpretazione risposta considerando i diversi casi di errore
+                        break;
+                    }
+                    case 403: {
+                        if(response.body() != null) {
+                            AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
+                            ad.setTitle(R.string.internal_server_error);
+                            ad.setMessage(f.getString(R.string.service_unavailable));
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                            ad.show();
+                        }
+                    }
+                    case 500: {
+                        AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
+                        ad.setTitle(R.string.internal_server_error);
+                        ad.setMessage(f.getString(R.string.service_unavailable));
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        ad.show();
                     }
                 }
             }

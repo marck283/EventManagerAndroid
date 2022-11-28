@@ -11,7 +11,7 @@ public class DBThread extends Thread {
     protected static AppDatabase db;
 
     public DBThread(@NonNull Activity a) {
-        db = Room.databaseBuilder(a.getApplicationContext(), AppDatabase.class, "EventManagerDB").build();
+        db = Room.databaseBuilder(a.getApplicationContext(), AppDatabase.class, "EventManagerDB").fallbackToDestructiveMigration().build();
     }
 
     public void close() {

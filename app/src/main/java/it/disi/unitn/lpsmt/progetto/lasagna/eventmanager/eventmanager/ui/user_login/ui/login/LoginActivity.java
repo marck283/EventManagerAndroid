@@ -43,13 +43,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final int REQ_SIGN_IN = 2;
     private GSignIn signIn;
     private DBThread t2;
-    private CallbackManager callbackManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         signIn = new GSignIn(this);
@@ -70,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
 
-            callbackManager = CallbackManager.Factory.create();
+            CallbackManager callbackManager = CallbackManager.Factory.create();
             LoginButton loginButton = findViewById(R.id.login_button);
             LoginManager loginManager = LoginManager.getInstance();
 
@@ -136,7 +135,9 @@ public class LoginActivity extends AppCompatActivity {
         if(which.equals("google")) {
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount", signIn.getAccount());
         } else {
-            Log.i("profileNull", accessToken.getToken());
+            if(accessToken != null) {
+                Log.i("profileNull", accessToken.getToken());
+            }
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", accessToken);
         }
         return intent;

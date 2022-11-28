@@ -129,4 +129,6 @@
     <string name="org_name_field_empty_message">The field \"organizer name\" cannot be empty if the user wants to use it to retrieve events based on its value.</string>
     <string name="event_registration_success_title">Success!</string>
     <string name="event_registration_success">The user has been successfully registrated to the event.</string>
+    <string name="internal_server_error">Server error</string>
+    <string name="service_unavailable">Our services are temporarily unavailable. Please try again later.</string>
 </resources>
