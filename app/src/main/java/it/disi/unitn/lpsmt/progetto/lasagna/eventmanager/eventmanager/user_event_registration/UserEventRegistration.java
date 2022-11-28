@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserEventRegistration {
-    private UserEventRegistrationInterface ueInterface;
+    private final UserEventRegistrationInterface ueInterface;
 
     public UserEventRegistration() {
         Retrofit retro = new Retrofit.Builder()
