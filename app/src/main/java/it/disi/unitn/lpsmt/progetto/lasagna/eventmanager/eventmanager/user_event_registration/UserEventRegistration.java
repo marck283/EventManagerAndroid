@@ -26,8 +26,9 @@ public class UserEventRegistration {
         ueInterface = retro.create(UserEventRegistrationInterface.class);
     }
 
-    public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f) {
-        Call<JsonObject> call = ueInterface.registerUser(eventId, accessToken);
+    public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
+                             @NonNull String time, @NonNull EventDetailsFragment f) {
+        Call<JsonObject> call = ueInterface.registerUser(eventId, accessToken, new EventDayHour(day, time));
         call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {

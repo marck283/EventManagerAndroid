@@ -157,6 +157,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
+
         profile = Profile.getCurrentProfile();
         if(profile == null) {
             account.silentSignIn(s -> {
@@ -247,7 +248,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
         TextView username = l.findViewById(R.id.profile_name);
         TextView email = l.findViewById(R.id.profile_email);
-        Log.i("account", String.valueOf(account.getAccount()));
+        if(account != null) {
+            Log.i("account", String.valueOf(account.getAccount()));
+        }
 
         NetworkCallback nc = new NetworkCallback(this);
         nc.registerNetworkCallback();

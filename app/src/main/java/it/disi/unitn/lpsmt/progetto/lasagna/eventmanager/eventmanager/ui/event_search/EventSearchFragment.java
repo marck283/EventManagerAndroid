@@ -1,9 +1,13 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,6 +45,13 @@ public class EventSearchFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //Controllo di che siano stati garantiti i permessi necessari a registrare la voce dell'utente
+        //Se i peressi non sono garantiti, allora chiamo checkPermission().
+        if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+            checkPermission();
+        }
+
         mViewModel = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
         root.findViewById(R.id.search_for_event_name).setOnClickListener(c -> {
             EditText t1 = root.findViewById(R.id.nomeAtt2);
@@ -69,6 +80,21 @@ public class EventSearchFragment extends DialogFragment {
                 dismiss();
             }
         });
+    }
+
+    public void onStart() {
+        super.onStart();
+
+        SpeechImageButton imageButton = root.findViewById(R.id.imageButton);
+        imageButton.setupImageButton(root.findViewById(R.id.frameLayout4), R.id.organizerName);
+
+        SpeechImageButton imageButton3 = root.findViewById(R.id.imageButton3);
+        imageButton3.setupImageButton(root.findViewById(R.id.frameLayout4), R.id.nomeAtt2);
+    }
+
+    private void checkPermission() {
+        //Richiedo i permessi per la registrazione della voce dell'utente
+        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.RECORD_AUDIO}, 23);
     }
 
 }

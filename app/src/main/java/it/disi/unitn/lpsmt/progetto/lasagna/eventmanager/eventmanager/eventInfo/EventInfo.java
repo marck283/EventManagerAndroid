@@ -46,6 +46,7 @@ public class EventInfo {
 
     private EventInfo(@NonNull String id, @NonNull String nomeAtt, @NonNull String categoria, @NonNull String eventPic,
     int durata, boolean terminato, @NonNull ArrayList<LuogoEvento> luogoEvento, @NonNull String organizzatore) {
+        this.id = id;
         this.nomeAtt = nomeAtt;
         this.categoria = categoria;
         this.eventPic = eventPic;

@@ -73,8 +73,9 @@ public class EventInfoCall {
 
                     f.setEventId(ei1.getId());
 
-                    ArrayList<String> dateArr = ei1.getLuoghi();
+                    ArrayList<String> dateArr = new ArrayList<>(ei1.getLuoghi());
                     ArrayAdapter<CharSequence> ad = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
+                    ad.add("---");
                     ad.addAll(dateArr);
 
                     Spinner spinner = v.findViewById(R.id.spinner), spinner1 = v.findViewById(R.id.dateArray);
@@ -83,37 +84,45 @@ public class EventInfoCall {
                     SpinnerOnItemSelectedListener l = new SpinnerOnItemSelectedListener(), l1 = new SpinnerOnItemSelectedListener();
                     spinner.setOnItemSelectedListener(l);
                     l.getItem().observe(f.getViewLifecycleOwner(), o -> {
-                        ArrayList<String> orariArr = ei1.getOrari((String) o);
-                        ArrayAdapter<CharSequence> ad1 = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
-                        ad1.addAll(orariArr);
-                        spinner1.setAdapter(ad1);
-                        spinner1.setOnItemSelectedListener(l1);
-                        l1.getItem().observe(f.getViewLifecycleOwner(), o1 -> {
-                            LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
-                            TextView indirizzo = v.findViewById(R.id.event_address);
-                            indirizzo.setText(f.getString(R.string.event_address, le.toString()));
-                            indirizzo.setOnClickListener(c -> {
-                                //Questo dovrebbe aprire Google Maps (vedi report progetto per sapere come fare)
+                        if(o instanceof String && !((String) o).equals("---")) {
+                            f.setDay((String) o);
+                            f.setTime("");
+                            ArrayList<String> orariArr = ei1.getOrari((String) o);
+                            ArrayAdapter<CharSequence> ad1 = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
+                            ad1.add("---");
+                            ad1.addAll(orariArr);
+                            spinner1.setAdapter(ad1);
+                            spinner1.setOnItemSelectedListener(l1);
+                            l1.getItem().observe(f.getViewLifecycleOwner(), o1 -> {
+                                if(o1 instanceof String && !((String)o1).equals("---")) {
+                                    f.setTime((String) o1);
+                                    LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
+                                    TextView indirizzo = v.findViewById(R.id.event_address);
+                                    indirizzo.setText(f.getString(R.string.event_address, le.toString()));
+                                    indirizzo.setOnClickListener(c -> {
+                                        //Questo dovrebbe aprire Google Maps (vedi report progetto per sapere come fare)
+                                    });
+
+                                    try {
+                                        SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+                                        boolean over = false;
+                                        Date toCheck = sdformat.parse(le.getData());
+                                        Date d = new Date();
+                                        if(toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
+                                            over = true;
+                                        }
+
+                                        if(over || le.getPostiRimanenti() == 0) {
+                                            Button b = v.findViewById(R.id.sign_up_button);
+                                            b.setEnabled(false);
+                                            b.setText(f.getString(R.string.registrations_closed));
+                                        }
+                                    } catch(ParseException ex) {
+                                        Log.i("ParseException", "ParseException");
+                                    }
+                                }
                             });
-
-                            try {
-                                SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-                                boolean over = false;
-                                Date toCheck = sdformat.parse(le.getData());
-                                Date d = new Date();
-                                if(toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
-                                    over = true;
-                                }
-
-                                if(over || le.getPostiRimanenti() == 0) {
-                                    Button b = v.findViewById(R.id.sign_up_button);
-                                    b.setEnabled(false);
-                                    b.setText(f.getString(R.string.registrations_closed));
-                                }
-                            } catch(ParseException ex) {
-                                Log.i("ParseException", "ParseException");
-                            }
-                        });
+                        }
                     });
                 }
             }

@@ -65,7 +65,7 @@
                 app:layout_constraintStart_toStartOf="@+id/nomeAtt2"
                 app:layout_constraintTop_toTopOf="@+id/nomeAtt2" />
 
-            <ImageButton
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.SpeechImageButton
                 android:id="@+id/imageButton3"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
@@ -97,7 +97,7 @@
                 app:layout_constraintStart_toStartOf="@+id/organizerName"
                 app:layout_constraintTop_toTopOf="@+id/organizerName" />
 
-            <ImageButton
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.SpeechImageButton
                 android:id="@+id/imageButton"
                 android:layout_width="54dp"
                 android:layout_height="48dp"
@@ -120,6 +120,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

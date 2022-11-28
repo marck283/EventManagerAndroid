@@ -19,6 +19,7 @@ public class EventDetailsFragment extends Fragment {
 
     private EventDetailsViewModel mViewModel;
     private NavigationSharedViewModel nvm;
+    private String day, time;
 
     //Indica il tipo della schermata (ad esempio "iscr" per utente iscritto, od "org" per "organizzatore")
     private String screenType;
@@ -26,6 +27,14 @@ public class EventDetailsFragment extends Fragment {
 
     public void setEventId(@NonNull String val) {
         eventId = val;
+    }
+
+    public void setDay(@NonNull String day) {
+        this.day = day;
+    }
+
+    public void setTime(@NonNull String time) {
+        this.time = time;
     }
 
     @NonNull
@@ -66,8 +75,13 @@ public class EventDetailsFragment extends Fragment {
             case "pub": {
                 mViewModel.getEventInfo("pub", eventId, view, this);
 
-                view.findViewById(R.id.sign_up_button).setOnClickListener(c ->
-                        mViewModel.registerUser(nvm.getToken().getValue(), eventId, this));
+                view.findViewById(R.id.sign_up_button).setOnClickListener(c -> {
+                    if(eventId != null && day != null && !day.equals("") && !day.equals("---") &&
+                            time != null && !time.equals("") && !time.equals("---") && nvm.getToken() != null &&
+                    nvm.getToken().getValue() != null) {
+                        mViewModel.registerUser(nvm.getToken().getValue(), eventId, this, day, time);
+                    }
+                });
                 break;
             }
             case "iscr": {

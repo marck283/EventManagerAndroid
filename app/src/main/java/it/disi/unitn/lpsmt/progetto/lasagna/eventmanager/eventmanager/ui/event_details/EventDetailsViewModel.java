@@ -25,8 +25,9 @@ public class EventDetailsViewModel extends ViewModel {
         }
     }
 
-    public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f) {
+    public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
+                             @NonNull String day, @NonNull String time) {
         UserEventRegistration uer = new UserEventRegistration();
-        uer.registerUser(accessToken, eventId, f);
+        uer.registerUser(accessToken, eventId, day, time, f);
     }
 }
