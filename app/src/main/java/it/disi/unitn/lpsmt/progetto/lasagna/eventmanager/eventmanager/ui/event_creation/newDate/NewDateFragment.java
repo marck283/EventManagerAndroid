@@ -11,8 +11,6 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -23,6 +21,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 public class NewDateFragment extends DialogFragment {
 
     private NewDateViewModel mViewModel;
+    private View root;
 
     @NonNull
     public static NewDateFragment newInstance() {
@@ -32,7 +31,9 @@ public class NewDateFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_new_date, container, false);
+        root = inflater.inflate(R.layout.fragment_new_date, container, false);
+
+        return root;
     }
 
     private boolean parseBeginDate(@NonNull EditText t) {
@@ -98,11 +99,7 @@ public class NewDateFragment extends DialogFragment {
             if(t.getText() != null && t1.getText() != null && t3.getText() != null) {
                 if(parseBeginDate(t) && parseBeginHour(t1) && parseSeats(t3)) {
                     mViewModel.setOk(true);
-                    /*FragmentManager fm = getChildFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    EventLocationFragment el = EventLocationFragment.newInstance();
-                    ft.add(el, "EventLocationFragment");
-                    ft.commit();*/
+                    NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
                 }
             } else {
                 setAlertDialog(R.string.no_value_title, getString(R.string.no_value));

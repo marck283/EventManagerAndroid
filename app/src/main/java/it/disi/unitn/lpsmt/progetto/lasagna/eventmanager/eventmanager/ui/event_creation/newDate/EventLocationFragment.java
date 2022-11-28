@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
@@ -69,6 +68,7 @@ public class EventLocationFragment extends DialogFragment {
 
             itemSelected.getItem().observe(requireActivity(), o -> mViewModel.setProvincia((String) o));
             mViewModel.parseAddress(t, t1, t2, t3);
+            NavHostFragment.findNavController(this).navigate(R.id.action_eventLocationFragment_to_SecondFragment);
         });
     }
 
