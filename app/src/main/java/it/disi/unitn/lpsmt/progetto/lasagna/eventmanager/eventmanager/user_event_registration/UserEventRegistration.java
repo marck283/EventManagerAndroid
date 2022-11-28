@@ -44,7 +44,7 @@ public class UserEventRegistration {
                     if(response.code() == 400) {
                         Log.i("malformed", "Richiesta malformata");
                     } else {
-                        //COntinuare interpretazione risposta considerando i diversi casi di errore
+                        //Continuare interpretazione risposta considerando i diversi casi di errore
                     }
                 }
             }
