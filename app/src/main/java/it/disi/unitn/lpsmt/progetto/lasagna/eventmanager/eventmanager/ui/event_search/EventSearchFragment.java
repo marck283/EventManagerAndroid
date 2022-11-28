@@ -46,8 +46,8 @@ public class EventSearchFragment extends DialogFragment {
             EditText t1 = root.findViewById(R.id.nomeAtt2);
             if(t1.getText().toString().equals("")) {
                 AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
-                ad.setTitle(R.string.both_fields_empty);
-                ad.setMessage(getString(R.string.fields_empty_message));
+                ad.setTitle(R.string.event_name_field_empty);
+                ad.setMessage(getString(R.string.event_name_field_empty_message));
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 ad.show();
             } else {
@@ -60,8 +60,8 @@ public class EventSearchFragment extends DialogFragment {
             EditText t = root.findViewById(R.id.organizerName);
             if(t.getText().toString().equals("")) {
                 AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
-                ad.setTitle(R.string.both_fields_empty);
-                ad.setMessage(getString(R.string.fields_empty_message));
+                ad.setTitle(R.string.org_name_field_empty);
+                ad.setMessage(getString(R.string.org_name_field_empty_message));
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 ad.show();
             } else {

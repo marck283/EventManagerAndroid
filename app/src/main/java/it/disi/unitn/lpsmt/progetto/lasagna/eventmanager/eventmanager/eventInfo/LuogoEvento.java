@@ -70,7 +70,7 @@ public class LuogoEvento extends Address {
                 fromJsonString(gs1, json, "provincia"),
                 maxPers,
                 fromJsonString(gs1, json, "data"), fromJsonString(gs1, json, "ora"),
-                maxPers - json.getAsJsonArray("partecipantiID").size());
+                json.getAsJsonArray("partecipantiID").size());
     }
 
     @NonNull
