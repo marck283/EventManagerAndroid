@@ -44,7 +44,7 @@ public class Authentication {
             }
             auth = authentication.authentication(new AuthObject(csrfToken, googleJwt, null));
         } else {
-            if(fbJwt == null || fbJwt.equals("")) {
+            if(fbJwt == null || fbJwt.getToken().equals("")) {
                 Log.i("fbJwtNull", "L'Access Token di Facebook non può essere null o una stringa vuota");
                 return;
             }
