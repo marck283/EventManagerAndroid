@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout4"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.event_search.EventSearchFragment">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="385dp"
+        android:layout_height="314dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/event_search"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/nomeAtt2"
+                android:layout_width="256dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:autofillHints="name"
+                android:hint="@string/insert_event_name"
+                android:inputType="text"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/organizerName" />
+
+            <Button
+                android:id="@+id/search_for_event_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/search_for_event_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.504"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nomeAtt2" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_by_event_name"
+                app:layout_constraintStart_toStartOf="@+id/nomeAtt2"
+                app:layout_constraintTop_toTopOf="@+id/nomeAtt2" />
+
+            <ImageButton
+                android:id="@+id/imageButton3"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@color/white"
+                android:contentDescription="@string/speak"
+                android:src="@drawable/ic_record_voice"
+                app:layout_constraintEnd_toEndOf="@+id/nomeAtt2"
+                app:layout_constraintTop_toTopOf="@+id/nomeAtt2" />
+
+            <EditText
+                android:id="@+id/organizerName"
+                android:layout_width="257dp"
+                android:layout_height="59dp"
+                android:layout_marginTop="12dp"
+                android:autofillHints="name"
+                android:hint="@string/insert_org_name"
+                android:inputType="text"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/search_by_organizer_name"
+                app:layout_constraintStart_toStartOf="@+id/organizerName"
+                app:layout_constraintTop_toTopOf="@+id/organizerName" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="54dp"
+                android:layout_height="48dp"
+                android:background="@color/white"
+                android:contentDescription="@string/speak"
+                android:src="@drawable/ic_record_voice"
+                app:layout_constraintEnd_toEndOf="@+id/organizerName"
+                app:layout_constraintTop_toTopOf="@+id/organizerName" />
+
+            <Button
+                android:id="@+id/search_for_org_name"
+                android:layout_width="274dp"
+                android:layout_height="49dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/search_for_org_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.513"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_for_event_name" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

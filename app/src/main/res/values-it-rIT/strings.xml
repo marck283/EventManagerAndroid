@@ -103,4 +103,13 @@
     <string name="scan_qr_code">Scansiona biglietto</string>
     <string name="event_over">Termina evento</string>
     <string name="cancel_event">Annulla evento</string>
+    <string name="event_search">Cerca eventi simili…</string>
+    <string name="search_by_organizer_name">Per nome dell\'organizzatore</string>
+    <string name="search_by_event_name">Per nome dell\'evento</string>
+    <string name="search">Cerca</string>
+    <string name="both_fields_empty">Entrambi i campi vuoti</string>
+    <string name="fields_empty_message">Almeno un campo non deve essere vuoto.</string>
+    <string name="search_for_event_name">Cerca per nome dell\'evento</string>
+    <string name="search_for_org_name">Cerca per organizzatore</string>
+    <string name="insert_org_name">Inserisci nome utente</string>
 </resources>

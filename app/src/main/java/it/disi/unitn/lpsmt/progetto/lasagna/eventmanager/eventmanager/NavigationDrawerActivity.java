@@ -48,6 +48,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.EventSearchViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
@@ -65,6 +66,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private Profile profile;
     private AccessTokenTracker tracker;
     private boolean prompt = true;
+    private EventSearchViewModel esvm;
 
     private void setAlertDialog(boolean eventCreation) {
         AlertDialog d = new AlertDialog.Builder(this).create();
@@ -129,6 +131,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
         ms = new ViewModelProvider(this).get(MenuSettingsViewModel.class);
+        esvm = new ViewModelProvider(this).get(EventSearchViewModel.class);
         accessToken = AccessToken.getCurrentAccessToken();
 
         // Passing each menu ID as a set of Ids because each
@@ -162,6 +165,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     updateUI("login", null, null);
                 } catch(ApiException ex) {
                     Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
+                    updateUI("logout", null, null);
+                } catch(NullPointerException ex) {
+                    Log.i("Exception", "An exception was thrown.");
                     updateUI("logout", null, null);
                 }
             }, e -> {

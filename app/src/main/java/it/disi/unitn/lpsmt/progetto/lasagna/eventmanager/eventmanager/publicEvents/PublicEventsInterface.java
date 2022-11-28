@@ -13,5 +13,5 @@ public interface PublicEventsInterface {
                            @Header("categoria") String categoria,
                            @Header("durata") String durata,
                            @Header("indirizzo") String indirizzo,
-                           @Header("citta") String citta);
+                           @Header("citta") String citta, @Header("orgName") String orgName);
 }

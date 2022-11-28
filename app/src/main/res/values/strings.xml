@@ -114,4 +114,13 @@
     <string name="scan_qr_code">Scan QR code</string>
     <string name="event_over">End event</string>
     <string name="cancel_event">Cancel event</string>
+    <string name="event_search">Search similar events…</string>
+    <string name="search_by_organizer_name">By organizer\'s name</string>
+    <string name="search_by_event_name">By event\'s name</string>
+    <string name="search">Search</string>
+    <string name="both_fields_empty">Both fields are empty</string>
+    <string name="fields_empty_message">At least one field must not be empty.</string>
+    <string name="search_for_event_name">Search for event name</string>
+    <string name="search_for_org_name">Search for event organizer</string>
+    <string name="insert_org_name">Insert username</string>
 </resources>

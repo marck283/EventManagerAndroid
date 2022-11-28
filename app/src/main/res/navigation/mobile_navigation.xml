@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_nav_event_list_to_eventDetailsFragment"
             app:destination="@id/eventDetailsFragment" />
+        <action
+            android:id="@+id/action_nav_event_list_to_eventSearchFragment"
+            app:destination="@id/eventSearchFragment" />
     </fragment>
 
     <fragment
@@ -84,5 +87,14 @@
         android:id="@+id/eventDetailsFragment"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment"
         android:label="@string/event_details_fragment" />
+    <dialog
+        android:id="@+id/eventSearchFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.EventSearchFragment"
+        android:label="fragment_event_search"
+        tools:layout="@layout/fragment_event_search" >
+        <action
+            android:id="@+id/action_eventSearchFragment_to_nav_event_list"
+            app:destination="@id/nav_event_list" />
+    </dialog>
 
 </navigation>
