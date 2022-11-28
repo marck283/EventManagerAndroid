@@ -13,16 +13,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 
 public class EventDetailsFragment extends Fragment {
 
     private EventDetailsViewModel mViewModel;
+    private NavigationSharedViewModel nvm;
 
     //Indica il tipo della schermata (ad esempio "iscr" per utente iscritto, od "org" per "organizzatore")
     private String screenType;
     private String eventId;
 
-
+    public void setEventId(@NonNull String val) {
+        eventId = val;
+    }
 
     @NonNull
     public static EventDetailsFragment newInstance() {
@@ -56,10 +60,14 @@ public class EventDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(EventDetailsViewModel.class);
+        nvm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
 
         switch(screenType) {
             case "pub": {
                 mViewModel.getEventInfo("pub", eventId, view, this);
+
+                view.findViewById(R.id.sign_up_button).setOnClickListener(c ->
+                        mViewModel.registerUser(nvm.getToken().getValue(), eventId, this));
                 break;
             }
             case "iscr": {

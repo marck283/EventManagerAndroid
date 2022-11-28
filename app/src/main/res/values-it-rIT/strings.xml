@@ -116,4 +116,6 @@
     <string name="event_name_field_empty_message">Il campo \"nome evento\" non può essere vuoto se l\'utente intende utilizzarlo per ottenere eventi basandosi sul suo valore.</string>
     <string name="org_name_field_empty">Il campo \"nome organizzatore\" è vuoto</string>
     <string name="org_name_field_empty_message">Il campo \"nome organizzatore\" non può essere vuoto se l\'utente intende usarlo per visualizzare eventi basandosi sul suo valore.</string>
+    <string name="event_registration_success_title">Tutto a posto!</string>
+    <string name="event_registration_success">L\'utente è stato registrato con successo all\'evento.</string>
 </resources>

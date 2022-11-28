@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.EventInfoCall;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event_registration.UserEventRegistration;
 
 public class EventDetailsViewModel extends ViewModel {
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view, @NonNull EventDetailsFragment f) {
@@ -22,5 +23,10 @@ public class EventDetailsViewModel extends ViewModel {
                 //Qualcosa
             }
         }
+    }
+
+    public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f) {
+        UserEventRegistration uer = new UserEventRegistration();
+        uer.registerUser(accessToken, eventId, f);
     }
 }

@@ -127,4 +127,6 @@
     <string name="event_name_field_empty_message">The field \"event name\" cannot be empty if the user wants to filter events for event name.</string>
     <string name="org_name_field_empty">Field \"organizer name\" is empty</string>
     <string name="org_name_field_empty_message">The field \"organizer name\" cannot be empty if the user wants to use it to retrieve events based on its value.</string>
+    <string name="event_registration_success_title">Success!</string>
+    <string name="event_registration_success">The user has been successfully registrated to the event.</string>
 </resources>

@@ -28,7 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EventInfoCall {
-    private EventInfoInterface evInterface;
+    private final EventInfoInterface evInterface;
 
     public EventInfoCall() {
         Retrofit retro = new Retrofit.Builder()
@@ -69,7 +69,9 @@ public class EventInfoCall {
                     organizerName.setText(f.getString(R.string.organizer, ei1.getOrgName()));
 
                     TextView durata = v.findViewById(R.id.duration);
-                    durata.setText(String.valueOf(f.getString(R.string.duration, ei1.getDurata())));
+                    durata.setText(f.getString(R.string.duration, ei1.getDurata()));
+
+                    f.setEventId(ei1.getId());
 
                     ArrayList<String> dateArr = ei1.getLuoghi();
                     ArrayAdapter<CharSequence> ad = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);

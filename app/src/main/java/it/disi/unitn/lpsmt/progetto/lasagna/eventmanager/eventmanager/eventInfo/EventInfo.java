@@ -15,7 +15,7 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 
 public class EventInfo {
-    private String nomeAtt, categoria, organizzatore, eventPic;
+    private String id, nomeAtt, categoria, organizzatore, eventPic;
     private int durata;
     private boolean terminato;
     private ArrayList<LuogoEvento> luogoEvento;
@@ -44,7 +44,7 @@ public class EventInfo {
         return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
     }
 
-    private EventInfo(@NonNull String nomeAtt, @NonNull String categoria, @NonNull String eventPic,
+    private EventInfo(@NonNull String id, @NonNull String nomeAtt, @NonNull String categoria, @NonNull String eventPic,
     int durata, boolean terminato, @NonNull ArrayList<LuogoEvento> luogoEvento, @NonNull String organizzatore) {
         this.nomeAtt = nomeAtt;
         this.categoria = categoria;
@@ -53,6 +53,10 @@ public class EventInfo {
         this.terminato = terminato;
         this.luogoEvento = luogoEvento;
         this.organizzatore = organizzatore;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getNomeAtt() {
@@ -118,7 +122,8 @@ public class EventInfo {
 
     public EventInfo parseJSON(@NonNull JsonObject response) {
         Gson gs1 = new GsonBuilder().create();
-        return new EventInfo(fromJsonString(gs1, response, "nomeAtt"),
+        return new EventInfo(fromJsonString(gs1, response, "id"),
+                fromJsonString(gs1, response, "nomeAtt"),
                 fromJsonString(gs1, response, "categoria"),
                 fromJsonString(gs1, response, "eventPic"),
                 Integer.parseInt(fromJsonString(gs1, response, "durata")),
