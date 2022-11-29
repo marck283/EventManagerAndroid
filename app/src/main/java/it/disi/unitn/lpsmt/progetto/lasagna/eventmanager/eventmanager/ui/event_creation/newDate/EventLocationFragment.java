@@ -20,12 +20,12 @@ import android.widget.Spinner;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
 
 public class EventLocationFragment extends DialogFragment {
 
     private EventLocationViewModel mViewModel;
-    private View view;
 
     @NonNull
     @Contract(" -> new")
@@ -36,8 +36,7 @@ public class EventLocationFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_event_location, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_event_location, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -67,8 +66,12 @@ public class EventLocationFragment extends DialogFragment {
             spinner.setOnItemSelectedListener(itemSelected);
 
             itemSelected.getItem().observe(requireActivity(), o -> mViewModel.setProvincia((String) o));
-            mViewModel.parseAddress(t, t1, t2, t3);
-            NavHostFragment.findNavController(this).navigate(R.id.action_eventLocationFragment_to_SecondFragment);
+            LuogoEv l = mViewModel.parseAddress(t, t1, t2, t3);
+            if(l != null) {
+                Bundle b1 = new Bundle();
+                b1.putParcelable("luogoEv", l);
+                NavHostFragment.findNavController(this).navigate(R.id.action_eventLocationFragment_to_SecondFragment, b1);
+            }
         });
     }
 

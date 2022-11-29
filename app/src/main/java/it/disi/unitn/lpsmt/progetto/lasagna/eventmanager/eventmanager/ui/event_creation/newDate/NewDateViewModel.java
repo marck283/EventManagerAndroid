@@ -1,42 +1,45 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class NewDateViewModel extends ViewModel {
-    private final MutableLiveData<String> data, ora;
-    private final MutableLiveData<Integer> posti;
+    private String data, ora;
+    private Integer posti;
     private final MutableLiveData<Boolean> ok;
 
     public NewDateViewModel() {
-        data = new MutableLiveData<>();
-        ora = new MutableLiveData<>();
-        posti = new MutableLiveData<>();
+        data = "";
+        ora = "";
+        posti = 0;
         ok = new MutableLiveData<>(false);
     }
 
     public void setData(String data) {
-        this.data.setValue(data);
+        this.data = data;
     }
 
-    public LiveData<String> getData() {
+    public String getData() {
+        Log.i("data", data);
         return data;
     }
 
     public void setOra(String ora) {
-        this.ora.setValue(ora);
+        this.ora = ora;
     }
 
-    public LiveData<String> getOra() {
+    public String getOra() {
         return ora;
     }
 
     public void setPosti(int posti) {
-        this.posti.setValue(posti);
+        this.posti = posti;
     }
 
-    public LiveData<Integer> getPosti() {
+    public Integer getPosti() {
         return posti;
     }
 

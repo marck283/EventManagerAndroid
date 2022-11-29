@@ -9,11 +9,9 @@ import android.util.Log;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.IOException;
 import java.util.List;
@@ -306,15 +304,10 @@ public class EventLocationViewModel extends ViewModel {
         return ok;
     }
 
-    //Perché questo metodo non esegue la navigazione alla pressione del tasto "Continua"?
-    private void dismiss() {
-        NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment);
-    }
-
-    public void parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4, @NonNull EditText t5) {
+    public LuogoEv parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4, @NonNull EditText t5) {
         if (provincia == null || provincia.equals("")) {
             setAlertDialog(R.string.incorrect_province_format_title, f.getString(R.string.incorrect_province_format));
-            return;
+            return null;
         }
 
         String location = t2.getText() + ", " + t3.getText() + ", " + t4.getText() + ", " + t5.getText() + ", " + parseProvince();
@@ -327,8 +320,8 @@ public class EventLocationViewModel extends ViewModel {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> {
                     setAddress(addresses, luogo);
-                    ok.setValue(true);
-                    f.dismiss();
+                    ok.postValue(true);
+                    //f.dismiss();
                 });
             } else {
                 Thread t1 = new Thread() {
@@ -346,8 +339,6 @@ public class EventLocationViewModel extends ViewModel {
                                 Looper.loop();
                                 Looper.getMainLooper().quitSafely();
                             }
-
-                            //Qui potrebbe essere opportuno utilizzare la navigazione offerta dal Navigation Graph di Android...
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -356,11 +347,13 @@ public class EventLocationViewModel extends ViewModel {
                 t1.start();
                 t1.join();
             }
-            f.dismiss();
+            //f.dismiss();
+            return luogo;
         } catch (NumberFormatException ex) {
             setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
