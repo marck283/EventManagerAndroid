@@ -65,11 +65,11 @@
     <string name="incorrect_location_format">Formato campo \"luogo\" non corretto.</string>
     <string name="insert_venue_address">Inserisci indirizzo</string>
     <string name="insert_address">Inserisci indirizzo…</string>
-    <string name="insert_city">Inserisci comune…</string>
-    <string name="insert_postal_code">Inserisci CAP…</string>
+    <string name="insert_city">Comune…</string>
+    <string name="insert_postal_code">CAP</string>
     <string name="forward">Continua</string>
     <string name="insert_event_start_info">Inserisci la data e l\'ora d\'inizio dell\'evento e il numero di posti disponibili</string>
-    <string name="insert_house_number">Inserisci numero civico…</string>
+    <string name="insert_house_number">Numero civico…</string>
     <string name="province">Provincia</string>
     <string name="incorrect_province_format_title">Valore o formato non corretti per il campo \"provincia\"</string>
     <string name="incorrect_province_format">Valore o formato non corretti per il campo \"provincia\".</string>

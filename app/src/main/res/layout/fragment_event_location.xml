@@ -8,8 +8,8 @@
     tools:context=".ui.event_creation.newDate.EventLocationFragment">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="385dp"
-        android:layout_height="396dp"
+        android:layout_width="379dp"
+        android:layout_height="449dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -34,57 +34,57 @@
                 android:id="@+id/location_address"
                 android:layout_width="320dp"
                 android:layout_height="63dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="28dp"
                 android:hint="@string/insert_address"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.513"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView38" />
 
             <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
                 android:id="@+id/location_city"
-                android:layout_width="153dp"
-                android:layout_height="61dp"
+                android:layout_width="140dp"
+                android:layout_height="56dp"
                 android:layout_marginTop="16dp"
                 android:hint="@string/insert_city"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.36"
                 app:layout_constraintStart_toEndOf="@+id/house_number"
                 app:layout_constraintTop_toBottomOf="@+id/location_address" />
 
+            <Spinner
+                android:id="@+id/province"
+                android:layout_width="151dp"
+                android:layout_height="65dp"
+                android:layout_marginTop="36dp"
+                android:contentDescription="@string/category_selection"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.344"
+                app:layout_constraintStart_toEndOf="@+id/zipcode"
+                app:layout_constraintTop_toBottomOf="@+id/location_city" />
+
             <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
                 android:id="@+id/zipcode"
-                android:layout_width="169dp"
-                android:layout_height="66dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="142dp"
+                android:layout_height="67dp"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="36dp"
                 android:ems="10"
                 android:hint="@string/insert_postal_code"
                 android:inputType="number"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/house_number" />
 
-            <Spinner
-                android:id="@+id/province"
-                android:layout_width="139dp"
-                android:layout_height="61dp"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/category_selection"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.622"
-                app:layout_constraintStart_toEndOf="@+id/zipcode"
-                app:layout_constraintTop_toBottomOf="@+id/location_city" />
-
             <Button
                 android:id="@+id/button6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="72dp"
+                android:onClick="navigate"
                 android:text="@string/confirm"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                android:onClick="navigate" />
+                app:layout_constraintHorizontal_bias="0.501"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/textView41"
@@ -98,9 +98,9 @@
 
             <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
                 android:id="@+id/house_number"
-                android:layout_width="191dp"
-                android:layout_height="61dp"
-                android:layout_marginStart="16dp"
+                android:layout_width="141dp"
+                android:layout_height="57dp"
+                android:layout_marginStart="36dp"
                 android:layout_marginTop="16dp"
                 android:hint="@string/insert_house_number"
                 app:layout_constraintStart_toStartOf="parent"
