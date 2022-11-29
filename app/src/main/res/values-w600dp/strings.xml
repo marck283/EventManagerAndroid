@@ -61,10 +61,10 @@
     <string name="total_seats">Seats</string>
     <string name="add_row">Add row</string>
     <string name="confirm">Confirm</string>
-    <string name="insert_date">Insert date...</string>
-    <string name="insert_hour">Insert time...</string>
+    <string name="insert_date">Insert date…</string>
+    <string name="insert_hour">Insert time…</string>
     <string name="seats">Seats:</string>
-    <string name="insert_seats">Insert number of seats...</string>
+    <string name="insert_seats">Insert number of seats…</string>
     <string name="incorrect_seats_format">Incorrect seats format</string>
     <string name="incorrect_date_format">Incorrect date format. The correct date format is GG/MM/AAAA.</string>
     <string name="incorrect_date_format_title">Incorrect date format</string>
@@ -75,12 +75,12 @@
     <string name="incorrect_location_format_title">Incorrect location format</string>
     <string name="incorrect_location_format">Incorrect location format.</string>
     <string name="insert_venue_address">Insert venue address</string>
-    <string name="insert_address">Insert address...</string>
-    <string name="insert_city">Insert city...</string>
-    <string name="insert_postal_code">Insert postal code...</string>
+    <string name="insert_address">Insert address…</string>
+    <string name="insert_city">Insert city…</string>
+    <string name="insert_postal_code">Insert postal code…</string>
     <string name="forward">Continue</string>
     <string name="insert_event_start_info">Insert the event\'s starting date, time and number of seats</string>
-    <string name="insert_house_number">Insert House number...</string>
+    <string name="insert_house_number">Insert House number…</string>
     <string name="province">Province</string>
     <string name="incorrect_province_format_title">Incorrect province format or value</string>
     <string name="incorrect_province_format">Incorrect province format or value.</string>
@@ -131,4 +131,12 @@
     <string name="event_registration_success">The user has been successfully registrated to the event.</string>
     <string name="internal_server_error">Server error</string>
     <string name="service_unavailable">Our services are temporarily unavailable. Please try again later.</string>
+    <string name="additional_information">Additional information</string>
+    <string name="event_description">Event description</string>
+    <string name="duration_info">Duration</string>
+    <string name="add_event_image">Add event picture…</string>
+    <string name="days">Days</string>
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
+    <string name="continue_forward">Continue</string>
 </resources>

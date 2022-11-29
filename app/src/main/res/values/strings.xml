@@ -131,4 +131,12 @@
     <string name="event_registration_success">The user has been successfully registrated to the event.</string>
     <string name="internal_server_error">Server error</string>
     <string name="service_unavailable">Our services are temporarily unavailable. Please try again later.</string>
+    <string name="additional_information">Additional information</string>
+    <string name="event_description">Event description</string>
+    <string name="duration_info">Duration</string>
+    <string name="add_event_image">Add event picture…</string>
+    <string name="days">Days</string>
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
+    <string name="continue_forward">Continue</string>
 </resources>
