@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private EventViewModel evm;
+    private boolean ok = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,8 +34,10 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.button5.setOnClickListener(c -> {
-            evm.setNomeAtt(((EditText)requireActivity().findViewById(R.id.nomeAtt)).getText().toString());
-            Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
+            if(ok) {
+                evm.setNomeAtt(((EditText)requireActivity().findViewById(R.id.nomeAtt)).getText().toString());
+                Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
+            }
         });
     }
 
@@ -60,7 +64,18 @@ public class FirstFragment extends Fragment {
 
         SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
         spinner.setOnItemSelectedListener(itemSelected);
-        itemSelected.getItem().observe(requireActivity(), o -> evm.setCategoria((String) o));
+        itemSelected.getItem().observe(requireActivity(), o -> {
+            if(o != null && !((String) o).equals("")) {
+                evm.setCategoria((String) o);
+                ok = true;
+            } else {
+                AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
+                ad.setTitle(R.string.invalid_category);
+                ad.setMessage(getString(R.string.invalid_category_message));
+                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                ad.show();
+            }
+        });
     }
 
     @Override

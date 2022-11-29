@@ -46,7 +46,7 @@ public class EventLocationViewModel extends ViewModel {
         int i = 0;
         for (Address a : addresses) {
             Log.i("addresses", addresses.toString());
-            if (a.getAddressLine(i).contains(luogo.toString())) {
+            if (a != null && a.getAddressLine(i) != null && a.getAddressLine(i).contains(luogo.toString())) {
                 ok.postValue(true);
                 break;
             } else {

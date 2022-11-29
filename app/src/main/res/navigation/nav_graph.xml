@@ -23,12 +23,11 @@
         tools:layout="@layout/fragment_second">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment"
-            app:launchSingleTop="true" />
-        <action
             android:id="@+id/action_SecondFragment_to_newDateFragment"
             app:destination="@id/newDateFragment" />
+        <action
+            android:id="@+id/action_SecondFragment_to_eventAdditionalInfoFragment"
+            app:destination="@id/eventAdditionalInfoFragment" />
     </fragment>
     <dialog
         android:id="@+id/newDateFragment"
@@ -49,4 +48,8 @@
             android:id="@+id/action_eventLocationFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/eventAdditionalInfoFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.eventAdditionalInfoFragment.EventAdditionalInfoFragment"
+        android:label="@string/second_fragment_label" />
 </navigation>

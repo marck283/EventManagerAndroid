@@ -141,4 +141,6 @@
     <string name="continue_forward">Continue</string>
     <string name="wrong_date">Incorrect date</string>
     <string name="date_less_than_current_date">The given date is less than the current date.</string>
+    <string name="invalid_category">Invalid category</string>
+    <string name="invalid_category_message">The selected category does not correspond to any valid value.</string>
 </resources>

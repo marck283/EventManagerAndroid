@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -35,12 +34,10 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_c
 public class EventCreationActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
-    private ActivityEventCreationBinding binding;
     private String idToken;
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
     private EventViewModel evm;
-    private final int countRows = 0;
     private NewDateViewModel nd;
     private EventLocationViewModel elvm;
 
@@ -48,7 +45,7 @@ public class EventCreationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityEventCreationBinding.inflate(getLayoutInflater());
+        it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding binding = ActivityEventCreationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -93,18 +90,6 @@ public class EventCreationActivity extends AppCompatActivity {
 
         CheckBox box = findViewById(R.id.checkBox);
         box.setOnCheckedChangeListener((buttonView, isChecked) -> evm.setPrivEvent(isChecked));
-    }
-
-    public void navigate(@NonNull View view) {
-        if(view.getId() == R.id.button3) {
-            nd.getOk().observe(this, o -> {
-                if(o) {
-                    Navigation.findNavController(findViewById(R.id.nav_host_fragment_content_event_creation)).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
-                }
-            });
-        } else {
-            Navigation.findNavController(findViewById(R.id.nav_host_fragment_content_event_creation)).navigate(R.id.action_eventLocationFragment_to_SecondFragment);
-        }
     }
 
     private void checkPermission() {

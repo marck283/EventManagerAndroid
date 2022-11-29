@@ -130,4 +130,6 @@
     <string name="continue_forward">Continua</string>
     <string name="wrong_date">Data non corretta</string>
     <string name="date_less_than_current_date">La data fornita è inferiore a quella corrente.</string>
+    <string name="invalid_category">Categoria non valida.</string>
+    <string name="invalid_category_message">La categoria selezionata non corrisponde ad alcun valore valido.</string>
 </resources>
