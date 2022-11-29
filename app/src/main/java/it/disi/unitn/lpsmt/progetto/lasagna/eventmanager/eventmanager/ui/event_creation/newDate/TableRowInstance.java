@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.Contract;
+
 public class TableRowInstance implements Parcelable {
     private String data, ora, luogo, posti;
 
@@ -38,12 +40,16 @@ public class TableRowInstance implements Parcelable {
         posti = in.readString();
     }
 
-    public static final Creator<TableRowInstance> CREATOR = new Creator<TableRowInstance>() {
+    public static final Creator<TableRowInstance> CREATOR = new Creator<>() {
+        @NonNull
+        @Contract("_ -> new")
         @Override
         public TableRowInstance createFromParcel(Parcel in) {
             return new TableRowInstance(in);
         }
 
+        @NonNull
+        @Contract(value = "_ -> new", pure = true)
         @Override
         public TableRowInstance[] newArray(int size) {
             return new TableRowInstance[size];

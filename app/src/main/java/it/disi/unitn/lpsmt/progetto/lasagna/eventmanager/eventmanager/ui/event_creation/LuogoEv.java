@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import java.util.Locale;
 
 public class LuogoEv extends Address {
-    private String address, city, civNum, province;
-    private int cap;
+    private String address, city, civNum, province, data, ora;
+    private int cap, maxPers;
 
     public LuogoEv(String a, String c, String civNum, String province, int cap) {
         super(Locale.ITALY);
@@ -17,6 +17,18 @@ public class LuogoEv extends Address {
         this.civNum = civNum;
         this.province = province;
         this.cap = cap;
+    }
+
+    public LuogoEv(String a, String c, String civNum, String province, int cap, String data, String ora, int maxPers) {
+        super(Locale.ITALY);
+        address = a;
+        city = c;
+        this.civNum = civNum;
+        this.province = province;
+        this.cap = cap;
+        this.data = data;
+        this.ora = ora;
+        this.maxPers = maxPers;
     }
 
     public String getAddress() {
@@ -57,6 +69,30 @@ public class LuogoEv extends Address {
 
     public void setCAP(int cap) {
         this.cap = cap;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(@NonNull String data) {
+        this.data = data;
+    }
+
+    public String getOra() {
+        return ora;
+    }
+
+    public void setOra(@NonNull String ora) {
+        this.ora = ora;
+    }
+
+    public int getPosti() {
+        return maxPers;
+    }
+
+    public void setPosti(int posti) {
+        maxPers = posti;
     }
 
     @NonNull

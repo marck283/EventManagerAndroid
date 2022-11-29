@@ -128,4 +128,6 @@
     <string name="hours">Ore</string>
     <string name="minutes">Minuti</string>
     <string name="continue_forward">Continua</string>
+    <string name="wrong_date">Data non corretta</string>
+    <string name="date_less_than_current_date">La data fornita è inferiore a quella corrente.</string>
 </resources>

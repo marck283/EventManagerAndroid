@@ -14,6 +14,10 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -21,7 +25,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 public class NewDateFragment extends DialogFragment {
 
     private NewDateViewModel mViewModel;
-    private View root;
 
     @NonNull
     public static NewDateFragment newInstance() {
@@ -31,32 +34,48 @@ public class NewDateFragment extends DialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_new_date, container, false);
-
-        return root;
+        return inflater.inflate(R.layout.fragment_new_date, container, false);
     }
 
     private boolean parseBeginDate(@NonNull EditText t) {
         String beginDate = String.valueOf(t.getText());
         if(beginDate.length() == 10) {
-            Pattern pattern;
-            int substr = Integer.parseInt(beginDate.substring(6));
-            if(substr%400 == 0 || (substr%100 == 0 && substr%4 != 0)) {
-                //Anno bisestile
-                pattern = Pattern.compile("(([0-2][1-9]/02)|((30|20|[0-2][1-9])/(4|6|9|11))|((31|30|20|[0-2][1-9])/(1|3|5|7|8|10|12)))/[1-9][0-9]{3}");
-            } else {
-                pattern = Pattern.compile("(([0-2][1-8]/02)|((30|20|[0-2][1-9])/(4|6|9|11))|((31|30|20|[0-2][1-9])/(1|3|5|7|8|10|12)))/[1-9][0-9]{3}");
-            }
-            if(pattern.matcher(beginDate).find()) {
-                mViewModel.setData(beginDate);
-                return true;
-            } else {
+            try {
+                Pattern pattern;
+                int substr = Integer.parseInt(beginDate.substring(6));
+                if(substr%400 == 0 || (substr%100 == 0 && substr%4 != 0)) {
+                    //Anno bisestile
+                    pattern = Pattern.compile("(([0-2][1-9]/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9][0-9]{3}");
+                } else {
+                    pattern = Pattern.compile("(([0-2][1-8]/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9][0-9]{3}");
+                }
+                if(pattern.matcher(beginDate).find()) {
+                    SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
+                    boolean over = false;
+                    Date toCheck = sdformat.parse(beginDate);
+                    Date d = new Date();
+                    if(toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
+                        over = true;
+                        mViewModel.setData(beginDate);
+                    } else {
+                        AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
+                        ad.setTitle(R.string.wrong_date);
+                        ad.setMessage(getString(R.string.date_less_than_current_date));
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        ad.show();
+                    }
+                    return over;
+                } else {
+                    setAlertDialog(R.string.incorrect_date_format_title, getString(R.string.incorrect_date_format));
+                }
+            } catch(NumberFormatException ex) {
                 setAlertDialog(R.string.incorrect_date_format_title, getString(R.string.incorrect_date_format));
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         } else {
             setAlertDialog(R.string.incorrect_date_format_title, getString(R.string.incorrect_date_format));
         }
-
         return false;
     }
 
@@ -71,11 +90,15 @@ public class NewDateFragment extends DialogFragment {
 
     private boolean parseSeats(@NonNull EditText t3) {
         Pattern pattern = Pattern.compile("([1-9][0-9])+");
-        if (pattern.matcher(String.valueOf(t3.getText())).find()) {
-            mViewModel.setPosti(Integer.parseInt(String.valueOf(t3.getText())));
-            return true;
+        try {
+            if (pattern.matcher(String.valueOf(t3.getText())).find()) {
+                mViewModel.setPosti(Integer.parseInt(String.valueOf(t3.getText())));
+                return true;
+            }
+            setAlertDialog(R.string.incorrect_seats_format, getString(R.string.incorrect_seats_format));
+        } catch(NumberFormatException ex) {
+            setAlertDialog(R.string.incorrect_seats_format, getString(R.string.incorrect_seats_format));
         }
-        setAlertDialog(R.string.incorrect_seats_format, getString(R.string.incorrect_seats_format));
         return false;
     }
 

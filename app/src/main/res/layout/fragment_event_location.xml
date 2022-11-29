@@ -22,11 +22,13 @@
                 android:id="@+id/textView38"
                 android:layout_width="match_parent"
                 android:layout_height="37dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/insert_venue_address"
                 android:textAlignment="center"
                 android:textSize="9pt"
                 android:textStyle="bold|italic"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

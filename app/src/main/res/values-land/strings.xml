@@ -139,4 +139,6 @@
     <string name="hours">Hours</string>
     <string name="minutes">Minutes</string>
     <string name="continue_forward">Continue</string>
+    <string name="wrong_date">Incorrect date</string>
+    <string name="date_less_than_current_date">The given date is less than the current date.</string>
 </resources>

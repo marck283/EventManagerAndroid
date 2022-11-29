@@ -12,17 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.navigation.fragment.NavHostFragment;
 
 import java.io.IOException;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.LuogoEv;
 
 public class EventLocationViewModel extends ViewModel {
     private EventLocationFragment f;
     private String provincia;
-    private String luogo;
     private final MutableLiveData<Boolean> ok;
 
     public EventLocationViewModel() {
@@ -41,27 +42,21 @@ public class EventLocationViewModel extends ViewModel {
         ad.show();
     }
 
-    //Il campo "luogo" è composto da: <nome via>, <numero civico>, <CAP>, <comune>, <sigla a due lettere per la provincia>
-    public void setLuogo(String indirizzo) {
-        luogo = indirizzo;
-    }
-
-    public String getLuogo() {
-        return luogo;
-    }
-
     private void setAddress(@NonNull List<Address> addresses, LuogoEv luogo) {
         int i = 0;
         for (Address a : addresses) {
             Log.i("addresses", addresses.toString());
             if (a.getAddressLine(i).contains(luogo.toString())) {
-                setLuogo(luogo.toString());
+                ok.postValue(true);
                 break;
             } else {
                 ++i;
-                setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
-                Looper.loop();
-                Looper.getMainLooper().quitSafely();
+                Looper.prepare();
+                if(i == addresses.size()) {
+                    setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
+                    Looper.loop();
+                    Looper.getMainLooper().quitSafely();
+                }
             }
         }
     }
@@ -304,10 +299,11 @@ public class EventLocationViewModel extends ViewModel {
         return ok;
     }
 
-    public LuogoEv parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4, @NonNull EditText t5) {
+    public void parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4,
+                                @NonNull EditText t5, @NonNull EventViewModel evm, @NonNull NewDateViewModel ndvm) {
         if (provincia == null || provincia.equals("")) {
             setAlertDialog(R.string.incorrect_province_format_title, f.getString(R.string.incorrect_province_format));
-            return null;
+            return;
         }
 
         String location = t2.getText() + ", " + t3.getText() + ", " + t4.getText() + ", " + t5.getText() + ", " + parseProvince();
@@ -315,13 +311,14 @@ public class EventLocationViewModel extends ViewModel {
 
         try {
             String[] split = location.split(", ");
-            LuogoEv luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]));
+            final LuogoEv luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra(), ndvm.getPosti());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> {
                     setAddress(addresses, luogo);
-                    ok.postValue(true);
-                    //f.dismiss();
+                    evm.setLuogoEv(luogo);
+                    f.requireActivity().runOnUiThread(() ->
+                            NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
                 });
             } else {
                 Thread t1 = new Thread() {
@@ -333,7 +330,9 @@ public class EventLocationViewModel extends ViewModel {
                             Looper.prepare();
                             if (addresses != null && !addresses.isEmpty()) {
                                 setAddress(addresses, luogo);
-                                ok.setValue(true);
+                                evm.setLuogoEv(luogo);
+                                f.requireActivity().runOnUiThread(() ->
+                                        NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
                             } else {
                                 setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result));
                                 Looper.loop();
@@ -347,13 +346,10 @@ public class EventLocationViewModel extends ViewModel {
                 t1.start();
                 t1.join();
             }
-            //f.dismiss();
-            return luogo;
         } catch (NumberFormatException ex) {
             setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return null;
     }
 }

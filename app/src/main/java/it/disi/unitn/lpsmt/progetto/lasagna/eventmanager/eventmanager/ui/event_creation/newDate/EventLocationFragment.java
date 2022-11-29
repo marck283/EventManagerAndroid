@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +19,14 @@ import android.widget.Spinner;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
 
 public class EventLocationFragment extends DialogFragment {
 
     private EventLocationViewModel mViewModel;
+    private EventViewModel evm;
+    private NewDateViewModel ndvm;
 
     @NonNull
     @Contract(" -> new")
@@ -42,6 +43,9 @@ public class EventLocationFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(requireActivity()).get(EventLocationViewModel.class);
         mViewModel.setDialogFragment(this);
+
+        evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+        ndvm = new ViewModelProvider(requireActivity()).get(NewDateViewModel.class);
 
         Spinner spinner = view.findViewById(R.id.province);
 
@@ -66,12 +70,7 @@ public class EventLocationFragment extends DialogFragment {
             spinner.setOnItemSelectedListener(itemSelected);
 
             itemSelected.getItem().observe(requireActivity(), o -> mViewModel.setProvincia((String) o));
-            LuogoEv l = mViewModel.parseAddress(t, t1, t2, t3);
-            if(l != null) {
-                Bundle b1 = new Bundle();
-                b1.putParcelable("luogoEv", l);
-                NavHostFragment.findNavController(this).navigate(R.id.action_eventLocationFragment_to_SecondFragment, b1);
-            }
+            mViewModel.parseAddress(t, t1, t2, t3, evm, ndvm);
         });
     }
 

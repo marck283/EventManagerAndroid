@@ -84,7 +84,7 @@ public class EventInfoCall {
                     SpinnerOnItemSelectedListener l = new SpinnerOnItemSelectedListener(), l1 = new SpinnerOnItemSelectedListener();
                     spinner.setOnItemSelectedListener(l);
                     l.getItem().observe(f.getViewLifecycleOwner(), o -> {
-                        if(o instanceof String && !((String) o).equals("---")) {
+                        if(o instanceof String && !o.equals("---")) {
                             f.setDay((String) o);
                             f.setTime("");
                             ArrayList<String> orariArr = ei1.getOrari((String) o);
@@ -94,7 +94,7 @@ public class EventInfoCall {
                             spinner1.setAdapter(ad1);
                             spinner1.setOnItemSelectedListener(l1);
                             l1.getItem().observe(f.getViewLifecycleOwner(), o1 -> {
-                                if(o1 instanceof String && !((String)o1).equals("---")) {
+                                if(o1 instanceof String && !o1.equals("---")) {
                                     f.setTime((String) o1);
                                     LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
                                     TextView indirizzo = v.findViewById(R.id.event_address);
