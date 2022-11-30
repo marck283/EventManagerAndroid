@@ -61,7 +61,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private DBThread t1;
     private NavigationSharedViewModel vm;
     private MenuSettingsViewModel ms;
-    private ActivityNavigationDrawerBinding binding;
     private AccessToken accessToken;
     private Profile profile;
     private AccessTokenTracker tracker;
@@ -105,7 +104,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
+        it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);

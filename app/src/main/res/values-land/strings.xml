@@ -145,4 +145,6 @@
     <string name="invalid_category_message">The selected category does not correspond to any valid value.</string>
     <string name="one_row_required">No rows</string>
     <string name="one_row_required_message">At least one row is required to continue.</string>
+    <string name="event_name_required">Event name required</string>
+    <string name="event_name_required_message">The given event name is not a valid value.</string>
 </resources>

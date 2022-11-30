@@ -22,7 +22,6 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private EventViewModel evm;
-    private boolean ok = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,17 +33,25 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.button5.setOnClickListener(c -> {
-            if(ok) {
-                evm.setNomeAtt(((EditText)requireActivity().findViewById(R.id.nomeAtt)).getText().toString());
-                Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
+            if(!binding.nomeAtt.getText().toString().equals("")) {
+                if(!binding.planetsSpinner.getSelectedItem().equals("---")) {
+                    evm.setNomeAtt(((EditText)requireActivity().findViewById(R.id.nomeAtt)).getText().toString());
+                    Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
+                } else {
+                    AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
+                    ad.setTitle(R.string.invalid_category);
+                    ad.setMessage(getString(R.string.invalid_category_message));
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    ad.show();
+                }
+            } else {
+                AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
+                ad.setTitle(R.string.event_name_required);
+                ad.setMessage(getString(R.string.event_name_required_message));
+                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                ad.show();
             }
         });
-    }
-
-    public void onStart() {
-        super.onStart();
-
-        evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
 
         //Richiedo un'istanza di Spinner (menù dropdown). Maggiori informazioni qui:
         // https://developer.android.com/develop/ui/views/components/spinner#java
@@ -65,17 +72,16 @@ public class FirstFragment extends Fragment {
         SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
         spinner.setOnItemSelectedListener(itemSelected);
         itemSelected.getItem().observe(requireActivity(), o -> {
-            if(o != null && !((String) o).equals("")) {
+            if(o != null && !o.equals("") && !o.equals("---")) {
                 evm.setCategoria((String) o);
-                ok = true;
-            } else {
-                AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
-                ad.setTitle(R.string.invalid_category);
-                ad.setMessage(getString(R.string.invalid_category_message));
-                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                ad.show();
             }
         });
+    }
+
+    public void onStart() {
+        super.onStart();
+
+        evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
     }
 
     @Override
