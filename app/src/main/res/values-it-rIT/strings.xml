@@ -132,4 +132,6 @@
     <string name="date_less_than_current_date">La data fornita è inferiore a quella corrente.</string>
     <string name="invalid_category">Categoria non valida.</string>
     <string name="invalid_category_message">La categoria selezionata non corrisponde ad alcun valore valido.</string>
+    <string name="one_row_required">Nessuna riga inserita</string>
+    <string name="one_row_required_message">E\' necessaria almeno una riga per continuare.</string>
 </resources>

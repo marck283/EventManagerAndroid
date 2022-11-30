@@ -143,4 +143,6 @@
     <string name="date_less_than_current_date">The given date is less than the current date.</string>
     <string name="invalid_category">Invalid category</string>
     <string name="invalid_category_message">The selected category does not correspond to any valid value.</string>
+    <string name="one_row_required">No rows</string>
+    <string name="one_row_required_message">At least one row is required to continue. You can add one by clicking the button on the bottom right and following the instructions.</string>
 </resources>
