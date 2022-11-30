@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="province_spinner_array">
+        <item>---</item>
         <item>Agrigento</item>
         <item>Alessandria</item>
         <item>Ancona</item>

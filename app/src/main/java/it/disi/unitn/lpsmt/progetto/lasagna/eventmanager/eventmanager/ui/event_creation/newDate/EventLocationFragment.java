@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -69,8 +70,18 @@ public class EventLocationFragment extends DialogFragment {
 
             spinner.setOnItemSelectedListener(itemSelected);
 
-            itemSelected.getItem().observe(requireActivity(), o -> mViewModel.setProvincia((String) o));
-            mViewModel.parseAddress(t, t1, t2, t3, evm, ndvm);
+            itemSelected.getItem().observe(requireActivity(), o -> {
+                if(o instanceof String && !o.equals("") && !o.equals("---")) {
+                    mViewModel.setProvincia((String) o);
+                    mViewModel.parseAddress(t, t1, t2, t3, evm, ndvm);
+                } else {
+                    AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
+                    ad.setTitle(R.string.no_province_selected);
+                    ad.setMessage(getString(R.string.invalid_province));
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    ad.show();
+                }
+            });
         });
     }
 

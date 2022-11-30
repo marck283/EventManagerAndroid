@@ -54,7 +54,8 @@ public class NewDateFragment extends DialogFragment {
                     boolean over = false;
                     Date toCheck = sdformat.parse(beginDate);
                     Date d = new Date();
-                    if(toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
+
+                    if(toCheck != null && toCheck.compareTo(d) > 0) {
                         over = true;
                         mViewModel.setData(beginDate);
                     } else {
