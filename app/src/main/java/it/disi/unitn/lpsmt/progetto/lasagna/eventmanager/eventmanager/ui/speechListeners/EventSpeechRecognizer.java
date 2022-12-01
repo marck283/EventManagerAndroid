@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.speech_recognizer;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,11 +13,11 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-public class EventFilterSpeechRecognizer implements RecognitionListener {
+public class EventSpeechRecognizer implements RecognitionListener {
     private final View a;
     private final int resId;
 
-    public EventFilterSpeechRecognizer(@NonNull View a, @IdRes int resId) {
+    public EventSpeechRecognizer(@NonNull View a, @IdRes int resId) {
         this.a = a;
         this.resId = resId;
     }

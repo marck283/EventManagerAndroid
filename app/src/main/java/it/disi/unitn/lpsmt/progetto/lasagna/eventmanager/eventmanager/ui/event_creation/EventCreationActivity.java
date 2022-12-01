@@ -2,13 +2,9 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,12 +18,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import java.util.Locale;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.EventRecognitionListener;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpeechOnTouchListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.EventLocationViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.NewDateViewModel;
 
@@ -35,8 +27,6 @@ public class EventCreationActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private String idToken;
-    private SpeechRecognizer speechRecognizer;
-    private Intent speechRecognizerIntent;
     private EventViewModel evm;
     private NewDateViewModel nd;
     private EventLocationViewModel elvm;
@@ -45,7 +35,7 @@ public class EventCreationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding binding = ActivityEventCreationBinding.inflate(getLayoutInflater());
+        ActivityEventCreationBinding binding = ActivityEventCreationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -65,14 +55,6 @@ public class EventCreationActivity extends AppCompatActivity {
             checkPermission();
         }
 
-        //Crea un'istanza di SpeechRecognizer
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-
-        speechRecognizer.setRecognitionListener(new EventRecognitionListener(this));
-
         evm = new ViewModelProvider(this).get(EventViewModel.class);
         elvm = new ViewModelProvider(this).get(EventLocationViewModel.class);
     }
@@ -84,9 +66,6 @@ public class EventCreationActivity extends AppCompatActivity {
     @SuppressLint("ClickableViewAccessibility")
     public void onStart() {
         super.onStart();
-
-        ImageButton button = findViewById(R.id.imageButton6);
-        button.setOnTouchListener(new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent));
 
         CheckBox box = findViewById(R.id.checkBox);
         box.setOnCheckedChangeListener((buttonView, isChecked) -> evm.setPrivEvent(isChecked));
@@ -121,8 +100,6 @@ public class EventCreationActivity extends AppCompatActivity {
 
     public void onDestroy() {
         super.onDestroy();
-        speechRecognizer.destroy();
-        speechRecognizerIntent = null;
         nd = null;
     }
 }

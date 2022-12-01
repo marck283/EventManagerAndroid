@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,7 +14,8 @@ import androidx.navigation.Navigation;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentFirstBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.SpeechImageButton;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerItemList;
 
 public class FirstFragment extends Fragment {
 
@@ -32,6 +31,9 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        SpeechImageButton button6 = binding.imageButton6;
+        button6.setupImageButton(binding.getRoot(), R.id.nomeAtt);
         binding.button5.setOnClickListener(c -> {
             if(!binding.nomeAtt.getText().toString().equals("")) {
                 if(!binding.planetsSpinner.getSelectedItem().equals("---")) {
@@ -55,23 +57,13 @@ public class FirstFragment extends Fragment {
 
         //Richiedo un'istanza di Spinner (menù dropdown). Maggiori informazioni qui:
         // https://developer.android.com/develop/ui/views/components/spinner#java
-        Spinner spinner = requireActivity().findViewById(R.id.planets_spinner);
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        /*DropdownSpinnerAdapter a = new DropdownSpinnerAdapter(requireContext(),
-                R.array.category_spinner_array, android.R.layout.simple_spinner_item);
-        a.create(android.R.layout.simple_spinner_dropdown_item);*/
-
-        ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(requireContext(),
-                R.array.category_spinner_array, android.R.layout.simple_spinner_item);
-        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        SpinnerItemList spinner = view.findViewById(R.id.planets_spinner);
 
         // Apply the adapter to the spinner
-        spinner.setAdapter(a);
+        spinner.setAdapter(this, R.array.category_spinner_array,
+                android.R.layout.simple_spinner_item, android.R.layout.simple_spinner_dropdown_item);
 
-        SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
-        spinner.setOnItemSelectedListener(itemSelected);
-        itemSelected.getItem().observe(requireActivity(), o -> {
+        spinner.getListener().getItem().observe(requireActivity(), o -> {
             if(o != null && !o.equals("") && !o.equals("---")) {
                 evm.setCategoria((String) o);
             }
@@ -87,6 +79,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        binding.imageButton6.destroy();
         binding = null;
     }
 }

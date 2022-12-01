@@ -13,10 +13,12 @@ import androidx.appcompat.widget.AppCompatImageButton;
 
 import java.util.Locale;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.speech_recognizer.EventFilterSpeechRecognizer;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.speech_recognizer.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
 
 public class SpeechImageButton extends AppCompatImageButton {
+    private SpeechRecognizer speechRecognizer;
+    private Intent speechRecognizerIntent;
 
     public SpeechImageButton(Context context) {
         super(context);
@@ -31,11 +33,16 @@ public class SpeechImageButton extends AppCompatImageButton {
     }
 
     public void setupImageButton(@NonNull View v, @IdRes int resId) {
-        SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(v.getContext());
-        Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(v.getContext());
+        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        speechRecognizer.setRecognitionListener(new EventFilterSpeechRecognizer(v, resId));
+        speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(v, resId));
         setOnTouchListener(new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent));
+    }
+
+    public void destroy() {
+        speechRecognizer.destroy();
+        speechRecognizerIntent = null;
     }
 }

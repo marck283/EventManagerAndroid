@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.speech_recognizer;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners;
 
 import android.content.Intent;
 import android.speech.SpeechRecognizer;

@@ -2,10 +2,8 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.listeners.SpinnerOnItemSelectedListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerItemList;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -73,27 +71,26 @@ public class EventInfoCall {
 
                     f.setEventId(ei1.getId());
 
-                    ArrayList<String> dateArr = new ArrayList<>(ei1.getLuoghi());
-                    ArrayAdapter<CharSequence> ad = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
-                    ad.add("---");
-                    ad.addAll(dateArr);
+                    ArrayList<CharSequence> dateArr = new ArrayList<>();
+                    dateArr.add("---");
+                    dateArr.addAll(ei1.getLuoghi());
 
-                    Spinner spinner = v.findViewById(R.id.spinner), spinner1 = v.findViewById(R.id.dateArray);
-                    spinner.setAdapter(ad);
+                    SpinnerItemList spinner = v.findViewById(R.id.spinner), spinner1 = v.findViewById(R.id.dateArray);
 
-                    SpinnerOnItemSelectedListener l = new SpinnerOnItemSelectedListener(), l1 = new SpinnerOnItemSelectedListener();
-                    spinner.setOnItemSelectedListener(l);
-                    l.getItem().observe(f.getViewLifecycleOwner(), o -> {
+                    //Verificare se queste chiamate a setAdapter() siano corrette e, nel caso, cambiarle con l'altra versione
+                    //di setAdapter().
+                    spinner.setAdapter(f,
+                            android.R.layout.simple_spinner_dropdown_item, R.id.spinner, dateArr);
+
+                    spinner.getListener().getItem().observe(f.getViewLifecycleOwner(), o -> {
                         if(o instanceof String && !o.equals("---")) {
                             f.setDay((String) o);
                             f.setTime("");
-                            ArrayList<String> orariArr = ei1.getOrari((String) o);
-                            ArrayAdapter<CharSequence> ad1 = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_spinner_dropdown_item);
-                            ad1.add("---");
-                            ad1.addAll(orariArr);
-                            spinner1.setAdapter(ad1);
-                            spinner1.setOnItemSelectedListener(l1);
-                            l1.getItem().observe(f.getViewLifecycleOwner(), o1 -> {
+                            ArrayList<CharSequence> orariArr = new ArrayList<>();
+                            orariArr.add("---");
+                            orariArr.addAll(ei1.getOrari((String) o));
+                            spinner1.setAdapter(f, android.R.layout.simple_spinner_dropdown_item, R.id.dateArray, orariArr);
+                            spinner1.getListener().getItem().observe(f.getViewLifecycleOwner(), o1 -> {
                                 if(o1 instanceof String && !o1.equals("---")) {
                                     f.setTime((String) o1);
                                     LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
