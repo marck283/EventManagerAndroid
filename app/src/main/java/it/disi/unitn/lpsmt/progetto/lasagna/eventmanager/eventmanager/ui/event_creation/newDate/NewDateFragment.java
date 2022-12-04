@@ -90,7 +90,7 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseSeats(@NonNull EditText t3) {
-        Pattern pattern = Pattern.compile("([1-9][0-9])+");
+        Pattern pattern = Pattern.compile("[1-9][0-9]*");
         try {
             if (pattern.matcher(String.valueOf(t3.getText())).find()) {
                 mViewModel.setPosti(Integer.parseInt(String.valueOf(t3.getText())));

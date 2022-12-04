@@ -18,26 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/textView34"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/begin_date"
-                app:layout_constraintStart_toStartOf="@+id/begin_date"
-                app:layout_constraintTop_toTopOf="@+id/begin_date" />
-
-            <TextView
-                android:id="@+id/textView33"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/starts_at"
-                app:layout_constraintStart_toStartOf="@+id/begin_time"
-                app:layout_constraintTop_toTopOf="@+id/begin_time" />
-
             <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
                 android:id="@+id/begin_time"
                 android:layout_width="303dp"
@@ -80,16 +60,6 @@
                 app:layout_constraintHorizontal_bias="0.482"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/begin_time" />
-
-            <TextView
-                android:id="@+id/textView36"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/seats"
-                app:layout_constraintStart_toStartOf="@+id/seats_value"
-                app:layout_constraintTop_toTopOf="@+id/seats_value" />
 
             <TextView
                 android:id="@+id/textView35"

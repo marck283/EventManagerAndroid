@@ -44,6 +44,8 @@ public class EventLocationViewModel extends ViewModel {
 
     private void setAddress(@NonNull List<Address> addresses, LuogoEv luogo) {
         int i = 0;
+
+        //Esempio indirizzo non riconosciuto: Vicolo (Giorgio) Tebaldeo, 3, 27036 Mortara PV. Perché?
         for (Address a : addresses) {
             Log.i("addresses", addresses.toString());
             if (a != null && a.getAddressLine(i) != null && a.getAddressLine(i).contains(luogo.toString())) {
@@ -54,6 +56,8 @@ public class EventLocationViewModel extends ViewModel {
                 Looper.prepare();
                 if(i == addresses.size()) {
                     setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
+
+                    //App bloccata dopo queste istruzioni. Perché?
                     Looper.loop();
                     Looper.getMainLooper().quitSafely();
                 }
@@ -321,13 +325,13 @@ public class EventLocationViewModel extends ViewModel {
                             NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
                 });
             } else {
+                //Applicazione bloccata dopo errore inserimento luogo. Come mai?
                 Thread t1 = new Thread() {
                     @Override
                     public void run() {
                         List<Address> addresses;
                         try {
                             addresses = geocoder.getFromLocationName(location, 5);
-                            Looper.prepare();
                             if (addresses != null && !addresses.isEmpty()) {
                                 setAddress(addresses, luogo);
                                 evm.setLuogoEv(luogo);
