@@ -321,13 +321,13 @@ public class EventLocationViewModel extends ViewModel {
                             NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
                 });
             } else {
+                //Applicazione bloccata dopo errore inserimento luogo. Come mai?
                 Thread t1 = new Thread() {
                     @Override
                     public void run() {
                         List<Address> addresses;
                         try {
                             addresses = geocoder.getFromLocationName(location, 5);
-                            Looper.prepare();
                             if (addresses != null && !addresses.isEmpty()) {
                                 setAddress(addresses, luogo);
                                 evm.setLuogoEv(luogo);

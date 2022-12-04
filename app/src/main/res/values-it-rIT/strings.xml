@@ -50,8 +50,8 @@
     <string name="add_row">Aggiungi riga</string>
     <string name="second_fragment_label">Creazione evento</string>
     <string name="confirm">Conferma</string>
-    <string name="insert_date">Inserisci data…</string>
-    <string name="insert_hour">Inserisci ora…</string>
+    <string name="insert_date">Inserisci data (gg/mm/aaaa)</string>
+    <string name="insert_hour">Inserisci ora (hh:mm)</string>
     <string name="seats">Posti</string>
     <string name="insert_seats">Inserisci numero di posti…</string>
     <string name="incorrect_seats_format">Formato campo posti non corretto</string>
