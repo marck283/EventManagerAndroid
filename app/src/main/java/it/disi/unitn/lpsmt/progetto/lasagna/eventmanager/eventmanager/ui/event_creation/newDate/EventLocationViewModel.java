@@ -44,6 +44,8 @@ public class EventLocationViewModel extends ViewModel {
 
     private void setAddress(@NonNull List<Address> addresses, LuogoEv luogo) {
         int i = 0;
+
+        //Esempio indirizzo non riconosciuto: Vicolo (Giorgio) Tebaldeo, 3, 27036 Mortara PV. Perché?
         for (Address a : addresses) {
             Log.i("addresses", addresses.toString());
             if (a != null && a.getAddressLine(i) != null && a.getAddressLine(i).contains(luogo.toString())) {
@@ -54,6 +56,8 @@ public class EventLocationViewModel extends ViewModel {
                 Looper.prepare();
                 if(i == addresses.size()) {
                     setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
+
+                    //App bloccata dopo queste istruzioni. Perché?
                     Looper.loop();
                     Looper.getMainLooper().quitSafely();
                 }

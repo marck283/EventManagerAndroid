@@ -101,6 +101,8 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            setResult(Activity.RESULT_OK, i);
+                            finish();
                         }
                             });
                     req1.setParameters(parameters);

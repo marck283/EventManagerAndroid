@@ -63,7 +63,7 @@
     <string name="incorrect_hour_format">Formato ora non corretto.</string>
     <string name="incorrect_location_format_title">Formato campo \"luogo\" non corretto</string>
     <string name="incorrect_location_format">Formato campo \"luogo\" non corretto.</string>
-    <string name="insert_venue_address">Inserisci indirizzo</string>
+    <string name="insert_venue_address">Inserisci indirizzo evento</string>
     <string name="insert_address">Inserisci indirizzo…</string>
     <string name="insert_city">Comune…</string>
     <string name="insert_postal_code">CAP</string>
@@ -122,14 +122,14 @@
     <string name="service_unavailable">Il servizio è temporaneamente non disponibile. Si prega di riprovare più tardi.</string>
     <string name="additional_information">Informazioni addizionali</string>
     <string name="event_description">Descrizione</string>
-    <string name="duration_info">Durata</string>
+    <string name="duration_info">Durata dell\'evento</string>
     <string name="add_event_image">Aggiungi immagine evento…</string>
     <string name="days">Giorni</string>
-    <string name="hours">Ore</string>
-    <string name="minutes">Minuti</string>
+    <string name="hours">Ore (HH)</string>
+    <string name="minutes">Minuti (MM)</string>
     <string name="continue_forward">Continua</string>
     <string name="wrong_date">Data non corretta</string>
-    <string name="date_less_than_current_date">La data fornita è inferiore a quella corrente.</string>
+    <string name="date_less_than_current_date">La data fornita è antecedente a quella corrente.</string>
     <string name="invalid_category">Categoria non valida.</string>
     <string name="invalid_category_message">La categoria selezionata non corrisponde ad alcun valore valido.</string>
     <string name="one_row_required">Nessuna riga inserita</string>
