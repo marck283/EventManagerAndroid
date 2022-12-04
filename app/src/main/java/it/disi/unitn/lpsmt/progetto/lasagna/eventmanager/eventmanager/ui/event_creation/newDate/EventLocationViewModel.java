@@ -331,6 +331,7 @@ public class EventLocationViewModel extends ViewModel {
                     public void run() {
                         List<Address> addresses;
                         try {
+                            //Exception: only one Looper may be created per thread
                             addresses = geocoder.getFromLocationName(location, 5);
                             if (addresses != null && !addresses.isEmpty()) {
                                 setAddress(addresses, luogo);
