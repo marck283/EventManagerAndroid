@@ -21,47 +21,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+    <ScrollView
+        android:layout_width="413dp"
+        android:layout_height="385dp"
+        android:layout_marginTop="92dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/second_fragment_title">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TableRow
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                android:id="@+id/textView28"
-                android:layout_width="92dp"
-                android:text="@string/begin_date"
-                android:textColor = "@color/com_facebook_blue"/>
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp">
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                android:id="@+id/textView27"
-                android:layout_width="92dp"
-                android:text="@string/starts_at" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                android:id="@+id/textView25"
-                android:layout_width="92dp"
-                android:text="@string/venue" />
+                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                        android:id="@+id/textView28"
+                        android:layout_width="92dp"
+                        android:text="@string/begin_date"
+                        android:textColor="@color/com_facebook_blue" />
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                android:id="@+id/textView26"
-                android:layout_width="92dp"
-                android:text="@string/total_seats" />
-        </TableRow>
+                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                        android:id="@+id/textView27"
+                        android:layout_width="92dp"
+                        android:text="@string/starts_at" />
 
-        <View
-            android:layout_height="2dip"
-            android:background="#FF909090" />
+                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                        android:id="@+id/textView25"
+                        android:layout_width="92dp"
+                        android:text="@string/venue" />
 
-    </TableLayout>
+                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                        android:id="@+id/textView26"
+                        android:layout_width="92dp"
+                        android:text="@string/total_seats" />
+                </TableRow>
+
+                <View
+                    android:layout_height="2dip"
+                    android:background="#FF909090" />
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/button_second"

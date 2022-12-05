@@ -74,7 +74,10 @@ public class Authentication {
                         ((NavigationDrawerActivity) a).getViewModel().setToken(info.getToken());
                         ImageView image = v.getHeaderView(0).findViewById(R.id.imageView);
                         Log.i("userPic", info.getProfilePic());
-                        Glide.with(v.getContext()).load(info.getProfilePic()).circleCrop().into(image);
+
+                        //Non risolve il problema
+                        Glide.with(v.getContext()).load(info.getProfilePic()).circleCrop()
+                                .override(image.getWidth(), image.getHeight()).into(image);
                     }
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
