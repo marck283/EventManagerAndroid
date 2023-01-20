@@ -34,6 +34,8 @@ import org.json.JSONObject;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBSignInThread;
@@ -83,23 +85,29 @@ public class LoginActivity extends AppCompatActivity {
                 loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this,
                         List.of("public_profile", "email")));
             }
+
+            Activity a = this;
             loginButton.registerCallback(callbackManager, new FacebookCallback<>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
                     AccessToken accessToken = loginResult.getAccessToken();
                     Intent i = setUpIntent("facebook", accessToken);
-                    accessToken.getUserId();
 
                     Bundle parameters = new Bundle();
                     parameters.putString("fields", "id,name,picture,email");
                     GraphRequest req1 = new GraphRequest(accessToken, accessToken.getUserId(),
-                            null, HttpMethod.GET, graphResponse -> {
+                            parameters, HttpMethod.GET, graphResponse -> {
                         try {
                             JSONObject jsonObject = graphResponse.getJSONObject();
                             if(jsonObject != null) {
                                 Profile p = new Profile(jsonObject);
+                                CsrfToken token = new CsrfToken();
+                                token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook");
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail", jsonObject.getString("email"));
+                                i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
+                                        jsonObject.getJSONArray("picture").getJSONObject(0).getString("url"));
+                                Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
                                 setResult(Activity.RESULT_OK, i);
                             } else {
                                 Log.i("nullResult", "Risposta null");
@@ -177,6 +185,9 @@ public class LoginActivity extends AppCompatActivity {
             t2.start();
 
             Intent intent = setUpIntent("google", null);
+            CsrfToken token = new CsrfToken();
+            signIn.setAccount(completedTask.getResult());
+            token.getCsrfToken(this, new Authentication(), signIn.getAccount().getIdToken(), null, "google");
             setResult(Activity.RESULT_OK, intent);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.

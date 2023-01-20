@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.AccessToken;
-import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -34,7 +33,7 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull Activity a, @NonNull String csrfToken, @Nullable String googleJwt, @Nullable AccessToken fbJwt, @NonNull NavigationView v, @NonNull String which) {
+    public void login(@NonNull Activity a, @NonNull String csrfToken, @Nullable String googleJwt, @Nullable AccessToken fbJwt, @NonNull String which) {
         Call<JsonObject> auth;
         if(which.equals("google")) {
             if(googleJwt == null || googleJwt.equals("")) {
@@ -47,6 +46,7 @@ public class Authentication {
                 Log.i("fbJwtNull", "L'Access Token di Facebook non può essere null o una stringa vuota");
                 return;
             }
+
             Log.i("fbJwt", fbJwt.getToken());
             auth = authentication.fbAuth(new AuthObject(csrfToken, fbJwt.getToken(), fbJwt.getUserId()));
         }
@@ -69,10 +69,11 @@ public class Authentication {
                     info = info.parseJSON(response.body());
                     new DBUser(a, info.getEmail(), "updateProfilePic", info).start();
 
-                    SharedPreferences prefs = a.getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("userToken", info.getToken());
+                    editor.putString("accessToken", info.getToken());
                     editor.apply();
+                    Log.i("token", info.getToken());
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
                     if(response.code() == 409 && which.equals("facebook")) {
@@ -80,7 +81,6 @@ public class Authentication {
                         dialog.setTitle(R.string.email_conflict_facebook);
                         dialog.setMessage(a.getString(R.string.connect_facebook_account));
                         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> {
-                            //Perché ho chiesto di connettere l'account Facebook se poi effettuo l'accesso con l'account Google?
                             GSignIn signIn = new GSignIn(a);
                             signIn.signIn(a, 4);
                         });

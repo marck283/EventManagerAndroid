@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,10 @@ public class UserProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
         ns = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
-        mViewModel.getUserInfo(this, ns.getToken().getValue(), v.findViewById(R.id.frameLayout2));
+        Log.i("undefinedToken", ns.getToken().getValue());
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+        mViewModel.getUserInfo(this, prefs.getString("accessToken", ""), v.findViewById(R.id.frameLayout2));
         ms = new ViewModelProvider(requireActivity()).get(MenuSettingsViewModel.class);
 
         ms.getChecked().observe(requireActivity(), o -> {

@@ -95,7 +95,6 @@ public class DBUser extends DBThread {
                     break;
                 }
                 case "updateProfilePic": {
-                    //Perché questa riga viene chiamata due volte? Invalidation tracker inizializzato due volte?
                     user.updateProfilePic(profilePic, email);
                     break;
                 }
