@@ -2,18 +2,17 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentic
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
 import com.facebook.AccessToken;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonObject;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
@@ -69,15 +68,11 @@ public class Authentication {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
                     new DBUser(a, info.getEmail(), "updateProfilePic", info).start();
-                    if (a instanceof NavigationDrawerActivity) {
-                        ((NavigationDrawerActivity) a).getViewModel().setToken(info.getToken());
-                        ImageView image = v.getHeaderView(0).findViewById(R.id.imageView);
-                        Log.i("userPic", info.getProfilePic());
 
-                        //Non risolve il problema
-                        Glide.with(v.getContext()).load(info.getProfilePic()).circleCrop()
-                                .override(image.getWidth(), image.getHeight()).into(image);
-                    }
+                    SharedPreferences prefs = a.getPreferences(Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("userToken", info.getToken());
+                    editor.apply();
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
                     if(response.code() == 409 && which.equals("facebook")) {

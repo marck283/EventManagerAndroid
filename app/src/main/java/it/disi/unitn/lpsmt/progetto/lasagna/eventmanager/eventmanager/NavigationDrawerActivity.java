@@ -8,9 +8,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.GraphRequest;
@@ -38,14 +41,10 @@ import org.json.JSONException;
 
 import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration.AccountIntegration;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.EventSearchViewModel;
@@ -67,7 +66,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private boolean prompt = true;
     private EventSearchViewModel esvm;
 
+    private int ivwidth, ivheight;
+
     private void setAlertDialog(boolean eventCreation) {
+        prompt = false;
         AlertDialog d = new AlertDialog.Builder(this).create();
         d.setTitle(getString(R.string.no_session_title));
         d.setMessage(getString(R.string.no_session_content));
@@ -82,7 +84,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
             account.setAccount(null);
-            updateUI("logout", null, null);
+            updateUI("logout", null);
         });
         d.setCanceledOnTouchOutside(true);
         d.show();
@@ -142,8 +144,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 .build();
 
         navView = binding.navView;
-        account = new GSignIn(this);
-        t1 = new DBThread(this);
 
         NavHostFragment nhf = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_content_navigation_drawer);
         if(nhf != null) {
@@ -157,29 +157,34 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
+        // Queste servirebbero per ottenere la dimensione dell'ImageView nel NavigationDrawer,
+        // ma la successiva impostazione dell'immagine non funziona...
+        ivwidth = navView.getHeaderView(0).getLayoutParams().width;
+        ivheight = navView.getHeaderView(0).getLayoutParams().height;
+
+        account = new GSignIn(this);
+        t1 = new DBThread(this);
+
         profile = Profile.getCurrentProfile();
         if(profile == null) {
-            account.silentSignIn(s -> {
+            GoogleSignInAccount userAccount = account.getAccount();
+            if(userAccount == null) {
                 try {
-                    account.setAccount(s.getResult(ApiException.class));
-                    updateUI("login", null, null);
-                } catch(ApiException ex) {
+                    userAccount = account.silentSignIn();
+                    account.setAccount(userAccount);
+                } catch (ApiException ex) {
                     Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
-                    updateUI("logout", null, null);
-                } catch(NullPointerException ex) {
-                    Log.i("Exception", "An exception was thrown.");
-                    updateUI("logout", null, null);
+                    updateUI("logout", null);
                 }
-            }, e -> {
-                if(profile == null) {
-                    Log.i("profileNull", "Profile null");
-                    if(prompt) {
-                        setAlertDialog(false);
-                    }
-                } else {
-                    makeEmailRequestAndUpdate();
+            }
+            if(userAccount != null) {
+                updateUI("login", null);
+            } else {
+                Log.i("profileNull", "Profile null");
+                if(prompt) {
+                    setAlertDialog(false);
                 }
-            });
+            }
         } else {
             if(accessToken.isExpired()) {
                 LoginManager.getInstance().logInWithReadPermissions(this, List.of("public_profile", "email"));
@@ -194,7 +199,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
             if(jsonObject != null) {
                 try {
-                    updateUI("login", jsonObject.getString("email"), jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));
+                    updateUI("login", jsonObject.getString("email"));
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
@@ -238,10 +243,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         navView.inflateMenu(R.menu.navmenu_not_logged_in);
         username.setText("");
         email.setText("");
-        Log.i("info", "account null");
     }
 
-    private void updateUI(@NonNull String request, @Nullable String emailF, @Nullable String picture) {
+    private void updateUI(@NonNull String request, @Nullable String emailF) {
         navView.getMenu().clear();
 
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
@@ -251,8 +255,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             Log.i("account", String.valueOf(account.getAccount()));
         }
 
-        NetworkCallback nc = new NetworkCallback(this);
-        nc.registerNetworkCallback();
         if(account.getAccount() == null) {
             if(Profile.getCurrentProfile() == null || accessToken.isExpired()) {
                 showNotLoggedIn(username, email);
@@ -270,15 +272,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     if(emailF != null && !emailF.equals("")) {
                         email.setText(getString(R.string.email, emailF));
                     }
-
-                    //Ora autentica l'utente al sistema, poi aggiorna l'immagine del profilo nel menù di navigazione...
-                    if(nc.isOnline(this)) {
-                        CsrfToken csrf = new CsrfToken();
-                        csrf.getCsrfToken(this, new Authentication(), null, accessToken, navView, "facebook");
-                    } else {
-                        t1 = new DBUser(this, emailF, "getProfilePic");
-                        t1.start();
-                    }
+                    Uri pictureURI = profile.getPictureUri(); //Perché questa variabile è sempre null?
+                    Glide.with(l.getContext()).load(pictureURI).apply(new RequestOptions().override(ivwidth, ivheight))
+                            .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
                 }
             }
         } else {
@@ -286,20 +282,12 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
 
             GoogleSignInAccount acc = account.getAccount();
-
-            if(nc.isOnline(this)) {
-                String authCode = acc.getIdToken();
-                CsrfToken csrf = new CsrfToken();
-                csrf.getCsrfToken(this, new Authentication(), authCode, null, navView, "google");
-            } else {
-                t1 = new DBUser(this, acc.getEmail(), "getProfilePic", l);
-                t1.start();
-            }
-
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
             email.setText(getString(R.string.email, acc.getEmail()));
+            Glide.with(l.getContext()).load(acc.getPhotoUrl()).apply(new RequestOptions().override(ivwidth, ivheight))
+                    .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
         }
-        nc.unregisterNetworkCallback();
+        //nc.unregisterNetworkCallback();
     }
 
     public void revokeAccess(MenuItem item) {
@@ -309,7 +297,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             t.addOnCompleteListener(c -> {
                 account.setAccount(null);
                 vm.setToken("");
-                updateUI("logout", null, null);
+                updateUI("logout", null);
             });
         } else {
             accessToken = null;
@@ -351,7 +339,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                             Log.i("gToken", "Nessun authToken Google valido");
                         }
                     } else {
-                        updateUI("login", null, null);
+                        updateUI("login", account.getAccount().getEmail());
                     }
                 } else {
                     //Facebook login
@@ -368,18 +356,13 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
                     }
 
-                    Uri picture = profile.getPictureUri();
-                    if(picture != null) {
-                        updateUI("login", email, profile.getPictureUri().toString());
-                    } else {
-                        updateUI("login", email, null);
-                    }
+                    updateUI("login", email);
                 }
                 break;
             }
             case Activity.RESULT_CANCELED: {
                 account.setAccount(null);
-                updateUI("logout", null, null);
+                updateUI("logout", null);
 
                 AlertDialog dialog = new AlertDialog.Builder(this).create();
                 dialog.setTitle(R.string.login_error_title);

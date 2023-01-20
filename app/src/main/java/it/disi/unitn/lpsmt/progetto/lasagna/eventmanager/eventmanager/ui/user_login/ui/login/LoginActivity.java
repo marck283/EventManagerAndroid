@@ -24,6 +24,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
@@ -44,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     private GSignIn signIn;
     private DBThread t2;
 
+    private SignInButton signInButton;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,19 +65,24 @@ public class LoginActivity extends AppCompatActivity {
             setResult(Activity.RESULT_OK, intent);
             finish();
         } else {
-            findViewById(R.id.sign_in_button).setOnClickListener(v -> {
-                //Sign in the user when the button is clicked
-                if(v.getId() == R.id.sign_in_button) {
-                    signIn();
-                }
-            });
+            signInButton = findViewById(R.id.sign_in_button);
+            if(!signInButton.hasOnClickListeners()) {
+                signInButton.setOnClickListener(v -> {
+                    //Sign in the user when the button is clicked
+                    if(v.getId() == R.id.sign_in_button) {
+                        signIn();
+                    }
+                });
+            }
 
             CallbackManager callbackManager = CallbackManager.Factory.create();
             LoginButton loginButton = findViewById(R.id.login_button);
             LoginManager loginManager = LoginManager.getInstance();
 
-            loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this,
-                    List.of("public_profile", "email")));
+            if(!loginButton.hasOnClickListeners()) {
+                loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(this,
+                        List.of("public_profile", "email")));
+            }
             loginButton.registerCallback(callbackManager, new FacebookCallback<>() {
                 @Override
                 public void onSuccess(LoginResult loginResult) {
