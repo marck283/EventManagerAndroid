@@ -65,7 +65,7 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
     }
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    //@RequiresApi(api = Build.VERSION_CODES.O)
     public void onUnavailable() {
         super.onUnavailable();
         AlertDialog alert = new AlertDialog.Builder(a).create();

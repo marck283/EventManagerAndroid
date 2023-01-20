@@ -48,7 +48,8 @@ public class EventLocationViewModel extends ViewModel {
         //Esempio indirizzo non riconosciuto: Vicolo (Giorgio) Tebaldeo, 3, 27036 Mortara PV. Perché?
         for (Address a : addresses) {
             Log.i("addresses", addresses.toString());
-            if (a != null && a.getAddressLine(i) != null && a.getAddressLine(i).contains(luogo.toString())) {
+            String indirizzo = a.getAddressLine(i);
+            if (indirizzo != null && indirizzo.contains(luogo.toString())) {
                 ok.postValue(true);
                 break;
             } else {

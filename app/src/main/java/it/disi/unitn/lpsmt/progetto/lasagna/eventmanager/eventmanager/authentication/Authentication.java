@@ -68,8 +68,7 @@ public class Authentication {
                 if (response.isSuccessful() && response.body() != null) {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
-                    DBUser up = new DBUser(a, info.getEmail(), "updateProfilePic", info);
-                    up.start();
+                    new DBUser(a, info.getEmail(), "updateProfilePic", info).start();
                     if (a instanceof NavigationDrawerActivity) {
                         ((NavigationDrawerActivity) a).getViewModel().setToken(info.getToken());
                         ImageView image = v.getHeaderView(0).findViewById(R.id.imageView);
@@ -86,6 +85,7 @@ public class Authentication {
                         dialog.setTitle(R.string.email_conflict_facebook);
                         dialog.setMessage(a.getString(R.string.connect_facebook_account));
                         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> {
+                            //Perché ho chiesto di connettere l'account Facebook se poi effettuo l'accesso con l'account Google?
                             GSignIn signIn = new GSignIn(a);
                             signIn.signIn(a, 4);
                         });

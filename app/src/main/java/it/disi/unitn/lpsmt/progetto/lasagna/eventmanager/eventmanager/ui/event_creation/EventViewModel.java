@@ -11,6 +11,7 @@ public class EventViewModel extends ViewModel {
     private int durata;
     private ArrayList<LuogoEv> luogoEv = new ArrayList<>();
     private String categoria;
+    private String base64Image;
 
     public void setNomeAtt(String nome) {
         nomeAtt = nome;
@@ -52,7 +53,11 @@ public class EventViewModel extends ViewModel {
         categoria = c;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public void setBase64Image(@NonNull String base64Image) {
+        this.base64Image = base64Image;
+    }
+
+    public String getBase64Image() {
+        return base64Image;
     }
 }

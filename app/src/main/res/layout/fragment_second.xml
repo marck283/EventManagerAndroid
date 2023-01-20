@@ -24,56 +24,48 @@
     <ScrollView
         android:layout_width="413dp"
         android:layout_height="385dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/second_fragment_title" >
 
-        <LinearLayout
+        <TableLayout
+            android:id="@+id/tableLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <TableLayout
-                android:id="@+id/tableLayout"
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                    android:id="@+id/textView28"
+                    android:layout_width="92dp"
+                    android:text="@string/begin_date"
+                    android:textColor="@color/com_facebook_blue" />
 
-                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                        android:id="@+id/textView28"
-                        android:layout_width="92dp"
-                        android:text="@string/begin_date"
-                        android:textColor="@color/com_facebook_blue" />
+                <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                    android:id="@+id/textView27"
+                    android:layout_width="92dp"
+                    android:text="@string/starts_at" />
 
-                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                        android:id="@+id/textView27"
-                        android:layout_width="92dp"
-                        android:text="@string/starts_at" />
+                <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                    android:id="@+id/textView25"
+                    android:layout_width="92dp"
+                    android:text="@string/venue" />
 
-                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                        android:id="@+id/textView25"
-                        android:layout_width="92dp"
-                        android:text="@string/venue" />
+                <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
+                    android:id="@+id/textView26"
+                    android:layout_width="92dp"
+                    android:text="@string/total_seats" />
+            </TableRow>
 
-                    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
-                        android:id="@+id/textView26"
-                        android:layout_width="92dp"
-                        android:text="@string/total_seats" />
-                </TableRow>
+            <View
+                android:layout_height="2dip"
+                android:background="#FF909090" />
 
-                <View
-                    android:layout_height="2dip"
-                    android:background="#FF909090" />
-
-            </TableLayout>
-        </LinearLayout>
+        </TableLayout>
     </ScrollView>
 
     <Button

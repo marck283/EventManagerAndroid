@@ -138,4 +138,7 @@
     <string name="event_name_required_message">Il nome dell\'evento fornito non è un valore valido.</string>
     <string name="no_province_selected">Nessuna provincia selezionata</string>
     <string name="invalid_province">La provincia selezionata non è valida. Si prega di selezionare un altro valore.</string>
+    <string name="file_not_found">File non trovato</string>
+    <string name="add_image_success">Immagine aggiunta con successo!</string>
+    <string name="add_image_no_success">L\'immagine non è stata aggiunta. Riprova più tardi.</string>
 </resources>

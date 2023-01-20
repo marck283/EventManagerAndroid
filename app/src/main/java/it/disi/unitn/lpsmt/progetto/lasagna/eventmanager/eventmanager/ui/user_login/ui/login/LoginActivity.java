@@ -93,15 +93,14 @@ public class LoginActivity extends AppCompatActivity {
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail", jsonObject.getString("email"));
                                 setResult(Activity.RESULT_OK, i);
-                                finish();
                             } else {
                                 Log.i("nullResult", "Risposta null");
                                 setResult(Activity.RESULT_CANCELED);
-                                finish();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             setResult(Activity.RESULT_OK, i);
+                        } finally {
                             finish();
                         }
                             });

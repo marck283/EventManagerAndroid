@@ -2,10 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localData
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -33,7 +29,7 @@ public class DBUser extends DBThread {
     private String profilePic;
     private View v;
     private Fragment f;
-    private Activity a;
+    private final Activity a;
 
     public DBUser(@NonNull Activity a, @NonNull String email, @NonNull String action) {
         super(a);
@@ -83,27 +79,6 @@ public class DBUser extends DBThread {
         this.a = a;
     }
 
-
-    /**
-     * Decodifica il valore della stringa base64 che rappresenta l'immagine dell'evento in Bitmap.
-     * @return Il valore decodificato in tipo Bitmap
-     */
-    public Bitmap decodeBase64(@NonNull String profilePic) {
-        if(!profilePic.equals("")) {
-            try {
-                byte[] decodedImg = Base64.decode(profilePic
-                        .replace("data:image/png;base64,", "")
-                        .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-                return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
-            } catch(IllegalArgumentException ex) {
-                //Bad Base64
-                byte[] profileBitmap = profilePic.getBytes(StandardCharsets.UTF_16);
-                return BitmapFactory.decodeByteArray(profileBitmap, 0, profileBitmap.length);
-            }
-        }
-        return null;
-    }
-
     public void run() {
         synchronized(this) {
             switch(action) {
@@ -120,6 +95,7 @@ public class DBUser extends DBThread {
                     break;
                 }
                 case "updateProfilePic": {
+                    //Perché questa riga viene chiamata due volte? Invalidation tracker inizializzato due volte?
                     user.updateProfilePic(profilePic, email);
                     break;
                 }
