@@ -103,10 +103,13 @@ public class LoginActivity extends AppCompatActivity {
                                 Profile p = new Profile(jsonObject);
                                 CsrfToken token = new CsrfToken();
                                 token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook");
+
+                                //Riscrivere questa parte in modo da sincronizzare la modifica delle SharedPreferences con
+                                //la NavigationDrawerActivity...
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail", jsonObject.getString("email"));
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
-                                        jsonObject.getJSONArray("picture").getJSONObject(0).getString("url"));
+                                        jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));
                                 Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
                                 setResult(Activity.RESULT_OK, i);
                             } else {

@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -197,7 +198,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
             if(jsonObject != null) {
                 try {
-                    updateUI("login", jsonObject.getString("email"), jsonObject.getString("picture"));
+                    updateUI("login", jsonObject.getString("email"),
+                            jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
@@ -359,14 +361,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         email = null;
                     }
                     if(accessToken != null) {
-                        vm.setToken(accessToken.getToken());
-
-                        editor.putString("accessToken", vm.getToken().getValue());
-                        editor.apply();
-
+                        vm.setToken(prefs.getString("accessToken", ""));
                         profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
                     }
-
                     updateUI("login", email, picture);
                 }
                 break;
@@ -419,6 +416,14 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
     public void onDestroy() {
         super.onDestroy();
+
+        //Salva il token di accesso nelle SharedPreferences per utilizzarlo al successivo accesso all'app.
+        Log.i("exitToken", vm.getToken().getValue());
+        SharedPreferences prefs = getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("accessToken", vm.getToken().getValue());
+        editor.apply();
+        vm = null;
         account = null;
         accessToken = null;
         profile = null;

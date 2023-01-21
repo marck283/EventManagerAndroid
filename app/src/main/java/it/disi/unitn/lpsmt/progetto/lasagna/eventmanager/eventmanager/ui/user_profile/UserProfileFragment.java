@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +17,11 @@ import android.view.ViewGroup;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 
 public class UserProfileFragment extends Fragment {
 
     private UserProfileViewModel mViewModel;
-    private NavigationSharedViewModel ns;
     private MenuSettingsViewModel ms;
     private View v;
 
@@ -49,8 +46,6 @@ public class UserProfileFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-        ns = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
-        Log.i("undefinedToken", ns.getToken().getValue());
 
         SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
         mViewModel.getUserInfo(this, prefs.getString("accessToken", ""), v.findViewById(R.id.frameLayout2));

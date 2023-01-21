@@ -73,7 +73,7 @@ public class Authentication {
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("accessToken", info.getToken());
                     editor.apply();
-                    Log.i("token", info.getToken());
+                    Log.i("token132", info.getToken());
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
                     if(response.code() == 409 && which.equals("facebook")) {
