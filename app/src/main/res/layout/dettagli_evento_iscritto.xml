@@ -5,25 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button10"
-        android:layout_width="411dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="256dp"
         android:layout_height="48dp"
         android:backgroundTint="@color/cardview_shadow_end_color"
         android:text="@string/write_reviews"
         android:textColor="@color/com_facebook_blue"
+        app:icon="@drawable/ic_event_creation"
+        app:iconGravity="textStart"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button9" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button11"
-        android:layout_width="411dp"
-        android:layout_height="48dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="256dp"
+        android:layout_height="49dp"
         android:backgroundTint="@color/cardview_shadow_end_color"
         android:text="@string/withdraw_subscription"
         android:textColor="@color/com_facebook_blue"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button10" />
 
@@ -40,8 +46,8 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="329dp"
-        android:layout_height="41dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textAlignment="center"
         android:textSize="16pt"
@@ -102,38 +108,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView39" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button9"
-        android:layout_width="411dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="256dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="4dp"
         android:backgroundTint="@color/cardview_shadow_end_color"
         android:text="@string/show_ticket"
         android:textColor="@color/com_facebook_blue"
+        app:icon="@drawable/ic_qr_code_ticket"
+        app:iconGravity="textStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView42" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:contentDescription="@string/qr_code_svg"
-        app:layout_constraintStart_toStartOf="@+id/button9"
-        app:layout_constraintTop_toTopOf="@+id/button9"
-        tools:srcCompat="@drawable/ic_qr_code_ticket" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="@+id/button10"
-        app:layout_constraintTop_toTopOf="@+id/button10"
-        app:srcCompat="@drawable/ic_event_creation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
