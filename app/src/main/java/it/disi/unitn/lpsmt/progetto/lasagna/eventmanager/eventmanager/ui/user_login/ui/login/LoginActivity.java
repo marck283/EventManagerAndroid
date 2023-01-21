@@ -104,8 +104,8 @@ public class LoginActivity extends AppCompatActivity {
                                 CsrfToken token = new CsrfToken();
                                 token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook");
 
-                                //Riscrivere questa parte e metodo setupIntent() in modo da sincronizzare la modifica delle SharedPreferences con
-                                //la NavigationDrawerActivity...
+                                // Riscrivere questa parte e metodo setupIntent() in modo da sincronizzare
+                                // la modifica delle SharedPreferences con la NavigationDrawerActivity...
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail", jsonObject.getString("email"));
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
