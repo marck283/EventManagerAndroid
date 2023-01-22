@@ -1,7 +1,10 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +15,21 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import java.util.Locale;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentFirstBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.SpeechImageButton;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerItemList;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private EventViewModel evm;
+
+    private SpeechRecognizer speechRecognizer;
+    private Intent speechRecognizerIntent;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,12 +41,20 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SpeechImageButton button6 = binding.imageButton6;
-        button6.setupImageButton(binding.getRoot(), R.id.nomeAtt);
+        binding.nomeAtt.setEndIconOnClickListener(c -> {
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(binding.getRoot().getContext());
+            speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(binding.getRoot(), R.id.nomeAtt1));
+
+            SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
+            speech.performClick();
+        });
         binding.button5.setOnClickListener(c -> {
-            if(!binding.nomeAtt.getText().toString().equals("")) {
+            if(binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
                 if(!binding.planetsSpinner.getSelectedItem().equals("---")) {
-                    evm.setNomeAtt(((EditText)requireActivity().findViewById(R.id.nomeAtt)).getText().toString());
+                    evm.setNomeAtt(binding.nomeAtt.getEditText().getText().toString());
                     Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
                 } else {
                     AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
@@ -79,7 +96,9 @@ public class FirstFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding.imageButton6.destroy();
+        if(speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
         binding = null;
     }
 }

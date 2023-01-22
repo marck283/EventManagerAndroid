@@ -7,23 +7,36 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Locale;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
 
 public class EventSearchFragment extends DialogFragment {
 
     private EventSearchViewModel mViewModel;
     private View root;
+
+    private SpeechRecognizer speechRecognizer;
+
+    private Intent speechRecognizerIntent;
 
     public EventSearchFragment() {
 
@@ -85,11 +98,29 @@ public class EventSearchFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-        SpeechImageButton imageButton = root.findViewById(R.id.imageButton);
-        imageButton.setupImageButton(root.findViewById(R.id.frameLayout4), R.id.organizerName);
+        TextInputLayout text1 = root.findViewById(R.id.orgName);
+        text1.setEndIconOnClickListener(c -> {
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(root.getContext());
+            speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(root, R.id.organizerName));
 
-        SpeechImageButton imageButton3 = root.findViewById(R.id.imageButton3);
-        imageButton3.setupImageButton(root.findViewById(R.id.frameLayout4), R.id.nomeAtt2);
+            SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
+            speech.performClick();
+        });
+
+        TextInputLayout text2 = root.findViewById(R.id.nomeAtt4);
+        text2.setEndIconOnClickListener(c -> {
+            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(root.getContext());
+            speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(root, R.id.nomeAtt2));
+
+            SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
+            speech.performClick();
+        });
     }
 
     private void checkPermission() {

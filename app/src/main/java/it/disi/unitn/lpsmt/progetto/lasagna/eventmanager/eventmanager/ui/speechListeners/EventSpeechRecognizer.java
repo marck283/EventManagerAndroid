@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.ArrayList;
 
 public class EventSpeechRecognizer implements RecognitionListener {
@@ -98,7 +100,7 @@ public class EventSpeechRecognizer implements RecognitionListener {
      */
     @Override
     public void onResults(@NonNull Bundle results) {
-        TextView v = a.findViewById(resId);
+        TextInputEditText v = a.findViewById(resId);
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         v.setText(data.get(0));
     }
