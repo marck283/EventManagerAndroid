@@ -17,9 +17,7 @@ public class OrgEvViewHolder extends EventHolder {
         super(itemView);
         t = itemView.findViewById(R.id.event_name_text_view);
         t.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        t.setOnClickListener(c -> {
-            Log.i("click", "box clicked");
-        });
+        t.setOnClickListener(c -> Log.i("click", "box clicked"));
     }
 
     @Override

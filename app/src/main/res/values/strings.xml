@@ -15,7 +15,7 @@
     <string name="event_picture">Event picture</string>
     <string name="date">Date</string>
     <string name="day">Day: </string>
-    <string name="duration">Duration: %1$d</string>
+    <string name="duration">Duration: %1$s</string>
     <string name="organizer">Organizer: %1$s</string>
     <string name="event_info">Event information</string>
     <string name="time">Time: </string>
@@ -153,4 +153,11 @@
     <string name="add_image_success">Image added successfully!</string>
     <string name="add_image_no_success">The image has not been added. Please try again.</string>
     <string name="write_reviews_button">Write reviews</string>
+    <string name="none" translatable="false">---</string>
+    <string name="sport" translatable="false">Sport</string>
+    <string name="show">Show</string>
+    <string name="event">Event</string>
+    <string name="trip">Trip</string>
+    <string name="other">Other</string>
+    <string name="insert_category">Insert event category</string>
 </resources>

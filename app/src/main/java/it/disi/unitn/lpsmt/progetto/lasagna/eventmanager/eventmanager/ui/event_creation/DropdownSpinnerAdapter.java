@@ -3,7 +3,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import androidx.annotation.ArrayRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 

@@ -20,8 +20,8 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="351dp"
-        android:layout_height="42dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:textAlignment="center"
         android:textSize="16pt"
@@ -35,7 +35,7 @@
         android:id="@+id/textView7"
         android:layout_width="188dp"
         android:layout_height="30dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="@string/date"
         android:textAlignment="center"
         android:textSize="10pt"
@@ -68,8 +68,8 @@
 
     <TextView
         android:id="@+id/textView14"
-        android:layout_width="163dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="@string/event_info"
         android:textAlignment="center"
@@ -103,7 +103,7 @@
         app:layout_constraintTop_toBottomOf="@+id/organizerName"
         app:layout_constraintVertical_bias="0.352" />
 
-    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerItemList
+    <!--<it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerItemList
         android:id="@+id/spinner"
         android:layout_width="159dp"
         android:layout_height="49dp"
@@ -111,18 +111,39 @@
         app:layout_constraintEnd_toStartOf="@+id/dateArray"
         app:layout_constraintHorizontal_bias="0.56"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />-->
 
-    <TextView
+    <!--<TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/day"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="@+id/spinner"
-        app:layout_constraintTop_toTopOf="@+id/spinner" />
+        app:layout_constraintTop_toTopOf="@+id/spinner" />-->
 
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/spinner"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="135dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/day"
+        android:labelFor="@+id/actv"
+        app:layout_constraintEnd_toStartOf="@+id/dateArray"
+        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/actv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+   <!-- <TextView
         android:id="@+id/textView19"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -138,7 +159,27 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="52dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dateArray"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="135dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="40dp"
+        android:hint="@string/time"
+        android:labelFor="@+id/actv1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1">
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/actv1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/show_ratings"
@@ -152,4 +193,5 @@
         app:layout_constraintStart_toEndOf="@+id/sign_up_button"
         app:layout_constraintTop_toBottomOf="@+id/duration"
         app:layout_constraintVertical_bias="0.375" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

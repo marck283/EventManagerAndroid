@@ -16,12 +16,12 @@ import java.util.ArrayList;
 
 public class EventInfo {
     private String id, nomeAtt, categoria, organizzatore, eventPic;
-    private int durata;
+    private String durata;
     private boolean terminato;
     private ArrayList<LuogoEvento> luogoEvento;
 
     public EventInfo() {
-        durata = 0;
+        durata = "";
         terminato = false;
     }
 
@@ -29,7 +29,7 @@ public class EventInfo {
         return organizzatore;
     }
 
-    public int getDurata() {
+    public String getDurata() {
         return durata;
     }
 
@@ -45,7 +45,7 @@ public class EventInfo {
     }
 
     private EventInfo(@NonNull String id, @NonNull String nomeAtt, @NonNull String categoria, @NonNull String eventPic,
-    int durata, boolean terminato, @NonNull ArrayList<LuogoEvento> luogoEvento, @NonNull String organizzatore) {
+    String durata, boolean terminato, @NonNull ArrayList<LuogoEvento> luogoEvento, @NonNull String organizzatore) {
         this.id = id;
         this.nomeAtt = nomeAtt;
         this.categoria = categoria;
@@ -107,7 +107,33 @@ public class EventInfo {
     }
 
     private String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject json, @NonNull String name) {
-        return gs1.fromJson(json.get(name), String.class);
+        String res = "";
+        if(name.equals("durata")) {
+            String[] arr = json.get(name).getAsString().split(":");
+            res += arr[0];
+            if(arr[0].equals("1")) {
+                res += " giorno, ";
+            } else {
+                res += " giorni, ";
+            }
+
+            res += arr[1];
+            if(arr[1].equals("1")) {
+                res += "ora e ";
+            } else {
+                res += "ore e ";
+            }
+
+            res += arr[2];
+            if(arr[2].equals("1")) {
+                res += "minuto";
+            } else {
+                res += "minuti";
+            }
+        } else {
+            res = gs1.fromJson(json.get(name), String.class);
+        }
+        return res;
     }
 
     @NonNull
@@ -127,7 +153,7 @@ public class EventInfo {
                 fromJsonString(gs1, response, "nomeAtt"),
                 fromJsonString(gs1, response, "categoria"),
                 fromJsonString(gs1, response, "eventPic"),
-                Integer.parseInt(fromJsonString(gs1, response, "durata")),
+                fromJsonString(gs1, response, "durata"),
                 Boolean.parseBoolean(fromJsonString(gs1, response, "terminato")),
                 fromJsonArr(response.getAsJsonArray("luogoEv")),
                 fromJsonString(gs1, response, "organizzatore"));

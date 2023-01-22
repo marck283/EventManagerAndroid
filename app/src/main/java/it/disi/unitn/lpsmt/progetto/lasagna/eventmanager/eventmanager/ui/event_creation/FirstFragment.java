@@ -8,7 +8,6 @@ import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -53,7 +52,7 @@ public class FirstFragment extends Fragment {
         });
         binding.button5.setOnClickListener(c -> {
             if(binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
-                if(!binding.planetsSpinner.getSelectedItem().equals("---")) {
+                if(binding.planetsSpinner.getSelectedItem() != null && !binding.planetsSpinner.getSelectedItem().equals("---")) {
                     evm.setNomeAtt(binding.nomeAtt.getEditText().getText().toString());
                     Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
                 } else {

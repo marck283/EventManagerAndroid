@@ -93,7 +93,7 @@ public class EventAdditionalInfoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable()) {
-            pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> setImage(uri));
+            pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::setImage);
             pickerAvailable = true;
         }
     }

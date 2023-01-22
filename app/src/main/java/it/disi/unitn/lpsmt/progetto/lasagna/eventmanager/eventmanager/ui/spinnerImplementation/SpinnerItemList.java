@@ -74,8 +74,15 @@ public class SpinnerItemList extends androidx.appcompat.widget.AppCompatSpinner 
         return listener;
     }
 
-    public void setAdapter(@NonNull Fragment f, @LayoutRes int layoutRes, @IdRes int idRes, List<CharSequence> items) {
-        adapter = new SpinnerArrayAdapter(f.requireContext(), layoutRes, idRes, items);
+    public void setAdapter(@NonNull Fragment f, @LayoutRes int layoutRes, @IdRes int idRes,
+                           List<CharSequence> items) {
+        adapter = new SpinnerArrayAdapter(f.requireContext(), layoutRes, idRes);
+        adapter.addAll(items);
+        super.setAdapter(adapter);
+    }
+
+    public void setAdapter(@NonNull Fragment f, @LayoutRes int layoutRes, List<CharSequence> items) {
+        adapter = new SpinnerArrayAdapter(f.requireContext(), layoutRes, this.getId(), items);
         super.setAdapter(adapter);
     }
 

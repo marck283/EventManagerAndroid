@@ -29,7 +29,7 @@
             android:name=".ui.event_creation.EventCreationActivity"
             android:exported="false"
             android:label="@string/title_activity_event_creation"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
+            android:theme="@style/Theme.Material3.Light.NoActionBar"
             android:parentActivityName="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity">
             <meta-data
                 android:name="access_token"
@@ -65,11 +65,11 @@
             android:name=".ui.user_login.ui.login.LoginActivity"
             android:exported="false"
             android:label="@string/title_activity_login"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"/>
+            android:theme="@style/Theme.Material3.Light.NoActionBar"/>
         <activity
             android:name=".NavigationDrawerActivity"
             android:exported="true"
-            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
+            android:theme="@style/Theme.Material3.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
