@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +89,14 @@ public class EventDetailsFragment extends Fragment {
                 });
 
                 ((TextView)view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
+
+                Button ratings = view.findViewById(R.id.show_ratings);
+                ratings.setOnClickListener(c -> {
+                    Bundle b1 = new Bundle();
+                    b1.putString("eventId", eventId);
+                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_reviewsFragment, b1);
+                });
+
                 break;
             }
             case "iscr": {
