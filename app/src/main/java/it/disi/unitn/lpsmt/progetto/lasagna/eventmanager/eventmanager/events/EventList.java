@@ -57,10 +57,4 @@ public class EventList {
     public List<Event> getList() {
         return pubEvList;
     }
-
-    public void print() {
-        for(Event pe: pubEvList) {
-            pe.print();
-        }
-    }
 }

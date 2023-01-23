@@ -18,6 +18,7 @@ public class ReviewsFragment extends Fragment {
 
     private ReviewsViewModel mViewModel;
     private String id = "";
+    private View root;
 
     public static ReviewsFragment newInstance() {
         return new ReviewsFragment();
@@ -31,14 +32,20 @@ public class ReviewsFragment extends Fragment {
             id = b.getString("eventId");
         }
 
-        return inflater.inflate(R.layout.fragment_reviews, container, false);
+        root = inflater.inflate(R.layout.fragment_reviews, container, false);
+
+        return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ReviewsViewModel.class);
-        mViewModel.getReviews(view.findViewById(R.id.frameLayout5), id);
+    }
+
+    public void onStart() {
+        super.onStart();
+        mViewModel.getReviews(requireActivity(), root.findViewById(R.id.frameLayout5), id);
     }
 
 }

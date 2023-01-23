@@ -11,14 +11,13 @@ import androidx.recyclerview.widget.ListAdapter;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 
 public class ReviewAdapter extends ListAdapter<Review, ReviewViewHolder> {
     private List<Review> revList;
 
     /**
-     * Costruisce un oggetto PubEvAdapter con i parametri forniti.
-     * @param pubL La lista di eventi pubblici ottenuta da remoto
+     * Costruisce un oggetto ReviewAdapter con i parametri forniti.
+     * @param pubL La lista di recensioni ottenuta da remoto
      */
     public ReviewAdapter(@NonNull DiffUtil.ItemCallback<Review> diffCallback, List<Review> pubL) {
         super(diffCallback);

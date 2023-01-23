@@ -1,11 +1,14 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.eventReviews;
 
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
@@ -26,6 +29,6 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
         userName.setText(review.getUserName());
         rating.setText(String.valueOf(review.getRating()));
-        userPic.setImageBitmap(review.decodeBase64());
+        Glide.with(userPic.getContext()).load(review.getUserPic()).circleCrop().into(userPic);
     }
 }

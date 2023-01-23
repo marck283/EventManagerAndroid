@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.eventReviews;
 
+import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 
@@ -8,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 
@@ -24,9 +27,12 @@ public class ReviewsRequest extends Thread {
     private String eventId = "";
     private RecyclerView rv;
     private final Request request;
+    private ReviewAdapter adapter;
+    private final Activity a;
 
-    public ReviewsRequest(@NonNull View layout, @NonNull String id) {
+    public ReviewsRequest(@NonNull Activity a, @NonNull View layout, @NonNull String id) {
         eventId = id;
+        this.a = a;
         request = new Request.Builder()
                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/recensioni")
                 .build();
@@ -35,7 +41,7 @@ public class ReviewsRequest extends Thread {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
         rv.setLayoutManager(mLayoutManager);
 
-        ReviewAdapter adapter = new ReviewAdapter(new ReviewCallback());
+        adapter = new ReviewAdapter(new ReviewCallback());
         rv.setAdapter(adapter);
     }
 
@@ -53,14 +59,25 @@ public class ReviewsRequest extends Thread {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(!response.isSuccessful() || response.body() == null) {
-                    //Qualcosa
                     Log.i("noResponse", String.valueOf(response.code()));
                 } else {
                     ResponseBody resBody = response.body();
                     String responseBody = resBody.string();
+
                     Log.i("response", responseBody);
+
                     Gson gson = new Gson();
-                    gson.fromJson(responseBody, Review.class);
+                    JsonObject r = gson.fromJson(responseBody, JsonObject.class);
+                    JsonArray jsonArr = r.getAsJsonArray("recensioni");
+                    ReviewList list = new ReviewList();
+                    list.parseJSON(jsonArr);
+
+                    adapter = new ReviewAdapter(new ReviewCallback(), list.getList());
+
+                    a.runOnUiThread(() -> {
+                        adapter.submitList(list.getList());
+                        rv.setAdapter(adapter);
+                    });
                 }
             }
         });
