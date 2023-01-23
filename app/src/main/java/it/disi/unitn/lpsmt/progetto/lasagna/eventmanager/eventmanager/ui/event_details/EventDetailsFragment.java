@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
@@ -75,7 +76,9 @@ public class EventDetailsFragment extends Fragment {
             case "pub": {
                 mViewModel.getEventInfo("pub", eventId, view, this);
 
-                view.findViewById(R.id.sign_up_button).setOnClickListener(c -> {
+                Button b = view.findViewById(R.id.sign_up_button);
+                b.setEnabled(false);
+                b.setOnClickListener(c -> {
                     if(eventId != null && day != null && !day.equals("") && !day.equals("---") &&
                             time != null && !time.equals("") && !time.equals("---") && nvm.getToken() != null &&
                     nvm.getToken().getValue() != null) {

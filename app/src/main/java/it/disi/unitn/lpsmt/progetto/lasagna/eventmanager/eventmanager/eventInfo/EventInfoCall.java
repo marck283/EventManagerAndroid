@@ -97,12 +97,13 @@ public class EventInfoCall {
 
                         @Override
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            TextView indirizzo = v.findViewById(R.id.event_address);
+
                             if (!s.toString().equals("---")) {
                                 Log.i("item", s.toString());
                                 f.setDay(s.toString());
                                 f.setTime("");
 
-                                TextView indirizzo = v.findViewById(R.id.event_address);
                                 indirizzo.setText(f.getString(R.string.event_address, ""));
 
                                 ArrayList<CharSequence> orariArr = new ArrayList<>();
@@ -152,8 +153,6 @@ public class EventInfoCall {
                                             } catch (ParseException ex) {
                                                 Log.i("ParseException", "ParseException");
                                             }
-                                        } else {
-                                            //Qualcosa
                                         }
                                     }
 
@@ -162,6 +161,10 @@ public class EventInfoCall {
                                         //Nothing
                                     }
                                 });
+                            } else {
+                                textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, new ArrayList<>()));
+                                textView1.setText("");
+                                indirizzo.setText(f.getString(R.string.event_address, ""));
                             }
                         }
 
