@@ -147,4 +147,9 @@
     <string name="trip">Viaggio</string>
     <string name="other">Altro</string>
     <string name="insert_category">Inserisci categoria evento</string>
+    <string name="reviews_fragment">Recensioni</string>
+    <string name="user_picture">Immagine profilo utente</string>
+    <string name="user_name">Nome utente: %1$s</string>
+    <string name="evaluation">Valutazione: %1$f/10</string>
+    <string name="show_all">Mostra tutto</string>
 </resources>

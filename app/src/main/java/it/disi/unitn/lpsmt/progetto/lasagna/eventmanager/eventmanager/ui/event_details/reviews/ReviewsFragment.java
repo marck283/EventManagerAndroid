@@ -38,7 +38,7 @@ public class ReviewsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ReviewsViewModel.class);
-        mViewModel.getReviews(id);
+        mViewModel.getReviews(view.findViewById(R.id.frameLayout5), id);
     }
 
 }

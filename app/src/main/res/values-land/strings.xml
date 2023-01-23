@@ -160,4 +160,9 @@
     <string name="trip">Trip</string>
     <string name="other">Other</string>
     <string name="insert_category">Insert event category</string>
+    <string name="reviews_fragment">Reviews</string>
+    <string name="user_picture">User profile picture</string>
+    <string name="user_name">Username: %1$s</string>
+    <string name="evaluation">Rating: %1$f/10</string>
+    <string name="show_all">Show all</string>
 </resources>

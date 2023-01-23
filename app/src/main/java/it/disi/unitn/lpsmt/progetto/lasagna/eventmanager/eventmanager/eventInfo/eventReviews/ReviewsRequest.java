@@ -1,0 +1,68 @@
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.eventReviews;
+
+import android.util.Log;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.gson.Gson;
+
+import java.io.IOException;
+
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
+public class ReviewsRequest extends Thread {
+    private final OkHttpClient client = new OkHttpClient();
+    private String eventId = "";
+    private RecyclerView rv;
+    private final Request request;
+
+    public ReviewsRequest(@NonNull View layout, @NonNull String id) {
+        eventId = id;
+        request = new Request.Builder()
+                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/recensioni")
+                .build();
+        rv = layout.findViewById(R.id.recyclerView);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
+        rv.setLayoutManager(mLayoutManager);
+
+        ReviewAdapter adapter = new ReviewAdapter(new ReviewCallback());
+        rv.setAdapter(adapter);
+    }
+
+    public void run() {
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                try {
+                    throw e;
+                } catch (Throwable e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(!response.isSuccessful() || response.body() == null) {
+                    //Qualcosa
+                    Log.i("noResponse", String.valueOf(response.code()));
+                } else {
+                    ResponseBody resBody = response.body();
+                    String responseBody = resBody.string();
+                    Log.i("response", responseBody);
+                    Gson gson = new Gson();
+                    gson.fromJson(responseBody, Review.class);
+                }
+            }
+        });
+    }
+}

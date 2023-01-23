@@ -43,7 +43,6 @@
     <string name="second_fragment_label">Event creation</string>
     <string name="previous">Previous</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="event_day">Day:</string>
     <string name="organizer_name">Organizer:</string>
     <string name="event_creation_title">Create an event</string>
@@ -160,4 +159,9 @@
     <string name="trip">Trip</string>
     <string name="other">Other</string>
     <string name="insert_category">Insert event category</string>
+    <string name="reviews_fragment">Reviews</string>
+    <string name="user_picture">User profile picture</string>
+    <string name="user_name">Username: %1$s</string>
+    <string name="evaluation">Rating: %1$f/10</string>
+    <string name="show_all">Show all</string>
 </resources>

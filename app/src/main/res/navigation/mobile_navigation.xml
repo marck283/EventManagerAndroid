@@ -103,7 +103,7 @@
     <fragment
         android:id="@+id/reviewsFragment"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment"
-        android:label="fragment_reviews"
+        android:label="@string/reviews_fragment"
         tools:layout="@layout/fragment_reviews" />
 
 </navigation>
