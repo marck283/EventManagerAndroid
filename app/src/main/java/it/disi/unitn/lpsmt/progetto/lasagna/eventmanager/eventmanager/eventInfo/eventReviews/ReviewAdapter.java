@@ -11,16 +11,19 @@ import androidx.recyclerview.widget.ListAdapter;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment;
 
 public class ReviewAdapter extends ListAdapter<Review, ReviewViewHolder> {
     private List<Review> revList;
+    private ReviewsFragment f;
 
     /**
      * Costruisce un oggetto ReviewAdapter con i parametri forniti.
      * @param pubL La lista di recensioni ottenuta da remoto
      */
-    public ReviewAdapter(@NonNull DiffUtil.ItemCallback<Review> diffCallback, List<Review> pubL) {
+    public ReviewAdapter(@NonNull ReviewsFragment f, @NonNull DiffUtil.ItemCallback<Review> diffCallback, List<Review> pubL) {
         super(diffCallback);
+        this.f = f;
         revList = pubL;
     }
 
@@ -34,7 +37,7 @@ public class ReviewAdapter extends ListAdapter<Review, ReviewViewHolder> {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.review_small_layout, parent, false);
 
-        return new ReviewViewHolder(view);
+        return new ReviewViewHolder(f, view);
     }
 
     @Override

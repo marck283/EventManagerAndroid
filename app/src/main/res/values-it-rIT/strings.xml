@@ -150,6 +150,8 @@
     <string name="reviews_fragment">Recensioni</string>
     <string name="user_picture">Immagine profilo utente</string>
     <string name="user_name">Nome utente: %1$s</string>
-    <string name="evaluation">Valutazione: %1$f/10</string>
+    <string name="evaluation">Valutazione:\n%1$.2f/10</string>
     <string name="show_all">Mostra tutto</string>
+    <string name="review_description">Testo</string>
+    <string name="full_review_fragment">Recensione completa</string>
 </resources>

@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.eventReviews;
 
-import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 
@@ -15,6 +14,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -28,11 +28,11 @@ public class ReviewsRequest extends Thread {
     private RecyclerView rv;
     private final Request request;
     private ReviewAdapter adapter;
-    private final Activity a;
+    private final ReviewsFragment f;
 
-    public ReviewsRequest(@NonNull Activity a, @NonNull View layout, @NonNull String id) {
+    public ReviewsRequest(@NonNull ReviewsFragment f, @NonNull View layout, @NonNull String id) {
         eventId = id;
-        this.a = a;
+        this.f = f;
         request = new Request.Builder()
                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/recensioni")
                 .build();
@@ -72,9 +72,9 @@ public class ReviewsRequest extends Thread {
                     ReviewList list = new ReviewList();
                     list.parseJSON(jsonArr);
 
-                    adapter = new ReviewAdapter(new ReviewCallback(), list.getList());
+                    adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList());
 
-                    a.runOnUiThread(() -> {
+                    f.requireActivity().runOnUiThread(() -> {
                         adapter.submitList(list.getList());
                         rv.setAdapter(adapter);
                     });

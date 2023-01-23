@@ -16,7 +16,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class ReviewsFragment extends Fragment {
 
-    private ReviewsViewModel mViewModel;
+    private ReviewsViewModel mViewModel1;
     private String id = "";
     private View root;
 
@@ -40,12 +40,12 @@ public class ReviewsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ReviewsViewModel.class);
+        mViewModel1 = new ViewModelProvider(this).get(ReviewsViewModel.class);
     }
 
     public void onStart() {
         super.onStart();
-        mViewModel.getReviews(requireActivity(), root.findViewById(R.id.frameLayout5), id);
+        mViewModel1.getReviews(this, root.findViewById(R.id.frameLayout5), id);
     }
 
 }

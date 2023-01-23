@@ -132,6 +132,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
         ms = new ViewModelProvider(this).get(MenuSettingsViewModel.class);
         esvm = new ViewModelProvider(this).get(EventSearchViewModel.class);
+
         accessToken = AccessToken.getCurrentAccessToken();
 
         // Passing each menu ID as a set of Ids because each

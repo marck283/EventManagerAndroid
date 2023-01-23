@@ -104,6 +104,15 @@
         android:id="@+id/reviewsFragment"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment"
         android:label="@string/reviews_fragment"
-        tools:layout="@layout/fragment_reviews" />
+        tools:layout="@layout/fragment_reviews" >
+        <action
+            android:id="@+id/action_reviewsFragment_to_fullReviewFragment"
+            app:destination="@id/fullReviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fullReviewFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.FullReviewFragment"
+        android:label="@string/full_review_fragment"
+        tools:layout="@layout/fragment_full_review" />
 
 </navigation>
