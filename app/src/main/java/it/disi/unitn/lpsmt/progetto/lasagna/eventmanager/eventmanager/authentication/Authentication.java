@@ -13,6 +13,7 @@ import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration.AccountIntegration;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
@@ -76,13 +77,21 @@ public class Authentication {
                     Log.i("token132", info.getToken());
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
-                    if(response.code() == 409 && which.equals("facebook")) {
+                    if(response.code() == 409) {
                         AlertDialog dialog = new AlertDialog.Builder(a).create();
                         dialog.setTitle(R.string.email_conflict_facebook);
                         dialog.setMessage(a.getString(R.string.connect_facebook_account));
                         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> {
-                            GSignIn signIn = new GSignIn(a);
-                            signIn.signIn(a, 4);
+                            AccountIntegration integration = new AccountIntegration();
+                            if(which.equals("facebook")) {
+                                integration.facebookIntegrate(fbJwt.getUserId(), fbJwt.getToken());
+                            } else {
+                                if(googleJwt != null) {
+                                    integration.googleIntegrate(googleJwt);
+                                } else {
+                                    Log.i("noJwt", "Utente non autenticato per mancanza dei codici di accesso");
+                                }
+                            }
                         });
                         dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
                         dialog.show();

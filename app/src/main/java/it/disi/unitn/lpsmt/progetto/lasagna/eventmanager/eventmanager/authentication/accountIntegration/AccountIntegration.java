@@ -35,9 +35,7 @@ public class AccountIntegration {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                if(response.body() != null && response.isSuccessful()) {
-
-                }
+                //Nothing to do
             }
 
             /**
@@ -58,7 +56,7 @@ public class AccountIntegration {
         });
     }
 
-    public void facebookIntegrate(int fbUserId, @NonNull String fbUserToken) {
+    public void facebookIntegrate(String fbUserId, @NonNull String fbUserToken) {
         Call<JsonObject> call = integrationInterface.fbIntegrate(new FBIntegration(fbUserId, fbUserToken));
         call.enqueue(new Callback<>() {
             /**
