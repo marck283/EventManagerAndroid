@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
@@ -85,6 +86,8 @@ public class EventDetailsFragment extends Fragment {
                         mViewModel.registerUser(nvm.getToken().getValue(), eventId, this, day, time);
                     }
                 });
+
+                ((TextView)view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
                 break;
             }
             case "iscr": {

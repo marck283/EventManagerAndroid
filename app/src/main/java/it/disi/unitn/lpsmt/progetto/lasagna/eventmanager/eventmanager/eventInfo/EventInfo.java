@@ -112,23 +112,23 @@ public class EventInfo {
             String[] arr = json.get(name).getAsString().split(":");
             res += arr[0];
             if(arr[0].equals("1")) {
-                res += " giorno, ";
+                res += " giorno, \n";
             } else {
-                res += " giorni, ";
+                res += " giorni, \n";
             }
 
             res += arr[1];
             if(arr[1].equals("1")) {
-                res += "ora e ";
+                res += " ora e ";
             } else {
-                res += "ore e ";
+                res += " ore e ";
             }
 
             res += arr[2];
             if(arr[2].equals("1")) {
-                res += "minuto";
+                res += " minuto";
             } else {
-                res += "minuti";
+                res += " minuti";
             }
         } else {
             res = gs1.fromJson(json.get(name), String.class);
