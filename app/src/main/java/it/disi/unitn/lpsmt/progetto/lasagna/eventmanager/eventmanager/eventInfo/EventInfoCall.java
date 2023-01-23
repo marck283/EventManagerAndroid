@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -82,53 +84,92 @@ public class EventInfoCall {
 
                     MaterialAutoCompleteTextView textView = spinner.findViewById(R.id.actv),
                             textView1 = spinner1.findViewById(R.id.actv1);
-                    textView.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
-                    textView1.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
+
+                    SpinnerOnItemSelectedListener ois2 = new SpinnerOnItemSelectedListener();
 
                     textView.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, dateArr));
 
-                    ((SpinnerOnItemSelectedListener) textView.getOnItemSelectedListener()).getItem()
-                            .observe(f.getViewLifecycleOwner(), o -> {
-                                Log.i("item", String.valueOf(o));
-                                if (o instanceof String && !o.equals("---")) {
-                                    f.setDay((String) o);
-                                    f.setTime("");
-                                    ArrayList<CharSequence> orariArr = new ArrayList<>();
-                                    orariArr.add("---");
-                                    orariArr.addAll(ei1.getOrari((String) o));
-                                    textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, orariArr));
-                                    ((SpinnerOnItemSelectedListener) textView1.getOnItemSelectedListener()).getItem()
-                                            .observe(f.getViewLifecycleOwner(), o1 -> {
-                                                if (o1 instanceof String && !o1.equals("---")) {
-                                                    f.setTime((String) o1);
-                                                    LuogoEvento le = ei1.getLuogo((String) o, (String) o1);
-                                                    TextView indirizzo = v.findViewById(R.id.event_address);
-                                                    indirizzo.setText(f.getString(R.string.event_address, le.toString()));
-                                                    indirizzo.setOnClickListener(c -> {
-                                                        //Questo dovrebbe aprire Google Maps (vedi report progetto per sapere come fare)
-                                                    });
+                    textView.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                            //Nothing
+                        }
 
-                                                    try {
-                                                        SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-                                                        boolean over = false;
-                                                        Date toCheck = sdformat.parse(le.getData());
-                                                        Date d = new Date();
-                                                        if (toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
-                                                            over = true;
-                                                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if (!s.toString().equals("---")) {
+                                Log.i("item", s.toString());
+                                f.setDay(s.toString());
+                                f.setTime("");
 
-                                                        if (over || le.getPostiRimanenti() == 0) {
-                                                            Button b = v.findViewById(R.id.sign_up_button);
-                                                            b.setEnabled(false);
-                                                            b.setText(f.getString(R.string.registrations_closed));
-                                                        }
-                                                    } catch (ParseException ex) {
-                                                        Log.i("ParseException", "ParseException");
-                                                    }
-                                                }
+                                TextView indirizzo = v.findViewById(R.id.event_address);
+                                indirizzo.setText(f.getString(R.string.event_address, ""));
+
+                                ArrayList<CharSequence> orariArr = new ArrayList<>();
+                                orariArr.add("---");
+                                orariArr.addAll(ei1.getOrari(s.toString()));
+                                textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, orariArr));
+                                textView1.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                        //Nothing
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s1, int start, int before, int count) {
+                                        if(!s.toString().equals("---")) {
+                                            f.setTime(s1.toString());
+
+                                            indirizzo.setOnClickListener(c -> {
+                                                //Questo dovrebbe aprire Google Maps (vedi report progetto per sapere come fare)
                                             });
-                                }
-                            });
+
+                                            LuogoEvento le = ei1.getLuogo(s.toString(), s1.toString());
+                                            if(le != null) {
+                                                indirizzo.setText(f.getString(R.string.event_address, le.toString()));
+                                            }
+
+                                            try {
+                                                SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+                                                boolean over = false;
+                                                Button b = v.findViewById(R.id.sign_up_button);
+
+                                                if(le != null) {
+                                                    Date toCheck = sdformat.parse(le.getData());
+                                                    Date d = new Date();
+                                                    if (toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
+                                                        over = true;
+                                                    }
+                                                    if (over || le.getPostiRimanenti() == 0) {
+                                                        b.setEnabled(false);
+                                                        b.setText(f.getString(R.string.registrations_closed));
+                                                    } else {
+                                                        b.setEnabled(true);
+                                                    }
+                                                } else {
+                                                    b.setEnabled(false);
+                                                }
+                                            } catch (ParseException ex) {
+                                                Log.i("ParseException", "ParseException");
+                                            }
+                                        } else {
+                                            //Qualcosa
+                                        }
+                                    }
+
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        //Nothing
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            //Nothing
+                        }
+                    });
                 }
             }
 
