@@ -59,11 +59,11 @@
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="329dp"
-            android:layout_height="27dp"
-            android:layout_marginTop="12dp"
+            android:layout_width="330dp"
+            android:layout_height="31dp"
             android:ellipsize="end"
             android:textAlignment="center"
+            android:textSize="12pt"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
