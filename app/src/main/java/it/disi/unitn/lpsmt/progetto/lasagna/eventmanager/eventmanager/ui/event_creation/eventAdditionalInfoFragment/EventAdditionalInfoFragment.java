@@ -16,12 +16,15 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -71,22 +74,18 @@ public class EventAdditionalInfoFragment extends Fragment {
     }
 
     public void selectImage(@Nullable ActivityResultLauncher<Intent> launcher) {
-        if(pickerAvailable) {
+        if(launcher == null) {
             //Posso usare PhotoPicker
             pickMedia.launch(new PickVisualMediaRequest.Builder()
                     .setMediaType((ActivityResultContracts.PickVisualMedia.VisualMediaType) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build());
         } else {
-            if(launcher != null) {
-                //Non posso usare PhotoPicker
-                Intent intent = new Intent();
-                intent.setType("image/");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
+            //Non posso usare PhotoPicker
+            Intent intent = new Intent();
+            intent.setType("image/");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
 
-                launcher.launch(intent);
-            } else {
-                Log.i("nullLauncher", "Il laucher dell'Activity di selezione immagini è null.");
-            }
+            launcher.launch(intent);
         }
     }
 
@@ -139,6 +138,39 @@ public class EventAdditionalInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(EventAdditionalInfoViewModel.class);
         evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+
+        if(!evm.getPrivEvent()) {
+            EditText description = view.findViewById(R.id.event_description);
+            description.setVisibility(View.INVISIBLE);
+        }
+
+        Button forward = view.findViewById(R.id.button14);
+        forward.setOnClickListener(c -> {
+            String image = evm.getBase64Image();
+            if(image == null || !image.equals("")) {
+                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                dialog.setTitle(R.string.no_event_picture);
+                dialog.setMessage(getString(R.string.missing_event_image));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            } else {
+                String description = evm.getDescription();
+                if(!evm.getPrivEvent() && (description == null || description.equals(""))) {
+                    AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                    dialog.setTitle(R.string.no_event_description);
+                    dialog.setMessage(getString(R.string.missing_event_description));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                } else {
+                    if(evm.getGiorni() < 0 || evm.getOre() < 0 || evm.getMinuti() < 0) {
+                        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                        dialog.setTitle(R.string.wrong_duration);
+                        dialog.setMessage(getString(R.string.wrong_duration_value));
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    } else {
+                        Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
+                    }
+                }
+            }
+        });
     }
 
 }

@@ -51,5 +51,14 @@
     <fragment
         android:id="@+id/eventAdditionalInfoFragment"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.eventAdditionalInfoFragment.EventAdditionalInfoFragment"
-        android:label="@string/second_fragment_label" />
+        android:label="@string/second_fragment_label" >
+        <action
+            android:id="@+id/action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2"
+            app:destination="@id/eventRestrictionsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/eventRestrictionsFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.event_restrictions.EventRestrictionsFragment"
+        android:label="fragment_event_restrictions"
+        tools:layout="@layout/fragment_event_restrictions" />
 </navigation>

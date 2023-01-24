@@ -186,8 +186,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 }
             }
         } else {
-            if(accessToken.isExpired()) {
+            if(accessToken != null && accessToken.isExpired()) {
                 LoginManager.getInstance().logInWithReadPermissions(this, List.of("public_profile", "email"));
+            } else {
+                accessToken = AccessToken.getCurrentAccessToken();
             }
             makeEmailRequestAndUpdate();
         }

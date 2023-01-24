@@ -8,10 +8,9 @@ import java.util.ArrayList;
 public class EventViewModel extends ViewModel {
     private String nomeAtt = "";
     private boolean privEvent = false;
-    private int durata;
+    private int giorni = -1, ore = -1, minuti = -1;
     private ArrayList<LuogoEv> luogoEv = new ArrayList<>();
-    private String categoria;
-    private String base64Image;
+    private String categoria, base64Image, description;
 
     public void setNomeAtt(String nome) {
         nomeAtt = nome;
@@ -29,12 +28,28 @@ public class EventViewModel extends ViewModel {
         return privEvent;
     }
 
-    public void setDurata(Integer d) {
-        durata = d;
+    public void setGiorni(Integer d) {
+        giorni = d;
     }
 
-    public int getDurata() {
-        return durata;
+    public int getGiorni() {
+        return giorni;
+    }
+
+    public void setOre(Integer h) {
+        ore = h;
+    }
+
+    public int getOre() {
+        return ore;
+    }
+
+    public void setMinuti(Integer mins) {
+        minuti = mins;
+    }
+
+    public int getMinuti() {
+        return minuti;
     }
 
     public void setLuogoEv(String address, String city, String civNum, String province, int cap, String data, String ora, int maxPers) {
@@ -59,5 +74,13 @@ public class EventViewModel extends ViewModel {
 
     public String getBase64Image() {
         return base64Image;
+    }
+
+    public void setDescription(String desc) {
+        description = desc;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -97,8 +97,8 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/search_for_org_name"
-                android:layout_width="274dp"
-                android:layout_height="49dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/search_for_org_name"
                 app:layout_constraintEnd_toEndOf="parent"

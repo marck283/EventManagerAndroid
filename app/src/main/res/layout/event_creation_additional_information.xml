@@ -19,17 +19,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName"
+        android:id="@+id/event_description"
         android:layout_width="217dp"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
+        android:autofillHints="true"
         android:ems="10"
         android:hint="@string/event_description"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView37"
-        android:autofillHints="true" />
+        app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
     <TextView
         android:id="@+id/textView40"
@@ -39,83 +39,106 @@
         android:text="@string/duration_info"
         android:textAlignment="center"
         android:textStyle="bold"
+        android:textSize="9pt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName" />
+        app:layout_constraintTop_toBottomOf="@+id/event_description" />
 
-    <EditText
-        android:id="@+id/editTextTextPersonName2"
-        android:layout_width="78dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="20dp"
-        android:autofillHints="true"
-        android:ems="10"
-        android:hint="@string/days"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView40" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName3"
-        android:layout_width="78dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
-        android:autofillHints="true"
-        android:ems="10"
-        android:hint="@string/hours"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextPersonName4"
-        app:layout_constraintHorizontal_bias="0.29"
-        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName2"
-        app:layout_constraintTop_toBottomOf="@+id/textView40" />
-
-    <EditText
-        android:id="@+id/editTextTextPersonName4"
-        android:layout_width="112dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="44dp"
-        android:autofillHints="true"
-        android:ems="10"
-        android:hint="@string/minutes"
-        android:inputType="textPersonName"
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="412dp"
+        android:layout_height="105dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView40" />
-
-    <TextView
-        android:id="@+id/textView43"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="@string/add_event_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.289"
-        app:layout_constraintStart_toEndOf="@+id/imageSelector"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName3" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/imageSelector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="48dp"
-        android:contentDescription="@string/floating_action_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName3"
-        app:srcCompat="@drawable/ic_event_creation" />
+        app:layout_constraintTop_toBottomOf="@+id/textView40">
 
-    <Button
-        android:id="@+id/button14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:text="@string/continue_forward"
+        <EditText
+            android:id="@+id/duration_days"
+            android:layout_width="115dp"
+            android:layout_height="55dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="47dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="29dp"
+            android:layout_toStartOf="@+id/editTextTextPersonName3"
+            android:autofillHints="true"
+            android:ems="10"
+            android:hint="@string/days"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName3"
+            android:layout_width="78dp"
+            android:layout_height="57dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="28dp"
+            android:layout_toStartOf="@+id/editTextTextPersonName4"
+            android:autofillHints="true"
+            android:ems="10"
+            android:hint="@string/hours"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/editTextTextPersonName4"
+            android:layout_width="112dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="38dp"
+            android:layout_marginBottom="28dp"
+            android:autofillHints="true"
+            android:ems="10"
+            android:hint="@string/minutes"
+            android:inputType="textPersonName" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="410dp"
+        android:layout_height="191dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageSelector" />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
+
+        <Button
+            android:id="@+id/button14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="153dp"
+            android:layout_marginEnd="151dp"
+            android:layout_marginBottom="39dp"
+            android:text="@string/continue_forward" />
+
+        <TextView
+            android:id="@+id/textView43"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="71dp"
+            android:layout_marginBottom="118dp"
+            android:text="@string/add_event_image" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/imageSelector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button14"
+            android:layout_gravity="bottom|end"
+            android:layout_marginEnd="21dp"
+            android:layout_marginBottom="15dp"
+            android:layout_toStartOf="@+id/textView43"
+            android:contentDescription="@string/floating_action_button"
+            app:srcCompat="@drawable/ic_event_creation" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

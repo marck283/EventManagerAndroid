@@ -156,4 +156,10 @@
     <string name="full_review_fragment">Recensione completa</string>
     <string name="no_such_address">Nessun indirizzo</string>
     <string name="address_not_registered">Questo indirizzo non è stato registrato su Google Maps</string>
+    <string name="no_event_picture">Nessuna immagine selezionata</string>
+    <string name="missing_event_image">Non è stata selezionata alcuna immagine per l\'evento.</string>
+    <string name="no_event_description">Descrizione evento mancante</string>
+    <string name="missing_event_description">La descrizione dell\'evento non è presente.</string>
+    <string name="wrong_duration">Durata non corretta</string>
+    <string name="wrong_duration_value">I valori dei giorni, delle ore e dei minuti non possono essere negativi.</string>
 </resources>
