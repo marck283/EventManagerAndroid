@@ -1,5 +1,12 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,10 +21,12 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -39,6 +48,18 @@ public class EventInfoCall {
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .build();
         evInterface = retro.create(EventInfoInterface.class);
+    }
+
+    private void startGoogleMaps(@NonNull EventDetailsFragment f, @NonNull TextView indirizzo,
+                                 @NonNull List<Address> addresses) {
+        Address address = addresses.get(0);
+
+        Uri gmURI = Uri.parse("geo:" + address.getLatitude() + "," + address.getLongitude()
+                + "?q=" + indirizzo.getText().toString());
+        Intent i = new Intent(Intent.ACTION_VIEW, gmURI);
+        i.setPackage("com.google.android.apps.maps");
+
+        f.requireActivity().startActivity(i);
     }
 
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View v, @NonNull EventDetailsFragment f) {
@@ -122,7 +143,39 @@ public class EventInfoCall {
                                             f.setTime(s1.toString());
 
                                             indirizzo.setOnClickListener(c -> {
-                                                //Questo dovrebbe aprire Google Maps (vedi report progetto per sapere come fare)
+                                                Geocoder geocoder = new Geocoder(f.requireActivity());
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                    geocoder.getFromLocationName(indirizzo.getText().toString(), 5, addresses -> {
+                                                        if(addresses.size() > 0) {
+                                                            startGoogleMaps(f, indirizzo, addresses);
+                                                        } else {
+                                                            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                                            dialog.setTitle(R.string.no_such_address);
+                                                            dialog.setMessage(f.getString(R.string.address_not_registered));
+                                                        }
+                                                    });
+                                                } else {
+                                                    Thread t1 = new Thread() {
+                                                        public void run() {
+                                                            List<Address> addresses;
+                                                            try {
+                                                                addresses = geocoder.getFromLocationName(indirizzo.getText().toString(), 5);
+                                                                if(addresses != null && addresses.size() > 0) {
+                                                                    startGoogleMaps(f, indirizzo, addresses);
+                                                                } else {
+                                                                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                                                    dialog.setTitle(R.string.no_such_address);
+                                                                    dialog.setMessage(f.getString(R.string.address_not_registered));
+                                                                    Looper.loop();
+                                                                    Looper.getMainLooper().quitSafely();
+                                                                }
+                                                            } catch(IOException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    };
+                                                    t1.start();
+                                                }
                                             });
 
                                             LuogoEvento le = ei1.getLuogo(s.toString(), s1.toString());

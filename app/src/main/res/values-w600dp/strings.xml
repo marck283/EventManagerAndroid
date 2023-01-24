@@ -167,4 +167,6 @@
     <string name="show_all">Show all</string>
     <string name="review_description">Text</string>
     <string name="full_review_fragment">Full review</string>
+    <string name="no_such_address">No address</string>
+    <string name="address_not_registered">This address is not registered in Google Maps.</string>
 </resources>

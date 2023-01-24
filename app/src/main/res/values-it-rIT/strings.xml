@@ -154,4 +154,6 @@
     <string name="show_all">Mostra tutto</string>
     <string name="review_description">Testo</string>
     <string name="full_review_fragment">Recensione completa</string>
+    <string name="no_such_address">Nessun indirizzo</string>
+    <string name="address_not_registered">Questo indirizzo non è stato registrato su Google Maps</string>
 </resources>
