@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -32,7 +33,6 @@ import java.util.Locale;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerOnItemSelectedListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -106,8 +106,6 @@ public class EventInfoCall {
                     MaterialAutoCompleteTextView textView = spinner.findViewById(R.id.actv),
                             textView1 = spinner1.findViewById(R.id.actv1);
 
-                    SpinnerOnItemSelectedListener ois2 = new SpinnerOnItemSelectedListener();
-
                     textView.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, dateArr));
 
                     textView.addTextChangedListener(new TextWatcher() {
@@ -180,6 +178,7 @@ public class EventInfoCall {
 
                                             LuogoEvento le = ei1.getLuogo(s.toString(), s1.toString());
                                             if(le != null) {
+                                                indirizzo.setPaintFlags(indirizzo.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                                                 indirizzo.setText(f.getString(R.string.event_address, le.toString()));
                                             }
 
