@@ -70,14 +70,14 @@
 
         <TextView
             android:id="@+id/duration"
-            android:layout_width="192dp"
+            android:layout_width="167dp"
             android:layout_height="34dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="28dp"
             android:layout_marginTop="85dp"
-            android:layout_marginEnd="7dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="0dp"
             android:text="@string/duration" />
 
@@ -153,7 +153,7 @@
 
     <RelativeLayout
         android:id="@+id/buttons_layout"
-        android:layout_width="408dp"
+        android:layout_width="411dp"
         android:layout_height="115dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

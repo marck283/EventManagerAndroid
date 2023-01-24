@@ -112,9 +112,9 @@ public class EventInfo {
             String[] arr = json.get(name).getAsString().split(":");
             res += arr[0];
             if(arr[0].equals("1")) {
-                res += " giorno, \n";
+                res += " giorno, ";
             } else {
-                res += " giorni, \n";
+                res += " giorni, ";
             }
 
             res += arr[1];
