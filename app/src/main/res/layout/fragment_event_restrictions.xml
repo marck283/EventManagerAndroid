@@ -1,13 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.event_creation.event_restrictions.EventRestrictionsFragment">
 
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="104dp"
+            android:text="@string/almost_done"
+            android:textStyle="bold"
+            android:textSize="9pt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView17"
+            android:layout_width="222dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="44dp"
+            android:text="@string/age_restriction_choice"
+            android:textAlignment="center"
+            android:textSize="8pt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout3"
+            android:layout_width="409dp"
+            android:layout_height="229dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView17">
+
+            <CheckBox
+                android:id="@+id/minimumAgeCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/minimum_age_text_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="80dp"
+                android:layout_marginBottom="34dp"
+                android:text="@string/minimum_age" />
+
+            <CheckBox
+                android:id="@+id/maximumAgeCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/maximum_age_text_layout"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="51dp"
+                android:layout_marginEnd="60dp"
+                android:layout_marginBottom="32dp"
+                android:layout_toStartOf="@+id/minimumAgeCheckBox"
+                android:text="@string/maximum_age" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/maximum_age_text_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="176dp"
+                android:layout_height="66dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="19dp"
+                android:layout_marginEnd="23dp"
+                android:layout_marginBottom="59dp"
+                android:layout_toStartOf="@+id/minimum_age_text_layout"
+                app:endIconDrawable="@drawable/ic_record_voice"
+                app:endIconMode="custom">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/maximum_age_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true"
+                    android:autofillHints=""
+                    android:hint="@string/maximum_age"
+                    android:inputType="number"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/minimum_age_text_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="169dp"
+                android:layout_height="65dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="22dp"
+                android:layout_marginBottom="60dp"
+                app:endIconDrawable="@drawable/ic_record_voice"
+                app:endIconMode="custom">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/minimum_age_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="58dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerInParent="true"
+                    android:autofillHints=""
+                    android:hint="@string/minimum_age"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/createEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/create_event"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

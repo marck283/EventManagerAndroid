@@ -36,10 +36,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nomeAtt1"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_marginTop="8dp"
-            android:layout_toEndOf="@id/event_name_text_view"
             android:autofillHints="name"
             android:inputType="text"
             android:padding="10dp"

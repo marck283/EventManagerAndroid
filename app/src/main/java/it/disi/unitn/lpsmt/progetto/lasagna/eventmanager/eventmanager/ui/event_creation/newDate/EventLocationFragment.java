@@ -4,11 +4,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,9 @@ public class EventLocationFragment extends DialogFragment {
     private EventViewModel evm;
     private NewDateViewModel ndvm;
 
+    private SpeechRecognizer speechRecognizer;
+    private Intent speechRecognizerIntent;
+
     @NonNull
     @Contract(" -> new")
     public static EventLocationFragment newInstance() {
@@ -42,6 +47,8 @@ public class EventLocationFragment extends DialogFragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         mViewModel = new ViewModelProvider(requireActivity()).get(EventLocationViewModel.class);
         mViewModel.setDialogFragment(this);
 

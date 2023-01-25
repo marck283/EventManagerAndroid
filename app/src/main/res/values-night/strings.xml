@@ -43,7 +43,6 @@
     <string name="second_fragment_label">Event creation</string>
     <string name="previous">Previous</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="event_day">Day:</string>
     <string name="organizer_name">Organizer:</string>
     <string name="event_creation_title">Create an event</string>
@@ -178,4 +177,14 @@
     <string name="illegal_duration_format">Illegal duration format</string>
     <string name="illegal_duration_format_message">An illegal value has been inserted for one or more of the fields \"days\", \"hours\" or \"minutes\". Please insert only positive integer values for those fields.</string>
     <string name="event_restrictions_fragment">Event restrictions</string>
+    <string name="almost_done">Almost done!</string>
+    <string name="age_restriction_choice">Choose whether to apply age restrictions or not</string>
+    <string name="minimum_age">Minimum age</string>
+    <string name="maximum_age">Maximum age</string>
+    <string name="create_event">Create event</string>
+    <string name="illegal_min_age">Illegal minimum age</string>
+    <string name="illegal_min_age_message">An illegal minimum age has been inserted. Try to insert only positive integer values.</string>
+    <string name="illegal_max_age">Illegal maximum age</string>
+    <string name="illegal_max_age_message">An illegal maximum age value has been inserted. Please try to insert only positive integer values.</string>
+    <string name="min_eta_gt_max_eta_message">The minimum age cannot be greater than the maximum age.</string>
 </resources>

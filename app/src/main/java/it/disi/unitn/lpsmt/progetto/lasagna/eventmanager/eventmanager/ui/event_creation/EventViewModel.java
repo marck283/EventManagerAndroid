@@ -12,6 +12,8 @@ public class EventViewModel extends ViewModel {
     private ArrayList<LuogoEv> luogoEv = new ArrayList<>();
     private String categoria, base64Image, description;
 
+    private int etaMin, etaMax; //Non obbligatori per la creazione di un evento
+
     public void setNomeAtt(String nome) {
         nomeAtt = nome;
     }
@@ -82,5 +84,21 @@ public class EventViewModel extends ViewModel {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setEtaMin(int etaMin) {
+        this.etaMin = etaMin;
+    }
+
+    public int getEtaMin() {
+        return etaMin;
+    }
+
+    public void setEtaMax(int etaMax) {
+        this.etaMax = etaMax;
+    }
+
+    public int getEtaMax() {
+        return etaMax;
     }
 }

@@ -60,16 +60,18 @@ public class EventAdditionalInfoFragment extends Fragment {
     }
 
     private void setImage(Uri uri) {
-        try {
-            final InputStream imageStream = requireActivity().getContentResolver().openInputStream(uri);
-            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            updateEventImage(encodeImage(selectedImage));
-        } catch(FileNotFoundException ex) {
-            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-            dialog.setTitle(R.string.file_not_found);
-            dialog.setMessage(getString(R.string.file_not_found));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
+        if(uri != null) {
+            try {
+                final InputStream imageStream = requireActivity().getContentResolver().openInputStream(uri);
+                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                updateEventImage(encodeImage(selectedImage));
+            } catch(FileNotFoundException ex) {
+                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                dialog.setTitle(R.string.file_not_found);
+                dialog.setMessage(getString(R.string.file_not_found));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+            }
         }
     }
 
@@ -190,7 +192,12 @@ public class EventAdditionalInfoFragment extends Fragment {
                         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                         dialog.show();
                     } else {
-                        Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
+                        if(!evm.getPrivEvent()) {
+                            Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
+                        } else {
+                            //Poiché l'evento è privato, fai partire la sua creazione da qui...
+                            mViewModel.createPrivateEvent();
+                        }
                     }
                 }
             }

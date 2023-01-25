@@ -3,5 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 import androidx.lifecycle.ViewModel;
 
 public class EventAdditionalInfoViewModel extends ViewModel {
-
+    public void createPrivateEvent(/*Lista di parametri richiesti*/) {
+        //Qualcosa
+    }
 }

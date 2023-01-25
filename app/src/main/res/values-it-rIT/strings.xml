@@ -165,4 +165,14 @@
     <string name="illegal_duration_format">Formato valori durata sbagliato</string>
     <string name="illegal_duration_format_message">Un valore non consentito è stato inserito in uno o più campi tra \"giorni\", \"ore\" o \"minuti\". Si prega di inserire solo numeri interi positivi.</string>
     <string name="event_restrictions_fragment">Restrizioni evento</string>
+    <string name="almost_done">Abbiamo quasi terminato!</string>
+    <string name="age_restriction_choice">Scegli se applicare o meno restrizioni sull\'età</string>
+    <string name="minimum_age">Età minima</string>
+    <string name="maximum_age">Età massima</string>
+    <string name="create_event">Crea evento</string>
+    <string name="illegal_min_age">Età minima non consentita</string>
+    <string name="illegal_min_age_message">E\' stato inserito un valore non consentito come età minima. Prego inserire solo valori interi positivi.</string>
+    <string name="illegal_max_age">Età massima non consentita</string>
+    <string name="illegal_max_age_message">Un valore non consentito è stato inserito come età massima. Si prega di riprovare inserendo solo valori interi positivi.</string>
+    <string name="min_eta_gt_max_eta_message">L\'età minima non può essere maggiore di quella massima.</string>
 </resources>
