@@ -162,4 +162,7 @@
     <string name="missing_event_description">La descrizione dell\'evento non è presente.</string>
     <string name="wrong_duration">Durata non corretta</string>
     <string name="wrong_duration_value">I valori dei giorni, delle ore e dei minuti non possono essere negativi.</string>
+    <string name="illegal_duration_format">Formato valori durata sbagliato</string>
+    <string name="illegal_duration_format_message">Un valore non consentito è stato inserito in uno o più campi tra \"giorni\", \"ore\" o \"minuti\". Si prega di inserire solo numeri interi positivi.</string>
+    <string name="event_restrictions_fragment">Restrizioni evento</string>
 </resources>

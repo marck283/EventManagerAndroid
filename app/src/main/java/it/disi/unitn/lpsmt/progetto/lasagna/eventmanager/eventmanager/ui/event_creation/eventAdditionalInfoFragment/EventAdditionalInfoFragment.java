@@ -139,32 +139,56 @@ public class EventAdditionalInfoFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(EventAdditionalInfoViewModel.class);
         evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
 
-        if(!evm.getPrivEvent()) {
-            EditText description = view.findViewById(R.id.event_description);
+        Log.i("private", String.valueOf(evm.getPrivEvent()));
+
+        EditText description = view.findViewById(R.id.event_description);
+        if(evm.getPrivEvent()) {
             description.setVisibility(View.INVISIBLE);
         }
 
         Button forward = view.findViewById(R.id.button14);
         forward.setOnClickListener(c -> {
+            String giorni, ore, minuti, descrizione = description.getText().toString();
+            EditText editGiorni = view.findViewById(R.id.duration_days), editOre = view.findViewById(R.id.duration_hours),
+            editMins = view.findViewById(R.id.duration_mins);
+            giorni = editGiorni.getText().toString();
+            ore = editOre.getText().toString();
+            minuti = editMins.getText().toString();
+            evm.setDescription(descrizione);
+
+            try {
+                evm.setGiorni(Integer.parseInt(giorni));
+                evm.setOre(Integer.parseInt(ore));
+                evm.setMinuti(Integer.parseInt(minuti));
+            } catch(NumberFormatException ex) {
+                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                dialog.setTitle(R.string.illegal_duration_format);
+                dialog.setMessage(getString(R.string.illegal_duration_format_message));
+                dialog.show();
+            }
+
             String image = evm.getBase64Image();
-            if(image == null || !image.equals("")) {
+            if(image == null || image.equals("")) {
                 AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
                 dialog.setTitle(R.string.no_event_picture);
                 dialog.setMessage(getString(R.string.missing_event_image));
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
             } else {
-                String description = evm.getDescription();
-                if(!evm.getPrivEvent() && (description == null || description.equals(""))) {
+                String description1 = evm.getDescription();
+                if(!evm.getPrivEvent() && (description1 == null || description1.equals(""))) {
                     AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
                     dialog.setTitle(R.string.no_event_description);
                     dialog.setMessage(getString(R.string.missing_event_description));
                     dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
                 } else {
                     if(evm.getGiorni() < 0 || evm.getOre() < 0 || evm.getMinuti() < 0) {
                         AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
                         dialog.setTitle(R.string.wrong_duration);
                         dialog.setMessage(getString(R.string.wrong_duration_value));
                         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        dialog.show();
                     } else {
                         Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
                     }

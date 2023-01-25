@@ -174,4 +174,7 @@
     <string name="missing_event_description">The event\'s description is missing.</string>
     <string name="wrong_duration">Wrong duration</string>
     <string name="wrong_duration_value">The values for the days, the hours and the minutes cannot be negative.</string>
+    <string name="illegal_duration_format">Illegal duration format</string>
+    <string name="illegal_duration_format_message">An illegal value has been inserted for one or more of the fields \"days\", \"hours\" or \"minutes\". Please insert only positive integer values for those fields.</string>
+    <string name="event_restrictions_fragment">Event restrictions</string>
 </resources>

@@ -59,6 +59,6 @@
     <fragment
         android:id="@+id/eventRestrictionsFragment"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.event_restrictions.EventRestrictionsFragment"
-        android:label="fragment_event_restrictions"
+        android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_event_restrictions" />
 </navigation>
