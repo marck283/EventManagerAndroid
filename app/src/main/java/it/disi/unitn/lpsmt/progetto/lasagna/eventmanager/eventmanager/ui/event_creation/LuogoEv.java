@@ -4,19 +4,24 @@ import android.location.Address;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Locale;
 
 public class LuogoEv extends Address {
     private String address, city, civNum, province, data, ora;
     private int cap, maxPers;
 
-    public LuogoEv(String a, String c, String civNum, String province, int cap) {
+    public LuogoEv(String a, String c, String civNum, String province, int cap, String data, String ora) {
         super(Locale.ITALY);
         address = a;
         city = c;
         this.civNum = civNum;
         this.province = province;
         this.cap = cap;
+        this.data = data;
+        this.ora = ora;
     }
 
     public LuogoEv(String a, String c, String civNum, String province, int cap, String data, String ora, int maxPers) {
@@ -29,6 +34,23 @@ public class LuogoEv extends Address {
         this.data = data;
         this.ora = ora;
         this.maxPers = maxPers;
+    }
+
+    public JSONObject toJSON(boolean priv) throws JSONException {
+        JSONObject json = new JSONObject();
+
+        json.put("indirizzo", address);
+        json.put("civNum", civNum);
+        json.put("cap", cap);
+        json.put("citta", city);
+        json.put("provincia", province);
+        if(!priv) {
+            json.put("maxPers", maxPers);
+        }
+        json.put("data", data);
+        json.put("ora", ora);
+
+        return json;
     }
 
     public String getAddress() {

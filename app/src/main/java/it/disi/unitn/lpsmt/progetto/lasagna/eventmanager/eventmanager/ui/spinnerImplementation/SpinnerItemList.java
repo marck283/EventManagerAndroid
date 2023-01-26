@@ -26,11 +26,13 @@ public class SpinnerItemList extends androidx.appcompat.widget.AppCompatSpinner 
     public SpinnerItemList(@NonNull Context context) {
         super(context);
         listener = new SpinnerOnItemSelectedListener();
+        super.setOnItemSelectedListener(listener);
     }
 
     public SpinnerItemList(@NonNull Context context, int mode) {
         super(context, mode);
         listener = new SpinnerOnItemSelectedListener();
+        super.setOnItemSelectedListener(listener);
     }
 
     /**
@@ -43,6 +45,7 @@ public class SpinnerItemList extends androidx.appcompat.widget.AppCompatSpinner 
     public SpinnerItemList(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         listener = new SpinnerOnItemSelectedListener();
+        super.setOnItemSelectedListener(listener);
     }
 
     /**
@@ -58,16 +61,19 @@ public class SpinnerItemList extends androidx.appcompat.widget.AppCompatSpinner 
     public SpinnerItemList(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         listener = new SpinnerOnItemSelectedListener();
+        super.setOnItemSelectedListener(listener);
     }
 
     public SpinnerItemList(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int mode) {
         super(context, attrs, defStyleAttr, mode);
         listener = new SpinnerOnItemSelectedListener();
+        super.setOnItemSelectedListener(listener);
     }
 
     public SpinnerItemList(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int mode, Resources.Theme popupTheme) {
         super(context, attrs, defStyleAttr, mode, popupTheme);
         listener = new SpinnerOnItemSelectedListener();
+        super.setOnItemSelectedListener(listener);
     }
 
     public SpinnerOnItemSelectedListener getListener() {

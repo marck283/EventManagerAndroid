@@ -187,4 +187,13 @@
     <string name="illegal_max_age">Illegal maximum age</string>
     <string name="illegal_max_age_message">An illegal maximum age value has been inserted. Please try to insert only positive integer values.</string>
     <string name="min_eta_gt_max_eta_message">The minimum age cannot be greater than the maximum age.</string>
+    <string name="illegal_hours_value">Illegal hours value</string>
+    <string name="illegal_hours_message">The value for the field \"hours cannot be greater than or equal to 24.</string>
+    <string name="illegal_minutes_value">Illegal minutes value</string>
+    <string name="illegal_minutes_message">The value for the field \"minutes\" cannot be greater than or equal to 60.</string>
+    <string name="event_creation_ok_title">Event created</string>
+    <string name="event_creation_ok_message">The event was successfully created!</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="log_in_to_authorize">In order to create an event, you need to be logged into the system.</string>
+    <string name="retry_later">An internal server error has occurred. Please try again later.</string>
 </resources>

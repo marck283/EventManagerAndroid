@@ -175,4 +175,13 @@
     <string name="illegal_max_age">Età massima non consentita</string>
     <string name="illegal_max_age_message">Un valore non consentito è stato inserito come età massima. Si prega di riprovare inserendo solo valori interi positivi.</string>
     <string name="min_eta_gt_max_eta_message">L\'età minima non può essere maggiore di quella massima.</string>
+    <string name="illegal_hours_value">Valore campo \"ore\" non consentito</string>
+    <string name="illegal_hours_message">Il valore del campo \"ore\" non può essere maggiore o uguale a 24.</string>
+    <string name="illegal_minutes_value">Valore campo \"minuti\" non consentito</string>
+    <string name="illegal_minutes_message">Il valore del campo \"minuti\" non può essere maggiore o uguale a 60.</string>
+    <string name="event_creation_ok_title">Evento creato</string>
+    <string name="event_creation_ok_message">L\'evento è stato creato con successo!</string>
+    <string name="unauthorized">Utente non autorizzato</string>
+    <string name="log_in_to_authorize">Per creare un evento devi essere autenticato al sistema. Riprova dopo aver eseguito l\'accesso.</string>
+    <string name="retry_later">Si è verificato un errore interno al server. Si prega di riprovare più tardi.</string>
 </resources>

@@ -21,10 +21,13 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 
 public class NewDateFragment extends DialogFragment {
 
     private NewDateViewModel mViewModel;
+
+    private EventViewModel evm;
 
     @NonNull
     public static NewDateFragment newInstance() {
@@ -57,6 +60,9 @@ public class NewDateFragment extends DialogFragment {
 
                     if(toCheck != null && toCheck.compareTo(d) > 0) {
                         over = true;
+
+                        String[] dataArr = beginDate.split("/");
+                        beginDate = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
                         mViewModel.setData(beginDate);
                     } else {
                         AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
@@ -90,6 +96,10 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseSeats(@NonNull EditText t3) {
+        if(t3.getText() == null || t3.getText().toString().equals("")) {
+            return true;
+        }
+
         Pattern pattern = Pattern.compile("[1-9][0-9]*");
         try {
             if (pattern.matcher(String.valueOf(t3.getText())).find()) {
@@ -114,13 +124,21 @@ public class NewDateFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mViewModel = new ViewModelProvider(requireActivity()).get(NewDateViewModel.class);
+        evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+
+        if(evm.getPrivEvent()) {
+            view.findViewById(R.id.seats_value).setVisibility(View.GONE);
+        }
+
         Button b = view.findViewById(R.id.button3);
         b.setOnClickListener(c -> {
             EditText t = view.findViewById(R.id.begin_date);
             EditText t1 = view.findViewById(R.id.begin_time);
             EditText t3 = view.findViewById(R.id.seats_value);
-            if(t.getText() != null && t1.getText() != null && t3.getText() != null) {
+            if((t.getText() != null && t1.getText() != null && t3.getText() != null && !evm.getPrivEvent()) ||
+                    (evm.getPrivEvent() && t.getText() != null && t1.getText() != null)) {
                 if(parseBeginDate(t) && parseBeginHour(t1) && parseSeats(t3)) {
                     mViewModel.setOk(true);
                     NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);

@@ -4,13 +4,11 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +28,6 @@ public class EventLocationFragment extends DialogFragment {
     private EventLocationViewModel mViewModel;
     private EventViewModel evm;
     private NewDateViewModel ndvm;
-
-    private SpeechRecognizer speechRecognizer;
-    private Intent speechRecognizerIntent;
 
     @NonNull
     @Contract(" -> new")
@@ -80,7 +75,7 @@ public class EventLocationFragment extends DialogFragment {
             itemSelected.getItem().observe(requireActivity(), o -> {
                 if(o instanceof String && !o.equals("") && !o.equals("---")) {
                     mViewModel.setProvincia((String) o);
-                    mViewModel.parseAddress(t, t1, t2, t3, evm, ndvm);
+                    mViewModel.parseAddress(evm.getPrivEvent(), t, t1, t2, t3, evm, ndvm);
                 } else {
                     AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
                     ad.setTitle(R.string.no_province_selected);

@@ -57,8 +57,6 @@ public class EventLocationViewModel extends ViewModel {
                 Looper.prepare();
                 if(i == addresses.size()) {
                     setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
-
-                    //App bloccata dopo queste istruzioni. Perché?
                     Looper.loop();
                     Looper.getMainLooper().quitSafely();
                 }
@@ -304,7 +302,7 @@ public class EventLocationViewModel extends ViewModel {
         return ok;
     }
 
-    public void parseAddress(@NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4,
+    public void parseAddress(boolean priv, @NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4,
                                 @NonNull EditText t5, @NonNull EventViewModel evm, @NonNull NewDateViewModel ndvm) {
         if (provincia == null || provincia.equals("")) {
             setAlertDialog(R.string.incorrect_province_format_title, f.getString(R.string.incorrect_province_format));
@@ -316,7 +314,14 @@ public class EventLocationViewModel extends ViewModel {
 
         try {
             String[] split = location.split(", ");
-            final LuogoEv luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra(), ndvm.getPosti());
+            LuogoEv luogo;
+
+            if(!priv) {
+                luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra(), ndvm.getPosti());
+            } else {
+                luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra());
+            }
+
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> {

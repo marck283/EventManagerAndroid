@@ -1,7 +1,13 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -9,7 +15,7 @@ public class EventViewModel extends ViewModel {
     private String nomeAtt = "";
     private boolean privEvent = false;
     private int giorni = -1, ore = -1, minuti = -1;
-    private ArrayList<LuogoEv> luogoEv = new ArrayList<>();
+    private final ArrayList<LuogoEv> luogoEv = new ArrayList<>();
     private String categoria, base64Image, description;
 
     private int etaMin, etaMax; //Non obbligatori per la creazione di un evento
@@ -54,10 +60,6 @@ public class EventViewModel extends ViewModel {
         return minuti;
     }
 
-    public void setLuogoEv(String address, String city, String civNum, String province, int cap, String data, String ora, int maxPers) {
-        luogoEv.add(new LuogoEv(address, city, civNum, province, cap, data, ora, maxPers));
-    }
-
     public void setLuogoEv(@NonNull LuogoEv luogo) {
         luogoEv.add(luogo);
     }
@@ -68,6 +70,10 @@ public class EventViewModel extends ViewModel {
 
     public void setCategoria(String c) {
         categoria = c;
+    }
+
+    public String getCategoria() {
+        return categoria;
     }
 
     public void setBase64Image(@NonNull String base64Image) {
@@ -100,5 +106,44 @@ public class EventViewModel extends ViewModel {
 
     public int getEtaMax() {
         return etaMax;
+    }
+
+    @NonNull
+    private JSONArray toJSONArray() throws JSONException {
+        JSONArray arr = new JSONArray();
+
+        for(LuogoEv l: luogoEv) {
+            arr.put(l.toJSON(privEvent));
+        }
+
+        return arr;
+    }
+
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONArray arr = new JSONArray();
+            arr.put(giorni);
+            arr.put(ore);
+            arr.put(minuti);
+            jsonObject.put("durata", arr);
+
+            jsonObject.put("categoria", categoria);
+            jsonObject.put("nomeAtt", nomeAtt);
+            jsonObject.put("luogoEv", toJSONArray());
+
+            Log.i("base64", base64Image);
+            jsonObject.put("eventPic", base64Image);
+
+            if(privEvent) {
+                jsonObject.put("descrizione", description);
+                jsonObject.put("etaMin", etaMin);
+                jsonObject.put("etaMax", etaMax);
+            }
+        } catch(JSONException ex) {
+            ex.printStackTrace();
+        }
+
+        return jsonObject;
     }
 }

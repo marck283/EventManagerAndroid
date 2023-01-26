@@ -3,13 +3,15 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +36,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
@@ -62,8 +65,7 @@ public class EventAdditionalInfoFragment extends Fragment {
     private void setImage(Uri uri) {
         if(uri != null) {
             try {
-                final InputStream imageStream = requireActivity().getContentResolver().openInputStream(uri);
-                final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                final Bitmap selectedImage = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
                 updateEventImage(encodeImage(selectedImage));
             } catch(FileNotFoundException ex) {
                 AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
@@ -71,6 +73,8 @@ public class EventAdditionalInfoFragment extends Fragment {
                 dialog.setMessage(getString(R.string.file_not_found));
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 dialog.show();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -84,8 +88,8 @@ public class EventAdditionalInfoFragment extends Fragment {
         } else {
             //Non posso usare PhotoPicker
             Intent intent = new Intent();
-            intent.setType("image/");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.setType("image/jpg");
+            intent.setAction(Intent.ACTION_PICK);
 
             launcher.launch(intent);
         }
@@ -126,6 +130,7 @@ public class EventAdditionalInfoFragment extends Fragment {
 
     public void updateEventImage(String uri) {
         evm.setBase64Image(uri);
+        Log.i("image", uri);
         if(evm.getBase64Image() != null && !evm.getBase64Image().equals("")) {
             Toast t = Toast.makeText(requireActivity(), R.string.add_image_success, Toast.LENGTH_SHORT);
             t.show();
@@ -133,6 +138,14 @@ public class EventAdditionalInfoFragment extends Fragment {
             Toast t = Toast.makeText(requireActivity(), R.string.add_image_no_success, Toast.LENGTH_SHORT);
             t.show();
         }
+    }
+
+    private void setAlertDialog(@StringRes int title, @StringRes int message) {
+        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+        dialog.setTitle(title);
+        dialog.setMessage(getString(message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
     }
 
     @Override
@@ -163,40 +176,34 @@ public class EventAdditionalInfoFragment extends Fragment {
                 evm.setOre(Integer.parseInt(ore));
                 evm.setMinuti(Integer.parseInt(minuti));
             } catch(NumberFormatException ex) {
-                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                dialog.setTitle(R.string.illegal_duration_format);
-                dialog.setMessage(getString(R.string.illegal_duration_format_message));
-                dialog.show();
+                setAlertDialog(R.string.illegal_duration_format, R.string.illegal_duration_format_message);
             }
 
             String image = evm.getBase64Image();
             if(image == null || image.equals("")) {
-                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                dialog.setTitle(R.string.no_event_picture);
-                dialog.setMessage(getString(R.string.missing_event_image));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
+                setAlertDialog(R.string.no_event_picture, R.string.missing_event_image);
             } else {
                 String description1 = evm.getDescription();
                 if(!evm.getPrivEvent() && (description1 == null || description1.equals(""))) {
-                    AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                    dialog.setTitle(R.string.no_event_description);
-                    dialog.setMessage(getString(R.string.missing_event_description));
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    dialog.show();
+                    setAlertDialog(R.string.no_event_description, R.string.missing_event_description);
                 } else {
                     if(evm.getGiorni() < 0 || evm.getOre() < 0 || evm.getMinuti() < 0) {
-                        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                        dialog.setTitle(R.string.wrong_duration);
-                        dialog.setMessage(getString(R.string.wrong_duration_value));
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                        dialog.show();
+                        setAlertDialog(R.string.wrong_duration, R.string.wrong_duration_value);
                     } else {
-                        if(!evm.getPrivEvent()) {
-                            Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
+                        if(evm.getOre() >= 24) {
+                            setAlertDialog(R.string.illegal_hours_value, R.string.illegal_hours_message);
                         } else {
-                            //Poiché l'evento è privato, fai partire la sua creazione da qui...
-                            mViewModel.createPrivateEvent();
+                            if(evm.getMinuti() >= 60) {
+                                setAlertDialog(R.string.illegal_minutes_value, R.string.illegal_minutes_message);
+                            } else {
+                                if(!evm.getPrivEvent()) {
+                                    Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
+                                } else {
+                                    //Poiché l'evento è privato, fai partire la sua creazione da qui...
+                                    SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                                    mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm);
+                                }
+                            }
                         }
                     }
                 }

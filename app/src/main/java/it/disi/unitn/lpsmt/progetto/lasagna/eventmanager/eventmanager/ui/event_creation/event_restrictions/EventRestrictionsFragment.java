@@ -4,7 +4,9 @@ import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,9 +24,12 @@ import android.widget.CheckBox;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.jetbrains.annotations.Contract;
+
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
@@ -38,6 +43,10 @@ public class EventRestrictionsFragment extends Fragment {
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
 
+    private NavigationSharedViewModel nsvm;
+
+    @NonNull
+    @Contract(" -> new")
     public static EventRestrictionsFragment newInstance() {
         return new EventRestrictionsFragment();
     }
@@ -53,6 +62,7 @@ public class EventRestrictionsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(EventRestrictionsViewModel.class);
         evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+        nsvm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
 
         CheckBox etaMin = view.findViewById(R.id.minimumAgeCheckBox), etaMax = view.findViewById(R.id.maximumAgeCheckBox);
         TextInputLayout etaMinLayout = view.findViewById(R.id.minimum_age_text_layout);
@@ -117,7 +127,8 @@ public class EventRestrictionsFragment extends Fragment {
                 setAlertDialog(R.string.illegal_min_age, R.string.min_eta_gt_max_eta_message);
             } else {
                 //Valori OK, ora crea l'evento...
-                mViewModel.createPublicEvent();
+                SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm);
             }
         });
     }

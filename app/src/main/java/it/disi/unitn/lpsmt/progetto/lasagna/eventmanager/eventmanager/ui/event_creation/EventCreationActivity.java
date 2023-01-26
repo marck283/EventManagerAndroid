@@ -1,10 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,14 +59,6 @@ public class EventCreationActivity extends AppCompatActivity {
 
     public EventViewModel getViewModel() {
         return evm;
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    public void onStart() {
-        super.onStart();
-
-        CheckBox box = findViewById(R.id.checkBox);
-        box.setOnCheckedChangeListener((buttonView, isChecked) -> evm.setPrivEvent(isChecked));
     }
 
     private void checkPermission() {
