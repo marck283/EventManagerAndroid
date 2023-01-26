@@ -3,6 +3,8 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
@@ -19,12 +21,15 @@ public class JsonCallback implements Callback<JsonObject> {
     private EventAdapter p1;
     private final RecyclerView mRecyclerView;
 
-    public JsonCallback(String type, RecyclerView view) {
+    private Fragment f;
+
+    public JsonCallback(@Nullable Fragment f, String type, RecyclerView view) {
         this.type = type;
         mRecyclerView = view;
+        this.f = f;
     }
 
-    private void initAdapter(EventList ev) {
+    private void initAdapter(@Nullable Fragment f, EventList ev) {
         switch(type) {
             case "org": {
                 p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
@@ -35,7 +40,7 @@ public class JsonCallback implements Callback<JsonObject> {
                 break;
             }
             case "pub": {
-                p1 = new PubEvAdapter(new EventCallback(), ev.getList());
+                p1 = new PubEvAdapter(f, new EventCallback(), ev.getList());
                 break;
             }
             default: {
@@ -62,7 +67,7 @@ public class JsonCallback implements Callback<JsonObject> {
                 Log.i("orgEvResponse", String.valueOf(response.body()));
                 ev = ev.parseJSON(response.body());
                 if(ev != null && ev.getList().size() > 0) {
-                    initAdapter(ev);
+                    initAdapter(f, ev);
                     if(p1 instanceof OrgEvAdapter) {
                         Log.i("count", String.valueOf(p1.getItemCount()));
                     }
@@ -76,7 +81,7 @@ public class JsonCallback implements Callback<JsonObject> {
             }
         } else {
             Log.i("noResponse", "response is null");
-            initAdapter(new EventList());
+            initAdapter(f, new EventList());
             p1.clearEventList();
             mRecyclerView.setAdapter(p1);
         }

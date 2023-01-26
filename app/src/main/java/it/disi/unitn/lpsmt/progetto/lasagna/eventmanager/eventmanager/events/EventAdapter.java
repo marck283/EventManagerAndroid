@@ -73,6 +73,12 @@ public abstract class EventAdapter extends ListAdapter<Event, EventHolder> {
         holder.bindData(evList.get(position));
     }
 
+    @Override
+    @NonNull
+    public List<Event> getCurrentList() {
+        return evList;
+    }
+
     public void clearEventList() {
         if(evList != null && evList.size() > 0) {
             evList.clear();

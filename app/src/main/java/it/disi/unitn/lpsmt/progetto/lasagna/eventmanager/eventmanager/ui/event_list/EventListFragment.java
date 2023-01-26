@@ -22,12 +22,11 @@ public class EventListFragment extends Fragment {
     private String idToken = "";
     private NavigationSharedViewModel vm;
     private EventSearchViewModel esvm;
-    private String eventName = "", orgName = ""; //Utilizzate per il filtro degli eventi
-    private boolean beginning;
+
+    private String evName = null, orgName = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        beginning = true;
 
         Bundle args = getArguments();
         if (args != null && args.getString("accessToken") != null) {
@@ -35,6 +34,14 @@ public class EventListFragment extends Fragment {
         } else {
             if (savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
                 idToken = savedInstanceState.getString("accessToken");
+            }
+        }
+        if(args != null) {
+            if(args.getString("evName") != null) {
+                evName = args.getString("evName");
+            }
+            if(args.getString("orgName") != null) {
+                orgName = args.getString("orgName");
             }
         }
     }
@@ -47,6 +54,8 @@ public class EventListFragment extends Fragment {
             idToken = savedInstanceState.getString("accessToken");
         }
 
+        root.findViewById(R.id.eventSearch).setOnClickListener(c -> NavHostFragment.findNavController(this).navigate(R.id.action_nav_event_list_to_eventSearchFragment));
+
         return root;
     }
 
@@ -56,8 +65,6 @@ public class EventListFragment extends Fragment {
         vm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
         eventListViewModel = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
         esvm = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
-
-        root.findViewById(R.id.eventSearch).setOnClickListener(c -> NavHostFragment.findNavController(this).navigate(R.id.action_nav_event_list_to_eventSearchFragment));
     }
 
     public void onStart() {
@@ -70,33 +77,10 @@ public class EventListFragment extends Fragment {
             if (rv != null) {
                 rv.invalidate();
             }
-            eventListViewModel.getEvents(root, idToken, null, null);
+            eventListViewModel.getEvents(this, root, idToken, evName, orgName);
         });
 
-        esvm.getOrgName().observe(requireActivity(), o -> {
-            orgName = o;
-            RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-            if (rv != null) {
-                rv.invalidate();
-            }
-
-            if (o.equals("")) {
-                o = null;
-            }
-            eventListViewModel.getEvents(root, idToken, null, o);
-        });
-
-        esvm.getEventName().observe(requireActivity(), o1 -> {
-            RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-            if (rv != null) {
-                rv.invalidate();
-            }
-            if (o1.equals("")) {
-                o1 = null;
-            }
-
-            eventListViewModel.getEvents(root, idToken, o1, null);
-        });
+        eventListViewModel.getEvents(this, root, idToken, evName, orgName);
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {

@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,23 +21,26 @@ public class PublicEvents {
     private final PublicEventsInterface pubEv;
     private final RecyclerView mRecyclerView;
 
+    private Fragment f;
+
     /**
      * Costruisce l'oggetto PublicEvents.
      * @param layout L'istanza di View a cui il costruttore si appoggia per trovare la RecyclerView
      *               a cui agganciare gli eventi ricevuti. Non può essere null.
      */
-    public PublicEvents(@NonNull View layout) {
+    public PublicEvents(@NonNull Fragment f, @NonNull View layout) {
         Retrofit retro = new Retrofit.Builder()
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         pubEv = retro.create(PublicEventsInterface.class);
+        this.f = f;
 
         //Imposto la RecyclerView
         mRecyclerView = layout.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        PubEvAdapter l1 = new PubEvAdapter(new EventCallback());
+        PubEvAdapter l1 = new PubEvAdapter(f, new EventCallback());
         mRecyclerView.setAdapter(l1);
     }
 
@@ -57,6 +61,6 @@ public class PublicEvents {
                           @Nullable String categoria, @Nullable String durata,
                           @Nullable String indirizzo, @Nullable String citta, @Nullable String orgName) {
         Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta, orgName);
-        call.enqueue(new JsonCallback("pub", mRecyclerView));
+        call.enqueue(new JsonCallback(f, "pub", mRecyclerView));
     }
 }

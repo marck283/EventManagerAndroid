@@ -36,6 +36,6 @@ public class PrivateEvents {
 
     public void getPersonalEvents(String authToken, String data) {
         Call<JsonObject> json = privEv.privEv(authToken, data);
-        json.enqueue(new JsonCallback("priv", mRecyclerView));
+        json.enqueue(new JsonCallback(null, "priv", mRecyclerView));
     }
 }

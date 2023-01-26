@@ -13,6 +13,7 @@ import java.util.List;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class PubEvAdapter extends EventAdapter {
     private Fragment f;
@@ -21,16 +22,14 @@ public class PubEvAdapter extends EventAdapter {
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
      * @param pubL La lista di eventi pubblici ottenuta da remoto
      */
-    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> pubL) {
+    public PubEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> pubL) {
         super(diffCallback, pubL);
+        this.f = f;
     }
 
-    public PubEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+    public PubEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
-    }
-
-    public void setFragment(Fragment fragment) {
-        f = fragment;
+        this.f = f;
     }
 
     @NonNull
@@ -42,6 +41,11 @@ public class PubEvAdapter extends EventAdapter {
                 .inflate(R.layout.pub_ev_card_layout, parent, false);
         // Return a new view holder
 
-        return new ViewHolder(view);
+        return new ViewHolder(f, view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull EventHolder holder, int position) {
+        holder.bindData(getCurrentList().get(position));
     }
 }

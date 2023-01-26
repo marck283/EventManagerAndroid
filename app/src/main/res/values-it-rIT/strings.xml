@@ -30,9 +30,9 @@
     <string name="no_connection">Nessuna connessione Internet disponibile</string>
     <string name="no_connection_message">Nessuna connessione Internet disponibile.</string>
     <string name="title_activity_event_creation">Creazione eventi</string>
-    <string name="event_time">Ora inizio:</string>
-    <string name="event_day">Data:</string>
-    <string name="organizer_name">Organizzatore:</string>
+    <string name="event_time">Ora inizio: %1$s</string>
+    <string name="event_day">Data: %1$s</string>
+    <string name="organizer_name">Organizzatore: %1$s</string>
     <string name="event_creation_title">Crea un evento</string>
     <string name="event_name_text_view">Nome dell\'evento</string>
     <string name="speak">Parla</string>

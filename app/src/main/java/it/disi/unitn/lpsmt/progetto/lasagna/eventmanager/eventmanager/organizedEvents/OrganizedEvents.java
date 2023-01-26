@@ -34,6 +34,6 @@ public class OrganizedEvents {
 
     public void getOrgEvents(String authToken, String data) {
         Call<JsonObject> call = orgEv.orgEv(authToken, data);
-        call.enqueue(new JsonCallback("org", mRecyclerView));
+        call.enqueue(new JsonCallback(null, "org", mRecyclerView));
     }
 }

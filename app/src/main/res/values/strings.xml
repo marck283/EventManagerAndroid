@@ -10,7 +10,7 @@
     <string name="user_profile">User profile</string>
     <string name="menu_user_logout">Logout</string>
     <string name="floating_action_button">Create event</string>
-    <string name="event_time">Begins at: </string>
+    <string name="event_time">Begins at: %1$s</string>
     <string name="event_address">Address: %1$s</string>
     <string name="event_picture">Event picture</string>
     <string name="date">Date</string>
@@ -43,8 +43,8 @@
     <string name="second_fragment_label">Event creation</string>
     <string name="previous">Previous</string>
 
-    <string name="event_day">Day:</string>
-    <string name="organizer_name">Organizer:</string>
+    <string name="event_day">Day: %1$s</string>
+    <string name="organizer_name">Organizer: %1$s</string>
     <string name="event_creation_title">Create an event</string>
     <string name="event_name_text_view">Event name</string>
     <string name="speak">Speak</string>
