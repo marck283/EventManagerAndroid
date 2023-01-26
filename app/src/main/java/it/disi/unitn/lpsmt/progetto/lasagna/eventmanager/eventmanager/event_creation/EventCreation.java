@@ -62,7 +62,7 @@ public class EventCreation extends Thread {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 switch(response.code()) {
-                    case 200: {
+                    case 201: {
                         AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
                         dialog.setTitle(R.string.event_creation_ok_title);
                         dialog.setMessage(f.getString(R.string.event_creation_ok_message));

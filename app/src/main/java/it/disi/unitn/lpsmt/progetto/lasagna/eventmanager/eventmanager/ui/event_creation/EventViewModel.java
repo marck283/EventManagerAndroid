@@ -135,7 +135,7 @@ public class EventViewModel extends ViewModel {
             Log.i("base64", base64Image);
             jsonObject.put("eventPic", base64Image);
 
-            if(privEvent) {
+            if(!privEvent) {
                 jsonObject.put("descrizione", description);
                 jsonObject.put("etaMin", etaMin);
                 jsonObject.put("etaMax", etaMax);
