@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.menu_settings.MenuSettingsFragment">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -45,7 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button4"
         android:layout_width="match_parent"
         android:layout_height="80dp"
