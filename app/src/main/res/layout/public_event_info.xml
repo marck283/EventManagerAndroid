@@ -1,186 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteX="-16dp"
-    tools:layout_editor_absoluteY="19dp">
+    tools:context=".ui.event_details.EventDetailsFragment">
 
-    <ImageView
-        android:id="@+id/eventPicture"
-        android:layout_width="410dp"
-        android:layout_height="182dp"
-        android:layout_marginTop="10dp"
-        android:contentDescription="@string/event_picture"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="19dp">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textAlignment="center"
-        android:textSize="16pt"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventPicture" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/date"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout"
-        android:layout_width="409dp"
-        android:layout_height="119dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner">
+        <ImageView
+            android:id="@+id/eventPicture"
+            android:layout_width="410dp"
+            android:layout_height="182dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/event_picture"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="126dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="119dp"
-            android:text="@string/event_info"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            android:textSize="16pt"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/eventPicture" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/date"
             android:textAlignment="center"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/title" />
 
-        <TextView
-            android:id="@+id/duration"
-            android:layout_width="167dp"
-            android:layout_height="34dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="85dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="0dp"
-            android:text="@string/duration" />
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="409dp"
+            android:layout_height="119dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner">
 
-        <TextView
-            android:id="@+id/organizerName"
-            android:layout_width="179dp"
-            android:layout_height="34dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="52dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="-21dp"
-            android:layout_marginBottom="0dp"
-            android:layout_toStartOf="@+id/duration"
-            android:text="@string/organizer" />
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="126dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="119dp"
+                android:text="@string/event_info"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/event_address"
-            android:layout_width="wrap_content"
-            android:layout_height="57dp"
-            android:layout_above="@+id/organizerName"
-            android:layout_below="@+id/textView14"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="-18dp"
-            android:text="@string/event_address"
-            android:textAlignment="center" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/duration"
+                android:layout_width="167dp"
+                android:layout_height="34dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="85dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="0dp"
+                android:text="@string/duration" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/spinner"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
-        android:layout_width="159dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="16dp"
-        android:hint="@string/day"
-        android:labelFor="@+id/actv"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        app:layout_constraintEnd_toStartOf="@+id/dateArray"
-        app:layout_constraintHorizontal_bias="0.769"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7">
+            <TextView
+                android:id="@+id/organizerName"
+                android:layout_width="179dp"
+                android:layout_height="34dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="-21dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toStartOf="@+id/duration"
+                android:text="@string/organizer" />
 
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-            android:id="@+id/actv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/event_address"
+                android:layout_width="wrap_content"
+                android:layout_height="57dp"
+                android:layout_above="@+id/organizerName"
+                android:layout_below="@+id/textView14"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="-18dp"
+                android:text="@string/event_address"
+                android:textAlignment="center" />
+        </RelativeLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dateArray"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
-        android:layout_width="135dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        android:hint="@string/time"
-        android:labelFor="@+id/actv1"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/spinner"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="159dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="16dp"
+            android:hint="@string/day"
+            android:labelFor="@+id/actv"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            app:layout_constraintEnd_toStartOf="@+id/dateArray"
+            app:layout_constraintHorizontal_bias="0.769"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7">
 
-        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-            android:id="@+id/actv1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="none" />
-    </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/actv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <RelativeLayout
-        android:id="@+id/buttons_layout"
-        android:layout_width="411dp"
-        android:layout_height="115dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dateArray"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="135dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="40dp"
+            android:hint="@string/time"
+            android:labelFor="@+id/actv1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7">
 
-        <Button
-            android:id="@+id/show_ratings"
-            android:layout_width="158dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="51dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="14dp"
-            android:layout_toStartOf="@+id/sign_up_button"
-            android:text="@string/show_reviews" />
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/actv1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/sign_up_button"
-            android:layout_width="133dp"
-            android:layout_height="59dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="11dp"
-            android:layout_marginEnd="53dp"
-            android:text="@string/public_event_sign_up" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/buttons_layout"
+            android:layout_width="411dp"
+            android:layout_height="115dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:id="@+id/show_ratings"
+                android:layout_width="158dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="51dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="14dp"
+                android:layout_toStartOf="@+id/sign_up_button"
+                android:text="@string/show_reviews" />
+
+            <Button
+                android:id="@+id/sign_up_button"
+                android:layout_width="133dp"
+                android:layout_height="59dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="11dp"
+                android:layout_marginEnd="53dp"
+                android:text="@string/public_event_sign_up" />
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
