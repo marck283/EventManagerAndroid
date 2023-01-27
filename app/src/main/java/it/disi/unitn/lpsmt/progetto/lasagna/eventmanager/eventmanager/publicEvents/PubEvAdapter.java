@@ -16,7 +16,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class PubEvAdapter extends EventAdapter {
-    private Fragment f;
+    private final Fragment f;
 
     /**
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
