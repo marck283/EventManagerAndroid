@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModel;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.OrganizedEventInfo;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.EventInfoCall;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event_registration.UserEventRegistration;
 
@@ -22,7 +23,10 @@ public class EventDetailsViewModel extends ViewModel {
                 //Qualcosa
             }
             case "org": {
-                c.getEventInfo("org", eventId, view, f, userJwt);
+                if(userJwt != null) {
+                    OrganizedEventInfo orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId);
+                    orgEvInfo.start();
+                }
                 break;
             }
         }
