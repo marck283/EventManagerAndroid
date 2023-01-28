@@ -15,7 +15,7 @@
 
         <ImageView
             android:id="@+id/eventPicture"
-            android:layout_width="410dp"
+            android:layout_width="match_parent"
             android:layout_height="182dp"
             android:layout_marginTop="10dp"
             android:contentDescription="@string/event_picture"

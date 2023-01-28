@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent;
 
 import android.location.Address;
 
@@ -51,7 +51,12 @@ public class LuogoEvento extends Address {
         this.maxPers = maxPers;
         this.data = data;
         this.ora = ora;
-        postiRimanenti = maxPers - numPosti;
+
+        if(maxPers > 0) {
+            postiRimanenti = maxPers - numPosti;
+        } else {
+            postiRimanenti = 0;
+        }
     }
 
     public static String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject eo, @NonNull String name) {
@@ -61,7 +66,11 @@ public class LuogoEvento extends Address {
     @NonNull
     public static LuogoEvento parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
-        int maxPers = Integer.parseInt(fromJsonString(gs1, json, "maxPers"));
+
+        int maxPers = 0;
+        if(json.get("maxPers") != null) {
+            maxPers = Integer.parseInt(fromJsonString(gs1, json, "maxPers"));
+        }
 
         return new LuogoEvento(fromJsonString(gs1, json, "indirizzo"),
                 fromJsonString(gs1, json, "civNum"),

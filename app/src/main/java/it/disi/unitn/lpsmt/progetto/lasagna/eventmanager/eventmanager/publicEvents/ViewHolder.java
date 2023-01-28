@@ -19,7 +19,7 @@ public class ViewHolder extends EventHolder {
 
     private final View itemView;
 
-    private Fragment f;
+    private final Fragment f;
 
     public ViewHolder(@NonNull Fragment f, @NonNull View itemView) {
         super(itemView);

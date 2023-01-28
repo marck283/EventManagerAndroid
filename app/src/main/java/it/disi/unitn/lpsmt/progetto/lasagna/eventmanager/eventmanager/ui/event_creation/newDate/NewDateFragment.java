@@ -48,9 +48,9 @@ public class NewDateFragment extends DialogFragment {
                 int substr = Integer.parseInt(beginDate.substring(6));
                 if(substr%400 == 0 || (substr%100 == 0 && substr%4 != 0)) {
                     //Anno bisestile
-                    pattern = Pattern.compile("(([0-2][1-9]/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9][0-9]{3}");
+                    pattern = Pattern.compile("(([0-2][1-9]/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9]\\d{3}");
                 } else {
-                    pattern = Pattern.compile("(([0-2][1-8]/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9][0-9]{3}");
+                    pattern = Pattern.compile("(([0-2][1-8]/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9]\\d{3}");
                 }
                 if(pattern.matcher(beginDate).find()) {
                     SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
@@ -65,11 +65,7 @@ public class NewDateFragment extends DialogFragment {
                         beginDate = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
                         mViewModel.setData(beginDate);
                     } else {
-                        AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
-                        ad.setTitle(R.string.wrong_date);
-                        ad.setMessage(getString(R.string.date_less_than_current_date));
-                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                        ad.show();
+                        setAlertDialog(R.string.wrong_date, getString(R.string.date_less_than_current_date));
                     }
                     return over;
                 } else {
@@ -87,7 +83,7 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseBeginHour(@NonNull EditText t1) {
-        if(Pattern.compile("([0-1][0-9]|2[0-3]):[0-5][0-9]").matcher(String.valueOf(t1.getText())).matches()) {
+        if(Pattern.compile("([0-1]\\d|2[0-3]):[0-5]\\d").matcher(String.valueOf(t1.getText())).matches()) {
             mViewModel.setOra(String.valueOf(t1.getText()));
             return true;
         }
@@ -100,7 +96,7 @@ public class NewDateFragment extends DialogFragment {
             return true;
         }
 
-        Pattern pattern = Pattern.compile("[1-9][0-9]*");
+        Pattern pattern = Pattern.compile("[1-9]\\d*");
         try {
             if (pattern.matcher(String.valueOf(t3.getText())).find()) {
                 mViewModel.setPosti(Integer.parseInt(String.valueOf(t3.getText())));

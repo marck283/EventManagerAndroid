@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_c
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
 import org.jetbrains.annotations.Contract;
@@ -19,12 +20,12 @@ public class EventDialogViewModel extends ViewModel {
         return s;
     }
 
-    public void getEvents(String authToken, int d, int m, int y, ConstraintLayout l) {
+    public void getEvents(@NonNull Fragment f, String authToken, int d, int m, int y, ConstraintLayout l) {
         String data = padStart(String.valueOf(m)) + "-" + padStart(String.valueOf(y)) + "-" + d;
 
         //Parallelizzo le chiamate per ottenere gli eventi organizzati dall'utente che sta visualizzando il calendario
         // e quelli a cui partecipa.
-        OrganizedEvents orgEv = new OrganizedEvents(l);
+        OrganizedEvents orgEv = new OrganizedEvents(f, l);
         orgEv.getOrgEvents(authToken, data);
 
         PrivateEvents privEv = new PrivateEvents(l);

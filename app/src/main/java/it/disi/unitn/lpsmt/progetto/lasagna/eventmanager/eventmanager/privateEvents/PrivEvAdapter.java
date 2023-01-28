@@ -47,7 +47,7 @@ public class PrivEvAdapter extends EventAdapter {
     @NonNull
     public PrivEvViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.event_dialog_text_view, parent, false);
+                .inflate(R.layout.event_dialog_button, parent, false);
         // Return a new view holder
 
         return new PrivEvViewHolder(view);

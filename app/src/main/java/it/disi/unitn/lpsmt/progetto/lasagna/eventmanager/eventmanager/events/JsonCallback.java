@@ -21,7 +21,7 @@ public class JsonCallback implements Callback<JsonObject> {
     private EventAdapter p1;
     private final RecyclerView mRecyclerView;
 
-    private Fragment f;
+    private final Fragment f;
 
     public JsonCallback(@Nullable Fragment f, String type, RecyclerView view) {
         this.type = type;
@@ -32,7 +32,7 @@ public class JsonCallback implements Callback<JsonObject> {
     private void initAdapter(@Nullable Fragment f, EventList ev) {
         switch(type) {
             case "org": {
-                p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
+                p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList());
                 break;
             }
             case "priv": {
@@ -40,7 +40,9 @@ public class JsonCallback implements Callback<JsonObject> {
                 break;
             }
             case "pub": {
-                p1 = new PubEvAdapter(f, new EventCallback(), ev.getList());
+                if(f != null) {
+                    p1 = new PubEvAdapter(f, new EventCallback(), ev.getList());
+                }
                 break;
             }
             default: {

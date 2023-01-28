@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.eventReviews;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.eventReviews;
 
 import android.util.Log;
 import android.view.View;
@@ -24,8 +24,8 @@ import okhttp3.ResponseBody;
 
 public class ReviewsRequest extends Thread {
     private final OkHttpClient client = new OkHttpClient();
-    private String eventId = "";
-    private RecyclerView rv;
+    private final String eventId;
+    private final RecyclerView rv;
     private final Request request;
     private ReviewAdapter adapter;
     private final ReviewsFragment f;

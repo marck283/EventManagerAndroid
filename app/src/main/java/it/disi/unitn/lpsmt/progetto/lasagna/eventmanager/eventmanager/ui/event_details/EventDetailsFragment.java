@@ -76,7 +76,7 @@ public class EventDetailsFragment extends Fragment {
 
         switch(screenType) {
             case "pub": {
-                mViewModel.getEventInfo("pub", eventId, view, this);
+                mViewModel.getEventInfo("pub", eventId, view, this, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
@@ -103,7 +103,7 @@ public class EventDetailsFragment extends Fragment {
                 //Qualcosa
             }
             case "org": {
-                //Qualcosa
+                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue());
             }
         }
     }

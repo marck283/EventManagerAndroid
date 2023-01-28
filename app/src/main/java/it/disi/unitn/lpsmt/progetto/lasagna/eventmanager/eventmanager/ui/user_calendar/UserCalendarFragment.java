@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
@@ -38,11 +39,12 @@ public class UserCalendarFragment extends Fragment {
 
         CalendarView v = view.findViewById(R.id.calendarView);
         v.setOnDateChangeListener((v1, d, m, y) -> {
-            FragmentManager m1 = getChildFragmentManager();
-            FragmentTransaction t = m1.beginTransaction();
-            EventDialog e = EventDialog.newInstance(vm.getToken().getValue(), d, m + 1, y);
-            t.add(e, "");
-            t.commit();
+            Bundle b = new Bundle();
+            b.putString("idToken", vm.getToken().getValue());
+            b.putInt("day", d);
+            b.putInt("month", m + 1);
+            b.putInt("year", y);
+            Navigation.findNavController(view).navigate(R.id.action_nav_user_calendar_to_user_calendar_dialog, b);
         });
     }
 }

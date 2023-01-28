@@ -5,7 +5,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.eventReviews.ReviewsRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.eventReviews.ReviewsRequest;
 
 public class ReviewsViewModel extends ViewModel {
     public void getReviews(@NonNull ReviewsFragment f, @NonNull View layout, String eventId) {

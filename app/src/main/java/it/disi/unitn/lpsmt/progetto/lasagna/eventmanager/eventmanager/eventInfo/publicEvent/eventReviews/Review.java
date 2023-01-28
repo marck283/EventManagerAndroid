@@ -1,16 +1,12 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.eventReviews;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.eventReviews;
 
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 
 public class Review implements Serializable {
-    private String userName, userPic, description;
-    private float rating; //Rating in decimi
+    private final String userName, userPic, description;
+    private final float rating; //Rating in decimi
 
     public Review(String userName, String userPic, String description, float rating) {
         this.userName = userName;

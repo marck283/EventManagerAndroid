@@ -53,6 +53,6 @@ public class EventDialog extends DialogFragment {
 
     public void onStart() {
         super.onStart();
-        vm.getEvents(idToken, d, m, y, root.findViewById(R.id.dialog_constraintLayout));
+        vm.getEvents(this, idToken, d, m, y, root.findViewById(R.id.dialog_constraintLayout));
     }
 }
