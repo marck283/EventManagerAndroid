@@ -184,4 +184,12 @@
     <string name="unauthorized">Utente non autorizzato</string>
     <string name="log_in_to_authorize">Per creare un evento devi essere autenticato al sistema. Riprova dopo aver eseguito l\'accesso.</string>
     <string name="retry_later">Si è verificato un errore interno al server. Si prega di riprovare più tardi.</string>
+    <string name="qr_code_ok">Biglietto valido</string>
+    <string name="qr_code_ok_message">Questo biglietto è valido.</string>
+    <string name="qr_code_invalid">Biglietto non valido</string>
+    <string name="qr_error_message">Questo biglietto non è valido.</string>
+    <string name="unauthorized_attempt">Non autorizzato</string>
+    <string name="unauthorized_attempt_message">Non sei autorizzato ad eseguire questa azione.</string>
+    <string name="attempt_ok">Operazione completata</string>
+    <string name="attempt_ok_message">L\'evento è terminato.</string>
 </resources>

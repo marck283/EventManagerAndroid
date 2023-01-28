@@ -1,7 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details;
 
+import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,8 +17,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.button_callbacks.OrganizerCallback;
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -68,6 +77,14 @@ public class EventDetailsFragment extends Fragment {
         return null;
     }
 
+    private void setAlertDialog(@StringRes int title, @StringRes int message) {
+        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+        dialog.setTitle(title);
+        dialog.setMessage(getString(message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -104,6 +121,69 @@ public class EventDetailsFragment extends Fragment {
             }
             case "org": {
                 mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue());
+
+                Button qrCodeScan = view.findViewById(R.id.button8);
+                qrCodeScan.setOnClickListener(c -> Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_QRCodeScan));
+
+                Button terminaEvento = view.findViewById(R.id.button12);
+                terminaEvento.setOnClickListener(c -> {
+                    try {
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .addHeader("x-access-token", Objects.requireNonNull(nvm.getToken().getValue()))
+                                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId)
+                                .build();
+                        client.newCall(request).enqueue(new OrganizerCallback() {
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                                switch(response.code()) {
+                                    case 403: {
+                                        setAlertDialog(R.string.unauthorized_attempt, R.string.unauthorized_attempt_message);
+                                        break;
+                                    }
+                                    case 200: {
+                                        setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
+
+                                        //Ora disabilita tutti i bottoni della schermata...
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                    } catch(NullPointerException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+                Button annullaEvento = view.findViewById(R.id.button13);
+                annullaEvento.setOnClickListener(c -> {
+                    try {
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .addHeader("x-access-token", Objects.requireNonNull(nvm.getToken().getValue()))
+                                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/annullaEvento")
+                                .build();
+                        client.newCall(request).enqueue(new OrganizerCallback() {
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                                switch(response.code()) {
+                                    case 403: {
+                                        setAlertDialog(R.string.unauthorized_attempt, R.string.unauthorized_attempt_message);
+                                        break;
+                                    }
+                                    case 200: {
+                                        setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
+
+                                        //Ora torna al Fragment precedente...
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                    } catch(NullPointerException ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
         }
     }

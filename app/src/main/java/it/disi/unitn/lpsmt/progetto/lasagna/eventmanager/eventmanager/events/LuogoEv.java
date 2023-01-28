@@ -1,7 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
 import android.location.Address;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -64,7 +63,6 @@ public class LuogoEv extends Address {
         Gson gs1 = new GsonBuilder().create();
         int maxPers = Integer.parseInt(fromJsonString(gs1, json, "maxPers"));
 
-        Log.i("numPostiRimanenti1", String.valueOf(json.getAsJsonArray("partecipantiID").size()));
         return new LuogoEv(fromJsonString(gs1, json, "indirizzo"),
                 fromJsonString(gs1, json, "civNum"),
                 Integer.parseInt(fromJsonString(gs1, json, "cap")),

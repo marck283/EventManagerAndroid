@@ -13,6 +13,7 @@
         android:name="com.google.android.gms.permission.AD_ID"
         tools:node="remove" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:enableOnBackInvokedCallback="true"
@@ -25,6 +26,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light"
         tools:targetApi="33">
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="barcode" />
         <activity
             android:name=".ui.event_creation.EventCreationActivity"
             android:exported="false"

@@ -196,4 +196,12 @@
     <string name="unauthorized">Unauthorized</string>
     <string name="log_in_to_authorize">In order to create an event, you need to be logged into the system.</string>
     <string name="retry_later">An internal server error has occurred. Please try again later.</string>
+    <string name="qr_code_ok">Valid ticket</string>
+    <string name="qr_code_ok_message">This is a valid ticket.</string>
+    <string name="qr_code_invalid">Invalid ticket</string>
+    <string name="qr_error_message">This ticket is not valid.</string>
+    <string name="unauthorized_attempt">Unauthorized</string>
+    <string name="unauthorized_attempt_message">You are not authorized to perform this action.</string>
+    <string name="attempt_ok">Operation successful</string>
+    <string name="attempt_ok_message">The event is now over.</string>
 </resources>

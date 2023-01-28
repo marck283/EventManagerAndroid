@@ -94,6 +94,9 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_reviewsFragment"
             app:destination="@id/reviewsFragment" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_QRCodeScan"
+            app:destination="@id/QRCodeScan" />
     </fragment>
     <dialog
         android:id="@+id/eventSearchFragment"
@@ -118,5 +121,10 @@
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.FullReviewFragment"
         android:label="@string/full_review_fragment"
         tools:layout="@layout/fragment_full_review" />
+    <fragment
+        android:id="@+id/QRCodeScan"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scanning.QRCodeScan"
+        android:label="fragment_q_r_code_scan"
+        tools:layout="@layout/fragment_q_r_code_scan" />
 
 </navigation>
