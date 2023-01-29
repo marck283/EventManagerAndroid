@@ -1,8 +1,10 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.event_creation;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Looper;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -22,19 +24,34 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class EventCreation extends Thread {
-    private String userJwt;
+    private final String userJwt;
 
-    private EventViewModel evm;
+    private final EventViewModel evm;
 
-    private OkHttpClient client;
+    private final OkHttpClient client;
 
-    private Fragment f;
+    private final Fragment f;
+
+    private final ActivityResultLauncher<Intent> i;
+    private final Intent loginIntent;
 
     public EventCreation(@NonNull Fragment f, @NonNull String jwt, @NonNull EventViewModel evm) {
         userJwt = jwt;
         this.evm = evm;
         client = new OkHttpClient();
         this.f = f;
+        i = null;
+        loginIntent = null;
+    }
+
+    public EventCreation(@NonNull Fragment f, @NonNull String jwt, @NonNull EventViewModel evm,
+                         @NonNull ActivityResultLauncher<Intent> i, @NonNull Intent loginIntent) {
+        userJwt = jwt;
+        this.evm = evm;
+        client = new OkHttpClient();
+        this.f = f;
+        this.i = i;
+        this.loginIntent = loginIntent;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -76,7 +93,7 @@ public class EventCreation extends Thread {
             }
 
             @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 switch(response.code()) {
                     case 201: {
                         setAlertDialog(R.string.event_creation_ok_title, R.string.event_creation_ok_message);
@@ -84,7 +101,10 @@ public class EventCreation extends Thread {
                     }
 
                     case 401: {
-                        setAlertDialog(R.string.unauthorized, R.string.log_in_to_authorize);
+                        //setAlertDialog(R.string.unauthorized, R.string.log_in_to_authorize);
+                        if(i != null) {
+                            i.launch(loginIntent);
+                        }
                         break;
                     }
 

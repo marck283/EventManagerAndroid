@@ -21,7 +21,7 @@ public class PublicEvents {
     private final PublicEventsInterface pubEv;
     private final RecyclerView mRecyclerView;
 
-    private Fragment f;
+    private final Fragment f;
 
     /**
      * Costruisce l'oggetto PublicEvents.

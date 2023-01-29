@@ -1,13 +1,14 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
@@ -18,6 +19,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentica
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +37,8 @@ public class Authentication {
         authentication = retro.create(ServerAuthentication.class);
     }
 
-    public void login(@NonNull Activity a, @NonNull String csrfToken, @Nullable String googleJwt, @Nullable AccessToken fbJwt, @NonNull String which) {
+    public void login(@NonNull Activity a, @NonNull String csrfToken, @Nullable String googleJwt,
+                      @Nullable AccessToken fbJwt, @NonNull String which, @Nullable Intent i) {
         Call<JsonObject> auth;
         if(which.equals("google")) {
             if(googleJwt == null || googleJwt.equals("")) {
@@ -74,8 +77,13 @@ public class Authentication {
                     final String email = info.getEmail(), profilePic = info.getProfilePic();
                     if(a instanceof NavigationDrawerActivity) {
                         a.runOnUiThread(() -> ((NavigationDrawerActivity)a).updateUI("login", email, profilePic));
+                        ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
+                    } else {
+                        if(a instanceof LoginActivity) {
+                            a.setResult(Activity.RESULT_OK, i);
+                            a.finish();
+                        }
                     }
-
                     SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("accessToken", info.getToken());
@@ -101,7 +109,7 @@ public class Authentication {
                         dialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
                         dialog.show();
                     }
-                    if (response.body() != null && response.code() == 401 && which.equals("google")) {
+                    if (response.code() == 401 && which.equals("google")) {
                         GSignIn signIn = new GSignIn(a);
                         signIn.signIn(a, 2);
                     }

@@ -101,15 +101,18 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject jsonObject = graphResponse.getJSONObject();
                             if(jsonObject != null) {
                                 Profile p = new Profile(jsonObject);
-                                CsrfToken token = new CsrfToken();
-                                token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook");
 
                                 // Riscrivere questa parte e metodo setupIntent() in modo da sincronizzare
                                 // la modifica del token di accesso nelle SharedPreferences con la NavigationDrawerActivity...
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
-                                i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail", jsonObject.getString("email"));
+                                i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",
+                                        jsonObject.getString("email"));
                                 i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
                                         jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));
+
+                                CsrfToken token = new CsrfToken();
+                                token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook", i);
+
                                 Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
                                 setResult(Activity.RESULT_OK, i);
                             } else {
@@ -190,8 +193,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = setUpIntent("google", null);
             CsrfToken token = new CsrfToken();
             signIn.setAccount(completedTask.getResult());
-            token.getCsrfToken(this, new Authentication(), signIn.getAccount().getIdToken(), null, "google");
-            setResult(Activity.RESULT_OK, intent);
+            token.getCsrfToken(this, new Authentication(), signIn.getAccount().getIdToken(), null, "google", intent);
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
@@ -200,9 +202,9 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("info1", String.valueOf(signIn.getAccount() != null));
             //Not signed in, so return to caller with null results
             setResult(Activity.RESULT_CANCELED);
+            finish();
         } finally {
             t2.close();
-            finish();
         }
     }
 

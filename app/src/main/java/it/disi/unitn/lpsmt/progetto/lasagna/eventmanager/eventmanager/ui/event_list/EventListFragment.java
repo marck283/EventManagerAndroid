@@ -79,8 +79,6 @@ public class EventListFragment extends Fragment {
             }
             eventListViewModel.getEvents(this, root, idToken, evName, orgName);
         });
-
-        //eventListViewModel.getEvents(this, root, idToken, evName, orgName);
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {

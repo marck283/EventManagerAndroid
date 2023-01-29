@@ -30,6 +30,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.facebook.Profile;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.Contract;
@@ -47,6 +50,9 @@ public class EventAdditionalInfoFragment extends Fragment {
     private EventViewModel evm;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private boolean pickerAvailable = false;
+
+    private View view;
+    private ActivityResultLauncher<Intent> loginLauncher;
 
     @NonNull
     @Contract(" -> new")
@@ -88,7 +94,7 @@ public class EventAdditionalInfoFragment extends Fragment {
         } else {
             //Non posso usare PhotoPicker
             Intent intent = new Intent();
-            intent.setType("image/jpg");
+            intent.setType("image/");
             intent.setAction(Intent.ACTION_PICK);
 
             launcher.launch(intent);
@@ -101,12 +107,21 @@ public class EventAdditionalInfoFragment extends Fragment {
             pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::setImage);
             pickerAvailable = true;
         }
+
+        loginLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if(result != null && result.getData() != null) {
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                        String jwt = prefs.getString("accessToken", "");
+                        mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
+                    }
+                });
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.event_creation_additional_information, container, false);
+        view = inflater.inflate(R.layout.event_creation_additional_information, container, false);
 
         FloatingActionButton selectImage = view.findViewById(R.id.imageSelector);
         if(selectImage != null) {
@@ -131,13 +146,13 @@ public class EventAdditionalInfoFragment extends Fragment {
     public void updateEventImage(String uri) {
         evm.setBase64Image(uri);
         Log.i("image", uri);
+        Toast t;
         if(evm.getBase64Image() != null && !evm.getBase64Image().equals("")) {
-            Toast t = Toast.makeText(requireActivity(), R.string.add_image_success, Toast.LENGTH_SHORT);
-            t.show();
+            t = Toast.makeText(requireActivity(), R.string.add_image_success, Toast.LENGTH_SHORT);
         } else {
-            Toast t = Toast.makeText(requireActivity(), R.string.add_image_no_success, Toast.LENGTH_SHORT);
-            t.show();
+            t = Toast.makeText(requireActivity(), R.string.add_image_no_success, Toast.LENGTH_SHORT);
         }
+        t.show();
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -148,14 +163,7 @@ public class EventAdditionalInfoFragment extends Fragment {
         dialog.show();
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(EventAdditionalInfoViewModel.class);
-        evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-
-        Log.i("private", String.valueOf(evm.getPrivEvent()));
-
+    private void sendRequest(@NonNull View view) {
         EditText description = view.findViewById(R.id.event_description);
         if(evm.getPrivEvent()) {
             description.setVisibility(View.INVISIBLE);
@@ -165,7 +173,7 @@ public class EventAdditionalInfoFragment extends Fragment {
         forward.setOnClickListener(c -> {
             String giorni, ore, minuti, descrizione = description.getText().toString();
             EditText editGiorni = view.findViewById(R.id.duration_days), editOre = view.findViewById(R.id.duration_hours),
-            editMins = view.findViewById(R.id.duration_mins);
+                    editMins = view.findViewById(R.id.duration_mins);
             giorni = editGiorni.getText().toString();
             ore = editOre.getText().toString();
             minuti = editMins.getText().toString();
@@ -201,7 +209,7 @@ public class EventAdditionalInfoFragment extends Fragment {
                                 } else {
                                     //Poiché l'evento è privato, fai partire la sua creazione da qui...
                                     SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                                    mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm);
+                                    mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
                                 }
                             }
                         }
@@ -209,6 +217,17 @@ public class EventAdditionalInfoFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewModel = new ViewModelProvider(this).get(EventAdditionalInfoViewModel.class);
+        evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
+
+        Log.i("private", String.valueOf(evm.getPrivEvent()));
+
+        sendRequest(view);
     }
 
 }

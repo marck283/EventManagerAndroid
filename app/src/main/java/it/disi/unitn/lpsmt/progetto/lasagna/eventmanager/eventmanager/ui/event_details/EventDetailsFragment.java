@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +24,12 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -78,11 +82,14 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
+        Looper.prepare();
         AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
         dialog.setTitle(title);
         dialog.setMessage(getString(message));
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
         dialog.show();
+        Looper.loop();
+        Looper.getMainLooper().quitSafely();
     }
 
     @Override
@@ -132,6 +139,7 @@ public class EventDetailsFragment extends Fragment {
                         Request request = new Request.Builder()
                                 .addHeader("x-access-token", Objects.requireNonNull(nvm.getToken().getValue()))
                                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId)
+                                //.post()
                                 .build();
                         client.newCall(request).enqueue(new OrganizerCallback() {
                             @Override
@@ -177,8 +185,7 @@ public class EventDetailsFragment extends Fragment {
                                     }
                                     case 200: {
                                         setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
-
-                                        //Ora torna al Fragment precedente...
+                                        Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_user_calendar_dialog);
                                         break;
                                     }
                                 }

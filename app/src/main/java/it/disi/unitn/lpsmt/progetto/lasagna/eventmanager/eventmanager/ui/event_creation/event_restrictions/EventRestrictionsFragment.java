@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.event_restrictions;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -44,6 +46,8 @@ public class EventRestrictionsFragment extends Fragment {
     private Intent speechRecognizerIntent;
 
     private NavigationSharedViewModel nsvm;
+
+    private ActivityResultLauncher<Intent> loginLauncher;
 
     @NonNull
     @Contract(" -> new")
@@ -116,6 +120,15 @@ public class EventRestrictionsFragment extends Fragment {
             });
         }
 
+        loginLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if(result != null && result.getData() != null) {
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                        String jwt = prefs.getString("accessToken", "");
+                        mViewModel.createPublicEvent(this, jwt, evm, loginLauncher);
+                    }
+                });
+
         Button createEvent = view.findViewById(R.id.createEvent);
         createEvent.setOnClickListener(c -> {
             TextInputEditText etaMinEdit = view.findViewById(R.id.minimum_age_text_view),
@@ -128,7 +141,7 @@ public class EventRestrictionsFragment extends Fragment {
             } else {
                 //Valori OK, ora crea l'evento...
                 SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm);
+                mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm, null);
             }
         });
     }

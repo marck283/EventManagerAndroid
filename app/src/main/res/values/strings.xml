@@ -204,4 +204,6 @@
     <string name="unauthorized_attempt_message">You are not authorized to perform this action.</string>
     <string name="attempt_ok">Operation successful</string>
     <string name="attempt_ok_message">The event is now over.</string>
+    <string name="user_not_logged_in">User not authenticated</string>
+    <string name="user_not_logged_in_message">Your session has expired. Please consider logging in again.</string>
 </resources>

@@ -180,7 +180,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
             if(userAccount != null) {
                 CsrfToken token = new CsrfToken();
-                token.getCsrfToken(this, new Authentication(), userAccount.getIdToken(), null, "google");
+                token.getCsrfToken(this, new Authentication(), userAccount.getIdToken(), null, "google", null);
             } else {
                 updateUI("logout", null, null);
                 if(prompt) {
@@ -203,7 +203,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
             if(jsonObject != null) {
                 CsrfToken token = new CsrfToken();
-                token.getCsrfToken(this, new Authentication(), null, accessToken, "facebook");
+                token.getCsrfToken(this, new Authentication(), null, accessToken, "facebook", null);
             } else {
                 updateUI("logout", null, null);
             }

@@ -192,4 +192,6 @@
     <string name="unauthorized_attempt_message">Non sei autorizzato ad eseguire questa azione.</string>
     <string name="attempt_ok">Operazione completata</string>
     <string name="attempt_ok_message">L\'evento è terminato.</string>
+    <string name="user_not_logged_in">Utente non autenticato</string>
+    <string name="user_not_logged_in_message">La sessione corrente è terminata. Si prega di autenticarsi nuovamente al sistema.</string>
 </resources>
