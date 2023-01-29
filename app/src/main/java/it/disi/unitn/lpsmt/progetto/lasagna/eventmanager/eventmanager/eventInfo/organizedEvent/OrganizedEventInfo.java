@@ -15,21 +15,20 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class OrganizedEventInfo extends Thread {
-    private OkHttpClient client;
+    private final OkHttpClient client;
 
-    private String userJwt;
-    private String eventId;
+    private final String userJwt, eventId;
 
-    private View v;
+    private final View v;
 
-    private Fragment f;
+    private final Fragment f;
 
     public OrganizedEventInfo(@NonNull View v, @NonNull Fragment f, @NonNull String userJwt, @NonNull String evId) {
         client = new OkHttpClient();
@@ -44,16 +43,7 @@ public class OrganizedEventInfo extends Thread {
                 .addHeader("x-access-token", userJwt)
                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/InfoEventoOrg/" + eventId)
                 .build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                try {
-                    throw e;
-                } catch (Throwable e1) {
-                    e1.printStackTrace();
-                }
-            }
-
+        client.newCall(request).enqueue(new OrganizerCallback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 Gson gson = new Gson();

@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.button_callbacks;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks;
 
 import androidx.annotation.NonNull;
 
@@ -19,5 +19,5 @@ public abstract class OrganizerCallback implements Callback {
     }
 
     @Override
-    public abstract void onResponse(@NonNull Call call, @NonNull Response response);
+    public abstract void onResponse(@NonNull Call call, @NonNull Response response) throws IOException;
 }

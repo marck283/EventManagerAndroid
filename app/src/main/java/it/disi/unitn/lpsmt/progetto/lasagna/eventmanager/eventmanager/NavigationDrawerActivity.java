@@ -38,11 +38,11 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONException;
-
 import java.util.List;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration.AccountIntegration;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
@@ -177,10 +177,12 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     updateUI("logout", null, null);
                 }
             }
+
             if(userAccount != null) {
-                updateUI("login", null, null);
+                CsrfToken token = new CsrfToken();
+                token.getCsrfToken(this, new Authentication(), userAccount.getIdToken(), null, "google");
             } else {
-                Log.i("profileNull", "Profile null");
+                updateUI("logout", null, null);
                 if(prompt) {
                     setAlertDialog(false);
                 }
@@ -200,12 +202,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         parameters.putString("fields", "id,name,picture,email");
         GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
             if(jsonObject != null) {
-                try {
-                    updateUI("login", jsonObject.getString("email"),
-                            jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
+                CsrfToken token = new CsrfToken();
+                token.getCsrfToken(this, new Authentication(), null, accessToken, "facebook");
+            } else {
+                updateUI("logout", null, null);
             }
         });
         req.setParameters(parameters);
@@ -248,7 +248,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         email.setText("");
     }
 
-    private void updateUI(@NonNull String request, @Nullable String emailF, String pictureF) {
+    public void updateUI(@NonNull String request, @Nullable String emailF, String pictureF) {
         navView.getMenu().clear();
 
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
@@ -287,7 +287,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             Glide.with(l.getContext()).load(acc.getPhotoUrl()).apply(new RequestOptions().override(ivwidth, ivheight))
                     .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
         }
-        //nc.unregisterNetworkCallback();
     }
 
     public void revokeAccess(MenuItem item) {

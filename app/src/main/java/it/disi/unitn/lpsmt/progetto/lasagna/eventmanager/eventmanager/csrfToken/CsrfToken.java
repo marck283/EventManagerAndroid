@@ -7,46 +7,44 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.facebook.AccessToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class CsrfToken {
-    private final CsrfTokenRequest csrfToken;
-
-    public CsrfToken() {
-        Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        csrfToken = retro.create(CsrfTokenRequest.class);
-    }
 
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
     public void getCsrfToken(@NonNull Activity a, Object o, @Nullable String gJwt, @Nullable AccessToken fbJwt, @NonNull String which) {
-        ApiCSRFClass token = new ApiCSRFClass();
-        Call<JsonObject> call = csrfToken.getToken();
-        call.enqueue(new Callback<>() {
-
-            /**
-             * Invoked for a received HTTP response.
-             *
-             * <p>Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-             * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-             *
-             * @param call
-             * @param response
-             */
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("https://eventmanagerzlf.herokuapp.com/api/v2/csrfToken")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                try {
+                    throw e;
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 synchronized (this) {
+                    ApiCSRFClass token = new ApiCSRFClass();
                     if (response.isSuccessful() && response.body() != null) {
-                        ApiCSRFClass token1 = token.parseJSON(response.body());
+                        Gson gson = new GsonBuilder().create();
+                        ApiCSRFClass token1 = token.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                         Log.i("token1", String.valueOf(token1.getToken()));
                         if (o instanceof Authentication) {
                             ((Authentication) o).login(a, token1.getToken(), gJwt, fbJwt, which);
@@ -55,22 +53,6 @@ public class CsrfToken {
                         Log.i("null", "Unsuccessful or null response");
                     }
                     notify();
-                }
-            }
-
-            /**
-             * Invoked when a network exception occurred talking to the server or when an unexpected exception
-             * occurred creating the request or processing the response.
-             *
-             * @param call
-             * @param t
-             */
-            @Override
-            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                try {
-                    throw t;
-                } catch (Throwable e) {
-                    e.printStackTrace();
                 }
             }
         });

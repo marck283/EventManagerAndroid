@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration.AccountIntegration;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
@@ -70,11 +71,15 @@ public class Authentication {
                     info = info.parseJSON(response.body());
                     new DBUser(a, info.getEmail(), "updateProfilePic", info).start();
 
+                    final String email = info.getEmail(), profilePic = info.getProfilePic();
+                    if(a instanceof NavigationDrawerActivity) {
+                        a.runOnUiThread(() -> ((NavigationDrawerActivity)a).updateUI("login", email, profilePic));
+                    }
+
                     SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("accessToken", info.getToken());
                     editor.apply();
-                    Log.i("token132", info.getToken());
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
                     if(response.code() == 409) {

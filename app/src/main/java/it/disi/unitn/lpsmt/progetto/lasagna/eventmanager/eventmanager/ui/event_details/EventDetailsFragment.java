@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.button_callbacks.OrganizerCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -123,7 +123,7 @@ public class EventDetailsFragment extends Fragment {
                 mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue());
 
                 Button qrCodeScan = view.findViewById(R.id.button8);
-                qrCodeScan.setOnClickListener(c -> Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_QRCodeScan));
+                //qrCodeScan.setOnClickListener(c -> Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_QRCodeScan));
 
                 Button terminaEvento = view.findViewById(R.id.button12);
                 terminaEvento.setOnClickListener(c -> {
@@ -145,6 +145,8 @@ public class EventDetailsFragment extends Fragment {
                                         setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
 
                                         //Ora disabilita tutti i bottoni della schermata...
+                                        qrCodeScan.setEnabled(false);
+                                        terminaEvento.setEnabled(false);
                                         break;
                                     }
                                 }

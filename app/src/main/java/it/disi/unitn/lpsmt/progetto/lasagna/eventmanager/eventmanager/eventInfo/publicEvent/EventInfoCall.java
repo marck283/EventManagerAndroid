@@ -256,46 +256,6 @@ public class EventInfoCall {
                 //Qualcosa
                 break;
             }
-            case "org": {
-                Call<JsonObject> call = evInterface.getOrgEventInfo(eventId, userJwt);
-                call.enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                        if(response.isSuccessful() && response.body() != null) {
-                            EventInfo event = new EventInfo();
-                            event = event.parseJSON(response.body().getAsJsonObject("event"));
-
-                            ImageView iView = v.findViewById(R.id.imageView3);
-                            Glide.with(v).load(event.decodeBase64()).into(iView);
-
-                            TextView evName = v.findViewById(R.id.textView6);
-                            evName.setText(f.getString(R.string.info_on_event, event.getNomeAtt()));
-
-                            TextView evDay = v.findViewById(R.id.textView9), evHour = v.findViewById(R.id.textView10);
-
-                            /*Sistemare con la data e l'ora richieste*/
-                            //evDay.setText(f.getString(R.string.day_not_selectable, ));
-                            //evHour.setText(f.getString(R.string.time_not_selectable, ));
-
-                            TextView duration = v.findViewById(R.id.textView12);
-                            duration.setText(f.getString(R.string.duration, event.getDurata()));
-
-                            TextView address = v.findViewById(R.id.textView15);
-                            address.setText(f.getString(R.string.event_address, event.getNomeAtt()));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                        try {
-                            throw t;
-                        } catch (Throwable e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                break;
-            }
         }
     }
 }
