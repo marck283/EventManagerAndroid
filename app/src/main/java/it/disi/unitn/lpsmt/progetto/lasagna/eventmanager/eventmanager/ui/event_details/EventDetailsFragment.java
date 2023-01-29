@@ -144,7 +144,9 @@ public class EventDetailsFragment extends Fragment {
                                     case 200: {
                                         setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
 
-                                        //Ora disabilita tutti i bottoni della schermata...
+                                        // Ora disabilita tutti i bottoni della schermata e,
+                                        // la prossima volta che questo evento viene mostrato,
+                                        // mantieni i bottoni bloccati...
                                         qrCodeScan.setEnabled(false);
                                         terminaEvento.setEnabled(false);
                                         break;
