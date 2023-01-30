@@ -1,12 +1,17 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -16,6 +21,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan.QRCodeRenderingFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -88,6 +94,16 @@ public class RegisteredEventInfo extends Thread {
 
                             TextView address = v.findViewById(R.id.textView42);
                             address.setText(f.getString(R.string.event_address, event.getLuogoEv().toString()));
+
+                            Button qrCodeRender = v.findViewById(R.id.button9);
+                            qrCodeRender.setOnClickListener(c -> {
+                                Bundle b = new Bundle();
+                                b.putString("eventId", event.getIdEvent());
+                                b.putString("userId", userJwt);
+                                b.putString("data", event.getLuogoEv().getData());
+                                b.putString("ora", event.getLuogoEv().getOra());
+                                NavHostFragment.findNavController(f).navigate(R.id.action_eventDetailsFragment_to_QRCodeRenderingFragment, b);
+                            });
                         });
                     }
                 } else {

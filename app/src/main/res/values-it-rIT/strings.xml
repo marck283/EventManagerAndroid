@@ -194,4 +194,6 @@
     <string name="attempt_ok_message">L\'evento è terminato.</string>
     <string name="user_not_logged_in">Utente non autenticato</string>
     <string name="user_not_logged_in_message">La sessione corrente è terminata. Si prega di autenticarsi nuovamente al sistema.</string>
+    <string name="day_events">Eventi del giorno</string>
+    <string name="qr_code">Codice QR</string>
 </resources>
