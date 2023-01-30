@@ -18,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -174,6 +175,14 @@ public class RegisteredEventInfo extends Thread {
                                 QRCodeRenderingFragment destination = QRCodeRenderingFragment.newInstance(b);
                                 FragmentTransaction transaction = f.requireActivity().getSupportFragmentManager().beginTransaction();
                                 destination.show(transaction, "QRCodeRenderingFragment");
+                            });
+
+                            Button writeReview = v.findViewById(R.id.button10);
+                            writeReview.setOnClickListener(c -> {
+                                Bundle b = new Bundle();
+                                b.putString("userId", userJwt);
+                                b.putString("eventId", eventId);
+                                Navigation.findNavController(v).navigate(R.id.action_eventDetailsFragment_to_reviewWriting, b);
                             });
 
                             Button deleteTicket = v.findViewById(R.id.button11);

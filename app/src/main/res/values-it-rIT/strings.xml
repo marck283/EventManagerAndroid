@@ -202,4 +202,17 @@
     <string name="user_not_registered_message">L\'utente non è registrato a questo evento.</string>
     <string name="deletion_404">Utente non registrato</string>
     <string name="deletion_404_message">L\'utente non è registrato a questo evento.</string>
+    <string name="insert_review_description">Inserisci testo recensione…</string>
+    <string name="review_rating">Valutazione</string>
+    <string name="review_rating_bar">Barra di valutazione</string>
+    <string name="post_review">Pubblica</string>
+    <string name="wrong_rating">Valore valutazione non consentito</string>
+    <string name="wrong_rating_message">La valutazione deve avere un valore corrispondente ad almeno una stella.</string>
+    <string name="title">Titolo</string>
+    <string name="insert_review_title">Inserisci titolo recensione…</string>
+    <string name="write_a_review">Scrivi una recensione su questo evento!</string>
+    <string name="no_review_description">Descrizione mancante</string>
+    <string name="no_review_description_message">Il campo \"descrizione\" è obbligatorio.</string>
+    <string name="no_review_title">Titolo mancante</string>
+    <string name="no_review_title_message">Il campo \"Titolo\" è obbligatorio.</string>
 </resources>

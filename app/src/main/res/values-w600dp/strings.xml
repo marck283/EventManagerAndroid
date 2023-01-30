@@ -214,4 +214,16 @@
     <string name="user_not_registered_message">The user was not registered to this event.</string>
     <string name="deletion_404">Registration not found</string>
     <string name="deletion_404_message">No registration was found for the given user and the given event.</string>
+    <string name="insert_review_title">Insert review title...</string>
+    <string name="insert_review_description">Insert review description...</string>
+    <string name="review_rating">Rating</string>
+    <string name="review_rating_bar">Rating bar</string>
+    <string name="write_a_review">Write a review to this event!</string>
+    <string name="post_review">Publish</string>
+    <string name="wrong_rating">Illegal rating value</string>
+    <string name="wrong_rating_message">The ratig must be greater than or equal to one star.</string>
+    <string name="no_review_description">Missing review description</string>
+    <string name="no_review_description_message">The description field is mandatory.</string>
+    <string name="no_review_title">Missing review title</string>
+    <string name="no_review_title_message">The title field is mandatory.</string>
 </resources>
