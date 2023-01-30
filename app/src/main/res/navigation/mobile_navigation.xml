@@ -127,7 +127,7 @@
     <fragment
         android:id="@+id/reviewWriting"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.review_writing.ReviewWriting"
-        android:label="fragment_review_writing"
+        android:label="@string/review_writing_fragment"
         tools:layout="@layout/fragment_review_writing" />
 
 </navigation>

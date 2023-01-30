@@ -215,4 +215,5 @@
     <string name="no_review_description_message">Il campo \"descrizione\" è obbligatorio.</string>
     <string name="no_review_title">Titolo mancante</string>
     <string name="no_review_title_message">Il campo \"Titolo\" è obbligatorio.</string>
+    <string name="review_writing_fragment">Scrittura recensione</string>
 </resources>

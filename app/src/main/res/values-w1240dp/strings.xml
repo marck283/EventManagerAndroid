@@ -226,4 +226,5 @@
     <string name="no_review_description_message">The description field is mandatory.</string>
     <string name="no_review_title">Missing review title</string>
     <string name="no_review_title_message">The title field is mandatory.</string>
+    <string name="review_writing_fragment">Review writing</string>
 </resources>
