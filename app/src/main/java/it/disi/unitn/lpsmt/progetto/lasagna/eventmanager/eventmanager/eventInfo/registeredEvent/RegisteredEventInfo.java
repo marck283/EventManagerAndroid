@@ -10,8 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -21,6 +19,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan.QRCodeRenderingFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -79,8 +78,9 @@ public class RegisteredEventInfo extends Thread {
                             organizzatore.setText(f.getString(R.string.organizer, event.getOrgName()));
 
                             TextView giorno = v.findViewById(R.id.textView11);
+                            String[] data = event.getLuogoEv().getData().split("-");
                             giorno.setText(f.getString(R.string.day_not_selectable,
-                                    "\n" + event.getLuogoEv().getData()));
+                                    "\n" + data[1] + "/" + data[0] + "/" + data[2]));
 
                             TextView ora = v.findViewById(R.id.textView20);
                             ora.setText(f.getString(R.string.time_not_selectable,
@@ -89,7 +89,7 @@ public class RegisteredEventInfo extends Thread {
                             String[] sDurata = event.getDurata().split(":");
                             TextView durata = v.findViewById(R.id.textView39);
                             String wholeDuration = Integer.parseInt(sDurata[0]) + "g, "
-                                    + Integer.parseInt(sDurata[0]) + "h e " + Integer.parseInt(sDurata[0]) + "m";
+                                    + Integer.parseInt(sDurata[1]) + "h e " + Integer.parseInt(sDurata[2]) + "m";
                             durata.setText(f.getString(R.string.duration, wholeDuration));
 
                             TextView address = v.findViewById(R.id.textView42);
@@ -102,8 +102,16 @@ public class RegisteredEventInfo extends Thread {
                                 b.putString("userId", userJwt);
                                 b.putString("data", event.getLuogoEv().getData());
                                 b.putString("ora", event.getLuogoEv().getOra());
-                                NavHostFragment.findNavController(f).navigate(R.id.action_eventDetailsFragment_to_QRCodeRenderingFragment, b);
+
+                                QRCodeRenderingFragment destination = QRCodeRenderingFragment.newInstance(b);
+                                FragmentTransaction transaction = f.requireActivity().getSupportFragmentManager().beginTransaction();
+                                destination.show(transaction, "QRCodeRenderingFragment");
                             });
+
+                            Button deleteTicket = v.findViewById(R.id.button11);
+                            deleteTicket.setOnClickListener(c ->
+                                    ((EventDetailsFragment)f).getViewModel().deleteTicket(userJwt, event.getTicketId(),
+                                            event.getIdEvent(), f));
                         });
                     }
                 } else {

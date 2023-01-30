@@ -16,12 +16,13 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.
 
 public class RegisteredEvent {
 
-    private final String id, idevent, self, name, category, eventPic, orgName, durata;
+    private final String id, idevent, self, name, category, eventPic, orgName, durata, idIscr;
     private final LuogoEvento luogoEv;
 
     public RegisteredEvent(@NonNull String id, @NonNull String idevent, @NonNull String self,
                            @NonNull String name, @NonNull String category, @NonNull String eventPic,
-                           @NonNull String orgName, @NonNull LuogoEvento luogoEv, @NonNull String durata) {
+                           @NonNull String orgName, @NonNull LuogoEvento luogoEv, @NonNull String durata,
+                           @NonNull String idIscr) {
         this.id = id;
         this.idevent = idevent;
         this.self = self;
@@ -31,6 +32,7 @@ public class RegisteredEvent {
         this.orgName = orgName;
         this.luogoEv = luogoEv;
         this.durata = durata;
+        this.idIscr = idIscr;
     }
 
     /**
@@ -84,6 +86,14 @@ public class RegisteredEvent {
         return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
     }
 
+    /**
+     * Ritorna l'identificatore del biglietto così come identificato dal server.
+     * @return l'identificatore del biglietto così come identificato dal server
+     */
+    public String getTicketId() {
+        return idIscr;
+    }
+
     private static String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject e, @NonNull String name) {
         return gs1.fromJson(e.get(name), String.class);
     }
@@ -93,13 +103,14 @@ public class RegisteredEvent {
     public static RegisteredEvent parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
 
-        JsonObject json1 = json.get("event").getAsJsonObject();
-        return new RegisteredEvent(fromJsonString(gs1, json1, "id"),
-                fromJsonString(gs1, json1, "idevent"),
-                fromJsonString(gs1, json1, "self"), fromJsonString(gs1, json1, "name"),
-                fromJsonString(gs1, json1, "category"), fromJsonString(gs1, json1, "eventPic"),
-                fromJsonString(gs1, json1, "orgName"),
-                LuogoEvento.parseJSON(json1.getAsJsonArray("luogoEv").get(0).getAsJsonObject()),
-                fromJsonString(gs1, json1, "durata"));
+        JsonObject event = json.get("event").getAsJsonObject().get("event").getAsJsonObject();
+        String ticketId = json.get("biglietto").getAsString();
+        return new RegisteredEvent(fromJsonString(gs1, event, "id"),
+                fromJsonString(gs1, event, "idevent"),
+                fromJsonString(gs1, event, "self"), fromJsonString(gs1, event, "name"),
+                fromJsonString(gs1, event, "category"), fromJsonString(gs1, event, "eventPic"),
+                fromJsonString(gs1, event, "orgName"),
+                LuogoEvento.parseJSON(event.getAsJsonArray("luogoEv").get(0).getAsJsonObject()),
+                fromJsonString(gs1, event, "durata"), ticketId);
     }
 }

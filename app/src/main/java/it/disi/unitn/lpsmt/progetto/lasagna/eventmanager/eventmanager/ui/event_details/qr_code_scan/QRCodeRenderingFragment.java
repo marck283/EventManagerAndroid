@@ -1,12 +1,12 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,30 +16,29 @@ import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
-public class QRCodeRenderingFragment extends Fragment {
+public class QRCodeRenderingFragment extends DialogFragment {
 
     private QRCodeRenderingViewModel mViewModel;
 
-    private String eventId, userId, data, ora;
+    private final String eventId, userId, data, ora;
 
     private View v;
 
+    public QRCodeRenderingFragment(@NonNull Bundle b) {
+        eventId = b.getString("eventId");
+        userId = b.getString("userId");
+        data = b.getString("data");
+        ora = b.getString("ora");
+    }
+
     @NonNull
-    @Contract(" -> new")
-    public static QRCodeRenderingFragment newInstance() {
-        return new QRCodeRenderingFragment();
+    public static QRCodeRenderingFragment newInstance(@NonNull Bundle b) {
+        return new QRCodeRenderingFragment(b);
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Bundle b = getArguments();
-        if(b != null) {
-            eventId = b.getString("eventId");
-            userId = b.getString("userId");
-            data = b.getString("data");
-            ora = b.getString("ora");
-        }
 
         v = inflater.inflate(R.layout.fragment_q_r_code_rendering, container, false);
 

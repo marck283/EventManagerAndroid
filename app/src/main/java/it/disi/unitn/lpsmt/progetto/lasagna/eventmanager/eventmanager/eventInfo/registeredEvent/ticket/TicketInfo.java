@@ -62,7 +62,7 @@ public class TicketInfo extends Thread {
                         try {
                             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                             Bitmap bitmap = barcodeEncoder.encodeBitmap(ticket.getQR(), BarcodeFormat.QR_CODE,
-                                    10, 10);
+                                    400, 400);
                             ImageView imageViewQrCode = v.findViewById(R.id.qrCode);
                             imageViewQrCode.setImageBitmap(bitmap);
                         } catch(Exception e) {

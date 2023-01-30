@@ -196,4 +196,10 @@
     <string name="user_not_logged_in_message">La sessione corrente è terminata. Si prega di autenticarsi nuovamente al sistema.</string>
     <string name="day_events">Eventi del giorno</string>
     <string name="qr_code">Codice QR</string>
+    <string name="deletion_successful">Cancellazione completata</string>
+    <string name="deletion_successful_message">Ti sei de-registrato con successo da questo evento!</string>
+    <string name="user_not_registered">Operazione completata senza successo</string>
+    <string name="user_not_registered_message">L\'utente non è registrato a questo evento.</string>
+    <string name="deletion_404">Utente non registrato</string>
+    <string name="deletion_404_message">L\'utente non è registrato a questo evento.</string>
 </resources>

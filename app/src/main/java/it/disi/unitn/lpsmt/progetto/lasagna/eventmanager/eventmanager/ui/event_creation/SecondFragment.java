@@ -33,7 +33,7 @@ public class SecondFragment extends Fragment {
 
         view.findViewById(R.id.button_second).setOnClickListener(view1 -> {
             if(countRows > 0) {
-                NavHostFragment.findNavController(SecondFragment.this)
+                NavHostFragment.findNavController(this)
                         .navigate(R.id.action_SecondFragment_to_eventAdditionalInfoFragment);
             } else {
                 AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
@@ -54,7 +54,8 @@ public class SecondFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        view.findViewById(R.id.floatingActionButton).setOnClickListener(c -> NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment));
+        view.findViewById(R.id.floatingActionButton).setOnClickListener(c ->
+                NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment));
     }
 
     @Override

@@ -4,11 +4,13 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.OrganizedEventInfo;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.EventInfoCall;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.RegisteredEventInfo;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket.delete_ticket.DeleteTicket;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event_registration.UserEventRegistration;
 
 public class EventDetailsViewModel extends ViewModel {
@@ -42,5 +44,11 @@ public class EventDetailsViewModel extends ViewModel {
                              @NonNull String day, @NonNull String time) {
         UserEventRegistration uer = new UserEventRegistration();
         uer.registerUser(accessToken, eventId, day, time, f);
+    }
+
+    public void deleteTicket(@NonNull String accessToken, @NonNull String ticketId,
+                             @NonNull String eventId, @NonNull Fragment f) {
+        DeleteTicket delete = new DeleteTicket(eventId, ticketId, accessToken, f);
+        delete.start();
     }
 }

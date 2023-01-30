@@ -208,4 +208,10 @@
     <string name="user_not_logged_in_message">Your session has expired. Please consider logging in again.</string>
     <string name="day_events">Events of the day</string>
     <string name="qr_code">QR Code</string>
+    <string name="deletion_successful">Deletion successful</string>
+    <string name="deletion_successful_message">You have successfully unregistered from this event!</string>
+    <string name="user_not_registered">Unsuccessful operation</string>
+    <string name="user_not_registered_message">The user was not registered to this event.</string>
+    <string name="deletion_404">Registration not found</string>
+    <string name="deletion_404_message">No registration was found for the given user and the given event.</string>
 </resources>

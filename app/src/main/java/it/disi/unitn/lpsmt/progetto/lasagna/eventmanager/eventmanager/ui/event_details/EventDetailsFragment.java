@@ -198,4 +198,8 @@ public class EventDetailsFragment extends Fragment {
         }
     }
 
+    public EventDetailsViewModel getViewModel() {
+        return mViewModel;
+    }
+
 }
