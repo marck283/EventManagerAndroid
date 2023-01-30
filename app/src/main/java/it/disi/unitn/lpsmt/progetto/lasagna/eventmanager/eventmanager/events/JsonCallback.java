@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents.PrivEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.PubEvAdapter;
@@ -17,26 +19,28 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class JsonCallback implements Callback<JsonObject> {
-    private final String type;
+    private String type, day;
     private EventAdapter p1;
     private final RecyclerView mRecyclerView;
 
     private final Fragment f;
 
-    public JsonCallback(@Nullable Fragment f, String type, RecyclerView view) {
+    public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day) {
         this.type = type;
         mRecyclerView = view;
         this.f = f;
+        this.day = day;
     }
 
-    private void initAdapter(@Nullable Fragment f, EventList ev) {
+    private void initAdapter(@Nullable Fragment f, EventList ev, @Nullable String day) {
         switch(type) {
             case "org": {
                 p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList());
                 break;
             }
             case "priv": {
-                p1 = new PrivEvAdapter(new EventCallback(), ev.getList());
+                this.day = day;
+                p1 = new PrivEvAdapter(new EventCallback(), ev.getList(), day);
                 break;
             }
             case "pub": {
@@ -69,7 +73,7 @@ public class JsonCallback implements Callback<JsonObject> {
                 Log.i("orgEvResponse", String.valueOf(response.body()));
                 ev = ev.parseJSON(response.body());
                 if(ev != null && ev.getList().size() > 0) {
-                    initAdapter(f, ev);
+                    initAdapter(f, ev, day);
                     p1.submitList(ev.getList());
                     mRecyclerView.setAdapter(p1);
                 } else {
@@ -80,7 +84,7 @@ public class JsonCallback implements Callback<JsonObject> {
             }
         } else {
             Log.i("noResponse", "response is null");
-            initAdapter(f, new EventList());
+            initAdapter(f, new EventList(), day);
             p1.clearEventList();
             mRecyclerView.setAdapter(p1);
         }

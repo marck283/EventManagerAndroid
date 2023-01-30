@@ -24,12 +24,9 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.BufferedSink;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -65,6 +62,7 @@ public class EventDetailsFragment extends Fragment {
         if(b != null) {
             screenType = b.getString("eventType");
             eventId = b.getString("eventId");
+            day = b.getString("day");
         }
         switch(screenType) {
             case "pub": {
@@ -100,7 +98,7 @@ public class EventDetailsFragment extends Fragment {
 
         switch(screenType) {
             case "pub": {
-                mViewModel.getEventInfo("pub", eventId, view, this, null);
+                mViewModel.getEventInfo("pub", eventId, view, this, null, null, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
@@ -124,10 +122,11 @@ public class EventDetailsFragment extends Fragment {
                 break;
             }
             case "iscr": {
-                //Qualcosa
+                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day, null);
+                break;
             }
             case "org": {
-                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue());
+                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(), null, null);
 
                 Button qrCodeScan = view.findViewById(R.id.button8);
                 //qrCodeScan.setOnClickListener(c -> Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_QRCodeScan));

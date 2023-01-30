@@ -15,13 +15,17 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 
 public class PrivEvAdapter extends EventAdapter {
+    private String day;
 
-    public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
+    public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList,
+                         String day) {
         super(diffCallback, evList);
+        this.day = day;
     }
 
     protected PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
+        this.day = "";
     }
 
     /**
@@ -50,6 +54,6 @@ public class PrivEvAdapter extends EventAdapter {
                 .inflate(R.layout.event_dialog_button, parent, false);
         // Return a new view holder
 
-        return new PrivEvViewHolder(view);
+        return new PrivEvViewHolder(view, day);
     }
 }

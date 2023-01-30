@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModel;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.OrganizedEventInfo;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.EventInfoCall;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.RegisteredEventInfo;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event_registration.UserEventRegistration;
 
 public class EventDetailsViewModel extends ViewModel {
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
-                             @NonNull EventDetailsFragment f, @Nullable String userJwt) {
+                             @NonNull EventDetailsFragment f, @Nullable String userJwt,
+                             @Nullable String data, @Nullable String ora) {
         EventInfoCall c = new EventInfoCall();
         switch(which) {
             case "pub": {
@@ -20,7 +22,11 @@ public class EventDetailsViewModel extends ViewModel {
                 break;
             }
             case "iscr": {
-                //Qualcosa
+                if(userJwt != null && data != null) {
+                    RegisteredEventInfo info = new RegisteredEventInfo(userJwt, eventId, f, view, data);
+                    info.start();
+                }
+                break;
             }
             case "org": {
                 if(userJwt != null) {

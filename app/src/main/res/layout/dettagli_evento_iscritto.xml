@@ -7,11 +7,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button10"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="256dp"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:backgroundTint="@color/cardview_shadow_end_color"
         android:text="@string/write_reviews"
+        android:textSize="18sp"
         android:textColor="@color/com_facebook_blue"
         app:icon="@drawable/ic_event_creation"
         app:iconGravity="textStart"
@@ -22,11 +23,12 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button11"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="256dp"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="wrap_content"
         android:layout_height="49dp"
         android:backgroundTint="@color/cardview_shadow_end_color"
         android:text="@string/withdraw_subscription"
+        android:textSize="18sp"
         android:textColor="@color/com_facebook_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
@@ -73,6 +75,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="56dp"
         android:text="@string/time_not_selectable"
+        android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/textView39"
         app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toEndOf="@+id/textView11"
@@ -85,6 +88,7 @@
         android:layout_marginStart="44dp"
         android:layout_marginTop="20dp"
         android:text="@string/day_not_selectable"
+        android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
@@ -110,17 +114,17 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button9"
-        style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
-        android:layout_width="256dp"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="28dp"
         android:backgroundTint="@color/cardview_shadow_end_color"
         android:text="@string/show_ticket"
         android:textColor="@color/com_facebook_blue"
+        android:textSize="18sp"
         app:icon="@drawable/ic_qr_code_ticket"
         app:iconGravity="textStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView42" />
 

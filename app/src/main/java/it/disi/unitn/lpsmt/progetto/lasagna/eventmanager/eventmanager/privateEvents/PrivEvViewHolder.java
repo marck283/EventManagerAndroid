@@ -2,7 +2,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEv
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
@@ -17,11 +16,14 @@ public class PrivEvViewHolder extends EventHolder {
     private final MaterialButton t;
     private final View v;
 
-    public PrivEvViewHolder(@NonNull View itemView) {
+    private String day;
+
+    public PrivEvViewHolder(@NonNull View itemView, @NonNull String day) {
         super(itemView);
         t = itemView.findViewById(R.id.event_name_text_view);
         t.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         v = itemView;
+        this.day = day;
     }
 
     public void bindData(Event dataModel) {
@@ -30,8 +32,9 @@ public class PrivEvViewHolder extends EventHolder {
             v.setOnClickListener(c -> {
                 try {
                     Bundle b = new Bundle();
-                    b.putString("eventType", "priv");
+                    b.putString("eventType", "iscr");
                     b.putString("eventId", dataModel.getString("eventid"));
+                    b.putString("day", day);
                     Navigation.findNavController(v).navigate(R.id.action_user_calendar_dialog_to_eventDetailsFragment, b);
                 } catch (Exception e) {
                     e.printStackTrace();

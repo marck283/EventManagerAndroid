@@ -61,6 +61,6 @@ public class PublicEvents {
                           @Nullable String categoria, @Nullable String durata,
                           @Nullable String indirizzo, @Nullable String citta, @Nullable String orgName) {
         Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta, orgName);
-        call.enqueue(new JsonCallback(f, "pub", mRecyclerView));
+        call.enqueue(new JsonCallback(f, "pub", mRecyclerView, null));
     }
 }

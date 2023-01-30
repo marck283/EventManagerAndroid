@@ -51,25 +51,27 @@ public class OrganizedEventInfo extends Thread {
                     OrganizedEvent event = OrganizedEvent.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                     Log.i("OK", "OK");
 
-                    f.requireActivity().runOnUiThread(() -> {
-                        ImageView iView = v.findViewById(R.id.imageView3);
-                        Glide.with(v).load(event.decodeBase64()).into(iView);
+                    if(!f.isDetached()) {
+                        f.requireActivity().runOnUiThread(() -> {
+                            ImageView iView = v.findViewById(R.id.imageView3);
+                            Glide.with(v).load(event.decodeBase64()).into(iView);
 
-                        TextView evName = v.findViewById(R.id.textView6);
-                        evName.setText(f.getString(R.string.info_on_event, event.getEventName()));
+                            TextView evName = v.findViewById(R.id.textView6);
+                            evName.setText(f.getString(R.string.info_on_event, event.getEventName()));
 
-                        TextView evDay = v.findViewById(R.id.textView9), evHour = v.findViewById(R.id.textView10);
+                            TextView evDay = v.findViewById(R.id.textView9), evHour = v.findViewById(R.id.textView10);
 
-                        /*Sistemare con la data e l'ora richieste*/
-                        /*evDay.setText(f.getString(R.string.day_not_selectable, ));
-                        evHour.setText(f.getString(R.string.time_not_selectable, ));*/
+                            /*Sistemare con la data e l'ora richieste*/
+                            /*evDay.setText(f.getString(R.string.day_not_selectable, ));
+                            evHour.setText(f.getString(R.string.time_not_selectable, ));*/
 
-                        TextView duration = v.findViewById(R.id.textView12);
-                        duration.setText(f.getString(R.string.duration, event.getDurata()));
+                            TextView duration = v.findViewById(R.id.textView12);
+                            duration.setText(f.getString(R.string.duration, event.getDurata()));
 
-                        /*TextView address = v.findViewById(R.id.textView15);
-                        address.setText(f.getString(R.string.event_address, event.getNomeAtt()));*/
-                    });
+                            /*TextView address = v.findViewById(R.id.textView15);
+                            address.setText(f.getString(R.string.event_address, event.getNomeAtt()));*/
+                        });
+                    }
                 }
             }
         });
