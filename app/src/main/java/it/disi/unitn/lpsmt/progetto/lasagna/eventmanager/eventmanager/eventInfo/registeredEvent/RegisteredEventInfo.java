@@ -1,6 +1,14 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent;
 
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.graphics.Paint;
+import android.location.Address;
+import android.location.Geocoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,8 +25,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan.QRCodeRenderingFragment;
 import okhttp3.Call;
@@ -32,11 +42,11 @@ public class RegisteredEventInfo extends Thread {
 
     private final String userJwt, eventId, data;
 
-    private final Fragment f;
+    private final EventDetailsFragment f;
 
     private final View v;
 
-    public RegisteredEventInfo(@NonNull String userJwt, @NonNull String eventId, @NonNull Fragment f,
+    public RegisteredEventInfo(@NonNull String userJwt, @NonNull String eventId, @NonNull EventDetailsFragment f,
                                @NonNull View v, @NonNull String data) {
         client = new OkHttpClient();
         this.userJwt = userJwt;
@@ -44,6 +54,26 @@ public class RegisteredEventInfo extends Thread {
         this.f = f;
         this.v = v;
         this.data = data;
+    }
+
+    private void noSuchAddressDialog(@NonNull Fragment f) {
+        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+        dialog.setTitle(R.string.no_such_address);
+        dialog.setMessage(f.getString(R.string.address_not_registered));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
+    }
+
+    private void startGoogleMaps(@NonNull EventDetailsFragment f, @NonNull TextView indirizzo,
+                                 @NonNull List<Address> addresses) {
+        Address address = addresses.get(0);
+
+        Uri gmURI = Uri.parse("geo:" + address.getLatitude() + "," + address.getLongitude()
+                + "?q=" + indirizzo.getText().toString());
+        Intent i = new Intent(Intent.ACTION_VIEW, gmURI);
+        i.setPackage("com.google.android.apps.maps");
+
+        f.requireActivity().startActivity(i);
     }
 
     public void run() {
@@ -94,6 +124,44 @@ public class RegisteredEventInfo extends Thread {
 
                             TextView address = v.findViewById(R.id.textView42);
                             address.setText(f.getString(R.string.event_address, event.getLuogoEv().toString()));
+                            address.setOnClickListener(c -> {
+                                Geocoder geocoder = new Geocoder(f.requireActivity());
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    geocoder.getFromLocationName(address.getText().toString(), 5, addresses -> {
+                                        if (addresses.size() > 0) {
+                                            startGoogleMaps(f, address, addresses);
+                                        } else {
+                                            noSuchAddressDialog(f);
+                                        }
+                                    });
+                                } else {
+                                    Thread t1 = new Thread() {
+                                        public void run() {
+                                            List<Address> addresses;
+                                            try {
+                                                addresses = geocoder.getFromLocationName(address.getText().toString(), 5);
+                                                if (addresses != null && addresses.size() > 0) {
+                                                    startGoogleMaps(f, address, addresses);
+                                                } else {
+                                                    Looper.prepare();
+                                                    noSuchAddressDialog(f);
+                                                    Looper.loop();
+                                                    Looper.getMainLooper().quitSafely();
+                                                }
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    };
+                                    t1.start();
+                                }
+                            });
+
+                            LuogoEvento le = event.getLuogoEv();
+                            if (le != null) {
+                                address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                address.setText(f.getString(R.string.event_address, le.toString()));
+                            }
 
                             Button qrCodeRender = v.findViewById(R.id.button9);
                             qrCodeRender.setOnClickListener(c -> {
@@ -110,8 +178,7 @@ public class RegisteredEventInfo extends Thread {
 
                             Button deleteTicket = v.findViewById(R.id.button11);
                             deleteTicket.setOnClickListener(c ->
-                                    ((EventDetailsFragment)f).getViewModel().deleteTicket(userJwt, event.getTicketId(),
-                                            event.getIdEvent(), f));
+                                    f.getViewModel().deleteTicket(userJwt, event.getTicketId(), event.getIdEvent(), f));
                         });
                     }
                 } else {
