@@ -10,9 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.JsonCallback;
+import okhttp3.Dispatcher;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -23,13 +28,25 @@ public class PublicEvents {
 
     private final Fragment f;
 
+    private final ExecutorService executor;
+
     /**
      * Costruisce l'oggetto PublicEvents.
      * @param layout L'istanza di View a cui il costruttore si appoggia per trovare la RecyclerView
      *               a cui agganciare gli eventi ricevuti. Non può essere null.
      */
     public PublicEvents(@NonNull Fragment f, @NonNull View layout) {
+        //Limito il numero di thread a disposizione per non inondare il server di richieste
+        executor = Executors.newFixedThreadPool(20);
+        Dispatcher dispatcher = new Dispatcher(executor);
+        dispatcher.setMaxRequests(20);
+        dispatcher.setMaxRequestsPerHost(3);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .dispatcher(dispatcher) //Imposto il dispatcher delle richieste
+                .build();
         Retrofit retro = new Retrofit.Builder()
+                .client(okHttpClient)
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -61,6 +78,6 @@ public class PublicEvents {
                           @Nullable String categoria, @Nullable String durata,
                           @Nullable String indirizzo, @Nullable String citta, @Nullable String orgName) {
         Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta, orgName);
-        call.enqueue(new JsonCallback(f, "pub", mRecyclerView, null));
+        call.enqueue(new JsonCallback(f, "pub", mRecyclerView, null, executor));
     }
 }

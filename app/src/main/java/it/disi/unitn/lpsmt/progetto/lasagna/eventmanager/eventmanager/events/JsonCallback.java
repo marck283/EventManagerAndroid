@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents.PrivEvAdapter;
@@ -19,23 +19,38 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class JsonCallback implements Callback<JsonObject> {
-    private String type, day;
+    private final String type;
+    private String day;
     private EventAdapter p1;
     private final RecyclerView mRecyclerView;
 
     private final Fragment f;
+
+    private final ExecutorService executor;
 
     public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day) {
         this.type = type;
         mRecyclerView = view;
         this.f = f;
         this.day = day;
+        executor = null;
+    }
+
+    public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day,
+                        @NonNull ExecutorService executor) {
+        this.type = type;
+        mRecyclerView = view;
+        this.f = f;
+        this.day = day;
+        this.executor = executor;
     }
 
     private void initAdapter(@Nullable Fragment f, EventList ev, @Nullable String day) {
         switch(type) {
             case "org": {
-                p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList());
+                if(f != null) {
+                    p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList());
+                }
                 break;
             }
             case "priv": {
@@ -76,6 +91,11 @@ public class JsonCallback implements Callback<JsonObject> {
                     initAdapter(f, ev, day);
                     p1.submitList(ev.getList());
                     mRecyclerView.setAdapter(p1);
+
+                    if(executor != null) {
+                        //Chiudo la pool di connessioni per terminare i thread in essa contenuti
+                        executor.shutdown();
+                    }
                 } else {
                     Log.i("nullP", "Event list is null");
                 }
