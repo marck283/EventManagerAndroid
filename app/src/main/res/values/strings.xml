@@ -234,4 +234,7 @@
     <string name="malformed_request_message">A malformed request was issued to the server. You may have to contact the developer to solve the issue.</string>
     <string name="unknown_error">Unknown error</string>
     <string name="unknown_error_message">An unknown error has happened. Please contact the application\'s developer to solve the issue.</string>
+    <string name="invalid_qr_code_message">The given QR code is not valid.</string>
+    <string name="valid_qr_code">Valid QR Code</string>
+    <string name="valid_qr_code_message">The given QR Code is valid.</string>
 </resources>

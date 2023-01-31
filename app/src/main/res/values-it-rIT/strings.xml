@@ -208,6 +208,7 @@
     <string name="post_review">Pubblica</string>
     <string name="wrong_rating">Valore valutazione non consentito</string>
     <string name="wrong_rating_message">La valutazione deve avere un valore corrispondente ad almeno una stella.</string>
+    <string name="invalid_qr_code_message">Il codice QR fornito non è valido.</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>
@@ -222,4 +223,6 @@
     <string name="malformed_request_message">Il server ha ricevuto una richiesta malformata. Si prega di contattare lo sviluppatore dell\'applicazione per risolvere il problema.</string>
     <string name="unknown_error">Errore sconosciuto</string>
     <string name="unknown_error_message">Si è verificato un errore sconosciuto. Si prega di contattare lo sviluppatore dell\'applicazione per risolvere il problema.</string>
+    <string name="valid_qr_code">Codice QR valido</string>
+    <string name="valid_qr_code_message">Il codice QR fornito è valido.</string>
 </resources>

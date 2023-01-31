@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -16,7 +17,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.Objects;
 
@@ -37,6 +42,8 @@ public class EventDetailsFragment extends Fragment {
     //Indica il tipo della schermata (ad esempio "iscr" per utente iscritto, od "org" per "organizzatore")
     private String screenType;
     private String eventId;
+
+    private ActivityResultLauncher<ScanOptions> launcher;
 
     public void setEventId(@NonNull String val) {
         eventId = val;
@@ -98,7 +105,7 @@ public class EventDetailsFragment extends Fragment {
 
         switch(screenType) {
             case "pub": {
-                mViewModel.getEventInfo("pub", eventId, view, this, null, null);
+                mViewModel.getEventInfo("pub", eventId, view, this, null, null, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
@@ -122,23 +129,27 @@ public class EventDetailsFragment extends Fragment {
                 break;
             }
             case "iscr": {
-                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day);
+                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day, null);
                 break;
             }
             case "org": {
-                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(), day);
+                Spinner spinner = view.findViewById(R.id.spinner);
+                launcher = registerForActivityResult(new ScanContract(),
+                        result -> {
+                            if (result.getContents() != null && spinner.getSelectedItem() != null) {
+                                mViewModel.checkQR(nvm.getToken().getValue(), result.getContents(),
+                                        eventId, day, spinner.getSelectedItem().toString(), this);
+                            }
+                        });
+                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(), day, launcher);
 
-                Button qrCodeScan = view.findViewById(R.id.button8);
-                //qrCodeScan.setOnClickListener(c -> Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_QRCodeScan));
-
-                Button terminaEvento = view.findViewById(R.id.button12);
+                Button qrCodeScan = view.findViewById(R.id.button8), terminaEvento = view.findViewById(R.id.button12);
                 terminaEvento.setOnClickListener(c -> {
                     try {
                         OkHttpClient client = new OkHttpClient();
                         Request request = new Request.Builder()
                                 .addHeader("x-access-token", Objects.requireNonNull(nvm.getToken().getValue()))
                                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId)
-                                //.post()
                                 .build();
                         client.newCall(request).enqueue(new OrganizerCallback() {
                             @Override

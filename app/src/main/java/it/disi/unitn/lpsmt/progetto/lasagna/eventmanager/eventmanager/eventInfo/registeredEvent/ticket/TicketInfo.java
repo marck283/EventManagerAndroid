@@ -1,17 +1,15 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket;
 
-import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.zxing.BarcodeFormat;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.IOException;
 
@@ -27,7 +25,7 @@ public class TicketInfo extends Thread {
     private final OkHttpClient client;
     private final View v;
 
-    private Fragment f;
+    private final Fragment f;
 
     public TicketInfo(@NonNull Fragment f, @NonNull View v, @NonNull String eventId,
                       @NonNull String userId, @NonNull String data, @NonNull String ora) {
@@ -60,11 +58,8 @@ public class TicketInfo extends Thread {
                     Ticket ticket = Ticket.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                     f.requireActivity().runOnUiThread(() -> {
                         try {
-                            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                            Bitmap bitmap = barcodeEncoder.encodeBitmap(ticket.getQR(), BarcodeFormat.QR_CODE,
-                                    400, 400);
                             ImageView imageViewQrCode = v.findViewById(R.id.qrCode);
-                            imageViewQrCode.setImageBitmap(bitmap);
+                            Glide.with(v).load(ticket.getQR()).into(imageViewQrCode);
                         } catch(Exception e) {
                             e.printStackTrace();
                         }

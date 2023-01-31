@@ -2,11 +2,15 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
+import com.journeyapps.barcodescanner.ScanOptions;
+
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.checkQRCode.CheckQRCode;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.OrganizedEventInfo;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.EventInfoCall;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.RegisteredEventInfo;
@@ -16,7 +20,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event
 public class EventDetailsViewModel extends ViewModel {
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
                              @NonNull EventDetailsFragment f, @Nullable String userJwt,
-                             @Nullable String data) {
+                             @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher) {
         EventInfoCall c = new EventInfoCall();
         switch(which) {
             case "pub": {
@@ -31,8 +35,8 @@ public class EventDetailsViewModel extends ViewModel {
                 break;
             }
             case "org": {
-                if(userJwt != null && data != null) {
-                    OrganizedEventInfo orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data);
+                if(userJwt != null && data != null && launcher != null) {
+                    OrganizedEventInfo orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data, launcher);
                     orgEvInfo.start();
                 }
                 break;
@@ -50,5 +54,11 @@ public class EventDetailsViewModel extends ViewModel {
                              @NonNull String eventId, @NonNull Fragment f) {
         DeleteTicket delete = new DeleteTicket(eventId, ticketId, accessToken, f);
         delete.start();
+    }
+
+    public void checkQR(@NonNull String userJwt, @NonNull String qrCode, @NonNull String eventId,
+                        @NonNull String day, @NonNull String hour, @NonNull EventDetailsFragment f) {
+        CheckQRCode check = new CheckQRCode(userJwt, qrCode, eventId, day, hour, f);
+        check.start();
     }
 }
