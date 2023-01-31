@@ -227,4 +227,10 @@
     <string name="no_review_title">Missing review title</string>
     <string name="no_review_title_message">The title field is mandatory.</string>
     <string name="review_writing_fragment">Review writing</string>
+    <string name="review_creation_successful">Review creation successful</string>
+    <string name="review_creation_successful_message">The review was successfully created.</string>
+    <string name="malformed_request">Malformed request</string>
+    <string name="malformed_request_message">A malformed request was issued to the server. You may have to contact the developer to solve the issue.</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="unknown_error_message">An unknown error has happened. Please contact the application\'s developer to solve the issue.</string>
 </resources>

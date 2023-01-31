@@ -63,14 +63,13 @@ public class ReviewWriting extends Fragment {
             TextInputLayout titleLayout = v.findViewById(R.id.title), descriptionLayout = v.findViewById(R.id.description);
             RatingBar ratingBar = v.findViewById(R.id.ratingBar);
             String title, description;
-            if(titleLayout != null && titleLayout.getEditText() != null && !titleLayout.getEditText().toString().equals("")) {
+            if(titleLayout.getEditText() != null && !titleLayout.getEditText().getText().toString().equals("")) {
                 title = titleLayout.getEditText().getText().toString();
-                if(descriptionLayout != null && descriptionLayout.getEditText() != null &&
-                        !descriptionLayout.getEditText().toString().equals("")) {
-                    description = descriptionLayout.getEditText().toString();
+                if(descriptionLayout.getEditText() != null && !descriptionLayout.getEditText().getText().toString().equals("")) {
+                    description = descriptionLayout.getEditText().getText().toString();
                     float rating = ratingBar.getRating();
                     if(rating > 1.0) {
-                        mViewModel.postReview(userJwt, eventId, rating, title, description);
+                        mViewModel.postReview(userJwt, eventId, rating, title, description, this, v);
                     } else {
                         //Set alert dialog for wrong rating
                         setAlertDialog(R.string.wrong_rating, R.string.wrong_rating_message);

@@ -128,6 +128,10 @@
         android:id="@+id/reviewWriting"
         android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.review_writing.ReviewWriting"
         android:label="@string/review_writing_fragment"
-        tools:layout="@layout/fragment_review_writing" />
+        tools:layout="@layout/fragment_review_writing" >
+        <action
+            android:id="@+id/action_reviewWriting_to_nav_user_calendar"
+            app:destination="@id/nav_user_calendar" />
+    </fragment>
 
 </navigation>

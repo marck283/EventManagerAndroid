@@ -216,4 +216,10 @@
     <string name="no_review_title">Titolo mancante</string>
     <string name="no_review_title_message">Il campo \"Titolo\" è obbligatorio.</string>
     <string name="review_writing_fragment">Scrittura recensione</string>
+    <string name="review_creation_successful">Recensione creata</string>
+    <string name="review_creation_successful_message">La recensione è stata creata con successo.</string>
+    <string name="malformed_request">Richiesta malformata</string>
+    <string name="malformed_request_message">Il server ha ricevuto una richiesta malformata. Si prega di contattare lo sviluppatore dell\'applicazione per risolvere il problema.</string>
+    <string name="unknown_error">Errore sconosciuto</string>
+    <string name="unknown_error_message">Si è verificato un errore sconosciuto. Si prega di contattare lo sviluppatore dell\'applicazione per risolvere il problema.</string>
 </resources>
