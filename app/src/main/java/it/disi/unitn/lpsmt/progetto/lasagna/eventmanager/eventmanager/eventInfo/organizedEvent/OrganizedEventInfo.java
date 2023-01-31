@@ -30,7 +30,7 @@ public class OrganizedEventInfo extends Thread {
 
     private final Fragment f;
 
-    public OrganizedEventInfo(@NonNull View v, @NonNull Fragment f, @NonNull String userJwt, @NonNull String evId) {
+    public OrganizedEventInfo(@NonNull View v, @NonNull Fragment f, @NonNull String userJwt, @NonNull String evId, @NonNull String day) {
         client = new OkHttpClient();
         this.userJwt = userJwt;
         eventId = evId;
@@ -61,9 +61,9 @@ public class OrganizedEventInfo extends Thread {
 
                             TextView evDay = v.findViewById(R.id.textView9), evHour = v.findViewById(R.id.textView10);
 
-                            /*Sistemare con la data e l'ora richieste*/
-                            /*evDay.setText(f.getString(R.string.day_not_selectable, ));
-                            evHour.setText(f.getString(R.string.time_not_selectable, ));*/
+                            /*Sistemare con l'ora richiesta*/
+                            evDay.setText(f.getString(R.string.day_not_selectable, event.getLuogoEv().get(0).getData()));
+                            /*evHour.setText(f.getString(R.string.time_not_selectable, ));*/
 
                             TextView duration = v.findViewById(R.id.textView12);
                             duration.setText(f.getString(R.string.duration, event.getDurata()));

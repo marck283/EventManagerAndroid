@@ -32,7 +32,7 @@ public class OrganizedEvents {
         mRecyclerView = layout.findViewById(R.id.organizer_recycler_view);
         RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(lm);
-        OrgEvAdapter p1 = new OrgEvAdapter(f, new EventCallback());
+        OrgEvAdapter p1 = new OrgEvAdapter(new EventCallback());
         mRecyclerView.setAdapter(p1);
     }
 

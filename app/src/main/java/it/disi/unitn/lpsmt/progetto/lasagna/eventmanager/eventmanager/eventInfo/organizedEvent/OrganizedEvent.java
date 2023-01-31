@@ -24,7 +24,8 @@ public class OrganizedEvent {
 
     public OrganizedEvent(@NonNull String id, @NonNull String idevent, @NonNull String self,
                           @NonNull String name, @NonNull String category, @NonNull String eventPic,
-                          @NonNull String orgName, @NonNull ArrayList<LuogoEvento> luogoEv, @NonNull String durata) {
+                          @NonNull String orgName, @NonNull ArrayList<LuogoEvento> luogoEv,
+                          @NonNull String durata) {
         this.id = id;
         this.idevent = idevent;
         this.self = self;
@@ -99,7 +100,7 @@ public class OrganizedEvent {
     @Contract("_ -> new")
     public static OrganizedEvent parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
-
+        JsonObject json1 = json;
         json = json.getAsJsonObject("event");
         return new OrganizedEvent(fromJsonString(gs1, json, "id"),
                 fromJsonString(gs1, json, "idevent"),

@@ -2,7 +2,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organized
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,15 +15,14 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 
 public class OrgEvViewHolder extends EventHolder {
     private final MaterialButton t;
-    private final View v;
-    private final Fragment f;
 
-    public OrgEvViewHolder(@NonNull Fragment f, @NonNull View itemView) {
+    private final String day;
+
+    public OrgEvViewHolder(@NonNull View itemView, @NonNull String day) {
         super(itemView);
         t = itemView.findViewById(R.id.event_name_text_view);
         t.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        v = itemView;
-        this.f = f;
+        this.day = day;
     }
 
     @Override
@@ -36,6 +34,7 @@ public class OrgEvViewHolder extends EventHolder {
                     Bundle b = new Bundle();
                     b.putString("eventType", "org");
                     b.putString("eventId", dataModel.getString("eventid"));
+                    b.putString("day", day);
                     Navigation.findNavController(t).navigate(R.id.action_user_calendar_dialog_to_eventDetailsFragment, b);
                 } catch(Exception ex) {
                     ex.printStackTrace();

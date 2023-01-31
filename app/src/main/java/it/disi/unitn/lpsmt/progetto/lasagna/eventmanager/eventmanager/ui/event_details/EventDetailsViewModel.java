@@ -16,7 +16,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event
 public class EventDetailsViewModel extends ViewModel {
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
                              @NonNull EventDetailsFragment f, @Nullable String userJwt,
-                             @Nullable String data, @Nullable String ora) {
+                             @Nullable String data) {
         EventInfoCall c = new EventInfoCall();
         switch(which) {
             case "pub": {
@@ -31,8 +31,8 @@ public class EventDetailsViewModel extends ViewModel {
                 break;
             }
             case "org": {
-                if(userJwt != null) {
-                    OrganizedEventInfo orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId);
+                if(userJwt != null && data != null) {
+                    OrganizedEventInfo orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data);
                     orgEvInfo.start();
                 }
                 break;

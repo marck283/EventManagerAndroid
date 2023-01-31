@@ -48,8 +48,8 @@ public class JsonCallback implements Callback<JsonObject> {
     private void initAdapter(@Nullable Fragment f, EventList ev, @Nullable String day) {
         switch(type) {
             case "org": {
-                if(f != null) {
-                    p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList());
+                if(f != null && day != null) {
+                    p1 = new OrgEvAdapter(new EventCallback(), ev.getList(), day);
                 }
                 break;
             }

@@ -98,7 +98,7 @@ public class EventDetailsFragment extends Fragment {
 
         switch(screenType) {
             case "pub": {
-                mViewModel.getEventInfo("pub", eventId, view, this, null, null, null);
+                mViewModel.getEventInfo("pub", eventId, view, this, null, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
@@ -122,11 +122,11 @@ public class EventDetailsFragment extends Fragment {
                 break;
             }
             case "iscr": {
-                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day, null);
+                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day);
                 break;
             }
             case "org": {
-                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(), null, null);
+                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(), day);
 
                 Button qrCodeScan = view.findViewById(R.id.button8);
                 //qrCodeScan.setOnClickListener(c -> Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_QRCodeScan));

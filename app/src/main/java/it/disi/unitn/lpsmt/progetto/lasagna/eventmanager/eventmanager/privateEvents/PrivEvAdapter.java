@@ -15,7 +15,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 
 public class PrivEvAdapter extends EventAdapter {
-    private String day;
+    private final String day;
 
     public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList,
                          String day) {
