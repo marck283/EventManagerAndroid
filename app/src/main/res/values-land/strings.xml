@@ -142,8 +142,8 @@
     <string name="date_less_than_current_date">The given date is less than the current date.</string>
     <string name="invalid_category">Invalid category</string>
     <string name="invalid_category_message">The selected category does not correspond to any valid value.</string>
-    <string name="one_row_required">No rows</string>
-    <string name="one_row_required_message">At least one row is required to continue.</string>
+    <string name="one_row_required">Error</string>
+    <string name="one_row_required_message">No information on the starting date, the time or the location of the event has been given.</string>
     <string name="event_name_required">Event name required</string>
     <string name="event_name_required_message">The given event name is not a valid value.</string>
     <string name="no_province_selected">No province selected</string>
