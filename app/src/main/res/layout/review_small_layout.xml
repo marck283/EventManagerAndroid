@@ -34,9 +34,10 @@
                 android:id="@+id/userName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/user_name"
                 app:layout_constraintEnd_toStartOf="@+id/showAll"
+                app:layout_constraintHorizontal_bias="0.661"
                 app:layout_constraintStart_toEndOf="@+id/userPicture"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +45,7 @@
                 android:id="@+id/userRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="52dp"
+                android:layout_marginStart="48dp"
                 android:layout_marginTop="38dp"
                 android:layout_marginBottom="28dp"
                 android:text="@string/evaluation"

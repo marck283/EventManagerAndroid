@@ -81,7 +81,7 @@
     <string name="manage_your_events">Gestisci i tuoi eventi</string>
     <string name="average_rating_button">Visualizza la tua valutazione media</string>
     <string name="personal_rating">Valutazione media</string>
-    <string name="personal_rating_message">La tua valutazione corrente è %1$.4f.</string>
+    <string name="personal_rating_message">La tua valutazione media è pari a %1$.4f.</string>
     <string name="username">Nome utente: %1$s</string>
     <string name="facebook_login_error">Si è verificato un errore con il login Facebook. Riprova più tardi.</string>
     <string name="facebook_login_error_title">Accesso non effettuato</string>
@@ -225,4 +225,8 @@
     <string name="unknown_error_message">Si è verificato un errore sconosciuto. Si prega di contattare lo sviluppatore dell\'applicazione per risolvere il problema.</string>
     <string name="valid_qr_code">Codice QR valido</string>
     <string name="valid_qr_code_message">Il codice QR fornito è valido.</string>
+    <string name="error">Errore</string>
+    <string name="max_pers_reached_or_user_already_registered">Il numero massimo di partecipanti è stato raggiunto oppure l\'utente si è già iscritto all\'evento.</string>
+    <string name="no_event">Errore: nessun evento</string>
+    <string name="no_event_message">Non è presente alcun evento registrato con le informazioni fornite.</string>
 </resources>

@@ -183,12 +183,17 @@ public class EventDetailsFragment extends Fragment {
                         OkHttpClient client = new OkHttpClient();
                         Request request = new Request.Builder()
                                 .addHeader("x-access-token", Objects.requireNonNull(nvm.getToken().getValue()))
-                                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/annullaEvento")
+                                .url("https://eventmanagerzlf.herokuapp.com/api/v2/annullaEvento/" + eventId)
+                                .delete()
                                 .build();
                         client.newCall(request).enqueue(new OrganizerCallback() {
                             @Override
                             public void onResponse(@NonNull Call call, @NonNull Response response) {
                                 switch(response.code()) {
+                                    case 401: {
+                                        setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+                                        break;
+                                    }
                                     case 403: {
                                         setAlertDialog(R.string.unauthorized_attempt, R.string.unauthorized_attempt_message);
                                         break;
@@ -196,6 +201,10 @@ public class EventDetailsFragment extends Fragment {
                                     case 200: {
                                         setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
                                         Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_user_calendar_dialog);
+                                        break;
+                                    }
+                                    case 404: {
+                                        setAlertDialog(R.string.no_event, R.string.no_event_message);
                                         break;
                                     }
                                 }

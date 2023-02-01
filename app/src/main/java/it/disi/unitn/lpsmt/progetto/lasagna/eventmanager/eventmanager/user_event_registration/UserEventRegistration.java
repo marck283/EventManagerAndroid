@@ -54,8 +54,8 @@ public class UserEventRegistration {
                     case 403: {
                         if(response.body() != null) {
                             AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-                            ad.setTitle(R.string.internal_server_error);
-                            ad.setMessage(f.getString(R.string.service_unavailable));
+                            ad.setTitle(R.string.error);
+                            ad.setMessage(f.getString(R.string.max_pers_reached_or_user_already_registered));
                             ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                             ad.show();
                         }

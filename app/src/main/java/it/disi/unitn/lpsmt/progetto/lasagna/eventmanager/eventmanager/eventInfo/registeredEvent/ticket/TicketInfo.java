@@ -64,6 +64,7 @@ public class TicketInfo extends Thread {
                             e.printStackTrace();
                         }
                     });
+                    response.body().close();
                 }
             }
         });

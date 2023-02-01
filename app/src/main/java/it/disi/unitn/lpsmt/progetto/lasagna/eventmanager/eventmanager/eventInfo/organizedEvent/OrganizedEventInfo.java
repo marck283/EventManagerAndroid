@@ -104,6 +104,7 @@ public class OrganizedEventInfo extends Thread {
                             });
                         });
                     }
+                    response.body().close();
                 }
             }
         });

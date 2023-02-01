@@ -86,7 +86,11 @@ public class RegisteredEventInfo extends Thread {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //Nulla qui...
+                try {
+                    throw e;
+                } catch(IOException e1) {
+                    e1.printStackTrace();
+                }
             }
 
             @Override
@@ -97,7 +101,7 @@ public class RegisteredEventInfo extends Thread {
                     String body = response.body().string();
                     RegisteredEvent event = RegisteredEvent.parseJSON(gson.fromJson(body, JsonObject.class));
 
-                    if(!f.isDetached()) {
+                    if(f.isAdded()) {
                         f.requireActivity().runOnUiThread(() -> {
                             ImageView image = v.findViewById(R.id.eventPicture);
                             Glide.with(v).load(event.decodeBase64()).into(image);
@@ -190,6 +194,7 @@ public class RegisteredEventInfo extends Thread {
                                     f.getViewModel().deleteTicket(userJwt, event.getTicketId(), event.getIdEvent(), f));
                         });
                     }
+                    response.body().close();
                 } else {
                     Log.i("noResponse", "Nessuna informazione ricevuta sull'evento richiesto");
                 }

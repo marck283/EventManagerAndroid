@@ -237,4 +237,8 @@
     <string name="valid_qr_code_message">The given QR Code is valid.</string>
     <string name="one_row_required">Error</string>
     <string name="one_row_required_message">No information on the starting date, the time or the location of the event has been given.</string>
+    <string name="error">Error</string>
+    <string name="max_pers_reached_or_user_already_registered">Either the maximum nuber of participants was reached or the user has already enrolled.</string>
+    <string name="no_event">Error: no event</string>
+    <string name="no_event_message">There is no event registered with this information.</string>
 </resources>

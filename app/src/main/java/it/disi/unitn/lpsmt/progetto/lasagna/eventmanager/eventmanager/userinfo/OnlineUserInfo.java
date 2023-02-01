@@ -75,7 +75,7 @@ public class OnlineUserInfo {
                         numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
 
                         Button rating = v.findViewById(R.id.rating);
-                        if(userInfo.getNumEvOrg() == 0) {
+                        if(userInfo.getNumEvOrg() == 0 || userInfo.getValutazioneMedia() == 0.0) {
                             rating.setEnabled(false);
                             rating.setVisibility(View.INVISIBLE);
                         } else {
