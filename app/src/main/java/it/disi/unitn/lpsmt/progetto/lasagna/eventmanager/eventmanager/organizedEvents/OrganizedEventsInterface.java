@@ -10,4 +10,7 @@ import retrofit2.http.Path;
 public interface OrganizedEventsInterface {
     @GET("/api/v2/EventOrgList/{data}")
     Call<JsonObject> orgEv(@Header("x-access-token") String token, @Path("data") String data);
+
+    @GET("/api/v2/EventOrgList")
+    Call<JsonObject> orgEv(@Header("x-access-token") String token);
 }

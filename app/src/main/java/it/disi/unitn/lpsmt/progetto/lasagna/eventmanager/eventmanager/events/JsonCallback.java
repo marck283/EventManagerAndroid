@@ -1,7 +1,10 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.util.Log;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,9 +14,11 @@ import com.google.gson.JsonObject;
 
 import java.util.concurrent.ExecutorService;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents.PrivEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.PubEvAdapter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +31,8 @@ public class JsonCallback implements Callback<JsonObject> {
 
     private final Fragment f;
 
+    private final ActivityResultLauncher<Intent> launcher;
+
     private final ExecutorService executor;
 
     public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day) {
@@ -34,6 +41,26 @@ public class JsonCallback implements Callback<JsonObject> {
         this.f = f;
         this.day = day;
         executor = null;
+        launcher = null;
+    }
+
+    public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day,
+                        @NonNull ActivityResultLauncher<Intent> launcher) {
+        this.type = type;
+        mRecyclerView = view;
+        this.f = f;
+        this.day = day;
+        executor = null;
+        this.launcher = launcher;
+    }
+
+    public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @NonNull ActivityResultLauncher<Intent> launcher) {
+        this.type = type;
+        mRecyclerView = view;
+        this.f = f;
+        this.day = null;
+        executor = null;
+        this.launcher = launcher;
     }
 
     public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day,
@@ -43,13 +70,16 @@ public class JsonCallback implements Callback<JsonObject> {
         this.f = f;
         this.day = day;
         this.executor = executor;
+        launcher = null;
     }
 
     private void initAdapter(@Nullable Fragment f, EventList ev, @Nullable String day) {
         switch(type) {
             case "org": {
-                if(f != null && day != null) {
+                if(day != null) {
                     p1 = new OrgEvAdapter(new EventCallback(), ev.getList(), day);
+                } else {
+                    p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                 }
                 break;
             }
@@ -101,6 +131,25 @@ public class JsonCallback implements Callback<JsonObject> {
                 }
             } else {
                 Log.i("fail", "Unsuccessful operation");
+                switch(response.code()) {
+                    case 401: {
+                        if(f != null && launcher != null) {
+                            Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
+                            launcher.launch(loginIntent);
+                        }
+                        break;
+                    }
+                    case 404: {
+                        if(f != null) {
+                            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                            dialog.setTitle(R.string.no_org_event);
+                            dialog.setMessage(f.getString(R.string.no_org_event_message));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                            dialog.show();
+                        }
+                        break;
+                    }
+                }
             }
         } else {
             Log.i("noResponse", "response is null");

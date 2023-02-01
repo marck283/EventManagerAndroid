@@ -22,6 +22,11 @@ public class OrgEvAdapter extends EventAdapter {
         this.day = day;
     }
 
+    public OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
+        super(diffCallback, evList);
+        this.day = null;
+    }
+
     protected OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
         day = null;
@@ -33,7 +38,9 @@ public class OrgEvAdapter extends EventAdapter {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.event_dialog_button, parent, false);
         // Return a new view holder
-
-        return new OrgEvViewHolder(view, day);
+        if(day != null) {
+            return new OrgEvViewHolder(view, day);
+        }
+        return new OrgEvViewHolder(view);
     }
 }

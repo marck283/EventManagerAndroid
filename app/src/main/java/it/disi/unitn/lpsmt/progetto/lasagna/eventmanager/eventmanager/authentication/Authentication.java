@@ -76,7 +76,7 @@ public class Authentication {
 
                     final String email = info.getEmail(), profilePic = info.getProfilePic();
                     if(a instanceof NavigationDrawerActivity) {
-                        a.runOnUiThread(() -> ((NavigationDrawerActivity)a).updateUI("login", email, profilePic));
+                        a.runOnUiThread(() -> ((NavigationDrawerActivity)a).updateUI("login", email, profilePic, true));
                         ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
                     } else {
                         if(a instanceof LoginActivity) {

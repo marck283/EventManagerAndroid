@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 import org.jetbrains.annotations.Contract;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrganizedEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents.PrivateEvents;
 
@@ -25,7 +26,7 @@ public class EventDialogViewModel extends ViewModel {
 
         //Parallelizzo le chiamate per ottenere gli eventi organizzati dall'utente che sta visualizzando il calendario
         // e quelli a cui partecipa.
-        OrganizedEvents orgEv = new OrganizedEvents(f, l);
+        OrganizedEvents orgEv = new OrganizedEvents(R.id.organizer_recycler_view, f, l, null);
         orgEv.getOrgEvents(authToken, data);
 
         PrivateEvents privEv = new PrivateEvents(l);

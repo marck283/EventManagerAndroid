@@ -83,7 +83,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
             account.setAccount(null);
-            updateUI("logout", null, null);
+            updateUI("logout", null, null, true);
         });
         d.setCanceledOnTouchOutside(true);
         d.show();
@@ -157,8 +157,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-        // Queste servirebbero per ottenere la dimensione dell'ImageView nel NavigationDrawer,
-        // ma la successiva impostazione dell'immagine non funziona...
         ivwidth = navView.getHeaderView(0).getLayoutParams().width;
         ivheight = navView.getHeaderView(0).getLayoutParams().height;
 
@@ -174,7 +172,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     account.setAccount(userAccount);
                 } catch (ApiException ex) {
                     Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
-                    updateUI("logout", null, null);
+                    updateUI("logout", null, null, false);
                 }
             }
 
@@ -182,7 +180,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 CsrfToken token = new CsrfToken();
                 token.getCsrfToken(this, new Authentication(), userAccount.getIdToken(), null, "google", null);
             } else {
-                updateUI("logout", null, null);
+                updateUI("logout", null, null, false);
                 if(prompt) {
                     setAlertDialog(false);
                 }
@@ -205,7 +203,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 CsrfToken token = new CsrfToken();
                 token.getCsrfToken(this, new Authentication(), null, accessToken, "facebook", null);
             } else {
-                updateUI("logout", null, null);
+                updateUI("logout", null, null, false);
             }
         });
         req.setParameters(parameters);
@@ -248,12 +246,17 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         email.setText("");
     }
 
-    public void updateUI(@NonNull String request, @Nullable String emailF, String pictureF) {
+    public void updateUI(@NonNull String request, @Nullable String emailF, String pictureF, boolean reauth) {
         navView.getMenu().clear();
 
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
         TextView username = l.findViewById(R.id.profile_name);
         TextView email = l.findViewById(R.id.profile_email);
+
+        if(request.equals("logout") && !reauth) {
+            showNotLoggedIn(username, email);
+            return;
+        }
 
         if(account.getAccount() == null) {
             if(Profile.getCurrentProfile() == null || accessToken.isExpired()) {
@@ -296,7 +299,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             t.addOnCompleteListener(c -> {
                 account.setAccount(null);
                 vm.setToken("");
-                updateUI("logout", null, null);
+                updateUI("logout", null, null, false);
             });
         } else {
             accessToken = null;
@@ -346,7 +349,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                             Log.i("gToken", "Nessun authToken Google valido");
                         }
                     } else {
-                        updateUI("login", account.getAccount().getEmail(), account.getAccount().getPhotoUrl().toString());
+                        updateUI("login", account.getAccount().getEmail(),
+                                account.getAccount().getPhotoUrl().toString(), true);
                     }
                 } else {
                     //Facebook login
@@ -366,13 +370,13 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         vm.setToken(prefs.getString("accessToken", ""));
                         profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
                     }
-                    updateUI("login", email, picture);
+                    updateUI("login", email, picture, true);
                 }
                 break;
             }
             case Activity.RESULT_CANCELED: {
                 account.setAccount(null);
-                updateUI("logout", null, null);
+                updateUI("logout", null, null, false);
 
                 AlertDialog dialog = new AlertDialog.Builder(this).create();
                 dialog.setTitle(R.string.login_error_title);

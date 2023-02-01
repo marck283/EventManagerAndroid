@@ -242,4 +242,7 @@
     <string name="no_event">Error: no event</string>
     <string name="no_event_message">There is no event registered with this information.</string>
     <string name="organized_event_table">Table of organized events</string>
+    <string name="event_management">Event management</string>
+    <string name="no_org_event">No event found</string>
+    <string name="no_org_event_message">This user did not organize any events.</string>
 </resources>

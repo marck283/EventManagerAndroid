@@ -1,8 +1,14 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile;
 
+import static android.app.Activity.RESULT_OK;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -19,12 +25,15 @@ import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class UserProfileFragment extends Fragment {
 
     private UserProfileViewModel mViewModel;
     private MenuSettingsViewModel ms;
     private View v;
+
+    private SharedPreferences prefs;
 
     @NonNull
     @Contract(" -> new")
@@ -43,17 +52,22 @@ public class UserProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(UserProfileViewModel.class);
+        ms = new ViewModelProvider(requireActivity()).get(MenuSettingsViewModel.class);
+        prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
 
-        v.findViewById(R.id.eventManaging).setOnClickListener(c -> Navigation.findNavController(v)
-                .navigate(R.id.action_nav_user_profile_to_eventManagement));
+        String token = prefs.getString("accessToken", "");
+        if(!token.equals("")) {
+            Bundle b = new Bundle();
+            b.putString("userJwt", token);
+            v.findViewById(R.id.eventManaging).setOnClickListener(c -> Navigation.findNavController(v)
+                    .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
+        }
     }
 
     public void onStart() {
         super.onStart();
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
         mViewModel.getUserInfo(this, prefs.getString("accessToken", ""), v.findViewById(R.id.frameLayout2));
-        ms = new ViewModelProvider(requireActivity()).get(MenuSettingsViewModel.class);
 
         ms.getChecked().observe(requireActivity(), o -> {
             if(!((boolean) o)) {

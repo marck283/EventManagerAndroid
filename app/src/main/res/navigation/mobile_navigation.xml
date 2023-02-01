@@ -138,8 +138,15 @@
     </fragment>
     <fragment
         android:id="@+id/eventManagement"
-        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagement"
-        android:label="fragment_event_management"
-        tools:layout="@layout/fragment_event_management" />
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagementFragment"
+        android:label="@string/event_management"
+        tools:layout="@layout/fragment_event_management" >
+        <action
+            android:id="@+id/action_eventManagement_to_nav_event_list"
+            app:destination="@id/nav_event_list" />
+        <action
+            android:id="@+id/action_eventManagement_to_eventDetailsFragment"
+            app:destination="@id/eventDetailsFragment" />
+    </fragment>
 
 </navigation>

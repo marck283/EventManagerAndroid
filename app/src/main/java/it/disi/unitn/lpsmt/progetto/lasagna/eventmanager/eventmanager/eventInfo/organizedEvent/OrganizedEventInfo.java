@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -52,7 +53,7 @@ public class OrganizedEventInfo extends Thread {
     private ActivityResultLauncher<ScanOptions> launcher;
 
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
-                              @NonNull String evId, @NonNull String day, @NonNull ActivityResultLauncher<ScanOptions> launcher) {
+                              @NonNull String evId, @Nullable String day, @NonNull ActivityResultLauncher<ScanOptions> launcher) {
         client = new OkHttpClient();
         this.userJwt = userJwt;
         eventId = evId;
@@ -104,11 +105,8 @@ public class OrganizedEventInfo extends Thread {
                             TextView evName = v.findViewById(R.id.textView6);
                             evName.setText(f.getString(R.string.info_on_event, event.getEventName()));
 
-                            TextView evDay = v.findViewById(R.id.textView9)/*, evHour = v.findViewById(R.id.textView10)*/;
-
-                            /*Sistemare con l'ora richiesta*/
+                            TextView evDay = v.findViewById(R.id.textView9);
                             evDay.setText(f.getString(R.string.day_not_selectable, day));
-                            /*evHour.setText(f.getString(R.string.time_not_selectable, ));*/
 
                             TextView duration = v.findViewById(R.id.textView12);
                             duration.setText(f.getString(R.string.duration, event.getDurata()));
@@ -168,6 +166,12 @@ public class OrganizedEventInfo extends Thread {
                         });
                     }
                     response.body().close();
+                } else {
+                    switch(response.code()) {
+                        case 401: {
+
+                        }
+                    }
                 }
             }
         });
