@@ -240,4 +240,5 @@
     <string name="max_pers_reached_or_user_already_registered">Either the maximum nuber of participants was reached or the user has already enrolled.</string>
     <string name="no_event">Error: no event</string>
     <string name="no_event_message">There is no event registered with this information.</string>
+    <string name="organized_event_table">Table of organized events</string>
 </resources>

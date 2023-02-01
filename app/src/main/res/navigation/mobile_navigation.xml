@@ -86,6 +86,9 @@
         <action
             android:id="@+id/action_nav_user_profile_to_nav_user_calendar"
             app:destination="@id/nav_user_calendar" />
+        <action
+            android:id="@+id/action_nav_user_profile_to_eventManagement"
+            app:destination="@id/eventManagement" />
     </fragment>
     <fragment
         android:id="@+id/eventDetailsFragment"
@@ -133,5 +136,10 @@
             android:id="@+id/action_reviewWriting_to_nav_user_calendar"
             app:destination="@id/nav_user_calendar" />
     </fragment>
+    <fragment
+        android:id="@+id/eventManagement"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagement"
+        android:label="fragment_event_management"
+        tools:layout="@layout/fragment_event_management" />
 
 </navigation>

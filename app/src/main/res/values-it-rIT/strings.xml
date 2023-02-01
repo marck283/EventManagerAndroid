@@ -229,4 +229,5 @@
     <string name="max_pers_reached_or_user_already_registered">Il numero massimo di partecipanti è stato raggiunto oppure l\'utente si è già iscritto all\'evento.</string>
     <string name="no_event">Errore: nessun evento</string>
     <string name="no_event_message">Non è presente alcun evento registrato con le informazioni fornite.</string>
+    <string name="organized_event_table">Tabella eventi organizzati</string>
 </resources>
