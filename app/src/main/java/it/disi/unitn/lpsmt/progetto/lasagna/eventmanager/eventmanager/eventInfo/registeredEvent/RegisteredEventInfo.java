@@ -123,9 +123,7 @@ public class RegisteredEventInfo extends Thread {
 
                             String[] sDurata = event.getDurata().split(":");
                             TextView durata = v.findViewById(R.id.textView39);
-                            String wholeDuration = Integer.parseInt(sDurata[0]) + "g, "
-                                    + Integer.parseInt(sDurata[1]) + "h e " + Integer.parseInt(sDurata[2]) + "m";
-                            durata.setText(f.getString(R.string.duration, wholeDuration));
+                            durata.setText(f.getString(R.string.duration, sDurata[0], sDurata[1], sDurata[2]));
 
                             TextView address = v.findViewById(R.id.textView42);
                             address.setText(f.getString(R.string.event_address, event.getLuogoEv().toString()));
@@ -151,7 +149,7 @@ public class RegisteredEventInfo extends Thread {
                                                     Looper.prepare();
                                                     noSuchAddressDialog(f);
                                                     Looper.loop();
-                                                    Looper.getMainLooper().quitSafely();
+                                                    Looper.myLooper().quitSafely();
                                                 }
                                             } catch (IOException e) {
                                                 e.printStackTrace();

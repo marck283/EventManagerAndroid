@@ -101,7 +101,7 @@ public class PostReview extends Thread {
                 }
                 dialog.show();
                 Looper.loop();
-                Looper.getMainLooper().quitSafely();
+                Looper.myLooper().quitSafely();
             }
         });
     }

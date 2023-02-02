@@ -23,6 +23,7 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.GraphRequest;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -226,6 +227,18 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         account = new GSignIn(this);
         vm.init(this);
 
+        /*SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+        String accessToken = prefs.getString("accessToken", "");
+        if(accessToken.equals("")) {
+            updateUI("logout", null, null, false);
+            if(prompt) {
+                setAlertDialog(false);
+                prompt = false;
+            }
+        } else {
+            CsrfToken token = new CsrfToken();
+            token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
+        }*/
         profile = Profile.getCurrentProfile();
         if(profile == null) {
             GoogleSignInAccount userAccount = account.getAccount();

@@ -58,7 +58,7 @@ public class EventLocationViewModel extends ViewModel {
                 if(i == addresses.size()) {
                     setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
                     Looper.loop();
-                    Looper.getMainLooper().quitSafely();
+                    Looper.myLooper().quitSafely();
                 }
             }
         }
@@ -309,7 +309,8 @@ public class EventLocationViewModel extends ViewModel {
             return;
         }
 
-        String location = t2.getText() + ", " + t3.getText() + ", " + t4.getText() + ", " + t5.getText() + ", " + parseProvince();
+        String location = t2.getText().toString().trim() + ", " + t3.getText().toString().trim() + ", "
+                + t4.getText().toString().trim() + ", " + t5.getText().toString().trim() + ", " + parseProvince().trim();
         Geocoder geocoder = new Geocoder(f.getContext());
 
         try {
@@ -345,9 +346,7 @@ public class EventLocationViewModel extends ViewModel {
                                 f.requireActivity().runOnUiThread(() ->
                                         NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
                             } else {
-                                setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result));
-                                Looper.loop();
-                                Looper.getMainLooper().quitSafely();
+                                f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result)));
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -355,12 +354,9 @@ public class EventLocationViewModel extends ViewModel {
                     }
                 };
                 t1.start();
-                t1.join();
             }
         } catch (NumberFormatException ex) {
             setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }

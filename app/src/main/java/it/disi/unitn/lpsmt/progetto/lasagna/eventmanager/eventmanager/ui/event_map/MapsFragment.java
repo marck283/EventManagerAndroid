@@ -40,6 +40,8 @@ public class MapsFragment extends Fragment implements ActivityCompat.OnRequestPe
             googleMap.setMinZoomPreference(7);
             ((NavigationDrawerActivity)requireActivity()).checkMapPermissions(googleMap);
 
+            googleMap.setTrafficEnabled(true);
+
             LatLng sydney = new LatLng(lat, lng);
             googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));

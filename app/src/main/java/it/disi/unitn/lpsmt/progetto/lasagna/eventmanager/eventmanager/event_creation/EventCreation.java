@@ -65,7 +65,7 @@ public class EventCreation extends Thread {
         });
         dialog.show();
         Looper.loop();
-        Looper.getMainLooper().quitSafely();
+        Looper.myLooper().quitSafely();
     }
 
     public void run() {

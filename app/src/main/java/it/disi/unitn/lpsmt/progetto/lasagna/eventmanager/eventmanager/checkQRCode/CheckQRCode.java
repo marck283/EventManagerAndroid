@@ -42,7 +42,7 @@ public class CheckQRCode extends Thread {
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
         dialog.show();
         Looper.loop();
-        Looper.getMainLooper().quitSafely();
+        Looper.myLooper().quitSafely();
     }
 
     public void run() {

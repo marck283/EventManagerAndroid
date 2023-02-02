@@ -95,14 +95,16 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        Looper.prepare();
-        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-        dialog.setTitle(title);
-        dialog.setMessage(getString(message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
-        Looper.loop();
-        Looper.getMainLooper().quitSafely();
+        //Looper.prepare();
+        requireActivity().runOnUiThread(() -> {
+                    AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                    dialog.setTitle(title);
+                    dialog.setMessage(getString(message));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+                });
+        /*Looper.loop();
+        Looper.myLooper().quitSafely();*/
     }
 
     @Override

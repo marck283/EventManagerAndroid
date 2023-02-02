@@ -1,9 +1,11 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -54,20 +56,20 @@ public class EventInfoCall {
 
     private void startGoogleMaps(@NonNull EventDetailsFragment f, @NonNull TextView indirizzo,
                                  @NonNull List<Address> addresses, @NonNull View v) {
-        /*Address address = addresses.get(0);
+        Address address = addresses.get(0);
 
         Uri gmURI = Uri.parse("geo:" + address.getLatitude() + "," + address.getLongitude()
                 + "?q=" + indirizzo.getText().toString());
         Intent i = new Intent(Intent.ACTION_VIEW, gmURI);
         i.setPackage("com.google.android.apps.maps");
 
-        f.requireActivity().startActivity(i);*/
+        f.requireActivity().startActivity(i);
 
-        Bundle b = new Bundle();
+        /*Bundle b = new Bundle();
         b.putDouble("lat", addresses.get(0).getLatitude());
         b.putDouble("lng", addresses.get(0).getLongitude());
         f.requireActivity().runOnUiThread(() ->
-        Navigation.findNavController(v).navigate(R.id.action_eventDetailsFragment_to_mapsFragment, b));
+        Navigation.findNavController(v).navigate(R.id.action_eventDetailsFragment_to_mapsFragment, b));*/
     }
 
     private void noSuchAddressDialog(@NonNull Fragment f) {
@@ -181,7 +183,7 @@ public class EventInfoCall {
                                                                         Looper.prepare();
                                                                         noSuchAddressDialog(f);
                                                                         Looper.loop();
-                                                                        Looper.getMainLooper().quitSafely();
+                                                                        Looper.myLooper().quitSafely();
                                                                     }
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();

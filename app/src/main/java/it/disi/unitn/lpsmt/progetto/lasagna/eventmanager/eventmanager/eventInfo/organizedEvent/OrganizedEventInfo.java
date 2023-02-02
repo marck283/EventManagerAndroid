@@ -192,7 +192,7 @@ public class OrganizedEventInfo extends Thread {
                                                                 Looper.prepare();
                                                                 noSuchAddressDialog(f);
                                                                 Looper.loop();
-                                                                Looper.getMainLooper().quitSafely();
+                                                                Looper.myLooper().quitSafely();
                                                             }
                                                         } catch (IOException e) {
                                                             e.printStackTrace();

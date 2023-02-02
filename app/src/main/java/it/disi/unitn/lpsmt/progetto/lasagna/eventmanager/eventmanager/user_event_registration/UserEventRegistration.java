@@ -37,6 +37,7 @@ public class UserEventRegistration {
                 //Interpretare la risposta di errore (si ricordi che il messaggio di errore è
                 //contenuto nel campo "error" della risposta).
                 //Log.i("response", String.valueOf(response.body()));
+                //Errore sul body della risposta? Perché? Non ci dovrebbe essere un body...
                 switch(response.code()) {
                     case 201: {
                         //Successo
