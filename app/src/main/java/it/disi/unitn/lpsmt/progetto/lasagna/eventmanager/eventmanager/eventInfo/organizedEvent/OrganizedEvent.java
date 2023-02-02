@@ -90,10 +90,13 @@ public class OrganizedEvent {
     }
 
     public Bitmap decodeBase64() {
-        byte[] decodedImg = Base64.decode(eventPic
-                .replace("data:image/png;base64,", "")
-                .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-        return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+        if(eventPic != null) {
+            byte[] decodedImg = Base64.decode(eventPic
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
+            return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+        }
+        return null;
     }
 
     @NonNull

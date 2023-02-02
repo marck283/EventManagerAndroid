@@ -7,8 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -64,12 +61,6 @@ public class EventInfoCall {
         i.setPackage("com.google.android.apps.maps");
 
         f.requireActivity().startActivity(i);
-
-        /*Bundle b = new Bundle();
-        b.putDouble("lat", addresses.get(0).getLatitude());
-        b.putDouble("lng", addresses.get(0).getLongitude());
-        f.requireActivity().runOnUiThread(() ->
-        Navigation.findNavController(v).navigate(R.id.action_eventDetailsFragment_to_mapsFragment, b));*/
     }
 
     private void noSuchAddressDialog(@NonNull Fragment f) {
@@ -132,7 +123,7 @@ public class EventInfoCall {
                         textView.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                //Nothing
+                                //Nulla qui...
                             }
 
                             @Override
@@ -153,7 +144,7 @@ public class EventInfoCall {
                                     textView1.addTextChangedListener(new TextWatcher() {
                                         @Override
                                         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                            //Nothing
+                                            //Nulla qui...
                                         }
 
                                         @Override
@@ -180,10 +171,8 @@ public class EventInfoCall {
                                                                     if (addresses != null && addresses.size() > 0) {
                                                                         startGoogleMaps(f, indirizzo, addresses, v);
                                                                     } else {
-                                                                        Looper.prepare();
-                                                                        noSuchAddressDialog(f);
-                                                                        Looper.loop();
-                                                                        Looper.myLooper().quitSafely();
+                                                                        f.requireActivity().runOnUiThread(() ->
+                                                                                noSuchAddressDialog(f));
                                                                     }
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -228,7 +217,7 @@ public class EventInfoCall {
 
                                         @Override
                                         public void afterTextChanged(Editable s) {
-                                            //Nothing
+                                            //Nulla qui...
                                         }
                                     });
                                 } else {
@@ -240,7 +229,7 @@ public class EventInfoCall {
 
                             @Override
                             public void afterTextChanged(Editable s) {
-                                //Nothing
+                                //Nulla qui...
                             }
                         });
                     }

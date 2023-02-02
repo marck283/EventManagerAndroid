@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +114,9 @@ public class EventDetailsFragment extends Fragment {
 
         switch(screenType) {
             case "pub": {
+                TextView organizerName = view.findViewById(R.id.organizerName), duration = view.findViewById(R.id.duration);
+                organizerName.setText(getString(R.string.organizer_name, ""));
+                duration.setText(getString(R.string.duration, "", "", ""));
                 mViewModel.getEventInfo("pub", eventId, view, this, null, null, null, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
@@ -143,8 +145,9 @@ public class EventDetailsFragment extends Fragment {
                 break;
             }
             case "org": {
-                TextView duration = view.findViewById(R.id.textView12);
+                TextView duration = view.findViewById(R.id.textView12), address = view.findViewById(R.id.textView15);
                 duration.setText(getString(R.string.duration, "", "", ""));
+                address.setText(getString(R.string.event_address, ""));
 
                 TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.spinner2);
                 launcher = registerForActivityResult(new ScanContract(),
