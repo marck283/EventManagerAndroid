@@ -60,12 +60,10 @@ public class EventManagementFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     switch(result.getResultCode()) {
                         case RESULT_OK: {
-                            //Gather data from next Fragment, then load it
                             mViewModel.getOrgEvents(this, view, userJwt, null);
                             break;
                         }
                         case Activity.RESULT_CANCELED: {
-                            //Return to the main screen
                             SharedPreferences prefs =
                                     requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();

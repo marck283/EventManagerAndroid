@@ -103,6 +103,9 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_reviewWriting"
             app:destination="@id/reviewWriting" />
+        <action
+            android:id="@+id/action_eventDetailsFragment_to_nav_event_list"
+            app:destination="@id/nav_event_list" />
     </fragment>
     <dialog
         android:id="@+id/eventSearchFragment"

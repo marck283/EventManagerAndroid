@@ -15,7 +15,7 @@
     <string name="event_picture">Event picture</string>
     <string name="date">Date</string>
     <string name="day">Day: </string>
-    <string name="duration">Duration: %1$s</string>
+    <string name="duration">Duration: %1$s h, %2$s m and %3$s s</string>
     <string name="organizer">Organizer: %1$s</string>
     <string name="event_info">Event information</string>
     <string name="time">Time: </string>
@@ -245,4 +245,6 @@
     <string name="event_management">Event management</string>
     <string name="no_org_event">No event found</string>
     <string name="no_org_event_message">This user did not organize any events.</string>
+    <string name="select_date">Event date</string>
+    <string name="select_hour">Event time</string>
 </resources>

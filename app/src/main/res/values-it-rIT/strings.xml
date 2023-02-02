@@ -13,7 +13,7 @@
     <string name="event_picture">Immagine evento</string>
     <string name="date">Data e ora</string>
     <string name="day">Giorno:</string>
-    <string name="duration">Durata: %1$s</string>
+    <string name="duration">Durata: %1$s g, %2$s h e %3$s m</string>
     <string name="organizer">Organizzatore: %1$s</string>
     <string name="event_info">Informazioni evento</string>
     <string name="time">Orario:</string>
@@ -210,6 +210,10 @@
     <string name="wrong_rating_message">La valutazione deve avere un valore corrispondente ad almeno una stella.</string>
     <string name="invalid_qr_code_message">Il codice QR fornito non è valido.</string>
     <string name="event_management">Gestione eventi</string>
+    <string name="no_org_event">Nessun evento trovato</string>
+    <string name="no_org_event_message">L\'utente non ha organizzato alcun evento.</string>
+    <string name="select_date">Data evento</string>
+    <string name="select_hour">Ora evento</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>

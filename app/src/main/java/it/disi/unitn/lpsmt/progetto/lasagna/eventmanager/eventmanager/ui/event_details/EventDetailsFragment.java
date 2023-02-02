@@ -1,10 +1,15 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,14 +22,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.Objects;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
@@ -44,6 +50,8 @@ public class EventDetailsFragment extends Fragment {
     private String eventId;
 
     private ActivityResultLauncher<ScanOptions> launcher;
+
+    private ActivityResultLauncher<Intent> loginLauncher;
 
     public void setEventId(@NonNull String val) {
         eventId = val;
@@ -105,7 +113,7 @@ public class EventDetailsFragment extends Fragment {
 
         switch(screenType) {
             case "pub": {
-                mViewModel.getEventInfo("pub", eventId, view, this, null, null, null);
+                mViewModel.getEventInfo("pub", eventId, view, this, null, null, null, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
@@ -129,19 +137,46 @@ public class EventDetailsFragment extends Fragment {
                 break;
             }
             case "iscr": {
-                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day, null);
+                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day, null, null);
                 break;
             }
             case "org": {
-                Spinner spinner = view.findViewById(R.id.spinner);
+                TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.spinner2);
                 launcher = registerForActivityResult(new ScanContract(),
                         result -> {
-                            if (result.getContents() != null && spinner.getSelectedItem() != null) {
+                            if (result.getContents() != null && spinner.getEditText() != null &&
+                                    spinner.getEditText().getText() != null &&
+                                    !spinner.getEditText().getText().toString().equals("---") &&
+                                    spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
+                            !spinner2.getEditText().getText().toString().equals("---")) {
                                 mViewModel.checkQR(nvm.getToken().getValue(), result.getContents(),
-                                        eventId, day, spinner.getSelectedItem().toString(), this);
+                                        eventId, spinner2.getEditText().getText().toString(),
+                                        spinner.getEditText().getText().toString(), this);
                             }
                         });
-                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(), day, launcher);
+                loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                    switch(result.getResultCode()) {
+                        case Activity.RESULT_OK: {
+                            mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                    day, launcher, null);
+                            break;
+                        }
+                        case Activity.RESULT_CANCELED: {
+                            SharedPreferences prefs =
+                                    requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("accessToken", "");
+                            editor.apply();
+                            Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
+                            ((NavigationDrawerActivity)requireActivity())
+                                    .updateUI("logout", "", "", false);
+                            break;
+                        }
+                    }
+                        });
+                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                        day, launcher, loginLauncher);
 
                 Button qrCodeScan = view.findViewById(R.id.button8), terminaEvento = view.findViewById(R.id.button12);
                 terminaEvento.setOnClickListener(c -> {

@@ -14,7 +14,7 @@
             android:id="@+id/imageView3"
             android:layout_width="409dp"
             android:layout_height="155dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:contentDescription="@string/event_picture"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,26 +35,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="68dp"
-            android:text="@string/day_not_selectable"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
         <TextView
             android:id="@+id/textView12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginStart="68dp"
+            android:layout_marginTop="48dp"
             android:text="@string/duration"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner2" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textView15"
@@ -107,18 +96,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/button12" />
 
-        <Spinner
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/spinner"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="155dp"
             android:layout_height="52dp"
             android:layout_marginTop="52dp"
-            android:hint="@string/time"
-            style="@style/Widget.AppCompat.Spinner.DropDown"
+            android:layout_marginEnd="32dp"
+            android:contentDescription="@string/time"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.435"
-            app:layout_constraintStart_toEndOf="@+id/textView9"
-            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            app:layout_constraintTop_toBottomOf="@+id/textView6">
 
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/orgHourTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/select_hour"
+                android:enabled="false" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/spinner2"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="155dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="52dp"
+            app:layout_constraintEnd_toStartOf="@+id/spinner"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView6">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/orgDateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/select_date"
+                android:enabled="false" />
+
+        </com.google.android.material.textfield.TextInputLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

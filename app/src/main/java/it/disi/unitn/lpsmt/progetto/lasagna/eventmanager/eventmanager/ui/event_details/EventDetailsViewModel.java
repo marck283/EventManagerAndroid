@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details;
 
+import android.content.Intent;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,7 +21,8 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event
 public class EventDetailsViewModel extends ViewModel {
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
                              @NonNull EventDetailsFragment f, @Nullable String userJwt,
-                             @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher) {
+                             @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
+                             @Nullable ActivityResultLauncher<Intent> loginLauncher) {
         EventInfoCall c = new EventInfoCall();
         switch(which) {
             case "pub": {
@@ -35,8 +37,23 @@ public class EventDetailsViewModel extends ViewModel {
                 break;
             }
             case "org": {
-                if(userJwt != null && data != null && launcher != null) {
-                    OrganizedEventInfo orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data, launcher);
+                if(userJwt != null && launcher != null) {
+                    OrganizedEventInfo orgEvInfo;
+                    if(data != null) {
+                        //La data di un evento è inclusa solo quando la richiesta parte dal calendario dell'utente.
+                        orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data, launcher);
+                    } else {
+                        if(loginLauncher != null) {
+                            //n questo caso, ci potrebbe essere il rischio che l'utente non sia autenticato al sistema.
+                            //Questo problema è risolto aggiungendo un ActivityResultLauncher che permette l'avvio
+                            //dell'Activity di login e, una volta ricevuto il risultato, esegue di nuovo la
+                            //richiesta al server.
+                            orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, launcher, loginLauncher);
+                        } else {
+                            //La richiesta al server viene eseguita di nuovo passando per questa riga di codice.
+                            orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, launcher);
+                        }
+                    }
                     orgEvInfo.start();
                 }
                 break;
