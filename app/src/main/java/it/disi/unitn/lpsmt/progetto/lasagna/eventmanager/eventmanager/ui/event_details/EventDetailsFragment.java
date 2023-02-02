@@ -141,6 +141,9 @@ public class EventDetailsFragment extends Fragment {
                 break;
             }
             case "org": {
+                TextView duration = view.findViewById(R.id.textView12);
+                duration.setText(getString(R.string.duration, "", "", ""));
+
                 TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.spinner2);
                 launcher = registerForActivityResult(new ScanContract(),
                         result -> {
