@@ -3,6 +3,7 @@ plugins {
 
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -53,6 +54,7 @@ task testClasses {
 dependencies {
     implementation("androidx.room:room-runtime:2.5.0")
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     annotationProcessor("androidx.room:room-compiler:2.5.0")
     annotationProcessor('com.github.bumptech.glide:compiler:4.14.2')
 

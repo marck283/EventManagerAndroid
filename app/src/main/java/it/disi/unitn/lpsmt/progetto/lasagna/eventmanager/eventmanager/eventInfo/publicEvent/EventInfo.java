@@ -107,33 +107,7 @@ public class EventInfo {
     }
 
     private String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject json, @NonNull String name) {
-        String res = "";
-        if(name.equals("durata")) {
-            String[] arr = json.get(name).getAsString().split(":");
-            res += arr[0];
-            if(arr[0].equals("1")) {
-                res += " giorno, ";
-            } else {
-                res += " giorni, ";
-            }
-
-            res += arr[1];
-            if(arr[1].equals("1")) {
-                res += " ora e ";
-            } else {
-                res += " ore e ";
-            }
-
-            res += arr[2];
-            if(arr[2].equals("1")) {
-                res += " minuto";
-            } else {
-                res += " minuti";
-            }
-        } else {
-            res = gs1.fromJson(json.get(name), String.class);
-        }
-        return res;
+        return gs1.fromJson(json.get(name), String.class);
     }
 
     @NonNull

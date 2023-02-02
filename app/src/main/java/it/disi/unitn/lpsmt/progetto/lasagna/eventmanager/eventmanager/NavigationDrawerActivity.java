@@ -1,10 +1,13 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,11 +26,14 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -66,6 +72,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private EventSearchViewModel esvm;
 
     private int ivwidth, ivheight;
+
+    private GoogleMap map;
 
     private void setAlertDialog(boolean eventCreation) {
         prompt = false;
@@ -151,6 +159,61 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navController.setGraph(R.navigation.mobile_navigation);
             NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
             NavigationUI.setupWithNavController(binding.navView, navController);
+        }
+    }
+
+    public void checkMapPermissions(@NonNull GoogleMap map) {
+        this.map = map;
+        // 1. Check if permissions are granted, if so, enable the my location layer
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            enableMyLocation();
+            return;
+        }
+
+        // 2. Otherwise, request location permissions from the user.
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 23);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 23);
+    }
+
+    /**
+     * Enables the My Location layer if the fine location permission has been granted.
+     */
+    @SuppressLint("MissingPermission")
+    public void enableMyLocation() {
+        // 1. Check if permissions are granted, if so, enable the my location layer
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(true);
+            return;
+        }
+
+        // 2. Otherwise, request location permissions from the user.
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 23);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 23);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != 23) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            return;
+        }
+
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED || grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            // Enable the my location layer if the permission has been granted.
+            enableMyLocation();
+        } else {
+            // Permission was denied. Display an error message
+            // Display the missing permission error dialog when the fragments resume.
+            AlertDialog missingPermission = new AlertDialog.Builder(this).create();
+            missingPermission.setTitle(R.string.missing_location_permission);
+            missingPermission.setMessage(getString(R.string.missing_location_permission_message));
         }
     }
 

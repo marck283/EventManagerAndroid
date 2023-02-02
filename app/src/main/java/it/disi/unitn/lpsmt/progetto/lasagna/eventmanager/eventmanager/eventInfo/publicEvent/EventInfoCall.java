@@ -1,12 +1,11 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +18,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -53,15 +53,21 @@ public class EventInfoCall {
     }
 
     private void startGoogleMaps(@NonNull EventDetailsFragment f, @NonNull TextView indirizzo,
-                                 @NonNull List<Address> addresses) {
-        Address address = addresses.get(0);
+                                 @NonNull List<Address> addresses, @NonNull View v) {
+        /*Address address = addresses.get(0);
 
         Uri gmURI = Uri.parse("geo:" + address.getLatitude() + "," + address.getLongitude()
                 + "?q=" + indirizzo.getText().toString());
         Intent i = new Intent(Intent.ACTION_VIEW, gmURI);
         i.setPackage("com.google.android.apps.maps");
 
-        f.requireActivity().startActivity(i);
+        f.requireActivity().startActivity(i);*/
+
+        Bundle b = new Bundle();
+        b.putDouble("lat", addresses.get(0).getLatitude());
+        b.putDouble("lng", addresses.get(0).getLongitude());
+        f.requireActivity().runOnUiThread(() ->
+        Navigation.findNavController(v).navigate(R.id.action_eventDetailsFragment_to_mapsFragment, b));
     }
 
     private void noSuchAddressDialog(@NonNull Fragment f) {
@@ -89,7 +95,7 @@ public class EventInfoCall {
                  */
                 @Override
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                    if (response.body() != null && response.isSuccessful() && !f.isDetached()) {
+                    if (response.body() != null && response.isSuccessful() && f.isAdded()) {
                         EventInfo ei = new EventInfo();
                         Log.i("responseBody", String.valueOf(response.body()));
                         final EventInfo ei1 = ei.parseJSON(response.body());
@@ -105,7 +111,8 @@ public class EventInfoCall {
                         organizerName.setText(f.getString(R.string.organizer, ei1.getOrgName()));
 
                         TextView durata = v.findViewById(R.id.duration);
-                        durata.setText(f.getString(R.string.duration, ei1.getDurata()));
+                        String[] durataArr = ei1.getDurata().split(":");
+                        durata.setText(f.getString(R.string.duration, durataArr[0], durataArr[1], durataArr[2]));
 
                         f.setEventId(ei1.getId());
 
@@ -157,7 +164,7 @@ public class EventInfoCall {
                                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                                         geocoder.getFromLocationName(indirizzo.getText().toString(), 5, addresses -> {
                                                             if (addresses.size() > 0) {
-                                                                startGoogleMaps(f, indirizzo, addresses);
+                                                                startGoogleMaps(f, indirizzo, addresses, v);
                                                             } else {
                                                                 noSuchAddressDialog(f);
                                                             }
@@ -169,7 +176,7 @@ public class EventInfoCall {
                                                                 try {
                                                                     addresses = geocoder.getFromLocationName(indirizzo.getText().toString(), 5);
                                                                     if (addresses != null && addresses.size() > 0) {
-                                                                        startGoogleMaps(f, indirizzo, addresses);
+                                                                        startGoogleMaps(f, indirizzo, addresses, v);
                                                                     } else {
                                                                         Looper.prepare();
                                                                         noSuchAddressDialog(f);

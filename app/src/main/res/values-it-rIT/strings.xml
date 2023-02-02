@@ -214,6 +214,8 @@
     <string name="no_org_event_message">L\'utente non ha organizzato alcun evento.</string>
     <string name="select_date">Data evento</string>
     <string name="select_hour">Ora evento</string>
+    <string name="missing_location_permission">Permesso posizione mancante</string>
+    <string name="missing_location_permission_message">Non puoi usare questa funzionalità perché non è stato consentito l\'accesso alla posizione del dispositivo.</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>
@@ -235,4 +237,5 @@
     <string name="no_event">Errore: nessun evento</string>
     <string name="no_event_message">Non è presente alcun evento registrato con le informazioni fornite.</string>
     <string name="organized_event_table">Tabella eventi organizzati</string>
+    <string name="maps_fragment">Mappa</string>
 </resources>

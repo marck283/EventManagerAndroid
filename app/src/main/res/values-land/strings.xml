@@ -246,4 +246,7 @@
     <string name="no_org_event_message">This user did not organize any events.</string>
     <string name="select_date">Event date</string>
     <string name="select_hour">Event time</string>
+    <string name="maps_fragment">Map</string>
+    <string name="missing_location_permission">Missing location permission</string>
+    <string name="missing_location_permission_message">You cannot use this feature because no location permission was granted.</string>
 </resources>
