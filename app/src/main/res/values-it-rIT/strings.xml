@@ -216,6 +216,9 @@
     <string name="select_hour">Ora evento</string>
     <string name="missing_location_permission">Permesso posizione mancante</string>
     <string name="missing_location_permission_message">Non puoi usare questa funzionalità perché non è stato consentito l\'accesso alla posizione del dispositivo.</string>
+    <string name="modify_destination">Modifica destinazione</string>
+    <string name="event_creation_error">Errore durante la creazione dell\'evento</string>
+    <string name="event_creation_error_message">Si è verificato un errore durante la creazione dell\'evento. Si prega di controllare che tutti i campi siano stati compilati correttamente.</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>
@@ -238,4 +241,5 @@
     <string name="no_event_message">Non è presente alcun evento registrato con le informazioni fornite.</string>
     <string name="organized_event_table">Tabella eventi organizzati</string>
     <string name="maps_fragment">Mappa</string>
+    <string name="service_unavailable_message">Il servizio è temporaneamente non disponibile. Si prega di riprovare più tardi. Ci scusiamo per l\'inconveniente.</string>
 </resources>

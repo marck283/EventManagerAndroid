@@ -46,23 +46,23 @@
 
                     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
                         android:id="@+id/textView28"
-                        android:layout_width="92dp"
+                        android:layout_width="82dp"
                         android:text="@string/begin_date"
                         android:textColor="@color/com_facebook_blue" />
 
                     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
                         android:id="@+id/textView27"
-                        android:layout_width="92dp"
+                        android:layout_width="82dp"
                         android:text="@string/starts_at" />
 
                     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
                         android:id="@+id/textView25"
-                        android:layout_width="92dp"
+                        android:layout_width="82dp"
                         android:text="@string/venue" />
 
                     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
                         android:id="@+id/textView26"
-                        android:layout_width="92dp"
+                        android:layout_width="81dp"
                         android:text="@string/total_seats" />
                 </TableRow>
 

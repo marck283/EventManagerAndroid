@@ -250,4 +250,8 @@
     <string name="maps_fragment">Map</string>
     <string name="missing_location_permission">Missing location permission</string>
     <string name="missing_location_permission_message">You cannot use this feature because no location permission was granted.</string>
+    <string name="modify_destination">Modify destination</string>
+    <string name="event_creation_error">Event creation error</string>
+    <string name="event_creation_error_message">An error has occurred while creating the event. Please check that all fields have been filled accordingly.</string>
+    <string name="service_unavailable_message">The service is temporarily unavailable. Please try again later. We apologize for the inconvenience.</string>
 </resources>

@@ -100,6 +100,11 @@ public class EventCreation extends Thread {
                         break;
                     }
 
+                    case 400: {
+                        setAlertDialog(R.string.event_creation_error, R.string.event_creation_error_message);
+                        break;
+                    }
+
                     case 401: {
                         //setAlertDialog(R.string.unauthorized, R.string.log_in_to_authorize);
                         if(i != null) {
@@ -110,6 +115,11 @@ public class EventCreation extends Thread {
 
                     case 500: {
                         setAlertDialog(R.string.internal_server_error, R.string.retry_later);
+                        break;
+                    }
+
+                    case 503: {
+                        setAlertDialog(R.string.service_unavailable, R.string.service_unavailable_message);
                         break;
                     }
                 }
