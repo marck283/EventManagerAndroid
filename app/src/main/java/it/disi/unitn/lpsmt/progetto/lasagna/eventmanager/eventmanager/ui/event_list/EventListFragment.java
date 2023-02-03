@@ -79,6 +79,26 @@ public class EventListFragment extends Fragment {
             }
             eventListViewModel.getEvents(this, root, idToken, evName, orgName);
         });
+
+        esvm.getOrgName().observe(requireActivity(), o -> {
+            if(o != null) {
+                RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                if (rv != null) {
+                    rv.invalidate();
+                }
+                eventListViewModel.getEvents(this, root, idToken, evName, o);
+            }
+        });
+
+        esvm.getEventName().observe(requireActivity(), o -> {
+            if(o != null) {
+                RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                if (rv != null) {
+                    rv.invalidate();
+                }
+                eventListViewModel.getEvents(this, root, idToken, o, orgName);
+            }
+        });
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
