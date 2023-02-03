@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -257,6 +259,12 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         navView.inflateMenu(R.menu.navmenu_not_logged_in);
         username.setText("");
         email.setText("");
+
+        ImageView userPic = navView.getHeaderView(0).findViewById(R.id.imageView);
+        Drawable userImage = AppCompatResources.getDrawable(getApplicationContext(), R.mipmap.ic_launcher);
+        if(userImage != null) {
+            userPic.setImageDrawable(userImage);
+        }
     }
 
     public void updateUI(@NonNull String request, @Nullable String emailF, String pictureF, boolean reauth) {

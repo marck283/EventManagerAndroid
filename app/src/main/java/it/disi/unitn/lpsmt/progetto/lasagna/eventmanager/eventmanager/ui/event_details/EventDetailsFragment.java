@@ -147,6 +147,8 @@ public class EventDetailsFragment extends Fragment {
                 });
 
                 ((TextView) view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
+                ((TextView) view.findViewById(R.id.duration)).setText(getString(R.string.duration, "", "", ""));
+                ((TextView) view.findViewById(R.id.organizerName)).setText(getString(R.string.organizer, ""));
 
                 Button ratings = view.findViewById(R.id.show_ratings);
                 ratings.setOnClickListener(c -> {
