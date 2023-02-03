@@ -445,8 +445,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     if(accessToken != null) {
                         vm.setToken(prefs.getString("accessToken", ""));
                         profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
+                        updateUI("login", email, picture, true);
                     }
-                    updateUI("login", email, picture, true);
+                    updateUI("logout", email, picture, false);
                 }
                 break;
             }
