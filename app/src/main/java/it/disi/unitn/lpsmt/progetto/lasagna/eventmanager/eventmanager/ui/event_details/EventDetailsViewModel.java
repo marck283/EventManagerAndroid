@@ -31,49 +31,61 @@ public class EventDetailsViewModel extends ViewModel {
         dialog.show();
     }
 
+    private void requestEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
+                                  @NonNull EventDetailsFragment f, @Nullable String userJwt,
+                                  @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
+                                  @Nullable ActivityResultLauncher<Intent> loginLauncher) {
+        switch(which) {
+            case "pub": {
+                EventInfoCall c = new EventInfoCall(eventId, view, f);
+                c.start();
+                break;
+            }
+            case "iscr": {
+                if(userJwt != null && data != null) {
+                    RegisteredEventInfo info = new RegisteredEventInfo(userJwt, eventId, f, view, data);
+                    info.start();
+                }
+                break;
+            }
+            case "org": {
+                if(userJwt != null && launcher != null) {
+                    OrganizedEventInfo orgEvInfo;
+                    if(data != null) {
+                        //La data di un evento è inclusa solo quando la richiesta parte dal calendario dell'utente.
+                        orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data, launcher);
+                    } else {
+                        if(loginLauncher != null) {
+                            //n questo caso, ci potrebbe essere il rischio che l'utente non sia autenticato al sistema.
+                            //Questo problema è risolto aggiungendo un ActivityResultLauncher che permette l'avvio
+                            //dell'Activity di login e, una volta ricevuto il risultato, esegue di nuovo la
+                            //richiesta al server.
+                            orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, launcher, loginLauncher);
+                        } else {
+                            //La richiesta al server viene eseguita di nuovo passando per questa riga di codice.
+                            orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, launcher);
+                        }
+                    }
+                    orgEvInfo.start();
+                }
+                break;
+            }
+        }
+    }
+
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
                              @NonNull EventDetailsFragment f, @Nullable String userJwt,
                              @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
                              @Nullable ActivityResultLauncher<Intent> loginLauncher) {
         callback = new NetworkCallback(f.requireActivity());
         if(callback.isOnline(f.requireActivity())) {
-            switch(which) {
-                case "pub": {
-                    EventInfoCall c = new EventInfoCall(eventId, view, f);
-                    c.start();
-                    break;
-                }
-                case "iscr": {
-                    if(userJwt != null && data != null) {
-                        RegisteredEventInfo info = new RegisteredEventInfo(userJwt, eventId, f, view, data);
-                        info.start();
-                    }
-                    break;
-                }
-                case "org": {
-                    if(userJwt != null && launcher != null) {
-                        OrganizedEventInfo orgEvInfo;
-                        if(data != null) {
-                            //La data di un evento è inclusa solo quando la richiesta parte dal calendario dell'utente.
-                            orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data, launcher);
-                        } else {
-                            if(loginLauncher != null) {
-                                //n questo caso, ci potrebbe essere il rischio che l'utente non sia autenticato al sistema.
-                                //Questo problema è risolto aggiungendo un ActivityResultLauncher che permette l'avvio
-                                //dell'Activity di login e, una volta ricevuto il risultato, esegue di nuovo la
-                                //richiesta al server.
-                                orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, launcher, loginLauncher);
-                            } else {
-                                //La richiesta al server viene eseguita di nuovo passando per questa riga di codice.
-                                orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, launcher);
-                            }
-                        }
-                        orgEvInfo.start();
-                    }
-                    break;
-                }
-            }
+            requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher);
         } else {
+            //Aggiungi un listener per cercare le informazioni sull'evento quando sarà tornata la connessione ad Internet.
+            callback.registerNetworkCallback();
+            callback.addDefaultNetworkActiveListener(() ->
+                            requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher));
+            callback.unregisterNetworkCallback();
             setNoConnectionDialog(f);
         }
     }

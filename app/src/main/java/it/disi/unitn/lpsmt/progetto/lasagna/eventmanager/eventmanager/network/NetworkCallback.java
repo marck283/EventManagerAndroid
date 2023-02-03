@@ -32,6 +32,10 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
         connectivityManager = a.getSystemService(ConnectivityManager.class);
     }
 
+    public void addDefaultNetworkActiveListener(@NonNull ConnectivityManager.OnNetworkActiveListener listener) {
+        connectivityManager.addDefaultNetworkActiveListener(listener);
+    }
+
     @Override
     public void onAvailable(@NonNull Network network) {
         super.onAvailable(network);
@@ -77,6 +81,7 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
         ConnectivityManager cm =
                 (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
