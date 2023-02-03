@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,12 +73,12 @@ public class EventDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         Bundle b = getArguments();
-        if(b != null) {
+        if (b != null) {
             screenType = b.getString("eventType");
             eventId = b.getString("eventId");
             day = b.getString("day");
         }
-        switch(screenType) {
+        switch (screenType) {
             case "pub": {
                 return inflater.inflate(R.layout.public_event_info, container, false);
             }
@@ -95,16 +94,13 @@ public class EventDetailsFragment extends Fragment {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        //Looper.prepare();
         requireActivity().runOnUiThread(() -> {
-                    AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                    dialog.setTitle(title);
-                    dialog.setMessage(getString(message));
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    dialog.show();
-                });
-        /*Looper.loop();
-        Looper.myLooper().quitSafely();*/
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        });
     }
 
     @Override
@@ -113,21 +109,44 @@ public class EventDetailsFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(EventDetailsViewModel.class);
         nvm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
 
-        switch(screenType) {
+        switch (screenType) {
             case "pub": {
+                //Controllare questo blocco con un utente non registrato... dovrebbe reindirizzare
+                //all'Activity di login, ma qualcosa non funziona...
+                loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                        result -> {
+                            switch (result.getResultCode()) {
+                                case Activity.RESULT_OK: {
+                                    mViewModel.getEventInfo("pub", eventId, view, this, nvm.getToken().getValue(),
+                                            day, launcher, null);
+                                    break;
+                                }
+                                case Activity.RESULT_CANCELED: {
+                                    SharedPreferences prefs =
+                                            requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putString("accessToken", "");
+                                    editor.apply();
+                                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
+                                    ((NavigationDrawerActivity) requireActivity())
+                                            .updateUI("logout", "", "", false);
+                                    break;
+                                }
+                            }
+                        });
                 mViewModel.getEventInfo("pub", eventId, view, this, null, null, null, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
                 b.setOnClickListener(c -> {
-                    if(eventId != null && day != null && !day.equals("") && !day.equals("---") &&
+                    if (eventId != null && day != null && !day.equals("") && !day.equals("---") &&
                             time != null && !time.equals("") && !time.equals("---") && nvm.getToken() != null &&
-                    nvm.getToken().getValue() != null) {
-                        mViewModel.registerUser(nvm.getToken().getValue(), eventId, this, day, time);
+                            nvm.getToken().getValue() != null) {
+                        mViewModel.registerUser(nvm.getToken().getValue(), eventId, this, day, time, loginLauncher);
                     }
                 });
 
-                ((TextView)view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
+                ((TextView) view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
 
                 Button ratings = view.findViewById(R.id.show_ratings);
                 ratings.setOnClickListener(c -> {
@@ -153,7 +172,7 @@ public class EventDetailsFragment extends Fragment {
                                     spinner.getEditText().getText() != null &&
                                     !spinner.getEditText().getText().toString().equals("---") &&
                                     spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
-                            !spinner2.getEditText().getText().toString().equals("---")) {
+                                    !spinner2.getEditText().getText().toString().equals("---")) {
                                 mViewModel.checkQR(nvm.getToken().getValue(), result.getContents(),
                                         eventId, spinner2.getEditText().getText().toString(),
                                         spinner.getEditText().getText().toString(), this);
@@ -161,24 +180,24 @@ public class EventDetailsFragment extends Fragment {
                         });
                 loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
-                    switch(result.getResultCode()) {
-                        case Activity.RESULT_OK: {
-                            mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                    day, launcher, null);
-                            break;
-                        }
-                        case Activity.RESULT_CANCELED: {
-                            SharedPreferences prefs =
-                                    requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("accessToken", "");
-                            editor.apply();
-                            Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
-                            ((NavigationDrawerActivity)requireActivity())
-                                    .updateUI("logout", "", "", false);
-                            break;
-                        }
-                    }
+                            switch (result.getResultCode()) {
+                                case Activity.RESULT_OK: {
+                                    mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                            day, launcher, null);
+                                    break;
+                                }
+                                case Activity.RESULT_CANCELED: {
+                                    SharedPreferences prefs =
+                                            requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putString("accessToken", "");
+                                    editor.apply();
+                                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
+                                    ((NavigationDrawerActivity) requireActivity())
+                                            .updateUI("logout", "", "", false);
+                                    break;
+                                }
+                            }
                         });
                 mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                         day, launcher, loginLauncher);
@@ -194,7 +213,7 @@ public class EventDetailsFragment extends Fragment {
                         client.newCall(request).enqueue(new OrganizerCallback() {
                             @Override
                             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                                switch(response.code()) {
+                                switch (response.code()) {
                                     case 403: {
                                         setAlertDialog(R.string.unauthorized_attempt, R.string.unauthorized_attempt_message);
                                         break;
@@ -212,7 +231,7 @@ public class EventDetailsFragment extends Fragment {
                                 }
                             }
                         });
-                    } catch(NullPointerException ex) {
+                    } catch (NullPointerException ex) {
                         ex.printStackTrace();
                     }
                 });
@@ -229,7 +248,7 @@ public class EventDetailsFragment extends Fragment {
                         client.newCall(request).enqueue(new OrganizerCallback() {
                             @Override
                             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                                switch(response.code()) {
+                                switch (response.code()) {
                                     case 401: {
                                         setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
                                         break;
@@ -250,7 +269,7 @@ public class EventDetailsFragment extends Fragment {
                                 }
                             }
                         });
-                    } catch(NullPointerException ex) {
+                    } catch (NullPointerException ex) {
                         ex.printStackTrace();
                     }
                 });

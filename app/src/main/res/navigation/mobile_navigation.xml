@@ -106,9 +106,6 @@
         <action
             android:id="@+id/action_eventDetailsFragment_to_nav_event_list"
             app:destination="@id/nav_event_list" />
-        <action
-            android:id="@+id/action_eventDetailsFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
     </fragment>
     <dialog
         android:id="@+id/eventSearchFragment"
@@ -154,10 +151,5 @@
             android:id="@+id/action_eventManagement_to_eventDetailsFragment"
             app:destination="@id/eventDetailsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/mapsFragment"
-        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_map.MapsFragment"
-        android:label="@string/maps_fragment"
-        tools:layout="@layout/fragment_maps" />
 
 </navigation>

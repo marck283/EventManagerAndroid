@@ -1,14 +1,17 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event_registration;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.util.Log;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,7 +30,7 @@ public class UserEventRegistration {
     }
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
-                             @NonNull String time, @NonNull EventDetailsFragment f) {
+                             @NonNull String time, @NonNull EventDetailsFragment f, @NonNull ActivityResultLauncher<Intent> launcher) {
         Log.i("day", day);
         Log.i("time", time);
         Call<JsonObject> call = ueInterface.registerUser(eventId, accessToken, new EventDayHour(day, time));
@@ -51,6 +54,10 @@ public class UserEventRegistration {
                     case 400: {
                         Log.i("malformed", "Richiesta malformata");
                         break;
+                    }
+                    case 401: {
+                        Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
+                        launcher.launch(loginIntent);
                     }
                     case 403: {
                         if(response.body() != null) {
