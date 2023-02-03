@@ -158,6 +158,15 @@ public class EventDetailsFragment extends Fragment {
                 break;
             }
             case "iscr": {
+                TextView organizer = view.findViewById(R.id.textView16), dayTextView = view.findViewById(R.id.textView11),
+                time = view.findViewById(R.id.textView20), duration = view.findViewById(R.id.textView39),
+                address = view.findViewById(R.id.textView42);
+                organizer.setText(getString(R.string.organizer, ""));
+                dayTextView.setText(getString(R.string.day_not_selectable, ""));
+                time.setText(getString(R.string.time_not_selectable, ""));
+                duration.setText(getString(R.string.duration, "", "", ""));
+                address.setText(getString(R.string.event_address, ""));
+
                 mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day, null, null);
                 break;
             }

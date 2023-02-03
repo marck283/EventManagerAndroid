@@ -7,7 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,12 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -37,25 +36,31 @@ import java.util.Locale;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-public class EventInfoCall {
-    private final EventInfoInterface evInterface;
+public class EventInfoCall extends Thread {
 
-    public EventInfoCall() {
-        Retrofit retro = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
-                .build();
-        evInterface = retro.create(EventInfoInterface.class);
+    private final OkHttpClient client;
+
+    private final String eventId;
+
+    private final View v;
+
+    private final EventDetailsFragment f;
+
+    public EventInfoCall(@NonNull String eventId, @NonNull View v, @NonNull EventDetailsFragment f) {
+        client = new OkHttpClient();
+        this.eventId = eventId;
+        this.v = v;
+        this.f = f;
     }
 
     private void startGoogleMaps(@NonNull EventDetailsFragment f, @NonNull TextView indirizzo,
-                                 @NonNull List<Address> addresses, @NonNull View v) {
+                                 @NonNull List<Address> addresses) {
         Address address = addresses.get(0);
 
         Uri gmURI = Uri.parse("geo:" + address.getLatitude() + "," + address.getLongitude()
@@ -64,12 +69,6 @@ public class EventInfoCall {
         i.setPackage("com.google.android.apps.maps");
 
         f.requireActivity().startActivity(i);
-
-        /*Bundle b = new Bundle();
-        b.putDouble("lat", addresses.get(0).getLatitude());
-        b.putDouble("lng", addresses.get(0).getLongitude());
-        f.requireActivity().runOnUiThread(() ->
-        Navigation.findNavController(v).navigate(R.id.action_eventDetailsFragment_to_mapsFragment, b));*/
     }
 
     private void noSuchAddressDialog(@NonNull Fragment f) {
@@ -80,28 +79,29 @@ public class EventInfoCall {
         dialog.show();
     }
 
-    public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View v,
-                             @NonNull EventDetailsFragment f, @Nullable String userJwt) {
-        if ("pub".equals(which)) {
-            Call<JsonObject> call = evInterface.getPubEventInfo(eventId);
-            call.enqueue(new Callback<>() {
+    public void run() {
+        Request request = new Request.Builder()
+                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                try {
+                    throw e;
+                } catch(Throwable e1) {
+                    e1.printStackTrace();
+                }
+            }
 
-                /**
-                 * Invoked for a received HTTP response.
-                 *
-                 * <p>Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-                 * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-                 *
-                 * @param call
-                 * @param response
-                 */
-                @Override
-                public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                    if (response.body() != null && response.isSuccessful() && f.isAdded()) {
-                        EventInfo ei = new EventInfo();
-                        Log.i("responseBody", String.valueOf(response.body()));
-                        final EventInfo ei1 = ei.parseJSON(response.body());
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful() && f.isAdded()) {
+                    EventInfo ei = new EventInfo();
 
+                    Gson gson = new GsonBuilder().create();
+                    final EventInfo ei1 = ei.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
+
+                    f.requireActivity().runOnUiThread(() -> {
                         //Ora imposta il layout in base alla schermata visualizzata
                         ImageView imgView = v.findViewById(R.id.eventPicture);
                         imgView.setImageBitmap(ei1.decodeBase64());
@@ -166,7 +166,7 @@ public class EventInfoCall {
                                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                                         geocoder.getFromLocationName(indirizzo.getText().toString(), 5, addresses -> {
                                                             if (addresses.size() > 0) {
-                                                                startGoogleMaps(f, indirizzo, addresses, v);
+                                                                startGoogleMaps(f, indirizzo, addresses);
                                                             } else {
                                                                 noSuchAddressDialog(f);
                                                             }
@@ -178,7 +178,7 @@ public class EventInfoCall {
                                                                 try {
                                                                     addresses = geocoder.getFromLocationName(indirizzo.getText().toString(), 5);
                                                                     if (addresses != null && addresses.size() > 0) {
-                                                                        startGoogleMaps(f, indirizzo, addresses, v);
+                                                                        startGoogleMaps(f, indirizzo, addresses);
                                                                     } else {
                                                                         Looper.prepare();
                                                                         noSuchAddressDialog(f);
@@ -243,25 +243,9 @@ public class EventInfoCall {
                                 //Nothing
                             }
                         });
-                    }
+                    });
                 }
-
-                /**
-                 * Invoked when a network exception occurred talking to the server or when an unexpected exception
-                 * occurred creating the request or processing the response.
-                 *
-                 * @param call
-                 * @param t
-                 */
-                @Override
-                public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                    try {
-                        throw t;
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 }
