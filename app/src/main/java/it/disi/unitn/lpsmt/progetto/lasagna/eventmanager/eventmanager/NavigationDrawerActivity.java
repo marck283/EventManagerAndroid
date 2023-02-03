@@ -227,7 +227,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         account = new GSignIn(this);
         vm.init(this);
 
-        SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+        /*SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
         String accessToken = prefs.getString("accessToken", "");
         if(accessToken.equals("")) {
             updateUI("logout", null, null, false);
@@ -238,8 +238,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         } else {
             CsrfToken token = new CsrfToken();
             token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
-        }
-        /*profile = Profile.getCurrentProfile();
+        }*/
+        profile = Profile.getCurrentProfile();
         if(profile == null) {
             GoogleSignInAccount userAccount = account.getAccount();
             if(userAccount == null) {
@@ -268,7 +268,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 accessToken = AccessToken.getCurrentAccessToken();
             }
             makeEmailRequestAndUpdate();
-        }*/
+        }
     }
 
     private void makeEmailRequestAndUpdate() {

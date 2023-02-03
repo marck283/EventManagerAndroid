@@ -23,10 +23,8 @@ public class UserProfileViewModel extends ViewModel {
             //Ottieni i dati dell'utente dal database, se disponibili
             GSignIn signIn = new GSignIn(f.requireActivity());
             String userEmail = signIn.getAccount().getEmail();
-            if(userEmail != null) {
-                DBUser dbUser = new DBUser(f.requireActivity(), userEmail, "getAll", l, f);
-                dbUser.start();
-            }
+            DBUser dbUser = new DBUser(f.requireActivity(), userEmail, "getAll", l, f);
+            dbUser.start();
         }
     }
 
