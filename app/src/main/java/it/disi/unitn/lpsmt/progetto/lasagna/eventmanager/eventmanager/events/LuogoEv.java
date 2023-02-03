@@ -61,11 +61,7 @@ public class LuogoEv extends Address {
     @NonNull
     public static LuogoEv parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
-        int maxPers = 0;
-        if(json.get("maxPers") != null) {
-            maxPers = Integer.parseInt(fromJsonString(gs1, json, "maxPers"));
-        }
-
+        int maxPers = Integer.parseInt(fromJsonString(gs1, json, "maxPers"));
 
         return new LuogoEv(fromJsonString(gs1, json, "indirizzo"),
                 fromJsonString(gs1, json, "civNum"),
