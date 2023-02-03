@@ -6,37 +6,75 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
-import com.google.gson.JsonObject;
+import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
-public class UserEventRegistration {
-    private final UserEventRegistrationInterface ueInterface;
+public class UserEventRegistration extends Thread {
+    private final OkHttpClient client;
 
-    public UserEventRegistration() {
-        Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ueInterface = retro.create(UserEventRegistrationInterface.class);
+    private final EventDetailsFragment f;
+
+    private final String accessToken, eventId, day, time;
+
+    private final ActivityResultLauncher<Intent> launcher;
+
+    public UserEventRegistration(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
+                                 @NonNull String time, @NonNull EventDetailsFragment f,
+                                 @NonNull ActivityResultLauncher<Intent> launcher) {
+        client = new OkHttpClient();
+        this.f = f;
+        this.accessToken = accessToken;
+        this.eventId = eventId;
+        this.day = day;
+        this.time = time;
+        this.launcher = launcher;
     }
 
-    public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
-                             @NonNull String time, @NonNull EventDetailsFragment f, @NonNull ActivityResultLauncher<Intent> launcher) {
+    private void setAlertDialog(@StringRes int title, @StringRes int message) {
+        AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
+        ad.setTitle(title);
+        ad.setMessage(f.getString(message));
+        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        ad.show();
+    }
+
+    public void run() {
         Log.i("day", day);
         Log.i("time", time);
-        Call<JsonObject> call = ueInterface.registerUser(eventId, accessToken, new EventDayHour(day, time));
-        call.enqueue(new Callback<>() {
+
+        RequestBody body = new FormBody.Builder()
+                .add("data", day)
+                .add("ora", time)
+                .build();
+        Request request = new Request.Builder()
+                .addHeader("x-access-token", accessToken)
+                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni")
+                .post(body)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                try {
+                    throw e;
+                } catch (Throwable e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 //Interpretare la risposta di errore (si ricordi che il messaggio di errore è
                 //contenuto nel campo "error" della risposta).
                 //Log.i("response", String.valueOf(response.body()));
@@ -44,46 +82,30 @@ public class UserEventRegistration {
                 switch(response.code()) {
                     case 201: {
                         //Successo
-                        AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-                        ad.setTitle(R.string.event_registration_success_title);
-                        ad.setMessage(f.getString(R.string.event_registration_success));
-                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                        ad.show();
+                        f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.event_registration_success_title, R.string.event_registration_success));
                         break;
                     }
                     case 400: {
-                        Log.i("malformed", "Richiesta malformata");
+                        //Richiesta malformata
+                        f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.malformed_request, R.string.malformed_request_message));
                         break;
                     }
                     case 401: {
                         Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
                         launcher.launch(loginIntent);
+                        break;
                     }
                     case 403: {
                         if(response.body() != null) {
-                            AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-                            ad.setTitle(R.string.error);
-                            ad.setMessage(f.getString(R.string.max_pers_reached_or_user_already_registered));
-                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                            ad.show();
+                            f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.error, R.string.max_pers_reached_or_user_already_registered));
                         }
+                        break;
                     }
                     case 500: {
-                        AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-                        ad.setTitle(R.string.internal_server_error);
-                        ad.setMessage(f.getString(R.string.service_unavailable));
-                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                        ad.show();
+                        //Errore interno al server
+                        f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.internal_server_error, R.string.service_unavailable));
+                        break;
                     }
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                try {
-                    throw t;
-                } catch (Throwable e) {
-                    e.printStackTrace();
                 }
             }
         });

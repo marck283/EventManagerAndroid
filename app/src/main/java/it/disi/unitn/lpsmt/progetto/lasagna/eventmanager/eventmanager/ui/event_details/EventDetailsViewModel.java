@@ -63,8 +63,8 @@ public class EventDetailsViewModel extends ViewModel {
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
                              @NonNull String day, @NonNull String time, @NonNull ActivityResultLauncher<Intent> launcher) {
-        UserEventRegistration uer = new UserEventRegistration();
-        uer.registerUser(accessToken, eventId, day, time, f, launcher);
+        UserEventRegistration uer = new UserEventRegistration(accessToken, eventId, day, time, f, launcher);
+        uer.start();
     }
 
     public void deleteTicket(@NonNull String accessToken, @NonNull String ticketId,
