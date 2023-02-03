@@ -346,6 +346,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
 
                     //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
+                    profile = Profile.getCurrentProfile();
                     Log.i("id", profile.getId());
                     username.setText(getString(R.string.profileName, profile.getName()));
                     if(emailF != null && !emailF.equals("")) {
