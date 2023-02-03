@@ -9,34 +9,23 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button2"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="@color/white"
         android:text="@string/user_profile"
         android:textColor="#757575"
+        app:icon="@drawable/ic_user_profile"
+        app:iconSize="42sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/settings_image"
-        android:elevation="7dp"
-        android:src="@drawable/ic_user_profile"
-        app:layout_constraintBottom_toBottomOf="@+id/button2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/button2"
-        app:layout_constraintVertical_bias="0.375"
-        tools:ignore="DuplicateSpeakableTextCheck"
-        tools:src="@tools:sample/avatars" />
-
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch1"
+        style="@style/Widget.Material3.CompoundButton.MaterialSwitch"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:padding="20dp"
@@ -47,6 +36,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button4"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        app:icon="@drawable/ic_app_version"
+        app:iconSize="42sp"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:backgroundTint="@color/white"
@@ -55,19 +47,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switch1" />
-
-    <ImageButton
-        android:id="@+id/imageButton4"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:contentDescription="@string/settings_image"
-        android:elevation="7dp"
-        android:src="@drawable/ic_app_version"
-        app:layout_constraintBottom_toBottomOf="@+id/button4"
-        app:layout_constraintStart_toStartOf="@+id/button4"
-        app:layout_constraintTop_toTopOf="@+id/button4"
-        app:layout_constraintVertical_bias="0.468"
-        tools:src="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
