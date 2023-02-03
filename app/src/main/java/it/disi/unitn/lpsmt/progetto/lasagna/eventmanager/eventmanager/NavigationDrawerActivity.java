@@ -45,6 +45,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentica
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.EventSearchViewModel;
@@ -265,7 +266,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         TextView username = l.findViewById(R.id.profile_name);
         TextView email = l.findViewById(R.id.profile_email);
 
-        if(request.equals("logout") && !reauth) {
+        NetworkCallback callback = new NetworkCallback(this);
+        if((request.equals("logout") && !reauth) || !callback.isOnline(this)) {
             showNotLoggedIn(username, email);
             return;
         }

@@ -1,17 +1,20 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.EventSearchViewModel;
 
@@ -67,38 +70,63 @@ public class EventListFragment extends Fragment {
         esvm = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
     }
 
+    private void setAlertDialog(@StringRes int title, @StringRes int message) {
+        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+        dialog.setTitle(title);
+        dialog.setMessage(getString(message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
+    }
+
     public void onStart() {
         super.onStart();
 
-        vm.getToken().observe(requireActivity(), o -> {
-            idToken = o;
+        NetworkCallback callback = new NetworkCallback(requireActivity());
+        if(callback.isOnline(requireActivity())) {
+            vm.getToken().observe(requireActivity(), o -> {
+                if(callback.isOnline(requireActivity())) {
+                    idToken = o;
 
-            RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-            if (rv != null) {
-                rv.invalidate();
-            }
-            eventListViewModel.getEvents(this, root, idToken, evName, orgName);
-        });
-
-        esvm.getOrgName().observe(requireActivity(), o -> {
-            if(o != null) {
-                RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-                if (rv != null) {
-                    rv.invalidate();
+                    RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                    if (rv != null) {
+                        rv.invalidate();
+                    }
+                    eventListViewModel.getEvents(this, root, idToken, evName, orgName);
+                } else {
+                    setAlertDialog(R.string.no_connection, R.string.no_connection_message);
                 }
-                eventListViewModel.getEvents(this, root, idToken, evName, o);
-            }
-        });
+            });
 
-        esvm.getEventName().observe(requireActivity(), o -> {
-            if(o != null) {
-                RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-                if (rv != null) {
-                    rv.invalidate();
+            esvm.getOrgName().observe(requireActivity(), o -> {
+                if(callback.isOnline(requireActivity())) {
+                    if(o != null) {
+                        RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                        if (rv != null) {
+                            rv.invalidate();
+                        }
+                        eventListViewModel.getEvents(this, root, idToken, evName, o);
+                    }
+                } else {
+                    setAlertDialog(R.string.no_connection, R.string.no_connection_message);
                 }
-                eventListViewModel.getEvents(this, root, idToken, o, orgName);
-            }
-        });
+            });
+
+            esvm.getEventName().observe(requireActivity(), o -> {
+                if(callback.isOnline(requireActivity())) {
+                    if(o != null) {
+                        RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                        if (rv != null) {
+                            rv.invalidate();
+                        }
+                        eventListViewModel.getEvents(this, root, idToken, o, orgName);
+                    }
+                } else {
+                    setAlertDialog(R.string.no_connection, R.string.no_connection_message);
+                }
+            });
+        } else {
+            setAlertDialog(R.string.no_connection, R.string.no_connection_message);
+        }
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
