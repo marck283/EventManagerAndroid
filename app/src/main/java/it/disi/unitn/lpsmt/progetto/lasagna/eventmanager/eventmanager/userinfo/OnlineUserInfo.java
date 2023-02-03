@@ -12,105 +12,104 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-public class OnlineUserInfo {
-    private final UserInfoInterface userInfo;
+public class OnlineUserInfo extends Thread {
+    private final OkHttpClient client;
 
-    public OnlineUserInfo() {
-        Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        userInfo = retro.create(UserInfoInterface.class);
+    private final String accessToken;
+
+    private final View v;
+
+    private final Fragment f;
+
+    public OnlineUserInfo(@NonNull String accessToken, @NonNull View v, @NonNull Fragment f) {
+        client = new OkHttpClient();
+        this.accessToken = accessToken;
+        this.v = v;
+        this.f = f;
     }
 
-    public void getUserInfo(@NonNull String accessToken, @NonNull View v, @NonNull Fragment f) {
-        Call<JsonObject> call = userInfo.getUserInfo(accessToken);
-        call.enqueue(new Callback<>() {
-
-            /**
-             * Invoked for a received HTTP response.
-             *
-             * <p>Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-             * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-             *
-             * @param call
-             * @param response
-             */
+    public void run() {
+        Request request = new Request.Builder()
+                .addHeader("x-access-token", accessToken)
+                .url("https://eventmanagerzlf.herokuapp.com/api/v2/Utenti/me")
+                .build();
+        client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                try {
+                    throw e;
+                } catch(Throwable e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 //Set up the ImageView
                 if(response.body() != null) {
                     if(response.isSuccessful()) {
-                        UserInfo userInfo = new UserInfo();
-                        userInfo = userInfo.parseJSON(response.body());
+                        UserInfo user = new UserInfo();
+                        Gson gson1 = new GsonBuilder().create();
+                        JsonObject res = gson1.fromJson(response.body().string(), JsonObject.class);
+                        final UserInfo userInfo = user.parseJSON(res);
 
                         //Imposta la schermata del profilo dell'utente
-                        ImageView iv = v.findViewById(R.id.profilePic);
-                        Glide.with(f.requireActivity()).load(userInfo.getString("profilePic"))
-                                .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
+                        f.requireActivity().runOnUiThread(() -> {
+                            ImageView iv = v.findViewById(R.id.profilePic);
+                            Glide.with(f.requireActivity()).load(userInfo.getString("profilePic"))
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
 
-                        TextView username = v.findViewById(R.id.username);
-                        username.setText(f.getString(R.string.username, userInfo.getString("nome")));
+                            TextView username = v.findViewById(R.id.username);
+                            username.setText(f.getString(R.string.username, userInfo.getString("nome")));
 
-                        TextView email = v.findViewById(R.id.email);
-                        email.setText(f.getString(R.string.user_email, userInfo.getString("email")));
+                            TextView email = v.findViewById(R.id.email);
+                            email.setText(f.getString(R.string.user_email, userInfo.getString("email")));
 
-                        TextView phone = v.findViewById(R.id.phone_value);
-                        if(userInfo.getString("tel") != null && !userInfo.getString("tel").equals("")) {
-                            phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
-                        } else {
-                            phone.setText(f.getString(R.string.phone, "non presente"));
-                        }
+                            TextView phone = v.findViewById(R.id.phone_value);
+                            if (userInfo.getString("tel") != null && !userInfo.getString("tel").equals("")) {
+                                phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
+                            } else {
+                                phone.setText(f.getString(R.string.phone, "non presente"));
+                            }
 
-                        TextView numEvOrg = v.findViewById(R.id.numEvOrg);
-                        numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
+                            TextView numEvOrg = v.findViewById(R.id.numEvOrg);
+                            numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
 
-                        Button rating = v.findViewById(R.id.rating);
-                        if(userInfo.getNumEvOrg() == 0 || userInfo.getValutazioneMedia() == 0.0) {
-                            rating.setEnabled(false);
-                            rating.setVisibility(View.INVISIBLE);
-                        } else {
-                            rating.setEnabled(true);
-                            rating.setVisibility(View.VISIBLE);
-                            final double meanRating = userInfo.getValutazioneMedia();
-                            rating.setOnClickListener(c -> {
-                                AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
-                                ad.setTitle(R.string.personal_rating);
-                                ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
-                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
-                                ad.show();
-                            });
-                        }
+                            Button rating = v.findViewById(R.id.rating);
+                            if (userInfo.getNumEvOrg() == 0 || userInfo.getValutazioneMedia() == 0.0) {
+                                rating.setEnabled(false);
+                                rating.setVisibility(View.INVISIBLE);
+                            } else {
+                                rating.setEnabled(true);
+                                rating.setVisibility(View.VISIBLE);
+                                final double meanRating = userInfo.getValutazioneMedia();
+                                rating.setOnClickListener(c -> {
+                                    AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
+                                    ad.setTitle(R.string.personal_rating);
+                                    ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
+                                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
+                                    ad.show();
+                                });
+                            }
+                        });
                     } else {
                         Log.i("onlineResponse", "Utente non trovato");
                     }
                 } else {
                     Log.i("onlineResponse", "nessuna risposta dal server");
-                }
-            }
-
-            /**
-             * Invoked when a network exception occurred talking to the server or when an unexpected exception
-             * occurred creating the request or processing the response.
-             *
-             * @param call
-             * @param t
-             */
-            @Override
-            public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
-                try {
-                    throw t;
-                } catch (Throwable e) {
-                    e.printStackTrace();
                 }
             }
         });

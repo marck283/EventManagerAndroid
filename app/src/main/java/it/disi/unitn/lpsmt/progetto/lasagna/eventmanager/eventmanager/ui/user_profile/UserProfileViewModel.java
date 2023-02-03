@@ -17,8 +17,8 @@ public class UserProfileViewModel extends ViewModel {
         //è disponibile, cerca tali informazioni nel database stesso.
         NetworkCallback nc = new NetworkCallback(f.requireActivity());
         if(nc.isOnline(f.requireActivity())) {
-            OnlineUserInfo onlineUserInfo = new OnlineUserInfo();
-            onlineUserInfo.getUserInfo(accessToken, l, f);
+            OnlineUserInfo onlineUserInfo = new OnlineUserInfo(accessToken, l, f);
+            onlineUserInfo.start();
         } else {
             //Ottieni i dati dell'utente dal database, se disponibili
             GSignIn signIn = new GSignIn(f.requireActivity());
