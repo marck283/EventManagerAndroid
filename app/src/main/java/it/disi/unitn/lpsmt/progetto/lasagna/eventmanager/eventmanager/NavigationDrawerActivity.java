@@ -43,7 +43,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration.AccountIntegration;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
@@ -368,17 +367,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     editor.putString("accessToken", vm.getToken().getValue());
                     editor.apply();
 
-                    if(requestCode == 4) {
-                        AccountIntegration integration = new AccountIntegration();
-                        if(account != null && account.getAccount() != null && account.getAccount().getIdToken() != null) {
-                            integration.googleIntegrate(account.getAccount().getIdToken(), this);
-                        } else {
-                            Log.i("gToken", "Nessun authToken Google valido");
-                        }
-                    } else {
-                        updateUI("login", account.getAccount().getEmail(),
-                                account.getAccount().getPhotoUrl().toString(), true);
-                    }
+                    updateUI("login", account.getAccount().getEmail(),
+                            account.getAccount().getPhotoUrl().toString(), true);
                 } else {
                     //Facebook login
                     String email, picture = null;
@@ -422,7 +412,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION || requestCode == 4) {
+        if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) {
             if(data != null && data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
                 signInCheck(resultCode, data, "google", requestCode);
             } else {
