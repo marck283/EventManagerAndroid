@@ -41,7 +41,7 @@ public class EventLocationViewModel extends ViewModel {
         ad.show();
     }
 
-    private void setAddress(@NonNull List<Address> addresses, LuogoEv luogo) {
+    private void setAddress(@NonNull List<Address> addresses, LuogoEv luogo, EventViewModel evm) {
         int i = 0;
 
         //Esempio indirizzo non riconosciuto: Vicolo (Giorgio) Tebaldeo, 3, 27036 Mortara PV. Perché?
@@ -50,6 +50,9 @@ public class EventLocationViewModel extends ViewModel {
             String indirizzo = a.getAddressLine(i);
             if (indirizzo != null && indirizzo.contains(luogo.toString())) {
                 ok.postValue(true);
+                evm.setLuogoEv(luogo);
+                f.requireActivity().runOnUiThread(() ->
+                        NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
                 break;
             } else {
                 ++i;
@@ -323,10 +326,7 @@ public class EventLocationViewModel extends ViewModel {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> {
-                    setAddress(addresses, luogo);
-                    evm.setLuogoEv(luogo);
-                    f.requireActivity().runOnUiThread(() ->
-                            NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
+                    setAddress(addresses, luogo, evm);
                 });
             } else {
                 //Applicazione bloccata dopo errore inserimento luogo. Come mai?
@@ -338,10 +338,7 @@ public class EventLocationViewModel extends ViewModel {
                             //Exception: only one Looper may be created per thread
                             addresses = geocoder.getFromLocationName(location, 5);
                             if (addresses != null && !addresses.isEmpty()) {
-                                setAddress(addresses, luogo);
-                                evm.setLuogoEv(luogo);
-                                f.requireActivity().runOnUiThread(() ->
-                                        NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
+                                setAddress(addresses, luogo, evm);
                             } else {
                                 f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result)));
                             }

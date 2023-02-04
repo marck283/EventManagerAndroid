@@ -80,8 +80,8 @@ public class FirstFragment extends Fragment {
 
         //Richiedo un'istanza di Spinner (menù dropdown). Maggiori informazioni qui:
         // https://developer.android.com/develop/ui/views/components/spinner#java
-        TextInputLayout spinner = view.findViewById(R.id.nomeAtt);
-        MaterialAutoCompleteTextView category = spinner.findViewById(R.id.category);
+        TextInputLayout spinner = view.findViewById(R.id.planets_spinner);
+        MaterialAutoCompleteTextView category = spinner.findViewById(R.id.actv);
 
         // Apply the adapter to the spinner
         category.setAdapter(SpinnerArrayAdapter.createFromResources(requireActivity(), R.array.category_spinner_array,

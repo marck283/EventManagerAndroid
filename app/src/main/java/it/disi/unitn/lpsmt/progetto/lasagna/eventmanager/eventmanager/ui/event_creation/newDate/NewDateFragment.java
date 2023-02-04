@@ -48,9 +48,9 @@ public class NewDateFragment extends DialogFragment {
                 int substr = Integer.parseInt(beginDate.substring(6));
                 if(substr%400 == 0 || (substr%100 == 0 && substr%4 != 0)) {
                     //Anno bisestile
-                    pattern = Pattern.compile("(((10|[0-2][1-9])/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9]\\d{3}");
+                    pattern = Pattern.compile("(((10|[0-2][1-9])/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|10|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9]\\d{3}");
                 } else {
-                    pattern = Pattern.compile("(((10|[0-2][1-8])/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9]\\d{3}");
+                    pattern = Pattern.compile("(((10|[0-2][1-8])/02)|((30|20|[0-2][1-9])/(04|06|09|11))|((31|30|20|10|[0-2][1-9])/(01|03|05|07|08|10|12)))/[1-9]\\d{3}");
                 }
                 if(pattern.matcher(beginDate).find()) {
                     SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
