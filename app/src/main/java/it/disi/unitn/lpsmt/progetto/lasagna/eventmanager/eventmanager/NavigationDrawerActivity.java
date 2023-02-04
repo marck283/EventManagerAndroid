@@ -371,7 +371,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     if(requestCode == 4) {
                         AccountIntegration integration = new AccountIntegration();
                         if(account != null && account.getAccount() != null && account.getAccount().getIdToken() != null) {
-                            integration.googleIntegrate(account.getAccount().getIdToken());
+                            integration.googleIntegrate(account.getAccount().getIdToken(), this);
                         } else {
                             Log.i("gToken", "Nessun authToken Google valido");
                         }

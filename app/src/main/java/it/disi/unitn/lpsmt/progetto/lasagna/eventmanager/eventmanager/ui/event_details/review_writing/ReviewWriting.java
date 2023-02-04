@@ -68,18 +68,18 @@ public class ReviewWriting extends Fragment {
                 if(descriptionLayout.getEditText() != null && !descriptionLayout.getEditText().getText().toString().equals("")) {
                     description = descriptionLayout.getEditText().getText().toString();
                     float rating = ratingBar.getRating();
-                    if(rating > 1.0) {
+                    if(rating >= 0.5) {
                         mViewModel.postReview(userJwt, eventId, rating, title, description, this, v);
                     } else {
-                        //Set alert dialog for wrong rating
+                        //Imposta AlertDialog per valutazione non consentita
                         setAlertDialog(R.string.wrong_rating, R.string.wrong_rating_message);
                     }
                 } else {
-                    //Set alert dialog
+                    //Imposta AlertDialog per descrizione mancante
                     setAlertDialog(R.string.no_review_description, R.string.no_review_description_message);
                 }
             } else {
-                //Set alert dialog
+                //Imposta AlertDialog per titolo mancante
                 setAlertDialog(R.string.no_review_title, R.string.no_review_title_message);
             }
         });

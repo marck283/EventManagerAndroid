@@ -1,5 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.accountIntegration;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.JsonObject;
@@ -21,7 +25,7 @@ public class AccountIntegration {
         integrationInterface = retro.create(IntegrationInterface.class);
     }
 
-    public void googleIntegrate(@NonNull String gJwt) {
+    public void googleIntegrate(@NonNull String gJwt, @NonNull Activity a) {
         Call<JsonObject> call = integrationInterface.googleIntegrate(new GoogleIntegration(gJwt));
         call.enqueue(new Callback<>() {
             /**
@@ -35,7 +39,12 @@ public class AccountIntegration {
              */
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                //Nothing to do
+                if(response.isSuccessful() && response.body() != null) {
+                    SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("accessToken", response.body().get("token").getAsString());
+                    editor.apply();
+                }
             }
 
             /**

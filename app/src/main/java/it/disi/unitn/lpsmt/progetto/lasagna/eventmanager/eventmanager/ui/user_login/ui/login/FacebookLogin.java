@@ -33,7 +33,7 @@ public class FacebookLogin {
     private final LoginButton loginButton;
     private final LoginManager loginManager;
 
-    private LoginActivity a;
+    private final LoginActivity a;
 
     public FacebookLogin(@NonNull LoginActivity a) {
         this.a = a;

@@ -46,7 +46,7 @@ public class EventDetailsFragment extends Fragment {
 
     //Indica il tipo della schermata (ad esempio "iscr" per utente iscritto, od "org" per "organizzatore")
     private String screenType;
-    private String eventId;
+    private String eventId, ticketId;
 
     private ActivityResultLauncher<ScanOptions> launcher;
 
@@ -54,6 +54,10 @@ public class EventDetailsFragment extends Fragment {
 
     public void setEventId(@NonNull String val) {
         eventId = val;
+    }
+
+    public void setTicketId(@NonNull String val) {
+        ticketId = val;
     }
 
     public void setDay(@NonNull String day) {
@@ -118,7 +122,7 @@ public class EventDetailsFragment extends Fragment {
                             switch (result.getResultCode()) {
                                 case Activity.RESULT_OK: {
                                     mViewModel.getEventInfo("pub", eventId, view, this, nvm.getToken().getValue(),
-                                            day, launcher, null);
+                                            day, launcher, null, null);
                                     break;
                                 }
                                 case Activity.RESULT_CANCELED: {
@@ -134,7 +138,8 @@ public class EventDetailsFragment extends Fragment {
                                 }
                             }
                         });
-                mViewModel.getEventInfo("pub", eventId, view, this, null, null, null, null);
+                mViewModel.getEventInfo("pub", eventId, view, this, null, null,
+                        null, null, null);
 
                 Button b = view.findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
@@ -142,6 +147,8 @@ public class EventDetailsFragment extends Fragment {
                     if (eventId != null && day != null && !day.equals("") && !day.equals("---") &&
                             time != null && !time.equals("") && !time.equals("---") && nvm.getToken() != null &&
                             nvm.getToken().getValue() != null) {
+                        String[] dayArr = day.split("/");
+                        day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
                         mViewModel.registerUser(nvm.getToken().getValue(), eventId, this, day, time, loginLauncher);
                     }
                 });
@@ -169,7 +176,25 @@ public class EventDetailsFragment extends Fragment {
                 duration.setText(getString(R.string.duration, "", "", ""));
                 address.setText(getString(R.string.event_address, ""));
 
-                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(), day, null, null);
+                ActivityResultLauncher<Intent> loginLauncher1 = registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(), result -> {
+                            if(eventId != null && ticketId != null && !eventId.equals("") && !ticketId.equals("")) {
+                                mViewModel.deleteTicket(nvm.getToken().getValue(), ticketId,
+                                        eventId, this, null);
+                            }
+                        });
+
+                ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                            if(result.getResultCode() == Activity.RESULT_OK) {
+                                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
+                                        day, null, null, loginLauncher1);
+                            }
+                });
+
+                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
+                        day, null, loginLauncher, loginLauncher1);
                 break;
             }
             case "org": {
@@ -194,7 +219,7 @@ public class EventDetailsFragment extends Fragment {
                             switch (result.getResultCode()) {
                                 case Activity.RESULT_OK: {
                                     mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                            day, launcher, null);
+                                            day, launcher, null, null);
                                     break;
                                 }
                                 case Activity.RESULT_CANCELED: {
@@ -211,7 +236,7 @@ public class EventDetailsFragment extends Fragment {
                             }
                         });
                 mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                        day, launcher, loginLauncher);
+                        day, launcher, loginLauncher, null);
 
                 Button qrCodeScan = view.findViewById(R.id.button8), terminaEvento = view.findViewById(R.id.button12);
                 terminaEvento.setOnClickListener(c -> {

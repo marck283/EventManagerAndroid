@@ -100,7 +100,7 @@ public class Authentication {
                                 integration.facebookIntegrate(fbJwt.getUserId(), fbJwt.getToken());
                             } else {
                                 if(googleJwt != null) {
-                                    integration.googleIntegrate(googleJwt);
+                                    integration.googleIntegrate(googleJwt, a);
                                 } else {
                                     Log.i("noJwt", "Utente non autenticato per mancanza dei codici di accesso");
                                 }

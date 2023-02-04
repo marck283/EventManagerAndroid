@@ -65,7 +65,11 @@ public class PostReview extends Thread {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //Nulla qui...
+                try {
+                    throw e;
+                } catch(Throwable e1) {
+                    e1.printStackTrace();
+                }
             }
 
             @Override
