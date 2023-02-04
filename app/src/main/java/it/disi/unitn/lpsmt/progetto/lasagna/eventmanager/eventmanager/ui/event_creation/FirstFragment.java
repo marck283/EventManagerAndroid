@@ -20,6 +20,7 @@ import androidx.navigation.Navigation;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -84,8 +85,15 @@ public class FirstFragment extends Fragment {
         MaterialAutoCompleteTextView category = spinner.findViewById(R.id.actv);
 
         // Apply the adapter to the spinner
-        category.setAdapter(SpinnerArrayAdapter.createFromResources(requireActivity(), R.array.category_spinner_array,
-                android.R.layout.simple_spinner_item, android.R.layout.simple_spinner_dropdown_item));
+        ArrayList<CharSequence> categoryArr = new ArrayList<>();
+        categoryArr.add("Sport");
+        categoryArr.add("Spettacolo");
+        categoryArr.add("Manifestazione");
+        categoryArr.add("Viaggio");
+        categoryArr.add("Altro");
+        category.setAdapter(new SpinnerArrayAdapter(requireContext(),
+                R.layout.list_item, categoryArr));
+
 
         category.addTextChangedListener(new TextWatcher() {
             @Override
