@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
+
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentFirstBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerItemList;
 
 public class FirstFragment extends Fragment {
@@ -44,16 +51,17 @@ public class FirstFragment extends Fragment {
         binding.nomeAtt.setEndIconOnClickListener(c -> {
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(binding.getRoot().getContext());
             speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(binding.getRoot(), R.id.nomeAtt1));
+            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(binding.getRoot(), R.id.category));
 
             SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
             speech.performClick();
         });
         binding.button5.setOnClickListener(c -> {
-            if(binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
-                if(binding.planetsSpinner.getSelectedItem() != null && !binding.planetsSpinner.getSelectedItem().equals("---")) {
+            if (binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
+                if (binding.planetsSpinner.getEditText() != null && !binding.planetsSpinner.getEditText()
+                        .getText().toString().equals("---")) {
                     evm.setNomeAtt(binding.nomeAtt.getEditText().getText().toString());
                     Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
                 } else {
@@ -74,15 +82,31 @@ public class FirstFragment extends Fragment {
 
         //Richiedo un'istanza di Spinner (menù dropdown). Maggiori informazioni qui:
         // https://developer.android.com/develop/ui/views/components/spinner#java
-        SpinnerItemList spinner = view.findViewById(R.id.planets_spinner);
+        TextInputLayout spinner = view.findViewById(R.id.nomeAtt);
+        MaterialAutoCompleteTextView category = spinner.findViewById(R.id.category);
 
         // Apply the adapter to the spinner
-        spinner.setAdapter(this, R.array.category_spinner_array,
-                android.R.layout.simple_spinner_item, android.R.layout.simple_spinner_dropdown_item);
+        category.setAdapter(SpinnerArrayAdapter.createFromResources(requireActivity(), R.array.category_spinner_array,
+                android.R.layout.simple_spinner_item, android.R.layout.simple_spinner_dropdown_item));
 
-        spinner.getListener().getItem().observe(requireActivity(), o -> {
-            if(o != null && !o.equals("") && !o.equals("---")) {
-                evm.setCategoria((String) o);
+        category.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Nulla qui...
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (category.getText() != null && !category.getText()
+                        .toString().equals("") && !category.getText()
+                        .toString().equals("---")) {
+                    evm.setCategoria(category.getText().toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //Nulla qui...
             }
         });
         CheckBox checkBox = view.findViewById(R.id.checkBox);
@@ -98,7 +122,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(speechRecognizer != null) {
+        if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }
         binding = null;
