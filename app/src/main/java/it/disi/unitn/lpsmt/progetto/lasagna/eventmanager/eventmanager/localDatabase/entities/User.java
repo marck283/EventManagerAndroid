@@ -15,9 +15,10 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 
 @Entity(tableName = "Users")
 public class User implements Serializable {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "id", defaultValue = "0")
-    private int id = 0;
+    private String id = "0";
 
     @NonNull
     @ColumnInfo(name = "email")
@@ -29,13 +30,6 @@ public class User implements Serializable {
     @ColumnInfo(name = "profilePic")
     @Nullable
     private String profilePic;
-
-    @ColumnInfo(name = "gServerAuthCode")
-    private String gServerAuthCode;
-
-    @ColumnInfo(name = "gToken")
-    @Nullable
-    private String gToken;
 
     @ColumnInfo(name = "tel")
     @Nullable
@@ -56,11 +50,11 @@ public class User implements Serializable {
     private Double valutazioneMedia = 0.0;
 
     //Getter e setter per permettere a Room di accedere ai campi
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -89,22 +83,6 @@ public class User implements Serializable {
     //Non dovrebbe essere utilizzato se non in casi molto particolari.
     public void setProfilePic(@Nullable String val) {
         profilePic = val;
-    }
-
-    public String getGServerAuthCode() {
-        return gServerAuthCode;
-    }
-
-    public void setGServerAuthCode(String code) {
-        gServerAuthCode = code;
-    }
-
-    public String getGToken() {
-        return gToken;
-    }
-
-    public void setGToken(String token) {
-        gToken = token;
     }
 
     @Nullable

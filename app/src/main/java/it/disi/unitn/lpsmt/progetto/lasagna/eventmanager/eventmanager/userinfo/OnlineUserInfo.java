@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -65,6 +66,13 @@ public class OnlineUserInfo extends Thread {
                         Gson gson1 = new GsonBuilder().create();
                         JsonObject res = gson1.fromJson(response.body().string(), JsonObject.class);
                         final UserInfo userInfo = user.parseJSON(res);
+
+                        DBUser dbUser = new DBUser(f.requireActivity(), "setProfile", v, userInfo);
+                        if(!dbUser.checkUser(userInfo.getId())) {
+                            dbUser.start();
+                        } else {
+                            dbUser.insert();
+                        }
 
                         //Imposta la schermata del profilo dell'utente
                         f.requireActivity().runOnUiThread(() -> {

@@ -15,15 +15,11 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBSignInThread;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBThread;
 
 public class GoogleLogin {
     private final GSignIn signIn;
 
     private final LoginActivity a;
-
-    private DBThread t2;
 
     public GoogleLogin(@NonNull LoginActivity a) {
         this.a = a;
@@ -37,8 +33,6 @@ public class GoogleLogin {
                 }
             });
         }
-
-        t2 = new DBThread(a);
     }
 
     private void signIn() {
@@ -54,8 +48,6 @@ public class GoogleLogin {
             signIn.getAccountFromCompletedTask(completedTask);
 
             // Signed in successfully, update the database and return to caller with the results
-            t2 = new DBSignInThread(a, signIn);
-            t2.start();
 
             Intent intent = a.setUpIntent("google", null);
             CsrfToken token = new CsrfToken();
@@ -70,8 +62,6 @@ public class GoogleLogin {
             //Not signed in, so return to caller with null results
             a.setResult(Activity.RESULT_CANCELED);
             a.finish();
-        } finally {
-            t2.close();
         }
     }
 }

@@ -1,5 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
@@ -21,9 +24,8 @@ public class UserProfileViewModel extends ViewModel {
             onlineUserInfo.start();
         } else {
             //Ottieni i dati dell'utente dal database, se disponibili
-            GSignIn signIn = new GSignIn(f.requireActivity());
-            String userEmail = signIn.getAccount().getEmail();
-            DBUser dbUser = new DBUser(f.requireActivity(), userEmail, "getAll", l, f);
+            SharedPreferences prefs = f.requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+            DBUser dbUser = new DBUser(prefs.getString("userId", ""), "getAll", l, f);
             dbUser.start();
         }
     }

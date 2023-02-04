@@ -28,18 +28,13 @@ public class DBSignInThread extends DBThread {
     public void run() {
         GoogleSignInAccount account = signIn.getAccount();
         synchronized(this) {
-            if(user.getUserEmail(account.getEmail()) != null) {
-                //Se esiste l'utente con l'email cercata
-                //aggiorno gServerAuthCode e token Google
-                user.updateUserServerAuthCode(account.getServerAuthCode(), account.getEmail());
-            } else {
-                //Se l'utente cercato non esiste, aggiungilo al database (ancora da aggiungere: collegamento a People API)
+            if(user.getUserEmail(account.getEmail()) == null) {
+                //Se l'utente cercato non esiste, aggiungilo al database
                 Uri photo = account.getPhotoUrl();
 
                 User u = new User();
                 u.setEmail(account.getEmail());
                 u.setNome(account.getGivenName());
-                u.setGToken(account.getIdToken());
                 if(photo != null) {
                     Log.i("photo", photo.toString());
                     u.setProfilePic(photo.toString());

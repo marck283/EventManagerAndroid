@@ -69,7 +69,6 @@ public class Authentication {
                 if (response.isSuccessful() && response.body() != null) {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
-                    new DBUser(a, info.getEmail(), "updateProfilePic", info).start();
 
                     final String email = info.getEmail(), profilePic = info.getProfilePic();
                     if(a instanceof NavigationDrawerActivity) {
@@ -84,6 +83,7 @@ public class Authentication {
                     SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("accessToken", info.getToken());
+                    editor.putString("userId", info.getId());
                     editor.apply();
                 } else {
                     Log.i("null1", "Unsuccessful or null response");

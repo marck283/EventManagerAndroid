@@ -14,7 +14,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 
 //NOTA: classe ed entità associate sono da implementare come qui indicato: https://developer.android.com/training/data-storage/room#java
 
-@Database(entities = {User.class}, version = 2)
+@Database(entities = {User.class}, version = 3)
 @TypeConverters({ListConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     /**
