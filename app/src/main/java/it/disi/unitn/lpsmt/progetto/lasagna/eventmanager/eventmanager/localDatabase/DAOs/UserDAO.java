@@ -5,17 +5,13 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import java.util.List;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.helpers.UserInfo;
 
 @Dao
 public interface UserDAO {
-
-    @Query("UPDATE Users SET profilePic = :profilePic WHERE email = :email")
-    void updateProfilePic(String profilePic, String email);
-
-    @Query("SELECT U.profilePic FROM Users U WHERE U.email = :email")
-    String getProfilePic(@NonNull String email);
 
     @Query("SELECT U.email FROM Users U WHERE U.email = :email")
     String getUserEmail(String email);
@@ -26,9 +22,11 @@ public interface UserDAO {
     @Insert
     void insert(User u);
 
-    @Query("UPDATE Users SET nome = :nome WHERE email = :email")
-    void setUsername(@NonNull String nome, @NonNull String email);
-
-    @Query("UPDATE Users SET email = :newEmail WHERE email = :oldEmail")
-    void setUserEmail(@NonNull String newEmail, @NonNull String oldEmail);
+    @Query("UPDATE Users SET nome = :nome, email = :email, tel = :tel, profilePic = :profilePic," +
+            "eventiCreati = :eventiCreati, eventiIscritto = :eventiIscritto, numEvOrg = :numEvOrg," +
+            "valutazioneMedia = :valutazioneMedia WHERE id = :id")
+    void updateUserProfile(@NonNull String id, @NonNull String nome, @NonNull String email,
+                           @NonNull String tel, @NonNull String profilePic,
+                           @NonNull List<String> eventiCreati, @NonNull List<String> eventiIscritto,
+                           @NonNull Integer numEvOrg, @NonNull Double valutazioneMedia);
 }

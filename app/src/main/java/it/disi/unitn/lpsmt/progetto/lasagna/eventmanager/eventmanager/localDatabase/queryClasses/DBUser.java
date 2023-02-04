@@ -115,13 +115,11 @@ public class DBUser extends DBThread {
                 }
                 case "setProfile": {
                     if(userInfo != null) {
-                        UserInfo info = user.getUser(userInfo.getId());
-                        info.setNome(userInfo.getString("nome"));
-                        info.setEmail(userInfo.getString("email"));
-                        info.setTel(userInfo.getString("tel"));
-                        info.setProfilePic(userInfo.getString("profilePic"));
-                        info.setNumEvOrg(userInfo.getNumEvOrg());
-                        info.setValutazioneMedia(userInfo.getValutazioneMedia());
+                        user.updateUserProfile(userInfo.getId(), userInfo.getString("nome"),
+                                userInfo.getString("email"), userInfo.getString("tel"),
+                                userInfo.getString("profilePic"), userInfo.getEventiCreati(),
+                                userInfo.getEventiIscritto(), userInfo.getNumEvOrg(),
+                                userInfo.getValutazioneMedia());
                     }
                     break;
                 }

@@ -50,10 +50,11 @@ public class User implements Serializable {
     private Double valutazioneMedia = 0.0;
 
     //Getter e setter per permettere a Room di accedere ai campi
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
+    @NonNull
     public String getId() {
         return id;
     }

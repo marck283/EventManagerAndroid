@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localData
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserInfo {
@@ -15,8 +16,7 @@ public class UserInfo {
 
     public UserInfo(@NonNull String id, @NonNull String profilePic, @NonNull String nome,
                     @NonNull String email, @NonNull String tel, @NonNull Integer numEvOrg,
-                    @NonNull Double valutazioneMedia, @NonNull List<String> EventiCreati,
-                    @NonNull List<String> EventiIscritto) {
+                    @NonNull Double valutazioneMedia) {
         this.id = id;
         this.profilePic = profilePic;
         this.nome = nome;
@@ -24,16 +24,26 @@ public class UserInfo {
         this.tel = tel;
         this.numEvOrg = numEvOrg;
         this.valutazioneMedia = valutazioneMedia;
-        this.EventiCreati = EventiCreati;
-        this.EventiIscritto = EventiIscritto;
+        EventiCreati = new ArrayList<>();
+        EventiIscritto = new ArrayList<>();
     }
 
     public List<String> getEventiCreati() {
         return EventiCreati;
     }
 
+    public void setEventiCreati(@NonNull List<String> evList) {
+        EventiCreati.clear();
+        EventiCreati.addAll(evList);
+    }
+
     public List<String> getEventiIscritto() {
         return EventiIscritto;
+    }
+
+    public void setEventiIscritto(@NonNull List<String> evList) {
+        EventiIscritto.clear();
+        EventiIscritto.addAll(evList);
     }
 
     public void setId(@NonNull String id) {
