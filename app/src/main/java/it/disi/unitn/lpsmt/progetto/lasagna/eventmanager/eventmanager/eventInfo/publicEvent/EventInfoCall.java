@@ -7,7 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -148,7 +147,10 @@ public class EventInfoCall extends Thread {
 
                                     ArrayList<CharSequence> orariArr = new ArrayList<>();
                                     orariArr.add("---");
-                                    orariArr.addAll(ei1.getOrari(s.toString()));
+
+                                    String[] dataArr = s.toString().split("/");
+                                    String data = String.join("-", dataArr[1], dataArr[0], dataArr[2]);
+                                    orariArr.addAll(ei1.getOrari(data));
                                     textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, orariArr));
                                     textView1.addTextChangedListener(new TextWatcher() {
                                         @Override
@@ -180,10 +182,8 @@ public class EventInfoCall extends Thread {
                                                                     if (addresses != null && addresses.size() > 0) {
                                                                         startGoogleMaps(f, indirizzo, addresses);
                                                                     } else {
-                                                                        Looper.prepare();
-                                                                        noSuchAddressDialog(f);
-                                                                        Looper.loop();
-                                                                        Looper.myLooper().quitSafely();
+                                                                        f.requireActivity().runOnUiThread(() ->
+                                                                                noSuchAddressDialog(f));
                                                                     }
                                                                 } catch (IOException e) {
                                                                     e.printStackTrace();
@@ -194,7 +194,7 @@ public class EventInfoCall extends Thread {
                                                     }
                                                 });
 
-                                                LuogoEvento le = ei1.getLuogo(s.toString(), s1.toString());
+                                                LuogoEvento le = ei1.getLuogo(data, s1.toString());
                                                 if (le != null) {
                                                     indirizzo.setPaintFlags(indirizzo.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                                                     indirizzo.setText(f.getString(R.string.event_address, le.toString()));

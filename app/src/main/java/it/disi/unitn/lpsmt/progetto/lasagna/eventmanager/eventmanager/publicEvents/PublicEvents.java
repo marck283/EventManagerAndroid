@@ -37,10 +37,10 @@ public class PublicEvents {
      */
     public PublicEvents(@NonNull Fragment f, @NonNull View layout) {
         //Limito il numero di thread a disposizione per non inondare il server di richieste
-        executor = Executors.newFixedThreadPool(20);
+        executor = Executors.newFixedThreadPool(10);
         Dispatcher dispatcher = new Dispatcher(executor);
-        dispatcher.setMaxRequests(20);
-        dispatcher.setMaxRequestsPerHost(3);
+        dispatcher.setMaxRequests(2);
+        dispatcher.setMaxRequestsPerHost(2);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .dispatcher(dispatcher) //Imposto il dispatcher delle richieste

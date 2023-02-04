@@ -68,15 +68,11 @@ public class EventInfo {
         ArrayList<String> res = new ArrayList<>();
 
         for(LuogoEvento le: luogoEvento) {
-            if(!res.contains(le.getData())) {
-                res.add(le.getData());
+            String[] dataArr = le.getData().split("-");
+            String data = String.join("/", dataArr[1], dataArr[0], dataArr[2]);
+            if(!res.contains(data)) {
+                res.add(data);
             }
-        }
-
-        try {
-            res.forEach(c -> c = String.join("/", c.split("-")));
-        } catch(NullPointerException ex) {
-            Log.i("voidDateSpinner", "Nessuna data per questo evento");
         }
 
         return res;
