@@ -2,7 +2,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.event_cre
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Looper;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -55,17 +54,16 @@ public class EventCreation extends Thread {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        Looper.prepare();
-        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-        dialog.setTitle(title);
-        dialog.setMessage(f.getString(message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-            dialog1.dismiss();
-            f.requireActivity().finish();
-        });
-        dialog.show();
-        Looper.loop();
-        Looper.myLooper().quitSafely();
+        f.requireActivity().runOnUiThread(() -> {
+                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                    dialog.setTitle(title);
+                    dialog.setMessage(f.getString(message));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                        dialog1.dismiss();
+                        f.requireActivity().finish();
+                    });
+                    dialog.show();
+                });
     }
 
     public void run() {
@@ -89,7 +87,11 @@ public class EventCreation extends Thread {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //Nulla qui...
+                try {
+                    throw e;
+                } catch(Throwable ex) {
+                    ex.printStackTrace();
+                }
             }
 
             @Override
@@ -106,7 +108,6 @@ public class EventCreation extends Thread {
                     }
 
                     case 401: {
-                        //setAlertDialog(R.string.unauthorized, R.string.log_in_to_authorize);
                         if(i != null) {
                             i.launch(loginIntent);
                         }

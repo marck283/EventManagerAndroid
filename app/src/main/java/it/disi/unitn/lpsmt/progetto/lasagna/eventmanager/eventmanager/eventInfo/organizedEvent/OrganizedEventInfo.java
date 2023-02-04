@@ -7,7 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -189,10 +188,7 @@ public class OrganizedEventInfo extends Thread {
                                                             if (addresses != null && addresses.size() > 0) {
                                                                 startGoogleMaps(f, address, addresses);
                                                             } else {
-                                                                Looper.prepare();
-                                                                noSuchAddressDialog(f);
-                                                                Looper.loop();
-                                                                Looper.myLooper().quitSafely();
+                                                                f.requireActivity().runOnUiThread(() -> noSuchAddressDialog(f));
                                                             }
                                                         } catch (IOException e) {
                                                             e.printStackTrace();

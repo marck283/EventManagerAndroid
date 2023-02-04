@@ -1,10 +1,11 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.post_review;
 
 import android.app.AlertDialog;
-import android.os.Looper;
+import android.content.DialogInterface;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -41,10 +42,21 @@ public class PostReview extends Thread {
         this.v = v;
     }
 
+    private void setAlertDialog(@StringRes int title, @StringRes int message,
+                                @NonNull DialogInterface.OnClickListener click) {
+        f.requireActivity().runOnUiThread(() -> {
+            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(f.getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", click);
+            dialog.show();
+        });
+    }
+
     public void run() {
         //La valutazione deve essere espressa in decimi.
         RequestBody body = new FormBody.Builder().add("title", titolo)
-                .add("evaluation", String.valueOf(2*valutazione)).add("description", motivazione).build();
+                .add("evaluation", String.valueOf(2 * valutazione)).add("description", motivazione).build();
         Request request = new Request.Builder()
                 .addHeader("x-access-token", userId)
                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/Recensioni/" + eventId)
@@ -58,18 +70,13 @@ public class PostReview extends Thread {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                Looper.prepare();
-                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                switch(response.code()) {
+                switch (response.code()) {
                     case 201: {
-                        dialog.setTitle(R.string.review_creation_successful);
-                        dialog.setMessage(f.getString(R.string.review_creation_successful_message));
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-                            dialog1.dismiss();
-
-                            f.requireActivity().runOnUiThread(() ->
-                            Navigation.findNavController(v).navigate(R.id.action_reviewWriting_to_nav_user_calendar));
-                        });
+                        setAlertDialog(R.string.review_creation_successful, R.string.review_creation_successful_message,
+                                (dialog1, which) -> {
+                                    dialog1.dismiss();
+                                    Navigation.findNavController(v).navigate(R.id.action_reviewWriting_to_nav_user_calendar);
+                                });
                         break;
                     }
                     case 401: {
@@ -80,28 +87,22 @@ public class PostReview extends Thread {
                     case 400: {
                         // Primo dei due codici usati solo per il debug.
                         // Non dovrebbero esserci problemi durante l'utilizzo normale dell'applicazione.
-                        dialog.setTitle(R.string.malformed_request);
-                        dialog.setMessage(f.getString(R.string.malformed_request_message));
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        setAlertDialog(R.string.malformed_request, R.string.malformed_request_message,
+                                (dialog1, which) -> dialog1.dismiss());
                         break;
                     }
                     case 500: {
                         //Secondo dei due codici usati solo per il debug.
-                        dialog.setTitle(R.string.internal_server_error);
-                        dialog.setMessage(f.getString(R.string.retry_later));
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        setAlertDialog(R.string.internal_server_error, R.string.retry_later,
+                                (dialog1, which) -> dialog1.dismiss());
                         break;
                     }
                     default: {
                         //Tutti i codici di errore non gestiti sopra andranno a finire qui...
-                        dialog.setTitle(R.string.unknown_error);
-                        dialog.setMessage(f.getString(R.string.unknown_error_message));
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        setAlertDialog(R.string.unknown_error, R.string.unknown_error_message,
+                                (dialog1, which) -> dialog1.dismiss());
                     }
                 }
-                dialog.show();
-                Looper.loop();
-                Looper.myLooper().quitSafely();
             }
         });
     }

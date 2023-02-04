@@ -1,9 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket.delete_ticket;
 
 import android.app.AlertDialog;
-import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
@@ -29,6 +29,16 @@ public class DeleteTicket extends Thread {
         this.f = f;
     }
 
+    private void setAlertDialog(@StringRes int title, @StringRes int message) {
+        f.requireActivity().runOnUiThread(() -> {
+            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(f.getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        });
+    }
+
     public void run() {
         Request request = new Request.Builder()
                 .addHeader("x-access-token", userJwt)
@@ -37,51 +47,43 @@ public class DeleteTicket extends Thread {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //Nulla qui...
+                try {
+                    throw e;
+                } catch(Throwable ex) {
+                    ex.printStackTrace();
+                }
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                Looper.prepare();
-                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-
                 /*
-                * Di tutti i codici di errore gestiti qui sotto solo "204", "401" e "500" sono realmente utilizzati.
+                * Tra tutti i codici di errore gestiti qui sotto solo "204", "401" e "500" sono realmente utilizzati.
                 * Tutti gli altri servono per ragioni di debugging e non dovrebbero essere mai restituiti dal server.
                 * */
                 switch(response.code()) {
                     case 204: {
-                        dialog.setTitle(R.string.deletion_successful);
-                        dialog.setMessage(f.getString(R.string.deletion_successful_message));
+                        setAlertDialog(R.string.deletion_successful, R.string.deletion_successful_message);
                         break;
                     }
                     case 401: {
                         //Utente non autenticato
-                        dialog.setTitle(R.string.user_not_logged_in);
-                        dialog.setMessage(f.getString(R.string.user_not_logged_in_message));
+                        setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
                         break;
                     }
                     case 403: {
-                        dialog.setTitle(R.string.user_not_registered);
-                        dialog.setMessage(f.getString(R.string.user_not_registered_message));
+                        setAlertDialog(R.string.user_not_registered, R.string.user_not_registered_message);
                         break;
                     }
                     case 404: {
-                        dialog.setTitle(R.string.deletion_404);
-                        dialog.setMessage(f.getString(R.string.deletion_404_message));
+                        setAlertDialog(R.string.deletion_404, R.string.deletion_404_message);
                         break;
                     }
                     case 500: {
                         //Errore interno al server
-                        dialog.setTitle(R.string.internal_server_error);
-                        dialog.setMessage(f.getString(R.string.internal_server_error));
+                        setAlertDialog(R.string.internal_server_error, R.string.internal_server_error);
                         break;
                     }
                 }
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
-                Looper.loop();
-                Looper.myLooper().quitSafely();
             }
         });
     }

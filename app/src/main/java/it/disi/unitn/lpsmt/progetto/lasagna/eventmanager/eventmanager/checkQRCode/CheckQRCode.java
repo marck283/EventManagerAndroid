@@ -1,7 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.checkQRCode;
 
 import android.app.AlertDialog;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -35,14 +34,13 @@ public class CheckQRCode extends Thread {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        Looper.prepare();
-        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-        dialog.setTitle(title);
-        dialog.setMessage(f.getString(message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
-        Looper.loop();
-        Looper.myLooper().quitSafely();
+        f.requireActivity().runOnUiThread(() -> {
+            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(f.getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        });
     }
 
     public void run() {
@@ -62,7 +60,7 @@ public class CheckQRCode extends Thread {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                switch(response.code()) {
+                switch (response.code()) {
                     case 200: {
                         //OK
                         setAlertDialog(R.string.valid_qr_code, R.string.valid_qr_code_message);

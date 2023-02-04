@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -54,11 +53,9 @@ public class EventLocationViewModel extends ViewModel {
                 break;
             } else {
                 ++i;
-                Looper.prepare();
                 if(i == addresses.size()) {
-                    setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
-                    Looper.loop();
-                    Looper.myLooper().quitSafely();
+                    f.requireActivity().runOnUiThread(() ->
+                            setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format)));
                 }
             }
         }
