@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 
 public class UserProfileFragment extends Fragment {
@@ -41,6 +43,13 @@ public class UserProfileFragment extends Fragment {
         return v;
     }
 
+    private void toEventManagement(@NonNull String token) {
+        Bundle b = new Bundle();
+        b.putString("userJwt", token);
+        v.findViewById(R.id.eventManaging).setOnClickListener(c -> Navigation.findNavController(v)
+                .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
+    }
+
     @Override
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
@@ -50,10 +59,18 @@ public class UserProfileFragment extends Fragment {
 
         String token = prefs.getString("accessToken", "");
         if(!token.equals("")) {
-            Bundle b = new Bundle();
-            b.putString("userJwt", token);
-            v.findViewById(R.id.eventManaging).setOnClickListener(c -> Navigation.findNavController(v)
-                    .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
+            NetworkCallback callback = new NetworkCallback(requireActivity());
+            if(callback.isOnline(requireActivity())) {
+                toEventManagement(token);
+            } else {
+                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                dialog.setTitle(R.string.no_connection);
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+                callback.registerNetworkCallback();
+                callback.addDefaultNetworkActiveListener(() -> toEventManagement(token));
+                callback.unregisterNetworkCallback();
+            }
         }
     }
 

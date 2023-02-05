@@ -91,9 +91,7 @@ public class FirstFragment extends Fragment {
         categoryArr.add("Manifestazione");
         categoryArr.add("Viaggio");
         categoryArr.add("Altro");
-        category.setAdapter(new SpinnerArrayAdapter(requireContext(),
-                R.layout.list_item, categoryArr));
-
+        category.setAdapter(new SpinnerArrayAdapter(requireContext(), R.layout.list_item, categoryArr));
 
         category.addTextChangedListener(new TextWatcher() {
             @Override

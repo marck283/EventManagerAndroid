@@ -55,6 +55,7 @@
         android:layout_width="265dp"
         android:layout_height="52dp"
         android:hint="@string/category_selection_text_view"
+        android:labelFor="@+id/actv"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
@@ -62,26 +63,13 @@
         app:layout_constraintTop_toBottomOf="@+id/nomeAtt">
 
         <AutoCompleteTextView
-            android:hint="@string/none"
             android:id="@+id/actv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="none"
-            app:simpleItems="@array/category_spinner_array"
             android:textAppearance="?attr/textAppearanceBodyLarge" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <!--<it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerItemList
-        android:id="@+id/planets_spinner"
-        android:layout_width="265dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="4dp"
-        android:contentDescription="@string/category_selection"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.493"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_name_text_view2" />-->
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBox"
