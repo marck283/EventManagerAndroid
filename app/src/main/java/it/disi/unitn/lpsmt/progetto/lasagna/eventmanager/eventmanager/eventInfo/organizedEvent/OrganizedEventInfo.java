@@ -264,6 +264,14 @@ public class OrganizedEventInfo extends Thread {
                             if (loginLauncher != null) {
                                 Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
                                 loginLauncher.launch(loginIntent);
+                            } else {
+                                f.requireActivity().runOnUiThread(() -> {
+                                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                    dialog.setTitle(R.string.user_not_logged_in);
+                                    dialog.setMessage(f.getString(R.string.user_not_logged_in_message));
+                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                    dialog.show();
+                                });
                             }
                             break;
                         }
