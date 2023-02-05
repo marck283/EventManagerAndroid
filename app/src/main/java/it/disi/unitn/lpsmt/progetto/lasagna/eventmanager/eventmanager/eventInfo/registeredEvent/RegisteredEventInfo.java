@@ -54,12 +54,11 @@ public class RegisteredEventInfo extends Thread {
 
     private final View v;
 
-    private final ActivityResultLauncher<Intent> loginLauncher, loginLauncherTicket;
+    private final ActivityResultLauncher<Intent> loginLauncher;
 
     public RegisteredEventInfo(@NonNull String userJwt, @NonNull String eventId, @NonNull EventDetailsFragment f,
                                @NonNull View v, @NonNull String data,
-                               @NonNull ActivityResultLauncher<Intent> loginLauncher,
-                               @NonNull ActivityResultLauncher<Intent> loginLauncherTicket) {
+                               @NonNull ActivityResultLauncher<Intent> loginLauncher) {
         client = new OkHttpClient();
         this.userJwt = userJwt;
         this.eventId = eventId;
@@ -67,7 +66,6 @@ public class RegisteredEventInfo extends Thread {
         this.v = v;
         this.data = data;
         this.loginLauncher = loginLauncher;
-        this.loginLauncherTicket = loginLauncherTicket;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -230,7 +228,8 @@ public class RegisteredEventInfo extends Thread {
                                     Button deleteTicket = v.findViewById(R.id.button11);
                                     deleteTicket.setOnClickListener(c ->
                                             f.getViewModel().deleteTicket(userJwt, event.getTicketId(),
-                                                    event.getIdEvent(), f, loginLauncherTicket));
+                                                    event.getIdEvent(), f, event.getLuogoEv().getData(),
+                                                    event.getLuogoEv().getOra()));
                                 });
                             }
                             response.body().close();

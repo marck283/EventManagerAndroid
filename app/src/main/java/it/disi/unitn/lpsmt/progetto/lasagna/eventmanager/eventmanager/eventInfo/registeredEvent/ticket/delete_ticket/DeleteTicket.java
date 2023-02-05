@@ -19,31 +19,20 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DeleteTicket extends Thread {
-    private final String eventId, ticketId, userJwt;
+    private final String eventId, ticketId, userJwt, data, ora;
     private final OkHttpClient client;
 
     private final Fragment f;
 
-    private final ActivityResultLauncher<Intent> loginLauncher;
-
     public DeleteTicket(@NonNull String eventId, @NonNull String ticketId, @NonNull String userJwt,
-                        @NonNull Fragment f) {
+                        @NonNull Fragment f, @NonNull String data, @NonNull String ora) {
         this.eventId = eventId;
         this.ticketId = ticketId;
         this.userJwt = userJwt;
         client = new OkHttpClient();
         this.f = f;
-        loginLauncher = null;
-    }
-
-    public DeleteTicket(@NonNull String eventId, @NonNull String ticketId, @NonNull String userJwt,
-                        @NonNull Fragment f, @NonNull ActivityResultLauncher<Intent> loginLauncher) {
-        this.eventId = eventId;
-        this.ticketId = ticketId;
-        this.userJwt = userJwt;
-        client = new OkHttpClient();
-        this.f = f;
-        this.loginLauncher = loginLauncher;
+        this.data = data;
+        this.ora = ora;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -59,6 +48,8 @@ public class DeleteTicket extends Thread {
     public void run() {
         Request request = new Request.Builder()
                 .addHeader("x-access-token", userJwt)
+                .addHeader("data", data)
+                .addHeader("ora", ora)
                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni/" + ticketId)
                 .delete()
                 .build();
@@ -85,12 +76,7 @@ public class DeleteTicket extends Thread {
                     }
                     case 401: {
                         //Utente non autenticato
-                        Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
-                        if(loginLauncher != null) {
-                            loginLauncher.launch(loginIntent);
-                        } else {
-                            setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
-                        }
+                        setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
                         break;
                     }
                     case 403: {

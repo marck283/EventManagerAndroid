@@ -268,11 +268,13 @@ public class OrganizedEventInfo extends Thread {
                             break;
                         }
                         case 404: {
-                            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                            dialog.setTitle(R.string.no_org_event);
-                            dialog.setMessage(f.getString(R.string.no_org_event_message));
-                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                            dialog.show();
+                            f.requireActivity().runOnUiThread(() -> {
+                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                dialog.setTitle(R.string.no_org_event);
+                                dialog.setMessage(f.getString(R.string.no_org_event_message));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                dialog.show();
+                            });
                             break;
                         }
                     }

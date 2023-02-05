@@ -4,6 +4,8 @@ import static android.app.Activity.RESULT_OK;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
@@ -25,11 +27,13 @@ import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 
 public class EventManagementFragment extends Fragment {
 
     private EventManagementViewModel mViewModel;
+
+    private final MutableLiveData<String> evName = new MutableLiveData<>();
 
     private String userJwt;
 
@@ -55,11 +59,15 @@ public class EventManagementFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(EventManagementViewModel.class);
+
         //Login user, then send him to the next Fragment
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     switch(result.getResultCode()) {
                         case RESULT_OK: {
+                            SharedPreferences prefs =
+                                    requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                            userJwt = prefs.getString("accessToken", "");
                             mViewModel.getOrgEvents(this, view, userJwt, null);
                             break;
                         }
@@ -75,7 +83,20 @@ public class EventManagementFragment extends Fragment {
                         }
                     }
                 });
-        mViewModel.getOrgEvents(this, view, userJwt, launcher);
+
+        NetworkCallback callback = new NetworkCallback(requireActivity());
+        if(callback.isOnline(requireActivity())) {
+            mViewModel.getOrgEvents(this, view, userJwt, launcher);
+        } else {
+            callback.registerNetworkCallback();
+            callback.addDefaultNetworkActiveListener(() -> mViewModel.getOrgEvents(this, view, userJwt, launcher));
+            callback.unregisterNetworkCallback();
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+            dialog.setTitle(R.string.no_connection);
+            dialog.setMessage(getString(R.string.no_connection_message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        }
     }
 
 }

@@ -81,8 +81,9 @@ public abstract class EventAdapter extends ListAdapter<Event, EventHolder> {
 
     public void clearEventList() {
         if(evList != null && evList.size() > 0) {
+            int size = evList.size();
             evList.clear();
-            notifyDataSetChanged();
+            notifyItemRangeRemoved(0, size);
         }
     }
 

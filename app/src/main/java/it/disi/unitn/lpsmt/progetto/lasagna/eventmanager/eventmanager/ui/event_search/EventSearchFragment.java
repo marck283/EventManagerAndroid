@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -26,6 +28,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
 
@@ -34,13 +37,13 @@ public class EventSearchFragment extends DialogFragment {
     private EventSearchViewModel mViewModel;
     private View root;
 
+    private EventListViewModel elvm;
+
     private SpeechRecognizer speechRecognizer;
 
     private Intent speechRecognizerIntent;
 
-    public EventSearchFragment() {
-
-    }
+    private String parent;
 
     @NonNull
     public static EventSearchFragment newInstance() {
@@ -59,13 +62,20 @@ public class EventSearchFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        Bundle b = getArguments();
+        if(b != null) {
+            parent = b.getString("parent");
+        }
+
         //Controllo di che siano stati garantiti i permessi necessari a registrare la voce dell'utente
-        //Se i peressi non sono garantiti, allora chiamo checkPermission().
+        //Se i permessi non sono garantiti, allora chiamo checkPermission().
         if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
             checkPermission();
         }
 
         mViewModel = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
+        elvm = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
+
         root.findViewById(R.id.search_for_event_name).setOnClickListener(c -> {
             EditText t1 = root.findViewById(R.id.nomeAtt2);
             if(t1.getText().toString().equals("")) {
@@ -75,7 +85,11 @@ public class EventSearchFragment extends DialogFragment {
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 ad.show();
             } else {
-                mViewModel.setEventName(t1.getText().toString());
+                //mViewModel.setEventName(t1.getText().toString());
+                SharedPreferences prefs = requireActivity().getSharedPreferences(parent, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("evName", t1.getText().toString());
+                editor.apply();
                 dismiss();
             }
         });
@@ -89,7 +103,11 @@ public class EventSearchFragment extends DialogFragment {
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 ad.show();
             } else {
-                mViewModel.setOrgName(t.getText().toString());
+                //mViewModel.setOrgName(t.getText().toString());
+                SharedPreferences prefs = requireActivity().getSharedPreferences("EventSearch", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("orgName", t.getText().toString());
+                editor.apply();
                 dismiss();
             }
         });

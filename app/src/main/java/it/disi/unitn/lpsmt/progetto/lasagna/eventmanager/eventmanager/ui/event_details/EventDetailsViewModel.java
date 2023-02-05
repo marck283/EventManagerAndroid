@@ -34,8 +34,7 @@ public class EventDetailsViewModel extends ViewModel {
     private void requestEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
                                   @NonNull EventDetailsFragment f, @Nullable String userJwt,
                                   @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
-                                  @Nullable ActivityResultLauncher<Intent> loginLauncher,
-                                  @Nullable ActivityResultLauncher<Intent> loginLauncherTicket) {
+                                  @Nullable ActivityResultLauncher<Intent> loginLauncher) {
         switch(which) {
             case "pub": {
                 EventInfoCall c = new EventInfoCall(eventId, view, f);
@@ -44,8 +43,7 @@ public class EventDetailsViewModel extends ViewModel {
             }
             case "iscr": {
                 if(userJwt != null && data != null && loginLauncher != null) {
-                    RegisteredEventInfo info = new RegisteredEventInfo(userJwt, eventId, f, view, data,
-                            loginLauncher, loginLauncherTicket);
+                    RegisteredEventInfo info = new RegisteredEventInfo(userJwt, eventId, f, view, data, loginLauncher);
                     info.start();
                 }
                 break;
@@ -78,17 +76,16 @@ public class EventDetailsViewModel extends ViewModel {
     public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
                              @NonNull EventDetailsFragment f, @Nullable String userJwt,
                              @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
-                             @Nullable ActivityResultLauncher<Intent> loginLauncher,
-                             @Nullable ActivityResultLauncher<Intent> loginLauncherTicket) {
+                             @Nullable ActivityResultLauncher<Intent> loginLauncher) {
         callback = new NetworkCallback(f.requireActivity());
         if(callback.isOnline(f.requireActivity())) {
-            requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher, loginLauncherTicket);
+            requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher);
         } else {
             //Aggiungi un listener per cercare le informazioni sull'evento quando sarà tornata la connessione ad Internet.
             callback.registerNetworkCallback();
             callback.addDefaultNetworkActiveListener(() ->
                             requestEventInfo(which, eventId, view, f, userJwt, data, launcher,
-                                    loginLauncher, loginLauncherTicket));
+                                    loginLauncher));
             callback.unregisterNetworkCallback();
             setNoConnectionDialog(f);
         }
@@ -107,15 +104,10 @@ public class EventDetailsViewModel extends ViewModel {
 
     public void deleteTicket(@NonNull String accessToken, @NonNull String ticketId,
                              @NonNull String eventId, @NonNull EventDetailsFragment f,
-                             @Nullable ActivityResultLauncher<Intent> loginLauncher) {
+                             @NonNull String data, @NonNull String ora) {
         callback = new NetworkCallback(f.requireActivity());
         if(callback.isOnline(f.requireActivity())) {
-            DeleteTicket delete;
-            if(loginLauncher != null) {
-                delete = new DeleteTicket(eventId, ticketId, accessToken, f, loginLauncher);
-            } else {
-                delete = new DeleteTicket(eventId, ticketId, accessToken, f);
-            }
+            DeleteTicket delete = new DeleteTicket(eventId, ticketId, accessToken, f, data, ora);
             delete.start();
         } else {
             setNoConnectionDialog(f);

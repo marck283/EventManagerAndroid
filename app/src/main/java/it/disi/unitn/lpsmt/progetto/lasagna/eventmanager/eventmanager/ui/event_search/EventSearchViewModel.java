@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 
 public class EventSearchViewModel extends ViewModel {
     @NonNull
-    private MutableLiveData<String> eventName = new MutableLiveData<>(""), orgName = new MutableLiveData<>("");
+    private final MutableLiveData<String> eventName = new MutableLiveData<>(""), orgName = new MutableLiveData<>("");
 
     public void setEventName(@NonNull String evName) {
         eventName.setValue(evName);
