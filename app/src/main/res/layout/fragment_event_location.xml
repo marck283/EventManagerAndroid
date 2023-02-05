@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.event_creation.newDate.EventLocationFragment">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="379dp"
         android:layout_height="449dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,6 +109,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
