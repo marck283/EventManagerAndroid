@@ -10,6 +10,7 @@ import android.view.View;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -99,7 +100,7 @@ public class EventSpeechRecognizer implements RecognitionListener {
      */
     @Override
     public void onResults(@NonNull Bundle results) {
-        TextInputEditText v = a.findViewById(resId);
+        MaterialAutoCompleteTextView v = a.findViewById(resId);
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         v.setText(data.get(0));
     }
