@@ -38,11 +38,11 @@ public class OrganizedEvent {
     }
 
     public String getId() {
-        return id;
+        return idevent;
     }
 
     public String getEventType() {
-        return idevent;
+        return id;
     }
 
     public String getSelf() {
@@ -90,17 +90,19 @@ public class OrganizedEvent {
     }
 
     public Bitmap decodeBase64() {
-        byte[] decodedImg = Base64.decode(eventPic
-                .replace("data:image/png;base64,", "")
-                .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-        return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+        if(eventPic != null) {
+            byte[] decodedImg = Base64.decode(eventPic
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
+            return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+        }
+        return null;
     }
 
     @NonNull
     @Contract("_ -> new")
     public static OrganizedEvent parseJSON(@NonNull JsonObject json) {
         Gson gs1 = new GsonBuilder().create();
-        JsonObject json1 = json;
         json = json.getAsJsonObject("event");
         return new OrganizedEvent(fromJsonString(gs1, json, "id"),
                 fromJsonString(gs1, json, "idevent"),

@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
@@ -141,7 +142,10 @@ public class OrganizedEventInfo extends Thread {
                     if (f.isAdded()) {
                         f.requireActivity().runOnUiThread(() -> {
                             ImageView iView = v.findViewById(R.id.imageView3);
-                            Glide.with(v).load(event.decodeBase64()).into(iView);
+                            Bitmap bm = event.decodeBase64();
+                            if(bm != null) {
+                                Glide.with(v).load(bm).into(iView);
+                            }
 
                             TextView evName = v.findViewById(R.id.textView6);
                             evName.setText(f.getString(R.string.info_on_event, event.getEventName()));
@@ -170,8 +174,8 @@ public class OrganizedEventInfo extends Thread {
 
                                         address.setText(f.getString(R.string.event_address, event.getLuogoEv().get(pos - 1).toString()));
                                         address.setOnClickListener(c -> {
-                                            Geocoder geocoder = new Geocoder(f.requireActivity());
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                Geocoder geocoder = new Geocoder(f.requireActivity());
                                                 geocoder.getFromLocationName(address.getText().toString(), 5, addresses -> {
                                                     if (addresses.size() > 0) {
                                                         startGoogleMaps(f, address, addresses);
@@ -184,6 +188,7 @@ public class OrganizedEventInfo extends Thread {
                                                     public void run() {
                                                         List<Address> addresses;
                                                         try {
+                                                            Geocoder geocoder = new Geocoder(f.requireActivity());
                                                             addresses = geocoder.getFromLocationName(address.getText().toString(), 5);
                                                             if (addresses != null && addresses.size() > 0) {
                                                                 startGoogleMaps(f, address, addresses);
@@ -214,15 +219,20 @@ public class OrganizedEventInfo extends Thread {
 
                                         Button qrCodeScan = v.findViewById(R.id.button8);
                                         EditText editText = spinner.getEditText(), editText1 = evDay.getEditText();
-                                        qrCodeScan.setOnClickListener(c -> {
-                                            if (editText != null &&
-                                                    !editText.getText().toString().equals("") &&
-                                                    !editText.getText().toString().equals("---") &&
-                                            editText1 != null && !editText.getText().toString().equals("") &&
-                                                    !editText.getText().toString().equals("---")) {
-                                                launcher.launch(new ScanOptions());
-                                            }
-                                        });
+                                        if(event.getEventType().equals("priv")) {
+                                            qrCodeScan.setEnabled(false);
+                                        } else {
+                                            qrCodeScan.setEnabled(true);
+                                            qrCodeScan.setOnClickListener(c -> {
+                                                if (editText != null &&
+                                                        !editText.getText().toString().equals("") &&
+                                                        !editText.getText().toString().equals("---") &&
+                                                        editText1 != null && !editText.getText().toString().equals("") &&
+                                                        !editText.getText().toString().equals("---")) {
+                                                    launcher.launch(new ScanOptions());
+                                                }
+                                            });
+                                        }
                                     } else {
                                         TextInputLayout hour = v.findViewById(R.id.spinner);
                                         MaterialAutoCompleteTextView hourTextView = hour.findViewById(R.id.orgHourTextView);
