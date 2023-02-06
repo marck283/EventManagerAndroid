@@ -254,4 +254,5 @@
     <string name="event_creation_error">Event creation error</string>
     <string name="event_creation_error_message">An error has occurred while creating the event. Please check that all fields have been filled accordingly.</string>
     <string name="service_unavailable_message">The service is temporarily unavailable. Please try again later. We apologize for the inconvenience.</string>
+    <string name="org_event_search">Filter organized events</string>
 </resources>

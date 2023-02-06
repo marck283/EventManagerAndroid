@@ -150,6 +150,9 @@
         <action
             android:id="@+id/action_eventManagement_to_eventDetailsFragment"
             app:destination="@id/eventDetailsFragment" />
+        <action
+            android:id="@+id/action_eventManagement_to_eventSearchFragment"
+            app:destination="@id/eventSearchFragment" />
     </fragment>
 
 </navigation>

@@ -47,8 +47,7 @@
                     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
                         android:id="@+id/textView28"
                         android:layout_width="82dp"
-                        android:text="@string/begin_date"
-                        android:textColor="@color/com_facebook_blue" />
+                        android:text="@string/begin_date" />
 
                     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
                         android:id="@+id/textView27"

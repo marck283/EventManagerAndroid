@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,6 +21,8 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.Contract;
 
@@ -48,7 +49,7 @@ public class EventManagementFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         Bundle b = getArguments();
-        if(b != null) {
+        if (b != null) {
             userJwt = b.getString("userJwt");
         }
 
@@ -63,7 +64,7 @@ public class EventManagementFragment extends Fragment {
         //Login user, then send him to the next Fragment
         ActivityResultLauncher<Intent> launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    switch(result.getResultCode()) {
+                    switch (result.getResultCode()) {
                         case RESULT_OK: {
                             SharedPreferences prefs =
                                     requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
@@ -78,24 +79,43 @@ public class EventManagementFragment extends Fragment {
                             editor.putString("accessToken", "");
                             editor.apply();
                             Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_nav_event_list);
-                            ((NavigationDrawerActivity)requireActivity()).updateUI("logout",
+                            ((NavigationDrawerActivity) requireActivity()).updateUI("logout",
                                     "", "", false);
                         }
                     }
                 });
 
         NetworkCallback callback = new NetworkCallback(requireActivity());
-        if(callback.isOnline(requireActivity())) {
-            mViewModel.getOrgEvents(this, view, userJwt, launcher);
+        //searchEvents(callback, null, view, launcher);
+
+        FloatingActionButton fab = view.findViewById(R.id.floatingActionButton2);
+        fab.setOnClickListener(c -> {
+            Bundle b = new Bundle();
+            b.putString("parent", "EventManagementFragment");
+            Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_eventSearchFragment, b);
+        });
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("EventManagementFragment",
+                Context.MODE_PRIVATE);
+        evName.setValue(prefs.getString("evName", null));
+        evName.observe(getViewLifecycleOwner(), o -> searchEvents(callback, evName.getValue(), view, launcher));
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("evName", null);
+        editor.apply();
+    }
+
+    private void searchEvents(@NonNull NetworkCallback callback, @Nullable String evName,
+                              @NonNull View view, @Nullable ActivityResultLauncher<Intent> launcher) {
+        if (callback.isOnline(requireActivity())) {
+            if(evName != null && !evName.equals("")) {
+                mViewModel.getOrgEvents(this, view, userJwt, evName, launcher);
+            } else {
+                mViewModel.getOrgEvents(this, view, userJwt, launcher);
+            }
         } else {
-            callback.registerNetworkCallback();
-            callback.addDefaultNetworkActiveListener(() -> mViewModel.getOrgEvents(this, view, userJwt, launcher));
-            callback.unregisterNetworkCallback();
-            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-            dialog.setTitle(R.string.no_connection);
-            dialog.setMessage(getString(R.string.no_connection_message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
+            //Implementare qui l'ottenimento dei dati sugli eventi che l'utente ha organizzato
+            //tramite l'interazione con il database
         }
     }
 

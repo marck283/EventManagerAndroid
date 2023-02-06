@@ -21,8 +21,10 @@ import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Locale;
@@ -94,23 +96,38 @@ public class EventSearchFragment extends DialogFragment {
             }
         });
 
-        root.findViewById(R.id.search_for_org_name).setOnClickListener(c -> {
-            EditText t = root.findViewById(R.id.organizerName);
-            if(t.getText().toString().equals("")) {
-                AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
-                ad.setTitle(R.string.org_name_field_empty);
-                ad.setMessage(getString(R.string.org_name_field_empty_message));
-                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                ad.show();
-            } else {
-                //mViewModel.setOrgName(t.getText().toString());
-                SharedPreferences prefs = requireActivity().getSharedPreferences("EventSearch", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("orgName", t.getText().toString());
-                editor.apply();
-                dismiss();
+        MaterialButton searchForOrgName = root.findViewById(R.id.search_for_org_name);
+        TextInputLayout orgName = root.findViewById(R.id.orgName);
+        if(parent.equals("EventManagementFragment")) {
+            searchForOrgName.setEnabled(false);
+            searchForOrgName.setVisibility(View.GONE);
+            orgName.setEnabled(false);
+            orgName.setVisibility(View.GONE);
+        } else {
+            searchForOrgName.setEnabled(true);
+            searchForOrgName.setVisibility(View.VISIBLE);
+            orgName.setEnabled(true);
+            orgName.setVisibility(View.VISIBLE);
+            if(!searchForOrgName.hasOnClickListeners()) {
+                searchForOrgName.setOnClickListener(c -> {
+                    EditText t = root.findViewById(R.id.organizerName);
+                    if(t.getText().toString().equals("")) {
+                        AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
+                        ad.setTitle(R.string.org_name_field_empty);
+                        ad.setMessage(getString(R.string.org_name_field_empty_message));
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        ad.show();
+                    } else {
+                        //mViewModel.setOrgName(t.getText().toString());
+                        SharedPreferences prefs = requireActivity().getSharedPreferences(parent, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("orgName", t.getText().toString());
+                        editor.apply();
+                        dismiss();
+                    }
+                });
             }
-        });
+        }
     }
 
     public void onStart() {

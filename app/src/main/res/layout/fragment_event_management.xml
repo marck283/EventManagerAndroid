@@ -22,10 +22,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/orgEvTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/organized_event_table"
-                android:drawableEnd="@android:drawable/ic_search_category_default"
                 android:text="@string/organized_event_table"
                 android:textAlignment="center"
                 android:textSize="24sp"
@@ -42,6 +42,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textField"
             app:layout_constraintVertical_bias="0.065" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="108dp"
+            android:clickable="true"
+            android:src="@android:drawable/ic_menu_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteY="514dp"
+            android:focusable="true"
+            android:contentDescription="@string/org_event_search" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

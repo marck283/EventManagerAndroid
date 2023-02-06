@@ -109,7 +109,7 @@ public class EventListFragment extends Fragment {
                 }
             });
 
-            evName.observe(this, o -> {
+            evName.observe(getViewLifecycleOwner(), o -> {
                 if(callback.isOnline(requireActivity())) {
                     if(o != null) {
                         RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
@@ -123,7 +123,7 @@ public class EventListFragment extends Fragment {
                 }
             });
 
-            orgName.observe(this, o -> {
+            orgName.observe(getViewLifecycleOwner(), o -> {
                 if(callback.isOnline(requireActivity())) {
                     if(o != null) {
                         RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);

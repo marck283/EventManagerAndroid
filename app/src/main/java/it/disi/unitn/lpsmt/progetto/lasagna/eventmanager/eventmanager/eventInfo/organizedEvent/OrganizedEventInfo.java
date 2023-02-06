@@ -156,7 +156,8 @@ public class OrganizedEventInfo extends Thread {
                             ArrayList<CharSequence> dayArr = new ArrayList<>();
                             dayArr.add("---");
                             for (LuogoEvento l : event.getLuogoEv()) {
-                                dayArr.add(l.getData());
+                                String[] dateArr = l.getData().split("-");
+                                dayArr.add(dateArr[1] + "/" + dateArr[0] + "/" + dateArr[2]);
                             }
 
                             dayText.addTextChangedListener(new TextWatcher() {

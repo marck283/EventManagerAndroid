@@ -23,8 +23,8 @@
 
         <TextView
             android:id="@+id/textView6"
-            android:layout_width="342dp"
-            android:layout_height="39dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
             android:text="@string/info_on_event"
             android:textAlignment="center"
@@ -102,7 +102,7 @@
             android:layout_width="155dp"
             android:layout_height="52dp"
             android:layout_marginTop="52dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="12dp"
             android:contentDescription="@string/time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6">
@@ -119,9 +119,10 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/spinner2"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-            android:layout_width="155dp"
+            android:layout_width="165dp"
             android:layout_height="52dp"
             android:layout_marginTop="52dp"
+            android:layout_marginStart="6dp"
             app:layout_constraintEnd_toStartOf="@+id/spinner"
             app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"

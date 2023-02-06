@@ -219,6 +219,7 @@
     <string name="modify_destination">Modifica destinazione</string>
     <string name="event_creation_error">Errore durante la creazione dell\'evento</string>
     <string name="event_creation_error_message">Si è verificato un errore durante la creazione dell\'evento. Si prega di controllare che tutti i campi siano stati compilati correttamente.</string>
+    <string name="org_event_search">Filtra gli eventi che hai organizzato</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>

@@ -18,4 +18,10 @@ public class EventManagementViewModel extends ViewModel {
         OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, launcher);
         orgEvs.getOrgEvents(userJwt, null);
     }
+
+    public void getOrgEvents(@NonNull Fragment f, @NonNull View v, @NonNull String userJwt,
+                             @NonNull String evName, @Nullable ActivityResultLauncher<Intent> launcher) {
+        OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, evName, launcher);
+        orgEvs.getOrgEventsWithName(userJwt);
+    }
 }
