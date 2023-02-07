@@ -78,7 +78,7 @@ public class SecondFragment extends Fragment {
         t1.setText(luogoEv.getData());
         t2.setText(luogoEv.getOra());
         t3.setText(luogoEv.getAddress());
-        t4.setText(String.valueOf(luogoEv.getPostiRimanenti()));
+        t4.setText(String.valueOf(luogoEv.getMaxPers()));
 
         ImageView modifyDestination = view.findViewById(R.id.imageView4);
         modifyDestination.setOnClickListener(c -> {
