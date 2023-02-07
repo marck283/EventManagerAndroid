@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
@@ -16,20 +17,25 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 public class OrgEvAdapter extends EventAdapter {
     private final String day;
 
-    public OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList,
+    private final Fragment f;
+
+    public OrgEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList,
                         @NonNull String day) {
         super(diffCallback, evList);
         this.day = day;
+        this.f = f;
     }
 
-    public OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
+    public OrgEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
         super(diffCallback, evList);
         this.day = null;
+        this.f = f;
     }
 
-    protected OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+    protected OrgEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
         day = null;
+        this.f = f;
     }
 
     @NonNull
@@ -39,8 +45,8 @@ public class OrgEvAdapter extends EventAdapter {
                 .inflate(R.layout.event_dialog_button, parent, false);
         // Return a new view holder
         if(day != null) {
-            return new OrgEvViewHolder(view, day);
+            return new OrgEvViewHolder(f, view, day);
         }
-        return new OrgEvViewHolder(view);
+        return new OrgEvViewHolder(f, view);
     }
 }

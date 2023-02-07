@@ -1,5 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -112,6 +116,16 @@ public class OrgEvent implements Serializable {
     @NonNull
     public String getEventPic() {
         return eventPic;
+    }
+
+    public Bitmap decodeBase64() {
+        if(eventPic != null) {
+            byte[] decodedImg = Base64.decode(eventPic
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
+            return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+        }
+        return null;
     }
 
     public void setEventPic(@NonNull String val) {

@@ -230,7 +230,7 @@ public class EventDetailsFragment extends Fragment {
                                         mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                                                 day, launcher, null);
                                     } else {
-                                        DBOrgEvents orgEvents = new DBOrgEvents(this, eventId);
+                                        DBOrgEvents orgEvents = new DBOrgEvents(this, view, eventId);
                                         orgEvents.start();
                                     }
                                     break;
@@ -253,7 +253,7 @@ public class EventDetailsFragment extends Fragment {
                             day, launcher, loginLauncher);
                 } else {
                     //Nessuna connessione ad Internet
-                    DBOrgEvents orgEvents = new DBOrgEvents(this, eventId);
+                    DBOrgEvents orgEvents = new DBOrgEvents(this, view, eventId);
                     orgEvents.start();
                 }
 

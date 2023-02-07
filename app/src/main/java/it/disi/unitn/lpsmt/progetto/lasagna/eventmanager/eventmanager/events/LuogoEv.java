@@ -100,4 +100,8 @@ public class LuogoEv extends Address {
         return indirizzo + ", " + civNum + ", " + cap + " " + citta + " " + provincia + ", " + maxPers
                 + ", " + data + ", " + ora + ", " + postiRimanenti;
     }
+
+    public String getAddress() {
+        return indirizzo + ", " + civNum + ", " + cap + " " + citta + " " + provincia;
+    }
 }

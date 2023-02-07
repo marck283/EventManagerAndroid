@@ -45,7 +45,7 @@ public class OrganizedEvents {
         RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
                 false);
         mRecyclerView.setLayoutManager(lm);
-        OrgEvAdapter p1 = new OrgEvAdapter(new EventCallback());
+        OrgEvAdapter p1 = new OrgEvAdapter(f, new EventCallback());
         mRecyclerView.setAdapter(p1);
         this.launcher = launcher;
         evName = null;
@@ -64,7 +64,7 @@ public class OrganizedEvents {
         RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
                 false);
         mRecyclerView.setLayoutManager(lm);
-        OrgEvAdapter p1 = new OrgEvAdapter(new EventCallback());
+        OrgEvAdapter p1 = new OrgEvAdapter(f, new EventCallback());
         mRecyclerView.setAdapter(p1);
         this.launcher = launcher;
         this.evName = evName;

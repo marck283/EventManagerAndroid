@@ -85,7 +85,7 @@ public class EventManagementFragment extends Fragment {
                     switch (result.getResultCode()) {
                         case RESULT_OK: {
                             userJwt = prefs.getString("accessToken", "");
-                            searchEvents(callback, mViewModel.getEvName().getValue(), view, null);
+                            searchEvents(mViewModel.getEvName().getValue(), view, null);
                             break;
                         }
                         case Activity.RESULT_CANCELED: {
@@ -99,7 +99,7 @@ public class EventManagementFragment extends Fragment {
                     }
                 });
 
-        searchEvents(callback, null, view, launcher);
+        searchEvents(null, view, launcher);
 
         FloatingActionButton fab = view.findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(c -> {
@@ -111,25 +111,25 @@ public class EventManagementFragment extends Fragment {
         /*SharedPreferences prefs = requireActivity().getSharedPreferences("EventManagementFragment",
                 Context.MODE_PRIVATE);
         evName.setValue(prefs.getString("evName", null));*/
-        mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> searchEvents(callback,
-                mViewModel.getEvName().getValue(), view, launcher));
+        if(callback.isOnline(requireActivity())) {
+            mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> searchEvents(
+                    mViewModel.getEvName().getValue(), view, launcher));
+        } else {
+            DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+            orgEvs.start();
+        }
 
         /*SharedPreferences.Editor editor = prefs.edit();
         editor.putString("evName", null);
         editor.apply();*/
     }
 
-    private void searchEvents(@NonNull NetworkCallback callback, @Nullable String evName,
+    private void searchEvents(@Nullable String evName,
                               @NonNull View view, @Nullable ActivityResultLauncher<Intent> launcher) {
-        if (callback.isOnline(requireActivity())) {
-            if(evName != null && !evName.equals("")) {
-                mViewModel.getOrgEvents(this, view, userJwt, evName, launcher);
-            } else {
-                mViewModel.getOrgEvents(this, view, userJwt, launcher);
-            }
+        if(evName != null && !evName.equals("")) {
+            mViewModel.getOrgEvents(this, view, userJwt, evName, launcher);
         } else {
-            DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
-            orgEvs.start();
+            mViewModel.getOrgEvents(this, view, userJwt, launcher);
         }
     }
 }

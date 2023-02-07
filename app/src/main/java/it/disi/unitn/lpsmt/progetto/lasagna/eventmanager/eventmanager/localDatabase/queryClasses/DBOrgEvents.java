@@ -1,10 +1,16 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +36,8 @@ public class DBOrgEvents extends DBThread {
 
     private final RecyclerView recView;
 
+    private final View v;
+
     public DBOrgEvents(@NonNull Fragment f, @NonNull String action, @NonNull List<Event> events,
                        @NonNull RecyclerView recView) {
         super(f.requireActivity());
@@ -39,6 +47,7 @@ public class DBOrgEvents extends DBThread {
         this.events = events;
         this.recView = recView;
         eventId = null;
+        v = null;
     }
 
     public DBOrgEvents(@NonNull Fragment f, @NonNull String action, @NonNull RecyclerView recView) {
@@ -49,9 +58,15 @@ public class DBOrgEvents extends DBThread {
         this.recView = recView;
         events = null;
         eventId = null;
+
+        RecyclerView.LayoutManager lm = new LinearLayoutManager(f.requireContext(), LinearLayoutManager.VERTICAL,
+                false);
+        this.recView.setLayoutManager(lm);
+
+        v = null;
     }
 
-    public DBOrgEvents(@NonNull Fragment f, @NonNull String eventId) {
+    public DBOrgEvents(@NonNull Fragment f, @NonNull View v, @NonNull String eventId) {
         super(f.requireActivity());
         orgEvDAO = db.getOrgEvDAO();
         this.f = f;
@@ -59,6 +74,7 @@ public class DBOrgEvents extends DBThread {
         this.recView = null;
         events = null;
         this.eventId = eventId;
+        this.v = v;
     }
 
     private void updateAll() {
@@ -92,18 +108,31 @@ public class DBOrgEvents extends DBThread {
             helpList.add(new OrganizedEvent(o.getEventType(), o.getIdevent(), o.getSelf(), o.getName(),
                     o.getCategory(), o.getEventPic(), o.getOrgName(), o.getLuogoEv(), o.getDurata()));
         }
-        EventAdapter p1 = new OrgEvAdapter(new EventCallback(), helpList);
-        p1.submitList(helpList);
-        recView.setAdapter(p1);
+        f.requireActivity().runOnUiThread(() -> {
+            EventAdapter p1 = new OrgEvAdapter(f, new EventCallback(), helpList);
+            p1.submitList(helpList);
+            recView.setAdapter(p1);
+        });
     }
 
-    public void getEventById() {
+    private void getEventById() {
         OrgEvent event = orgEvDAO.getOrgEvent(eventId);
+
+        f.requireActivity().runOnUiThread(() -> {
+            ImageView iView = v.findViewById(R.id.imageView3);
+            Bitmap bm = event.decodeBase64();
+            if(bm != null) {
+                Glide.with(v).load(bm).into(iView);
+            }
+
+            //Recuperare anche le altre informazioni sull'evento in questione
+        });
     }
 
     public void run() {
         //Azioni da implementare:
-        //1) ottenere le informazioni su un singolo evento.
+        //1) ottenere le informazioni su un singolo evento;
+        //2) eliminare evento alla sua terminazione.
 
         switch(action) {
             case "updateAll": {

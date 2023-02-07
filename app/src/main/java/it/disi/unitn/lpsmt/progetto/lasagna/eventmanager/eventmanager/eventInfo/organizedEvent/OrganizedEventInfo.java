@@ -174,7 +174,8 @@ public class OrganizedEventInfo extends Thread {
                                         TextView address = v.findViewById(R.id.textView15);
                                         final int pos = dayArr.indexOf(evDay.getEditText().getText().toString());
 
-                                        address.setText(f.getString(R.string.event_address, event.getLuogoEv().get(pos - 1).toString()));
+                                        address.setText(f.getString(R.string.event_address, event.getLuogoEv()
+                                                .get(pos - 1).getAddress()));
                                         address.setOnClickListener(c -> {
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                                 Geocoder geocoder = new Geocoder(f.requireActivity());

@@ -93,9 +93,9 @@ public class JsonCallback implements Callback<JsonObject> {
         switch(type) {
             case "org": {
                 if(day != null) {
-                    p1 = new OrgEvAdapter(new EventCallback(), ev.getList(), day);
+                    p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList(), day);
                 } else {
-                    p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
+                    p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList());
                 }
                 DBOrgEvents dbOrg = new DBOrgEvents(f, "updateAll", ev.getList(), mRecyclerView);
                 dbOrg.start();
