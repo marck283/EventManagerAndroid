@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -21,7 +19,6 @@ import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.material.button.MaterialButton;
@@ -31,12 +28,14 @@ import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagementViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
 
 public class EventSearchFragment extends DialogFragment {
 
-    private EventSearchViewModel mViewModel;
+    private EventManagementViewModel emvm;
+
     private View root;
 
     private EventListViewModel elvm;
@@ -75,8 +74,8 @@ public class EventSearchFragment extends DialogFragment {
             checkPermission();
         }
 
-        mViewModel = new ViewModelProvider(requireActivity()).get(EventSearchViewModel.class);
         elvm = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
+        emvm = new ViewModelProvider(requireActivity()).get(EventManagementViewModel.class);
 
         root.findViewById(R.id.search_for_event_name).setOnClickListener(c -> {
             EditText t1 = root.findViewById(R.id.nomeAtt2);
@@ -87,11 +86,11 @@ public class EventSearchFragment extends DialogFragment {
                 ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 ad.show();
             } else {
-                //mViewModel.setEventName(t1.getText().toString());
-                SharedPreferences prefs = requireActivity().getSharedPreferences(parent, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("evName", t1.getText().toString());
-                editor.apply();
+                if(parent.equals("EventListFragment")) {
+                    elvm.setEvName(t1.getText().toString());
+                } else {
+                    emvm.setEvName(t1.getText().toString());
+                }
                 dismiss();
             }
         });
@@ -118,11 +117,7 @@ public class EventSearchFragment extends DialogFragment {
                         ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                         ad.show();
                     } else {
-                        //mViewModel.setOrgName(t.getText().toString());
-                        SharedPreferences prefs = requireActivity().getSharedPreferences(parent, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString("orgName", t.getText().toString());
-                        editor.apply();
+                        elvm.setOrgName(t.getText().toString());
                         dismiss();
                     }
                 });
