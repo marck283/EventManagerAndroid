@@ -95,15 +95,24 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     private void showCreaEvento() {
-        Intent i = new Intent(this, EventCreationActivity.class);
-        if(account != null && account.getAccount() != null) {
-            //L'utente è autenticato con Google
-            i.putExtra("accessToken", account.getAccount().getIdToken());
+        NetworkCallback callback = new NetworkCallback(this);
+        if(callback.isOnline(this)) {
+            Intent i = new Intent(this, EventCreationActivity.class);
+            if(account != null && account.getAccount() != null) {
+                //L'utente è autenticato con Google
+                i.putExtra("accessToken", account.getAccount().getIdToken());
+            } else {
+                //L'utente è autenticato con Facebook
+                i.putExtra("accessToken", accessToken.getToken());
+            }
+            startActivity(i);
         } else {
-            //L'utente è autenticato con Facebook
-            i.putExtra("accessToken", accessToken.getToken());
+            AlertDialog dialog = new AlertDialog.Builder(this).create();
+            dialog.setTitle(R.string.no_connection);
+            dialog.setMessage(getString(R.string.no_connection_message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
         }
-        startActivity(i);
     }
 
     @Override

@@ -38,14 +38,6 @@ public class EventListFragment extends Fragment {
                 idToken = savedInstanceState.getString("accessToken");
             }
         }
-        /*if(args != null) {
-            if(args.getString("evName") != null) {
-                evName.setValue(args.getString("evName"));
-            }
-            if(args.getString("orgName") != null) {
-                orgName.setValue(args.getString("orgName"));
-            }
-        }*/
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -82,16 +74,18 @@ public class EventListFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        /*SharedPreferences prefs = requireActivity().getSharedPreferences("EventListFragment", Context.MODE_PRIVATE);
-        evName.setValue(prefs.getString("evName", null));
-        orgName.setValue(prefs.getString("orgName", null));
-
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("evName", "");
-        editor.putString("orgName", "");
-        editor.apply();*/
-
         NetworkCallback callback = new NetworkCallback(requireActivity());
+
+        if(!callback.isOnline(requireActivity())) {
+            root.findViewById(R.id.eventSearch).setOnClickListener(c -> {
+                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                dialog.setTitle(R.string.no_connection);
+                dialog.setMessage(getString(R.string.no_connection_message));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+            });
+        }
+
         if(callback.isOnline(requireActivity())) {
             vm.getToken().observe(requireActivity(), o -> {
                 if(callback.isOnline(requireActivity())) {

@@ -13,15 +13,16 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class RegisteredEvent {
 
     private final String id, idevent, self, name, category, eventPic, orgName, durata, idIscr;
-    private final LuogoEvento luogoEv;
+    private final LuogoEv luogoEv;
 
     public RegisteredEvent(@NonNull String id, @NonNull String idevent, @NonNull String self,
                            @NonNull String name, @NonNull String category, @NonNull String eventPic,
-                           @NonNull String orgName, @NonNull LuogoEvento luogoEv, @NonNull String durata,
+                           @NonNull String orgName, @NonNull LuogoEv luogoEv, @NonNull String durata,
                            @NonNull String idIscr) {
         this.id = id;
         this.idevent = idevent;
@@ -71,7 +72,7 @@ public class RegisteredEvent {
         return orgName;
     }
 
-    public LuogoEvento getLuogoEv() {
+    public LuogoEv getLuogoEv() {
         return luogoEv;
     }
 
@@ -110,7 +111,7 @@ public class RegisteredEvent {
                 fromJsonString(gs1, event, "self"), fromJsonString(gs1, event, "name"),
                 fromJsonString(gs1, event, "category"), fromJsonString(gs1, event, "eventPic"),
                 fromJsonString(gs1, event, "orgName"),
-                LuogoEvento.parseJSON(event.getAsJsonArray("luogoEv").get(0).getAsJsonObject()),
+                LuogoEv.parseJSON(event.getAsJsonArray("luogoEv").get(0).getAsJsonObject()),
                 fromJsonString(gs1, event, "durata"), ticketId);
     }
 }

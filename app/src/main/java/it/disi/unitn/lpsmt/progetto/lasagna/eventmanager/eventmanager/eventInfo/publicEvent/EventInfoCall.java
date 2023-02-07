@@ -198,7 +198,7 @@ public class EventInfoCall extends Thread {
                                                 LuogoEv le = ei1.getLuogo(data, s1.toString());
                                                 if (le != null) {
                                                     indirizzo.setPaintFlags(indirizzo.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                                                    indirizzo.setText(f.getString(R.string.event_address, le.toString()));
+                                                    indirizzo.setText(f.getString(R.string.event_address, le.getAddress()));
                                                 }
 
                                                 try {

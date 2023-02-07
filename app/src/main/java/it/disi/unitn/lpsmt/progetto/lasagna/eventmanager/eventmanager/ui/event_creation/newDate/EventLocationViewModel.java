@@ -48,7 +48,7 @@ public class EventLocationViewModel extends ViewModel {
         for (Address a : addresses) {
             Log.i("addresses", addresses.toString());
             String indirizzo = a.getAddressLine(i);
-            if (indirizzo != null && indirizzo.contains(luogo.toString())) {
+            if (indirizzo != null && indirizzo.contains(luogo.getAddress())) {
                 ok.postValue(true);
                 evm.setLuogoEv(luogo);
                 f.requireActivity().runOnUiThread(() ->
@@ -329,9 +329,7 @@ public class EventLocationViewModel extends ViewModel {
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                geocoder.getFromLocationName(location, 5, addresses -> {
-                    setAddress(addresses, luogo, evm);
-                });
+                geocoder.getFromLocationName(location, 5, addresses -> setAddress(addresses, luogo, evm));
             } else {
                 //Applicazione bloccata dopo errore inserimento luogo. Come mai?
                 Thread t1 = new Thread() {

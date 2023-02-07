@@ -116,6 +116,7 @@ public class DBOrgEvents extends DBThread {
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 dialog.show();
             });
+            return;
         }
 
         //Mostra tutti gli eventi nella tabella degli eventi organizzati dall'utente

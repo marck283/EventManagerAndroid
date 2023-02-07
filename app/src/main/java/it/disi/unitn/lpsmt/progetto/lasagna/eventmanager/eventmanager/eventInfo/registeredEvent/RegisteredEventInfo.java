@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -35,7 +34,7 @@ import java.util.Date;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan.QRCodeRenderingFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
@@ -182,10 +181,10 @@ public class RegisteredEventInfo extends Thread {
                                         }
                                     });
 
-                                    LuogoEvento le = event.getLuogoEv();
+                                    LuogoEv le = event.getLuogoEv();
                                     if (le != null) {
                                         address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                                        address.setText(f.getString(R.string.event_address, le.toString()));
+                                        address.setText(f.getString(R.string.event_address, le.getAddress()));
                                     }
 
                                     Button qrCodeRender = v.findViewById(R.id.button9);
@@ -203,7 +202,7 @@ public class RegisteredEventInfo extends Thread {
 
                                     Button writeReview = v.findViewById(R.id.button10);
                                     String dateTime = dataArr[2]
-                                            + "-" + dataArr[1] + "-" + dataArr[0] + "T" + oraS + ":00";
+                                            + "-" + dataArr[0] + "-" + dataArr[1] + "T" + oraS + ":00";
                                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                                         LocalDateTime now = LocalDateTime.now(), eventDateTime = LocalDateTime.parse(dateTime);
                                         Log.i("boolean", String.valueOf(now.isBefore(eventDateTime)));

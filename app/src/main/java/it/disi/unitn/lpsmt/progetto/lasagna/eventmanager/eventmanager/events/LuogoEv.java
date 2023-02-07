@@ -54,9 +54,8 @@ public class LuogoEv extends Address {
         this.maxPers = maxPers;
         this.data = data;
         this.ora = ora;
-        postiRimanenti = maxPers - numPosti;
+        postiRimanenti = numPosti;
     }
-
 
     public JSONObject toJSON(boolean priv) throws JSONException {
         JSONObject json = new JSONObject();

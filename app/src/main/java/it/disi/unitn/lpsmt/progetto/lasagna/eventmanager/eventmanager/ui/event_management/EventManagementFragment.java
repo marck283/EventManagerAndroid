@@ -108,9 +108,6 @@ public class EventManagementFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_eventSearchFragment, b);
         });
 
-        /*SharedPreferences prefs = requireActivity().getSharedPreferences("EventManagementFragment",
-                Context.MODE_PRIVATE);
-        evName.setValue(prefs.getString("evName", null));*/
         if(callback.isOnline(requireActivity())) {
             mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> searchEvents(
                     mViewModel.getEvName().getValue(), view, launcher));
@@ -118,10 +115,6 @@ public class EventManagementFragment extends Fragment {
             DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
             orgEvs.start();
         }
-
-        /*SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("evName", null);
-        editor.apply();*/
     }
 
     private void searchEvents(@Nullable String evName,
