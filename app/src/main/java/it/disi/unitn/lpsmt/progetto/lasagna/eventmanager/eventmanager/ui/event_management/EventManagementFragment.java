@@ -34,14 +34,27 @@ public class EventManagementFragment extends Fragment {
 
     private EventManagementViewModel mViewModel;
 
-    private final MutableLiveData<String> evName = new MutableLiveData<>();
-
     private String userJwt;
+
+    private SharedPreferences prefs, evNamePrefs;
+
+    private NetworkCallback callback;
+
+    private View view;
+
+    private ActivityResultLauncher<Intent> launcher;
 
     @NonNull
     @Contract(" -> new")
     public static EventManagementFragment newInstance() {
         return new EventManagementFragment();
+    }
+
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+
+        evNamePrefs = requireActivity().getSharedPreferences("EventManagerFragment", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -53,28 +66,28 @@ public class EventManagementFragment extends Fragment {
             userJwt = b.getString("userJwt");
         }
 
-        return inflater.inflate(R.layout.fragment_event_management, container, false);
+        callback = new NetworkCallback(requireActivity());
+
+        view = inflater.inflate(R.layout.fragment_event_management, container, false);
+
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(EventManagementViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(EventManagementViewModel.class);
 
         //Login user, then send him to the next Fragment
-        ActivityResultLauncher<Intent> launcher = registerForActivityResult(
+        launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     switch (result.getResultCode()) {
                         case RESULT_OK: {
-                            SharedPreferences prefs =
-                                    requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                             userJwt = prefs.getString("accessToken", "");
-                            mViewModel.getOrgEvents(this, view, userJwt, null);
+                            searchEvents(callback, mViewModel.getEvName().getValue(), view, null);
                             break;
                         }
                         case Activity.RESULT_CANCELED: {
-                            SharedPreferences prefs =
-                                    requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("accessToken", "");
                             editor.apply();
@@ -85,8 +98,7 @@ public class EventManagementFragment extends Fragment {
                     }
                 });
 
-        NetworkCallback callback = new NetworkCallback(requireActivity());
-        //searchEvents(callback, null, view, launcher);
+        searchEvents(callback, null, view, launcher);
 
         FloatingActionButton fab = view.findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(c -> {
@@ -95,14 +107,15 @@ public class EventManagementFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_eventSearchFragment, b);
         });
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("EventManagementFragment",
+        /*SharedPreferences prefs = requireActivity().getSharedPreferences("EventManagementFragment",
                 Context.MODE_PRIVATE);
-        evName.setValue(prefs.getString("evName", null));
-        evName.observe(getViewLifecycleOwner(), o -> searchEvents(callback, evName.getValue(), view, launcher));
+        evName.setValue(prefs.getString("evName", null));*/
+        mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> searchEvents(callback,
+                mViewModel.getEvName().getValue(), view, launcher));
 
-        SharedPreferences.Editor editor = prefs.edit();
+        /*SharedPreferences.Editor editor = prefs.edit();
         editor.putString("evName", null);
-        editor.apply();
+        editor.apply();*/
     }
 
     private void searchEvents(@NonNull NetworkCallback callback, @Nullable String evName,
@@ -118,5 +131,4 @@ public class EventManagementFragment extends Fragment {
             //tramite l'interazione con il database
         }
     }
-
 }

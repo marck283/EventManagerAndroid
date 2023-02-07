@@ -27,8 +27,6 @@ public class EventListFragment extends Fragment {
     private String idToken = "";
     private NavigationSharedViewModel vm;
 
-    private final MutableLiveData<String> evName = new MutableLiveData<>(), orgName = new MutableLiveData<>();
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -40,14 +38,14 @@ public class EventListFragment extends Fragment {
                 idToken = savedInstanceState.getString("accessToken");
             }
         }
-        if(args != null) {
+        /*if(args != null) {
             if(args.getString("evName") != null) {
                 evName.setValue(args.getString("evName"));
             }
             if(args.getString("orgName") != null) {
                 orgName.setValue(args.getString("orgName"));
             }
-        }
+        }*/
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -84,14 +82,14 @@ public class EventListFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        SharedPreferences prefs = requireActivity().getSharedPreferences("EventListFragment", Context.MODE_PRIVATE);
+        /*SharedPreferences prefs = requireActivity().getSharedPreferences("EventListFragment", Context.MODE_PRIVATE);
         evName.setValue(prefs.getString("evName", null));
         orgName.setValue(prefs.getString("orgName", null));
 
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("evName", "");
         editor.putString("orgName", "");
-        editor.apply();
+        editor.apply();*/
 
         NetworkCallback callback = new NetworkCallback(requireActivity());
         if(callback.isOnline(requireActivity())) {
@@ -103,34 +101,35 @@ public class EventListFragment extends Fragment {
                     if (rv != null) {
                         rv.invalidate();
                     }
-                    eventListViewModel.getEvents(this, root, idToken, evName.getValue(), orgName.getValue());
+                    eventListViewModel.getEvents(this, root, idToken,
+                            eventListViewModel.getEvName().getValue(), eventListViewModel.getOrgName().getValue());
                 } else {
                     setAlertDialog(R.string.no_connection, R.string.no_connection_message);
                 }
             });
 
-            evName.observe(getViewLifecycleOwner(), o -> {
+            eventListViewModel.getEvName().observe(getViewLifecycleOwner(), o -> {
                 if(callback.isOnline(requireActivity())) {
                     if(o != null) {
                         RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                         if (rv != null) {
                             rv.invalidate();
                         }
-                        eventListViewModel.getEvents(this, root, idToken, evName.getValue(), o);
+                        eventListViewModel.getEvents(this, root, idToken, o, eventListViewModel.getOrgName().getValue());
                     }
                 } else {
                     setAlertDialog(R.string.no_connection, R.string.no_connection_message);
                 }
             });
 
-            orgName.observe(getViewLifecycleOwner(), o -> {
+            eventListViewModel.getOrgName().observe(getViewLifecycleOwner(), o -> {
                 if(callback.isOnline(requireActivity())) {
                     if(o != null) {
                         RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                         if (rv != null) {
                             rv.invalidate();
                         }
-                        eventListViewModel.getEvents(this, root, idToken, o, orgName.getValue());
+                        eventListViewModel.getEvents(this, root, idToken, eventListViewModel.getEvName().getValue(), o);
                     }
                 } else {
                     setAlertDialog(R.string.no_connection, R.string.no_connection_message);

@@ -27,6 +27,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -49,7 +51,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GS
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_search.EventSearchViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
@@ -65,9 +66,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     private Profile profile;
     private AccessTokenTracker tracker;
     private boolean prompt = true;
-    private EventSearchViewModel esvm;
 
     private int ivwidth, ivheight;
+
+    private ActivityResultLauncher<Intent> launcher, evLauncher;
 
     private void setAlertDialog(boolean eventCreation) {
         prompt = false;
@@ -77,7 +79,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
             if(eventCreation) {
                 Intent intent = new Intent(this, LoginActivity.class);
-                startActivityForResult(intent, REQ_SIGN_IN_EV_CREATION);
+                evLauncher.launch(intent);
             } else {
                 startLogin(null);
             }
@@ -86,6 +88,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setOnDismissListener(d1 -> {
             account.setAccount(null);
             updateUI("logout", null, null, true);
+            prompt = false;
         });
         d.setCanceledOnTouchOutside(true);
         d.show();
@@ -110,6 +113,14 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding binding = ActivityNavigationDrawerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result ->
+                        onActivityResult(REQ_SIGN_IN, result.getResultCode(), result.getData()));
+
+        evLauncher =
+                registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result ->
+                        onActivityResult(REQ_SIGN_IN_EV_CREATION, result.getResultCode(), result.getData()));
+
         setSupportActionBar(binding.appBarNavigationDrawer.toolbar);
         tracker = new AccessTokenTracker() {
             @Override
@@ -133,7 +144,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
         ms = new ViewModelProvider(this).get(MenuSettingsViewModel.class);
-        esvm = new ViewModelProvider(this).get(EventSearchViewModel.class);
 
         accessToken = AccessToken.getCurrentAccessToken();
 
@@ -342,7 +352,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
      */
     public void startLogin(MenuItem item) {
         Intent intent = new Intent(this, LoginActivity.class);
-        startActivityForResult(intent, REQ_SIGN_IN);
+        launcher.launch(intent);
     }
 
     private void signInCheck(int resultCode, Intent data, @NonNull String which, int requestCode) {
@@ -395,14 +405,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             case Activity.RESULT_CANCELED: {
                 account.setAccount(null);
                 updateUI("logout", null, null, false);
-
-                AlertDialog dialog = new AlertDialog.Builder(this).create();
-                dialog.setTitle(R.string.login_error_title);
-                dialog.setMessage(getString(R.string.login_error));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> dialog1.dismiss());
-                dialog.show();
-
-                prompt = false;
                 break;
             }
         }
