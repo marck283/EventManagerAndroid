@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 
 public class EventManagementFragment extends Fragment {
@@ -127,8 +128,8 @@ public class EventManagementFragment extends Fragment {
                 mViewModel.getOrgEvents(this, view, userJwt, launcher);
             }
         } else {
-            //Implementare qui l'ottenimento dei dati sugli eventi che l'utente ha organizzato
-            //tramite l'interazione con il database
+            DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+            orgEvs.start();
         }
     }
 }

@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+
 public class EventViewModel extends ViewModel {
     private String nomeAtt = "";
     private boolean privEvent = false;

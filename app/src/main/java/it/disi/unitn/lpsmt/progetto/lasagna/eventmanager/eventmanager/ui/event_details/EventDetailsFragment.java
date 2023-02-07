@@ -31,6 +31,8 @@ import java.util.Objects;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
@@ -198,6 +200,8 @@ public class EventDetailsFragment extends Fragment {
                 address.setText(getString(R.string.event_address, ""));
 
                 TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.spinner2);
+                NetworkCallback callback = new NetworkCallback(requireActivity());
+
                 launcher = registerForActivityResult(new ScanContract(),
                         result -> {
                             if (result.getContents() != null && spinner.getEditText() != null &&
@@ -208,9 +212,13 @@ public class EventDetailsFragment extends Fragment {
                                 SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                                 String token = prefs.getString("accessToken", "");
                                 if(!token.equals("")) {
-                                    mViewModel.checkQR(token, result.getContents(),
-                                            eventId, spinner2.getEditText().getText().toString(),
-                                            spinner.getEditText().getText().toString(), this);
+                                    if(callback.isOnline(requireActivity())) {
+                                        mViewModel.checkQR(token, result.getContents(),
+                                                eventId, spinner2.getEditText().getText().toString(),
+                                                spinner.getEditText().getText().toString(), this);
+                                    } else {
+                                        setNoConnectionDialog();
+                                    }
                                 }
                             }
                         });
@@ -218,8 +226,13 @@ public class EventDetailsFragment extends Fragment {
                         result -> {
                             switch (result.getResultCode()) {
                                 case Activity.RESULT_OK: {
-                                    mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                            day, launcher, null);
+                                    if(callback.isOnline(requireActivity())) {
+                                        mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                                day, launcher, null);
+                                    } else {
+                                        DBOrgEvents orgEvents = new DBOrgEvents(this, eventId);
+                                        orgEvents.start();
+                                    }
                                     break;
                                 }
                                 case Activity.RESULT_CANCELED: {
@@ -235,11 +248,21 @@ public class EventDetailsFragment extends Fragment {
                                 }
                             }
                         });
-                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                        day, launcher, loginLauncher);
+                if(callback.isOnline(requireActivity())) {
+                    mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                            day, launcher, loginLauncher);
+                } else {
+                    //Nessuna connessione ad Internet
+                    DBOrgEvents orgEvents = new DBOrgEvents(this, eventId);
+                    orgEvents.start();
+                }
 
                 Button qrCodeScan = view.findViewById(R.id.button8), terminaEvento = view.findViewById(R.id.button12);
                 terminaEvento.setOnClickListener(c -> {
+                    if(!callback.isOnline(requireActivity())) {
+                        setNoConnectionDialog();
+                        return;
+                    }
                     try {
                         OkHttpClient client = new OkHttpClient();
                         Request request = new Request.Builder()
@@ -274,6 +297,10 @@ public class EventDetailsFragment extends Fragment {
 
                 Button annullaEvento = view.findViewById(R.id.button13);
                 annullaEvento.setOnClickListener(c -> {
+                    if(!callback.isOnline(requireActivity())) {
+                        setNoConnectionDialog();
+                        return;
+                    }
                     try {
                         OkHttpClient client = new OkHttpClient();
                         Request request = new Request.Builder()
@@ -313,6 +340,14 @@ public class EventDetailsFragment extends Fragment {
                 });
             }
         }
+    }
+
+    private void setNoConnectionDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+        dialog.setTitle(R.string.no_connection);
+        dialog.setMessage(getString(R.string.no_connection_message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
     }
 
     public EventDetailsViewModel getViewModel() {

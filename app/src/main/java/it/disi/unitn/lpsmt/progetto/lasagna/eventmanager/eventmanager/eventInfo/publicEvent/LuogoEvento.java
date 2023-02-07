@@ -83,7 +83,7 @@ public class LuogoEvento extends Address {
     }
 
     @NonNull
-    public String toString() {
+    public String toAddress() {
         return indirizzo + ", " + civNum + ", " + cap + " " + citta + " " + provincia;
     }
 }

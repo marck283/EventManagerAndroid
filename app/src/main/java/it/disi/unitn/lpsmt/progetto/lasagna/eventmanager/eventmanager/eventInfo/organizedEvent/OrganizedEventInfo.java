@@ -35,6 +35,7 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
@@ -155,7 +156,7 @@ public class OrganizedEventInfo extends Thread {
 
                             ArrayList<CharSequence> dayArr = new ArrayList<>();
                             dayArr.add("---");
-                            for (LuogoEvento l : event.getLuogoEv()) {
+                            for (LuogoEv l : event.getLuogoEv()) {
                                 String[] dateArr = l.getData().split("-");
                                 dayArr.add(dateArr[1] + "/" + dateArr[0] + "/" + dateArr[2]);
                             }
@@ -211,7 +212,7 @@ public class OrganizedEventInfo extends Thread {
 
                                         ArrayList<CharSequence> hourArr = new ArrayList<>();
                                         hourArr.add("---");
-                                        for (LuogoEvento l : event.getLuogoEv()) {
+                                        for (LuogoEv l : event.getLuogoEv()) {
                                             hourArr.add(l.getOra());
                                         }
 

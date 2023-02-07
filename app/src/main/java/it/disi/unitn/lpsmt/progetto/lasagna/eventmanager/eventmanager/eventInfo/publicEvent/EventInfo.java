@@ -14,11 +14,13 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+
 public class EventInfo {
     private String id, nomeAtt, categoria, organizzatore, eventPic;
     private String durata;
     private boolean terminato;
-    private ArrayList<LuogoEvento> luogoEvento;
+    private ArrayList<LuogoEv> luogoEvento;
 
     public EventInfo() {
         durata = "";
@@ -45,7 +47,7 @@ public class EventInfo {
     }
 
     private EventInfo(@NonNull String id, @NonNull String nomeAtt, @NonNull String categoria, @NonNull String eventPic,
-    String durata, boolean terminato, @NonNull ArrayList<LuogoEvento> luogoEvento, @NonNull String organizzatore) {
+    String durata, boolean terminato, @NonNull ArrayList<LuogoEv> luogoEvento, @NonNull String organizzatore) {
         this.id = id;
         this.nomeAtt = nomeAtt;
         this.categoria = categoria;
@@ -67,7 +69,7 @@ public class EventInfo {
     public ArrayList<String> getLuoghi() {
         ArrayList<String> res = new ArrayList<>();
 
-        for(LuogoEvento le: luogoEvento) {
+        for(LuogoEv le: luogoEvento) {
             String[] dataArr = le.getData().split("-");
             String data = String.join("/", dataArr[1], dataArr[0], dataArr[2]);
             if(!res.contains(data)) {
@@ -81,7 +83,7 @@ public class EventInfo {
     public ArrayList<String> getOrari(@NonNull String data) {
         ArrayList<String> orari = new ArrayList<>();
 
-        for(LuogoEvento le: luogoEvento) {
+        for(LuogoEv le: luogoEvento) {
             if(!orari.contains(le.getOra()) && le.getData().equals(data)) {
                 orari.add(le.getOra());
             }
@@ -90,10 +92,10 @@ public class EventInfo {
         return orari;
     }
 
-    public LuogoEvento getLuogo(@NonNull String data, @NonNull String ora) {
-        LuogoEvento res = null;
+    public LuogoEv getLuogo(@NonNull String data, @NonNull String ora) {
+        LuogoEv res = null;
 
-        for(LuogoEvento le: luogoEvento) {
+        for(LuogoEv le: luogoEvento) {
             if(le.getData().equals(data) && le.getOra().equals(ora)) {
                 res = le;
             }
@@ -107,11 +109,11 @@ public class EventInfo {
     }
 
     @NonNull
-    private ArrayList<LuogoEvento> fromJsonArr(@NonNull JsonArray json) {
-        ArrayList<LuogoEvento> larr = new ArrayList<>();
+    private ArrayList<LuogoEv> fromJsonArr(@NonNull JsonArray json) {
+        ArrayList<LuogoEv> larr = new ArrayList<>();
 
         for(int i = 0; i < json.size(); i++) {
-            larr.add(LuogoEvento.parseJSON(json.get(i).getAsJsonObject()));
+            larr.add(LuogoEv.parseJSON(json.get(i).getAsJsonObject()));
         }
 
         return larr;

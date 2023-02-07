@@ -8,13 +8,15 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.OrgEvDAO;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.converters.ListConverter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.OrgEvent;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
 
 //NOTA: classe ed entità associate sono da implementare come qui indicato: https://developer.android.com/training/data-storage/room#java
 
-@Database(entities = {User.class}, version = 3)
+@Database(entities = {User.class, OrgEvent.class}, version = 4)
 @TypeConverters({ListConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     /**
@@ -59,4 +61,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract UserDAO getUserDAO();
+
+    public abstract OrgEvDAO getOrgEvDAO();
 }

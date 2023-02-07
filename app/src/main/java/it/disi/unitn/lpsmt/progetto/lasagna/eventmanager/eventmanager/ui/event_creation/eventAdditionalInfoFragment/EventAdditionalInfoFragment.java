@@ -30,9 +30,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.facebook.Profile;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.Contract;
@@ -89,7 +86,8 @@ public class EventAdditionalInfoFragment extends Fragment {
         if(launcher == null) {
             //Posso usare PhotoPicker
             pickMedia.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType((ActivityResultContracts.PickVisualMedia.VisualMediaType) ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .setMediaType((ActivityResultContracts.PickVisualMedia.VisualMediaType)
+                            ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build());
         } else {
             //Non posso usare PhotoPicker

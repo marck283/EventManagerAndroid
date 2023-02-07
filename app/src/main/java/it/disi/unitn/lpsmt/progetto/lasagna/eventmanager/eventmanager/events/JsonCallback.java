@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 import java.util.concurrent.ExecutorService;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents.PrivEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.PubEvAdapter;
@@ -96,6 +97,8 @@ public class JsonCallback implements Callback<JsonObject> {
                 } else {
                     p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                 }
+                DBOrgEvents dbOrg = new DBOrgEvents(f, "updateAll", ev.getList(), mRecyclerView);
+                dbOrg.start();
                 break;
             }
             case "priv": {
@@ -156,12 +159,16 @@ public class JsonCallback implements Callback<JsonObject> {
                     }
                     case 404: {
                         if(f != null) {
-                            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                            dialog.setTitle(R.string.no_org_event);
-                            dialog.setMessage(f.getString(R.string.no_org_event_message));
-                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                            dialog.show();
+                            f.requireActivity().runOnUiThread(() -> {
+                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                dialog.setTitle(R.string.no_org_event);
+                                dialog.setMessage(f.getString(R.string.no_org_event_message));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                dialog.show();
+                            });
                         }
+                        p1.clearEventList();
+                        mRecyclerView.setAdapter(p1);
                         break;
                     }
                 }

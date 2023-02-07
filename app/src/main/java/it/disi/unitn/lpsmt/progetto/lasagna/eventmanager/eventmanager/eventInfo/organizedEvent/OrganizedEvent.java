@@ -17,15 +17,18 @@ import org.jetbrains.annotations.Contract;
 import java.util.ArrayList;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
-public class OrganizedEvent {
+public class OrganizedEvent extends Event {
     private final String id, idevent, self, name, category, eventPic, orgName, durata;
-    private final ArrayList<LuogoEvento> luogoEv;
+    private final ArrayList<LuogoEv> luogoEv;
 
     public OrganizedEvent(@NonNull String id, @NonNull String idevent, @NonNull String self,
                           @NonNull String name, @NonNull String category, @NonNull String eventPic,
-                          @NonNull String orgName, @NonNull ArrayList<LuogoEvento> luogoEv,
+                          @NonNull String orgName, @NonNull ArrayList<LuogoEv> luogoEv,
                           @NonNull String durata) {
+        super(id, idevent, self, name, category, eventPic, orgName, luogoEv, durata);
         this.id = id;
         this.idevent = idevent;
         this.self = self;
@@ -37,66 +40,20 @@ public class OrganizedEvent {
         this.durata = durata;
     }
 
-    public String getId() {
-        return idevent;
-    }
-
-    public String getEventType() {
-        return id;
-    }
-
-    public String getSelf() {
-        return self;
-    }
-
-    public String getEventName() {
-        return name;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getEventPic() {
-        return eventPic;
-    }
-
-    public String getOrgName() {
-        return orgName;
-    }
-
-    public ArrayList<LuogoEvento> getLuogoEv() {
-        return luogoEv;
-    }
-
-    public String getDurata() {
-        return durata;
-    }
-
     private static String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject e, @NonNull String name) {
         return gs1.fromJson(e.get(name), String.class);
     }
 
     @NonNull
-    private static ArrayList<LuogoEvento> fromJsonArray(@NonNull JsonObject json) {
-        ArrayList<LuogoEvento> arr = new ArrayList<>();
+    private static ArrayList<LuogoEv> fromJsonArray(@NonNull JsonObject json) {
+        ArrayList<LuogoEv> arr = new ArrayList<>();
         JsonArray jsonArr = json.getAsJsonArray("luogoEv");
 
         for(JsonElement e: jsonArr) {
-            arr.add(LuogoEvento.parseJSON(e.getAsJsonObject()));
+            arr.add(LuogoEv.parseJSON(e.getAsJsonObject()));
         }
 
         return arr;
-    }
-
-    public Bitmap decodeBase64() {
-        if(eventPic != null) {
-            byte[] decodedImg = Base64.decode(eventPic
-                    .replace("data:image/png;base64,", "")
-                    .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-            return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
-        }
-        return null;
     }
 
     @NonNull

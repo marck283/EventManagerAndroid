@@ -8,6 +8,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Locale;
 
 public class LuogoEv extends Address {
@@ -54,6 +57,23 @@ public class LuogoEv extends Address {
         postiRimanenti = maxPers - numPosti;
     }
 
+
+    public JSONObject toJSON(boolean priv) throws JSONException {
+        JSONObject json = new JSONObject();
+
+        json.put("indirizzo", indirizzo);
+        json.put("civNum", civNum);
+        json.put("cap", cap);
+        json.put("citta", citta);
+        json.put("provincia", provincia);
+        if(!priv) {
+            json.put("maxPers", maxPers);
+        }
+        json.put("data", data);
+        json.put("ora", ora);
+
+        return json;
+    }
     public static String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject eo, @NonNull String name) {
         return gs1.fromJson(eo.get(name), String.class);
     }
@@ -77,6 +97,7 @@ public class LuogoEv extends Address {
 
     @NonNull
     public String toString() {
-        return indirizzo + ", " + civNum + ", " + cap + " " + citta + " " + provincia;
+        return indirizzo + ", " + civNum + ", " + cap + " " + citta + " " + provincia + ", " + maxPers
+                + ", " + data + ", " + ora + ", " + postiRimanenti;
     }
 }

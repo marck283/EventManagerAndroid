@@ -12,6 +12,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
+
 public class Event {
     private final String id; //Tipo dell'evento
     private final String eventid; //ID dell'evento
@@ -21,6 +23,8 @@ public class Event {
     private final String eventPic; //Informazioni sull'evento
     private final String orgName;
     private final ArrayList<LuogoEv> luogo;
+
+    private final String durata;
 
     /**
      * Costruisce l'oggetto PublicEvent. NOTA: nessuno dei seguenti parametri pu&ograve; essere null.
@@ -35,7 +39,7 @@ public class Event {
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
                  @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,
-                 @NotNull ArrayList<LuogoEv> luogo) {
+                 @NotNull ArrayList<LuogoEv> luogo, @NonNull String durata) {
         this.id = id;
         eventid = idevent;
         self = s;
@@ -44,6 +48,7 @@ public class Event {
         eventPic = ep;
         this.orgName = orgName;
         this.luogo = luogo;
+        this.durata = durata;
     }
 
     //Metodo di stampa per il debug
@@ -60,14 +65,49 @@ public class Event {
      * @return Il valore decodificato in tipo Bitmap
      */
     public Bitmap decodeBase64() {
-        byte[] decodedImg = Base64.decode(eventPic
-                .replace("data:image/png;base64,", "")
-                .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-        return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+        if(eventPic != null) {
+            byte[] decodedImg = Base64.decode(eventPic
+                    .replace("data:image/png;base64,", "")
+                    .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
+            return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+        }
+        return null;
     }
 
-    public ArrayList<LuogoEv> getAllLuogo() {
+    public String getId() {
+        return eventid;
+    }
+
+    public String getEventType() {
+        return id;
+    }
+
+    public String getSelf() {
+        return self;
+    }
+
+    public String getEventName() {
+        return name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getEventPic() {
+        return eventPic;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public ArrayList<LuogoEv> getLuogoEv() {
         return luogo;
+    }
+
+    public String getDurata() {
+        return durata;
     }
 
     public LuogoEv getLuogo(int i) {

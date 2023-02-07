@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class SecondFragment extends Fragment {
 
@@ -77,7 +78,7 @@ public class SecondFragment extends Fragment {
         t1.setText(luogoEv.getData());
         t2.setText(luogoEv.getOra());
         t3.setText(luogoEv.toString());
-        t4.setText(String.valueOf(luogoEv.getPosti()));
+        t4.setText(String.valueOf(luogoEv.getPostiRimanenti()));
 
         ImageView modifyDestination = view.findViewById(R.id.imageView4);
         modifyDestination.setOnClickListener(c -> {
@@ -86,7 +87,7 @@ public class SecondFragment extends Fragment {
             b.putString("data", luogoEv.getData());
             b.putString("ora", luogoEv.getOra());
             b.putString("indirizzo", luogoEv.toString());
-            b.putInt("numPosti", luogoEv.getPosti());
+            b.putInt("numPosti", luogoEv.getPostiRimanenti());
 
             NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment, b);
         });

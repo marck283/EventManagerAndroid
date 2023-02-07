@@ -48,7 +48,7 @@ public class EventList {
                     fromJson(gs1, eo, "category"),
                     fromJson(gs1, eo, "eventPic"),
                     fromJson(gs1, eo, "orgName"),
-                    fromJsonArr(eo.getAsJsonArray("luogoEv")));
+                    fromJsonArr(eo.getAsJsonArray("luogoEv")), fromJson(gs1, eo, "durata"));
             pubEvList.add(pe);
         }
         return this;

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import okhttp3.Call;
@@ -194,7 +195,7 @@ public class EventInfoCall extends Thread {
                                                     }
                                                 });
 
-                                                LuogoEvento le = ei1.getLuogo(data, s1.toString());
+                                                LuogoEv le = ei1.getLuogo(data, s1.toString());
                                                 if (le != null) {
                                                     indirizzo.setPaintFlags(indirizzo.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                                                     indirizzo.setText(f.getString(R.string.event_address, le.toString()));

@@ -80,7 +80,9 @@ public class DBUser extends DBThread {
                     a.runOnUiThread(() -> {
                         //Imposta la schermata del profilo dell'utente
                         ImageView iv = v.findViewById(R.id.profilePic);
-                        Glide.with(f.requireActivity()).load(profilePic).circleCrop().into(iv);
+                        if(profilePic != null) {
+                            Glide.with(f.requireActivity()).load(profilePic).circleCrop().into(iv);
+                        }
 
                         TextView username = v.findViewById(R.id.username);
                         username.setText(f.getString(R.string.username, u.getString("nome")));

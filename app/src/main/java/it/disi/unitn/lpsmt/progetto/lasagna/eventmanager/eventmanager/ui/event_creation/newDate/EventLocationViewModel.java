@@ -18,7 +18,7 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class EventLocationViewModel extends ViewModel {
     private EventLocationFragment f;
@@ -318,9 +318,13 @@ public class EventLocationViewModel extends ViewModel {
             LuogoEv luogo;
 
             if(!priv) {
-                luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra(), ndvm.getPosti());
+                //luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra(), ndvm.getPosti());
+                luogo = new LuogoEv(split[0], split[1], /*split[2],*/ Integer.parseInt(split[3]), /*split[4],*/ split[2],
+                        split[4], ndvm.getPosti(), ndvm.getData(), ndvm.getOra(), 0);
             } else {
-                luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra());
+                //luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra());
+                luogo = new LuogoEv(split[0], split[1], /*split[2],*/ Integer.parseInt(split[3]), /*split[4],*/ split[2],
+                        split[4], 0, ndvm.getData(), ndvm.getOra(), 0);
             }
 
 
