@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.jetbrains.annotations.Contract;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class ReviewsFragment extends Fragment {
@@ -20,6 +22,8 @@ public class ReviewsFragment extends Fragment {
     private String id = "";
     private View root;
 
+    @NonNull
+    @Contract(" -> new")
     public static ReviewsFragment newInstance() {
         return new ReviewsFragment();
     }
