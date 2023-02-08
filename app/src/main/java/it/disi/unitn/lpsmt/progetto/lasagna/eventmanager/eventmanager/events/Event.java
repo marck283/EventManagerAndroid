@@ -12,8 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
-
 public class Event {
     private final String id; //Tipo dell'evento
     private final String eventid; //ID dell'evento

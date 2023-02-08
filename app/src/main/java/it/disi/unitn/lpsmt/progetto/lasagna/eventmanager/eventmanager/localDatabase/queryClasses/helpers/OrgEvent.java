@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class OrgEvent {

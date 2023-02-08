@@ -13,8 +13,8 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 public interface OrgEvDAO {
 
     @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
-            "FROM OrgEvents O WHERE O.idevent = :idevent")
-    OrgEvent getOrgEvent(@NonNull String idevent);
+            "FROM OrgEvents O WHERE O.name = :evName")
+    List<OrgEvent> getOrgEventsByName(@NonNull String evName);
 
     @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata  FROM OrgEvents O")
     List<OrgEvent> getAllOrgEvents();

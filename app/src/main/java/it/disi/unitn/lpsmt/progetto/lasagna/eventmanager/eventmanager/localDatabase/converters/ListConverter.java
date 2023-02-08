@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class ListConverter {
@@ -71,7 +70,7 @@ public class ListConverter {
             String[] arr2 = arr1[2].split(" ");
 
             LuogoEv l = new LuogoEv(arr1[0], arr1[1], Integer.parseInt(arr2[0]), arr2[1], arr2[2], Integer.parseInt(arr1[3]),
-                    arr1[4], arr1[5], Integer.parseInt(arr1[6]));
+                    arr1[4], arr1[5], Integer.parseInt(arr1[6]), Boolean.valueOf(arr1[7]));
             evList.add(l);
         }
 

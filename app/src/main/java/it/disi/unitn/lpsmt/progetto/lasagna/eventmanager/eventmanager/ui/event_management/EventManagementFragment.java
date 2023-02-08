@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
@@ -37,7 +36,7 @@ public class EventManagementFragment extends Fragment {
 
     private String userJwt;
 
-    private SharedPreferences prefs, evNamePrefs;
+    private SharedPreferences prefs;
 
     private NetworkCallback callback;
 
@@ -54,8 +53,6 @@ public class EventManagementFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-
-        evNamePrefs = requireActivity().getSharedPreferences("EventManagerFragment", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -112,7 +109,13 @@ public class EventManagementFragment extends Fragment {
             mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> searchEvents(
                     mViewModel.getEvName().getValue(), view, launcher));
         } else {
-            DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+            DBOrgEvents orgEvs;
+            if(mViewModel.getEvName().getValue() == null) {
+                orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+            } else {
+                orgEvs = new DBOrgEvents(this, "getEventsByName", mViewModel.getEvName().getValue(),
+                        view.findViewById(R.id.eventRecyclerView));
+            }
             orgEvs.start();
         }
     }

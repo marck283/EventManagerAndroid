@@ -17,6 +17,8 @@ public class LuogoEv extends Address {
     private String indirizzo, civNum, citta, provincia, data, ora;
     private int cap, maxPers, postiRimanenti;
 
+    private Boolean terminato = false;
+
     /**
      * Constructs a new Address object set to the given Locale and with all
      * other fields initialized to null or false.
@@ -43,8 +45,13 @@ public class LuogoEv extends Address {
         return maxPers;
     }
 
+    public Boolean getTerminato() {
+        return terminato;
+    }
+
     public LuogoEv(@NonNull String indirizzo, @NonNull String civNum, int cap, @NonNull String citta,
-                   @NonNull String provincia, int maxPers, @NonNull String data, @NonNull String ora, int numPosti) {
+                   @NonNull String provincia, int maxPers, @NonNull String data, @NonNull String ora,
+                   int numPosti, @NonNull Boolean terminato) {
         super(Locale.getDefault());
         this.indirizzo = indirizzo;
         this.civNum = civNum;
@@ -55,6 +62,7 @@ public class LuogoEv extends Address {
         this.data = data;
         this.ora = ora;
         postiRimanenti = numPosti;
+        this.terminato = terminato;
     }
 
     public JSONObject toJSON(boolean priv) throws JSONException {
@@ -73,8 +81,13 @@ public class LuogoEv extends Address {
 
         return json;
     }
+
     public static String fromJsonString(@NonNull Gson gs1, @NonNull JsonObject eo, @NonNull String name) {
         return gs1.fromJson(eo.get(name), String.class);
+    }
+
+    public static Boolean fromJsonBoolean(@NonNull Gson gs1, @NonNull JsonObject json) {
+        return gs1.fromJson(json.get("terminato"), Boolean.class);
     }
 
     @NonNull
@@ -91,13 +104,14 @@ public class LuogoEv extends Address {
                 fromJsonString(gs1, json, "citta"), fromJsonString(gs1, json, "provincia"),
                 maxPers,
                 fromJsonString(gs1, json, "data"), fromJsonString(gs1, json, "ora"),
-                maxPers - json.getAsJsonArray("partecipantiID").size());
+                maxPers - json.getAsJsonArray("partecipantiID").size(),
+                fromJsonBoolean(gs1, json));
     }
 
     @NonNull
     public String toString() {
         return indirizzo + ", " + civNum + ", " + cap + " " + citta + " " + provincia + ", " + maxPers
-                + ", " + data + ", " + ora + ", " + postiRimanenti;
+                + ", " + data + ", " + ora + ", " + postiRimanenti + ", " + terminato.toString();
     }
 
     public String getAddress() {

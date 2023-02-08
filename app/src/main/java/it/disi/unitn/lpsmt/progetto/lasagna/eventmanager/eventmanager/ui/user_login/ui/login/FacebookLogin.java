@@ -27,6 +27,7 @@ import java.util.List;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 
 public class FacebookLogin {
     private final CallbackManager callbackManager;
@@ -42,8 +43,19 @@ public class FacebookLogin {
         loginManager = LoginManager.getInstance();
 
         if(!loginButton.hasOnClickListeners()) {
-            loginButton.setOnClickListener(c -> loginManager.logInWithReadPermissions(a,
-                    List.of("public_profile", "email")));
+            loginButton.setOnClickListener(c -> {
+                NetworkCallback callback = new NetworkCallback(a);
+                if(callback.isOnline(a)) {
+                    loginManager.logInWithReadPermissions(a,
+                            List.of("public_profile", "email"));
+                } else {
+                    AlertDialog dialog = new AlertDialog.Builder(a).create();
+                    dialog.setTitle(R.string.no_connection);
+                    dialog.setMessage(a.getString(R.string.no_connection_message_short));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+                }
+            });
         }
     }
 

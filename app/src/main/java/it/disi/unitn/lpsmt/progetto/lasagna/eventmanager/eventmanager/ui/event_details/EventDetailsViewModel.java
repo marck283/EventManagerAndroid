@@ -13,7 +13,9 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.checkQRCode.CheckQRCode;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.DeleteEvent;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.OrganizedEventInfo;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.TerminateEvent;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.EventInfoCall;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.RegisteredEventInfo;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket.delete_ticket.DeleteTicket;
@@ -29,6 +31,27 @@ public class EventDetailsViewModel extends ViewModel {
         dialog.setMessage(f.getString(R.string.no_connection_message));
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> dialog1.dismiss());
         dialog.show();
+    }
+
+    public void terminateEvent(@NonNull String accessToken, @NonNull EventDetailsFragment f,
+                               @NonNull String eventId, @NonNull String data, @NonNull String ora, @NonNull View v) {
+        callback = new NetworkCallback(f.requireActivity());
+        if(callback.isOnline(f.requireActivity())) {
+            TerminateEvent terminate = new TerminateEvent(accessToken, eventId, data, ora, v, f);
+            terminate.start();
+        } else {
+            setNoConnectionDialog(f);
+        }
+    }
+
+    public void deleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
+                            @NonNull View v) {
+        if(callback.isOnline(f.requireActivity())) {
+            DeleteEvent deleteEvent = new DeleteEvent(accessToken, eventId, f, v);
+            deleteEvent.start();
+        } else {
+            setNoConnectionDialog(f);
+        }
     }
 
     private void requestEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,

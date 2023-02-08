@@ -1,8 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
@@ -27,6 +25,8 @@ public class EventListFragment extends Fragment {
     private String idToken = "";
     private NavigationSharedViewModel vm;
 
+    private boolean prompt = true;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -36,6 +36,9 @@ public class EventListFragment extends Fragment {
         } else {
             if (savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
                 idToken = savedInstanceState.getString("accessToken");
+            }
+            if(savedInstanceState != null && savedInstanceState.getBoolean("prompt")) {
+                prompt = savedInstanceState.getBoolean("prompt");
             }
         }
     }
@@ -78,11 +81,10 @@ public class EventListFragment extends Fragment {
 
         if(!callback.isOnline(requireActivity())) {
             root.findViewById(R.id.eventSearch).setOnClickListener(c -> {
-                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                dialog.setTitle(R.string.no_connection);
-                dialog.setMessage(getString(R.string.no_connection_message));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
+                if(prompt) {
+                    setAlertDialog(R.string.no_connection, R.string.no_connection_message);
+                    prompt = false;
+                }
             });
         }
 
@@ -98,7 +100,10 @@ public class EventListFragment extends Fragment {
                     eventListViewModel.getEvents(this, root, idToken,
                             eventListViewModel.getEvName().getValue(), eventListViewModel.getOrgName().getValue());
                 } else {
-                    setAlertDialog(R.string.no_connection, R.string.no_connection_message);
+                    if(prompt) {
+                        setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
+                        prompt = false;
+                    }
                 }
             });
 
@@ -112,7 +117,10 @@ public class EventListFragment extends Fragment {
                         eventListViewModel.getEvents(this, root, idToken, o, eventListViewModel.getOrgName().getValue());
                     }
                 } else {
-                    setAlertDialog(R.string.no_connection, R.string.no_connection_message);
+                    if(prompt) {
+                        setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
+                        prompt = false;
+                    }
                 }
             });
 
@@ -126,15 +134,20 @@ public class EventListFragment extends Fragment {
                         eventListViewModel.getEvents(this, root, idToken, eventListViewModel.getEvName().getValue(), o);
                     }
                 } else {
-                    setAlertDialog(R.string.no_connection, R.string.no_connection_message);
+                    if(prompt) {
+                        setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
+                        prompt = false;
+                    }
                 }
             });
         } else {
-            setAlertDialog(R.string.no_connection, R.string.no_connection_message);
+            setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
+            ((NavigationDrawerActivity)requireActivity()).updateUI("logout", null, null, false);
         }
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString("accessToken", idToken);
+        outState.putBoolean("prompt", prompt);
     }
 }

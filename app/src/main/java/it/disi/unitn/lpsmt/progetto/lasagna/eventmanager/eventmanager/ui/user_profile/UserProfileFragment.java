@@ -64,21 +64,7 @@ public class UserProfileFragment extends Fragment {
 
         String token = prefs.getString("accessToken", "");
         if(!token.equals("")) {
-            MaterialButton evManaging = v.findViewById(R.id.eventManaging);
-            NetworkCallback callback = new NetworkCallback(requireActivity());
-            if(callback.isOnline(requireActivity())) {
-                evManaging.setEnabled(true);
-                toEventManagement(token);
-            } else {
-                evManaging.setEnabled(false);
-                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                dialog.setTitle(R.string.no_connection);
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
-                callback.registerNetworkCallback();
-                callback.addDefaultNetworkActiveListener(() -> toEventManagement(token));
-                callback.unregisterNetworkCallback();
-            }
+            toEventManagement(token);
         }
     }
 

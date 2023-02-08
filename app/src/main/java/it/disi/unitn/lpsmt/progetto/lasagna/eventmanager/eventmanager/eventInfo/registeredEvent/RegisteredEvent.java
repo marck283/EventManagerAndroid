@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.Contract;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class RegisteredEvent {

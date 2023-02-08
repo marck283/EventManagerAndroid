@@ -203,16 +203,14 @@ public class EventInfoCall extends Thread {
 
                                                 try {
                                                     SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-                                                    boolean over = false;
                                                     Button b = v.findViewById(R.id.sign_up_button);
 
                                                     if (le != null) {
                                                         Date toCheck = sdformat.parse(le.getData());
                                                         Date d = new Date();
-                                                        if (toCheck != null && sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0) {
-                                                            over = true;
-                                                        }
-                                                        if (over || le.getPostiRimanenti() == 0) {
+                                                        if (le.getTerminato() || (toCheck != null &&
+                                                                sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0)
+                                                                || le.getPostiRimanenti() == 0) {
                                                             b.setEnabled(false);
                                                             b.setText(f.getString(R.string.registrations_closed));
                                                         } else {

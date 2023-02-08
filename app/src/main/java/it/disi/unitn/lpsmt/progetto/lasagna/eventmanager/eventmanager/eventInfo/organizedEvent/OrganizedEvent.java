@@ -15,8 +15,8 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
@@ -54,6 +54,26 @@ public class OrganizedEvent extends Event {
         }
 
         return arr;
+    }
+
+    public LuogoEv getLuogo(@NonNull String data, @NonNull String ora) {
+        LuogoEv res = null;
+        for(LuogoEv l: luogoEv) {
+            if(l.getData().equals(data) && l.getOra().equals(ora)) {
+                res = l;
+            }
+        }
+        return res;
+    }
+
+    public List<LuogoEv> getOrari(@NonNull String data) {
+        ArrayList<LuogoEv> res = new ArrayList<>();
+        for(LuogoEv l: luogoEv) {
+            if(l.getData().equals(data)) {
+                res.add(l);
+            }
+        }
+        return res;
     }
 
     @NonNull

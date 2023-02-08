@@ -36,7 +36,7 @@
     <string name="events_organized_text_view">Events that you organized</string>
     <string name="events_participate_text_view">Events to which you will participate</string>
     <string name="no_connection">No Internet connection available</string>
-    <string name="no_connection_message">No internet connection available.</string>
+    <string name="no_connection_message">This action cannot be performed because there is no internet connection available.</string>
     <string name="title_activity_event_creation">Event creation</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Event creation</string>
@@ -255,4 +255,5 @@
     <string name="event_creation_error_message">An error has occurred while creating the event. Please check that all fields have been filled accordingly.</string>
     <string name="service_unavailable_message">The service is temporarily unavailable. Please try again later. We apologize for the inconvenience.</string>
     <string name="org_event_search">Filter organized events</string>
+    <string name="no_connection_message_short">No internet connection is available at this time. Please try again later.</string>
 </resources>

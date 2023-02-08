@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -34,8 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.LuogoEvento;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
@@ -54,14 +53,14 @@ public class OrganizedEventInfo extends Thread {
 
     private final EventDetailsFragment f;
 
-    private final String day;
+    private String day;
 
     private final ActivityResultLauncher<ScanOptions> launcher;
 
     private final ActivityResultLauncher<Intent> loginLauncher;
 
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
-                              @NonNull String evId, @Nullable String day,
+                              @NonNull String evId, @NonNull String day,
                               @NonNull ActivityResultLauncher<ScanOptions> launcher) {
         client = new OkHttpClient();
         this.userJwt = userJwt;
@@ -118,6 +117,14 @@ public class OrganizedEventInfo extends Thread {
         dialog.show();
     }
 
+    private void setNoConnectionDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+        dialog.setTitle(R.string.no_connection);
+        dialog.setMessage(f.getString(R.string.no_connection_message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
+    }
+
     public void run() {
         Request request;
         if (day != null) {
@@ -144,7 +151,7 @@ public class OrganizedEventInfo extends Thread {
                         f.requireActivity().runOnUiThread(() -> {
                             ImageView iView = v.findViewById(R.id.imageView3);
                             Bitmap bm = event.decodeBase64();
-                            if(bm != null) {
+                            if (bm != null) {
                                 Glide.with(v).load(bm).into(iView);
                             }
 
@@ -169,7 +176,7 @@ public class OrganizedEventInfo extends Thread {
 
                                 @Override
                                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                    if(evDay.getEditText() != null &&
+                                    if (evDay.getEditText() != null &&
                                             !evDay.getEditText().getText().toString().equals("---")) {
                                         TextView address = v.findViewById(R.id.textView15);
                                         final int pos = dayArr.indexOf(evDay.getEditText().getText().toString());
@@ -213,29 +220,74 @@ public class OrganizedEventInfo extends Thread {
 
                                         ArrayList<CharSequence> hourArr = new ArrayList<>();
                                         hourArr.add("---");
-                                        for (LuogoEv l : event.getLuogoEv()) {
+
+                                        if (day == null) {
+                                            String[] dayArr = evDay.getEditText().getText().toString().split("/");
+                                            day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
+                                        }
+                                        for (LuogoEv l : event.getOrari(day)) {
                                             hourArr.add(l.getOra());
                                         }
 
                                         hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
                                                 R.layout.list_item, hourArr));
 
-                                        Button qrCodeScan = v.findViewById(R.id.button8);
-                                        EditText editText = spinner.getEditText(), editText1 = evDay.getEditText();
-                                        if(event.getEventType().equals("priv")) {
-                                            qrCodeScan.setEnabled(false);
-                                        } else {
-                                            qrCodeScan.setEnabled(true);
-                                            qrCodeScan.setOnClickListener(c -> {
-                                                if (editText != null &&
-                                                        !editText.getText().toString().equals("") &&
-                                                        !editText.getText().toString().equals("---") &&
-                                                        editText1 != null && !editText.getText().toString().equals("") &&
-                                                        !editText.getText().toString().equals("---")) {
-                                                    launcher.launch(new ScanOptions());
+                                        hourTextView.addTextChangedListener(new TextWatcher() {
+                                            @Override
+                                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                            }
+
+                                            @Override
+                                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                Button qrCodeScan = v.findViewById(R.id.button8),
+                                                        terminaEvento = v.findViewById(R.id.button12);
+                                                EditText editText = spinner.getEditText(), editText1 = evDay.getEditText();
+                                                String[] day1 = dayText.getText().toString().split("/");
+                                                if (day1.length > 1) {
+                                                    String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
+                                                    if (event.getEventType().equals("priv") || (
+                                                            !dayText.getText().toString().equals("---") &&
+                                                                    !hourTextView.getText().toString().equals("---") &&
+                                                                    event.getLuogo(day2,
+                                                                            hourTextView.getText().toString()).getTerminato())) {
+                                                        qrCodeScan.setEnabled(false);
+                                                        terminaEvento.setEnabled(false);
+                                                    } else {
+                                                        qrCodeScan.setEnabled(true);
+                                                        qrCodeScan.setOnClickListener(c -> {
+                                                            if (editText != null &&
+                                                                    !editText.getText().toString().equals("") &&
+                                                                    !editText.getText().toString().equals("---") &&
+                                                                    editText1 != null && !editText.getText().toString().equals("") &&
+                                                                    !editText.getText().toString().equals("---")) {
+                                                                launcher.launch(new ScanOptions());
+                                                            }
+                                                        });
+
+                                                        terminaEvento.setEnabled(true);
+                                                        terminaEvento.setOnClickListener(c -> {
+                                                            NetworkCallback callback = new NetworkCallback(f.requireActivity());
+                                                            if (!callback.isOnline(f.requireActivity())) {
+                                                                setNoConnectionDialog();
+                                                            } else {
+                                                                try {
+                                                                    f.getViewModel().terminateEvent(userJwt,
+                                                                            f, eventId, day, hourTextView.getText().toString(), v);
+                                                                } catch (NullPointerException ex) {
+                                                                    ex.printStackTrace();
+                                                                }
+                                                            }
+                                                        });
+                                                    }
                                                 }
-                                            });
-                                        }
+                                            }
+
+                                            @Override
+                                            public void afterTextChanged(Editable s) {
+
+                                            }
+                                        });
                                     } else {
                                         TextInputLayout hour = v.findViewById(R.id.spinner);
                                         MaterialAutoCompleteTextView hourTextView = hour.findViewById(R.id.orgHourTextView);

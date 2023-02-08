@@ -1,7 +1,9 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Network;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,6 +17,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 
 public class GoogleLogin {
     private final GSignIn signIn;
@@ -28,8 +31,17 @@ public class GoogleLogin {
         if(!signInButton.hasOnClickListeners()) {
             signInButton.setOnClickListener(v -> {
                 //Sign in the user when the button is clicked
-                if(v.getId() == R.id.sign_in_button) {
-                    signIn();
+                NetworkCallback callback = new NetworkCallback(a);
+                if(callback.isOnline(a)) {
+                    if(v.getId() == R.id.sign_in_button) {
+                        signIn();
+                    }
+                } else {
+                    AlertDialog dialog = new AlertDialog.Builder(a).create();
+                    dialog.setTitle(R.string.no_connection);
+                    dialog.setMessage(a.getString(R.string.no_connection_message_short));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
                 }
             });
         }

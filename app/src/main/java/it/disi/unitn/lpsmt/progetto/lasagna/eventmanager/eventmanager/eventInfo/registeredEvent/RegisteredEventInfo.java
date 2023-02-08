@@ -206,12 +206,12 @@ public class RegisteredEventInfo extends Thread {
                                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                                         LocalDateTime now = LocalDateTime.now(), eventDateTime = LocalDateTime.parse(dateTime);
                                         Log.i("boolean", String.valueOf(now.isBefore(eventDateTime)));
-                                        writeReview.setEnabled(!now.isBefore(eventDateTime));
+                                        writeReview.setEnabled(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato());
                                     } else {
                                         try {
                                             DateFormat df = DateFormat.getDateInstance();
                                             Date now = new Date(), eventDateTime = df.parse(dateTime);
-                                            writeReview.setEnabled(!now.before(eventDateTime));
+                                            writeReview.setEnabled(!now.before(eventDateTime) || event.getLuogoEv().getTerminato());
                                         } catch(ParseException ex) {
                                             ex.printStackTrace();
                                         }

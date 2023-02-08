@@ -28,7 +28,7 @@
     <string name="events_organized_text_view">Eventi che hai organizzato</string>
     <string name="events_participate_text_view">Eventi a cui parteciperai</string>
     <string name="no_connection">Nessuna connessione Internet disponibile</string>
-    <string name="no_connection_message">Nessuna connessione Internet disponibile.</string>
+    <string name="no_connection_message">Questa azione non può essere compiuta perché non vi è alcuna connessione Internet disponibile.</string>
     <string name="title_activity_event_creation">Creazione eventi</string>
     <string name="event_time">Ora inizio: %1$s</string>
     <string name="event_day">Data: %1$s</string>
@@ -243,4 +243,5 @@
     <string name="organized_event_table">Tabella eventi organizzati</string>
     <string name="maps_fragment">Mappa</string>
     <string name="service_unavailable_message">Il servizio è temporaneamente non disponibile. Si prega di riprovare più tardi. Ci scusiamo per l\'inconveniente.</string>
+    <string name="no_connection_message_short">Nessuna connessione Internet è attiva al momento. Si prega di riprovare più tardi.</string>
 </resources>

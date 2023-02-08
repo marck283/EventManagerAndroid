@@ -318,20 +318,17 @@ public class EventLocationViewModel extends ViewModel {
             LuogoEv luogo;
 
             if(!priv) {
-                //luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra(), ndvm.getPosti());
-                luogo = new LuogoEv(split[0], split[1], /*split[2],*/ Integer.parseInt(split[3]), /*split[4],*/ split[2],
-                        split[4], ndvm.getPosti(), ndvm.getData(), ndvm.getOra(), 0);
+                luogo = new LuogoEv(split[0], split[1], Integer.parseInt(split[3]), split[2],
+                        split[4], ndvm.getPosti(), ndvm.getData(), ndvm.getOra(), 0, false);
             } else {
-                //luogo = new LuogoEv(split[0], split[2], split[1], split[4], Integer.parseInt(split[3]), ndvm.getData(), ndvm.getOra());
-                luogo = new LuogoEv(split[0], split[1], /*split[2],*/ Integer.parseInt(split[3]), /*split[4],*/ split[2],
-                        split[4], 0, ndvm.getData(), ndvm.getOra(), 0);
+                luogo = new LuogoEv(split[0], split[1], Integer.parseInt(split[3]), split[2],
+                        split[4], 0, ndvm.getData(), ndvm.getOra(), 0, false);
             }
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 geocoder.getFromLocationName(location, 5, addresses -> setAddress(addresses, luogo, evm));
             } else {
-                //Applicazione bloccata dopo errore inserimento luogo. Come mai?
                 Thread t1 = new Thread() {
                     @Override
                     public void run() {

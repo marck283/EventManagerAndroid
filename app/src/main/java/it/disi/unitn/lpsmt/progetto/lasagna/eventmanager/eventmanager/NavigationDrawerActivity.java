@@ -112,6 +112,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             dialog.setMessage(getString(R.string.no_connection_message));
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
             dialog.show();
+            updateUI("logout", null, null, false);
         }
     }
 

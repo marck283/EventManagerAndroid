@@ -2,7 +2,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
@@ -31,14 +30,8 @@ import java.util.Objects;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -95,16 +88,6 @@ public class EventDetailsFragment extends Fragment {
         return null;
     }
 
-    private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
-        });
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -150,7 +133,7 @@ public class EventDetailsFragment extends Fragment {
 
                         SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                         String token = prefs.getString("accessToken", "");
-                        if(!token.equals("")) {
+                        if (!token.equals("")) {
                             mViewModel.registerUser(token, eventId, this, day, time, loginLauncher);
                         }
                     }
@@ -171,8 +154,8 @@ public class EventDetailsFragment extends Fragment {
             }
             case "iscr": {
                 TextView organizer = view.findViewById(R.id.textView16), dayTextView = view.findViewById(R.id.textView11),
-                time = view.findViewById(R.id.textView20), duration = view.findViewById(R.id.textView39),
-                address = view.findViewById(R.id.textView42);
+                        time = view.findViewById(R.id.textView20), duration = view.findViewById(R.id.textView39),
+                        address = view.findViewById(R.id.textView42);
                 organizer.setText(getString(R.string.organizer, ""));
                 dayTextView.setText(getString(R.string.day_not_selectable, ""));
                 time.setText(getString(R.string.time_not_selectable, ""));
@@ -181,12 +164,12 @@ public class EventDetailsFragment extends Fragment {
 
                 ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(
                         new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                            if(result.getResultCode() == Activity.RESULT_OK) {
+                        result -> {
+                            if (result.getResultCode() == Activity.RESULT_OK) {
                                 mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
                                         day, null, null);
                             }
-                });
+                        });
 
                 mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
                         day, null, loginLauncher);
@@ -211,13 +194,19 @@ public class EventDetailsFragment extends Fragment {
                                     !spinner2.getEditText().getText().toString().equals("---")) {
                                 SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                                 String token = prefs.getString("accessToken", "");
-                                if(!token.equals("")) {
-                                    if(callback.isOnline(requireActivity())) {
+                                if (!token.equals("")) {
+                                    if (callback.isOnline(requireActivity())) {
                                         mViewModel.checkQR(token, result.getContents(),
                                                 eventId, spinner2.getEditText().getText().toString(),
                                                 spinner.getEditText().getText().toString(), this);
                                     } else {
                                         setNoConnectionDialog();
+                                        callback.registerNetworkCallback();
+                                        callback.addDefaultNetworkActiveListener(() ->
+                                                mViewModel.checkQR(token, result.getContents(),
+                                                        eventId, spinner2.getEditText().getText().toString(),
+                                                        spinner.getEditText().getText().toString(), this));
+                                        callback.unregisterNetworkCallback();
                                     }
                                 }
                             }
@@ -226,12 +215,16 @@ public class EventDetailsFragment extends Fragment {
                         result -> {
                             switch (result.getResultCode()) {
                                 case Activity.RESULT_OK: {
-                                    if(callback.isOnline(requireActivity())) {
+                                    if (callback.isOnline(requireActivity())) {
                                         mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                                                 day, launcher, null);
                                     } else {
-                                        DBOrgEvents orgEvents = new DBOrgEvents(this, view, eventId);
-                                        orgEvents.start();
+                                        setNoConnectionDialog();
+                                        callback.registerNetworkCallback();
+                                        callback.addDefaultNetworkActiveListener(() ->
+                                                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                                        day, launcher, null));
+                                        callback.unregisterNetworkCallback();
                                     }
                                     break;
                                 }
@@ -248,95 +241,26 @@ public class EventDetailsFragment extends Fragment {
                                 }
                             }
                         });
-                if(callback.isOnline(requireActivity())) {
+                if (callback.isOnline(requireActivity())) {
                     mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                             day, launcher, loginLauncher);
                 } else {
                     //Nessuna connessione ad Internet
-                    DBOrgEvents orgEvents = new DBOrgEvents(this, view, eventId);
-                    orgEvents.start();
+                    setNoConnectionDialog();
+                    callback.registerNetworkCallback();
+                    callback.addDefaultNetworkActiveListener(() ->
+                            mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                    day, launcher, null));
+                    callback.unregisterNetworkCallback();
                 }
-
-                Button qrCodeScan = view.findViewById(R.id.button8), terminaEvento = view.findViewById(R.id.button12);
-                terminaEvento.setOnClickListener(c -> {
-                    if(!callback.isOnline(requireActivity())) {
-                        setNoConnectionDialog();
-                        return;
-                    }
-                    try {
-                        OkHttpClient client = new OkHttpClient();
-                        Request request = new Request.Builder()
-                                .addHeader("x-access-token", Objects.requireNonNull(nvm.getToken().getValue()))
-                                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId)
-                                .build();
-                        client.newCall(request).enqueue(new OrganizerCallback() {
-                            @Override
-                            public void onResponse(@NonNull Call call, @NonNull Response response) {
-                                switch (response.code()) {
-                                    case 403: {
-                                        setAlertDialog(R.string.unauthorized_attempt, R.string.unauthorized_attempt_message);
-                                        break;
-                                    }
-                                    case 200: {
-                                        setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
-
-                                        // Ora disabilita tutti i bottoni della schermata e,
-                                        // la prossima volta che questo evento viene mostrato,
-                                        // mantieni i bottoni bloccati...
-                                        qrCodeScan.setEnabled(false);
-                                        terminaEvento.setEnabled(false);
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                    } catch (NullPointerException ex) {
-                        ex.printStackTrace();
-                    }
-                });
 
                 Button annullaEvento = view.findViewById(R.id.button13);
                 annullaEvento.setOnClickListener(c -> {
-                    if(!callback.isOnline(requireActivity())) {
+                    if (!callback.isOnline(requireActivity())) {
                         setNoConnectionDialog();
                         return;
                     }
-                    try {
-                        OkHttpClient client = new OkHttpClient();
-                        Request request = new Request.Builder()
-                                .addHeader("x-access-token", Objects.requireNonNull(nvm.getToken().getValue()))
-                                .url("https://eventmanagerzlf.herokuapp.com/api/v2/annullaEvento/" + eventId)
-                                .delete()
-                                .build();
-                        client.newCall(request).enqueue(new OrganizerCallback() {
-                            @Override
-                            public void onResponse(@NonNull Call call, @NonNull Response response) {
-                                switch (response.code()) {
-                                    case 401: {
-                                        setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
-                                        break;
-                                    }
-                                    case 403: {
-                                        setAlertDialog(R.string.unauthorized_attempt, R.string.unauthorized_attempt_message);
-                                        break;
-                                    }
-                                    case 200: {
-                                        setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
-                                        requireActivity().runOnUiThread(() ->
-                                                Navigation.findNavController(view).navigate(
-                                                        R.id.action_eventDetailsFragment_to_user_calendar_dialog));
-                                        break;
-                                    }
-                                    case 404: {
-                                        setAlertDialog(R.string.no_event, R.string.no_event_message);
-                                        break;
-                                    }
-                                }
-                            }
-                        });
-                    } catch (NullPointerException ex) {
-                        ex.printStackTrace();
-                    }
+                    mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this, view);
                 });
             }
         }
