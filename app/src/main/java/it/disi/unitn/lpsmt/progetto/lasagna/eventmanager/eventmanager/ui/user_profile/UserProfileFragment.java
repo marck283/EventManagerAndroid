@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
@@ -15,13 +14,13 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 
 public class UserProfileFragment extends Fragment {
@@ -50,7 +49,6 @@ public class UserProfileFragment extends Fragment {
         b.putString("userJwt", token);
 
         MaterialButton evManaging = v.findViewById(R.id.eventManaging);
-        /*evManaging.setEnabled(true);*/
         evManaging.setOnClickListener(c -> Navigation.findNavController(v)
                 .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
     }
@@ -66,6 +64,14 @@ public class UserProfileFragment extends Fragment {
         if(!token.equals("")) {
             toEventManagement(token);
         }
+
+        TextView username = v.findViewById(R.id.username), user_email = v.findViewById(R.id.email);
+        username.setText(getString(R.string.username, ""));
+        user_email.setText(getString(R.string.user_email, ""));
+
+        TextView phone_value = v.findViewById(R.id.phone_value), numEvOrg = v.findViewById(R.id.numEvOrg);
+        phone_value.setText(getString(R.string.phone, ""));
+        numEvOrg.setText(getString(R.string.numEvOrg, 0));
     }
 
     public void onStart() {
