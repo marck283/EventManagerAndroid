@@ -75,7 +75,9 @@ public class SecondFragment extends Fragment {
 
         TableTextView t1 = t.findViewById(R.id.textView32), t2 = t.findViewById(R.id.textView30),
         t3 = t.findViewById(R.id.textView31), t4 = t.findViewById(R.id.textView29);
-        t1.setText(luogoEv.getData());
+
+        String[] dataArr = luogoEv.getData().split("-");
+        t1.setText(dataArr[1] + "/" + dataArr[0] + "/" + dataArr[2]);
         t2.setText(luogoEv.getOra());
         t3.setText(luogoEv.getAddress());
         t4.setText(String.valueOf(luogoEv.getMaxPers()));
