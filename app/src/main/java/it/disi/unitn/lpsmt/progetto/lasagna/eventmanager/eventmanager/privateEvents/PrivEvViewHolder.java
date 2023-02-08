@@ -29,7 +29,7 @@ public class PrivEvViewHolder extends EventHolder {
     public void bindData(Event dataModel) {
         try {
             t.setText(dataModel.getString("name"));
-            v.setOnClickListener(c -> {
+            t.setOnClickListener(c -> {
                 try {
                     Bundle b = new Bundle();
                     b.putString("eventType", "iscr");
