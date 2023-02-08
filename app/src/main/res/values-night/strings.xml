@@ -60,8 +60,8 @@
     <string name="total_seats">Seats</string>
     <string name="add_row">Add row</string>
     <string name="confirm">Confirm</string>
-    <string name="insert_date">Insert date…</string>
-    <string name="insert_hour">Insert time…</string>
+    <string name="insert_date">Insert date… (DD/MM/YYYY)</string>
+    <string name="insert_hour">Insert time… (HH:MM)</string>
     <string name="seats">Seats:</string>
     <string name="insert_seats">Insert number of seats…</string>
     <string name="incorrect_seats_format">Incorrect seats format</string>
