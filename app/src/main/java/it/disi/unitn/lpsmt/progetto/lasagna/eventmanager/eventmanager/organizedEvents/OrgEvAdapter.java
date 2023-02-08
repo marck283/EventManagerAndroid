@@ -13,6 +13,7 @@ import java.util.List;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class OrgEvAdapter extends EventAdapter {
     private final String day;
@@ -49,4 +50,10 @@ public class OrgEvAdapter extends EventAdapter {
         }
         return new OrgEvViewHolder(f, view);
     }
+
+    @Override
+    public void onBindViewHolder(@NonNull EventHolder holder, int position) {
+        holder.bindData(getCurrentList().get(position));
+    }
+
 }

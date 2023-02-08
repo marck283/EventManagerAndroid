@@ -72,6 +72,8 @@ public class OrganizedEvents {
 
     //Perché la chiamata a questa funzione non restituisce nulla quando cerco di ottenere
     //gli eventi organizzati da un certo utente con almeno un evento organizzato?
+
+    //Perché questa chiamata permette di visualizzare solo un evento organizzato?
     public void getOrgEvents(@NonNull String authToken, @Nullable String data) {
         Call<JsonObject> call;
         if(data != null) {

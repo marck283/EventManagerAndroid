@@ -13,6 +13,7 @@ import java.util.List;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class PrivEvAdapter extends EventAdapter {
     private final String day;
@@ -56,4 +57,10 @@ public class PrivEvAdapter extends EventAdapter {
 
         return new PrivEvViewHolder(view, day);
     }
+
+    @Override
+    public void onBindViewHolder(@NonNull EventHolder holder, int position) {
+        holder.bindData(getCurrentList().get(position));
+    }
+
 }
