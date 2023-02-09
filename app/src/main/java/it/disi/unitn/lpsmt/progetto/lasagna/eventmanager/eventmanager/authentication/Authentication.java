@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,8 +14,7 @@ import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import retrofit2.Call;
@@ -70,9 +70,16 @@ public class Authentication {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
 
-                    final String email = info.getEmail(), profilePic = info.getProfilePic();
+                    SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("accessToken", info.getToken());
+                    editor.putString("userId", info.getId());
+                    editor.apply();
+
+                    final String email = info.getEmail(), profilePic = info.getProfilePic(), name = info.getName();
                     if(a instanceof NavigationDrawerActivity) {
-                        a.runOnUiThread(() -> ((NavigationDrawerActivity)a).updateUI("login", email, profilePic, true));
+                        a.runOnUiThread(() ->
+                                ((NavigationDrawerActivity)a).updateUI("login", email, name, profilePic, true));
                         ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
                     } else {
                         if(a instanceof LoginActivity) {
@@ -80,16 +87,16 @@ public class Authentication {
                             a.finish();
                         }
                     }
-                    SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("accessToken", info.getToken());
-                    editor.putString("userId", info.getId());
-                    editor.apply();
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
-                    if (response.code() == 401 && which.equals("google")) {
-                        GSignIn signIn = new GSignIn(a);
-                        signIn.signIn(a, 2);
+                    if (response.code() == 401) {
+                        a.runOnUiThread(() -> {
+                            AlertDialog dialog = new AlertDialog.Builder(a).create();
+                            dialog.setTitle(R.string.user_not_logged_in);
+                            dialog.setMessage(a.getString(R.string.user_not_logged_in_message));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                            dialog.show();
+                        });
                     }
                 }
             }

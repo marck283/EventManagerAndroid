@@ -142,7 +142,7 @@ public class EventListFragment extends Fragment {
             });
         } else {
             setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
-            ((NavigationDrawerActivity)requireActivity()).updateUI("logout", null, null, false);
+            ((NavigationDrawerActivity)requireActivity()).updateUI("logout", null, null, null, false);
         }
     }
 

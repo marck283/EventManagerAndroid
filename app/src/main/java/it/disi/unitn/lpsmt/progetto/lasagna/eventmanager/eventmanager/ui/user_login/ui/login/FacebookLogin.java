@@ -47,7 +47,7 @@ public class FacebookLogin {
                 NetworkCallback callback = new NetworkCallback(a);
                 if(callback.isOnline(a)) {
                     loginManager.logInWithReadPermissions(a,
-                            List.of("public_profile", "email", "birthday"));
+                            List.of("public_profile", "email"));
                 } else {
                     AlertDialog dialog = new AlertDialog.Builder(a).create();
                     dialog.setTitle(R.string.no_connection);

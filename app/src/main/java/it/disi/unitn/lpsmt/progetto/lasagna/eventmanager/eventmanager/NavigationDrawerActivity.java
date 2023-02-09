@@ -18,12 +18,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
-import com.facebook.GraphRequest;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
@@ -41,8 +39,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
@@ -87,7 +83,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
             account.setAccount(null);
-            updateUI("logout", null, null, true);
+            updateUI("logout", null, null, null, true);
             prompt = false;
         });
         d.setCanceledOnTouchOutside(true);
@@ -112,7 +108,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             dialog.setMessage(getString(R.string.no_connection_message));
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
             dialog.show();
-            updateUI("logout", null, null, false);
+            updateUI("logout", null, null, null, false);
         }
     }
 
@@ -185,10 +181,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         account = new GSignIn(this);
         vm.init(this);
 
-        /*SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
         String accessToken = prefs.getString("accessToken", "");
         if(accessToken.equals("")) {
-            updateUI("logout", null, null, false);
+            updateUI("logout", null, null, null, false);
             if(prompt) {
                 setAlertDialog(false);
                 prompt = false;
@@ -196,52 +192,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         } else {
             CsrfToken token = new CsrfToken();
             token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
-        }*/
-        profile = Profile.getCurrentProfile();
-        if(profile == null) {
-            GoogleSignInAccount userAccount = account.getAccount();
-            if(userAccount == null) {
-                try {
-                    userAccount = account.silentSignIn();
-                    account.setAccount(userAccount);
-                } catch (ApiException ex) {
-                    Log.i("Exception", "An exception was thrown. Error code: " + ex.getStatus());
-                    updateUI("logout", null, null, false);
-                }
-            }
-
-            if(userAccount != null) {
-                CsrfToken token = new CsrfToken();
-                token.getCsrfToken(this, new Authentication(), userAccount.getIdToken(), null, "google", null);
-            } else {
-                updateUI("logout", null, null, false);
-                if(prompt) {
-                    setAlertDialog(false);
-                }
-            }
-        } else {
-            if(accessToken != null && accessToken.isExpired()) {
-                LoginManager.getInstance().logInWithReadPermissions(this, List.of("public_profile", "email"));
-            } else {
-                accessToken = AccessToken.getCurrentAccessToken();
-            }
-            makeEmailRequestAndUpdate();
         }
-    }
-
-    private void makeEmailRequestAndUpdate() {
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,picture,email");
-        GraphRequest req = GraphRequest.newMeRequest(accessToken, (jsonObject, graphResponse) -> {
-            if(jsonObject != null) {
-                CsrfToken token = new CsrfToken();
-                token.getCsrfToken(this, new Authentication(), null, accessToken, "facebook", null);
-            } else {
-                updateUI("logout", null, null, false);
-            }
-        });
-        req.setParameters(parameters);
-        req.executeAsync();
     }
 
     public NavigationSharedViewModel getViewModel() {
@@ -286,7 +237,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         }
     }
 
-    public void updateUI(@NonNull String request, @Nullable String emailF, String pictureF, boolean reauth) {
+    public void updateUI(@NonNull String request, @Nullable String emailF, String name, String pictureF, boolean reauth) {
         navView.getMenu().clear();
 
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
@@ -311,8 +262,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
 
                     //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
-                    Log.i("id", profile.getId());
-                    username.setText(getString(R.string.profileName, profile.getName()));
+                    //Log.i("id", profile.getId());
+                    username.setText(getString(R.string.profileName, /*profile.getName()*/name));
                     if(emailF != null && !emailF.equals("")) {
                         email.setText(getString(R.string.email, emailF));
                     }
@@ -343,7 +294,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 account.setAccount(null);
                 vm.setToken("");
                 editor.putString("accessToken", "");
-                updateUI("logout", null, null, false);
+                updateUI("logout", null, null, null, false);
             });
         } else {
             accessToken = null;
@@ -387,7 +338,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     editor.putString("accessToken", vm.getToken().getValue());
                     editor.apply();
 
-                    updateUI("login", account.getAccount().getEmail(),
+                    updateUI("login", account.getAccount().getEmail(), account.getAccount().getDisplayName(),
                             account.getAccount().getPhotoUrl().toString(), true);
                 } else {
                     //Facebook login
@@ -406,15 +357,15 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     if(accessToken != null) {
                         vm.setToken(prefs.getString("accessToken", ""));
                         profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
-                        updateUI("login", email, picture, true);
+                        updateUI("login", email, picture, profile.getName(), true);
                     }
-                    updateUI("logout", email, picture, false);
+                    updateUI("logout", email, picture, null, false);
                 }
                 break;
             }
             case Activity.RESULT_CANCELED: {
                 account.setAccount(null);
-                updateUI("logout", null, null, false);
+                updateUI("logout", null, null, null, false);
                 break;
             }
         }
