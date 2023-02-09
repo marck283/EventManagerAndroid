@@ -287,7 +287,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     public void revokeAccess(MenuItem item) {
         SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        if(account != null) {
+        if(account.getAccount() != null) {
             Task<Void> t = account.signOut();
             t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
             t.addOnCompleteListener(c -> {
@@ -301,6 +301,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             editor.putString("accessToken", "");
             LoginManager.getInstance().logOut();
             vm.setToken("");
+            updateUI("logout", null, null, null, false);
         }
         editor.apply();
 
