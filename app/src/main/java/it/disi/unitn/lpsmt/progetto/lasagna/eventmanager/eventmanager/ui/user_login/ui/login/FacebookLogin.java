@@ -86,16 +86,16 @@ public class FacebookLogin {
                             CsrfToken token = new CsrfToken();
                             token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook", i);
 
-                            Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
-                            a.setResult(Activity.RESULT_OK, i);
+                            //Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
+                            //a.setResult(Activity.RESULT_OK, i);
                         } else {
                             Log.i("nullResult", "Risposta null");
                             a.setResult(Activity.RESULT_CANCELED);
+                            a.finish();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                         a.setResult(Activity.RESULT_OK, i);
-                    } finally {
                         a.finish();
                     }
                 });
