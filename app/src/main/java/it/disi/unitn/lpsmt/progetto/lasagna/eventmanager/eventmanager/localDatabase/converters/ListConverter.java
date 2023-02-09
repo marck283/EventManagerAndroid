@@ -65,8 +65,7 @@ public class ListConverter {
         Type listType = new TypeToken<List<String>>() {}.getType();
         String[] arr = str.split("; ");
         for (String s : arr) {
-            //String str1 = s.replace("[", "").replace("]", "");
-            String[] arr1 = s/*tr1*/.split(", ");
+            String[] arr1 = s.split(", ");
             String[] arr2 = arr1[2].split(" ");
 
             LuogoEv l = new LuogoEv(arr1[0], arr1[1], Integer.parseInt(arr2[0]), arr2[1], arr2[2], Integer.parseInt(arr1[3]),

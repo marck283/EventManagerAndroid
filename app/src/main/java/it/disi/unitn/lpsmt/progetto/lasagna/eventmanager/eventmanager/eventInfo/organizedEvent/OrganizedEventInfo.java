@@ -242,7 +242,7 @@ public class OrganizedEventInfo extends Thread {
                                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                                                 Button qrCodeScan = v.findViewById(R.id.button8),
                                                         terminaEvento = v.findViewById(R.id.button12);
-                                                EditText editText = spinner.getEditText(), editText1 = evDay.getEditText();
+                                                //EditText editText = spinner.getEditText(), editText1 = evDay.getEditText();
                                                 String[] day1 = dayText.getText().toString().split("/");
                                                 if (day1.length > 1) {
                                                     String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
@@ -255,7 +255,7 @@ public class OrganizedEventInfo extends Thread {
                                                         terminaEvento.setEnabled(false);
                                                     } else {
                                                         qrCodeScan.setEnabled(true);
-                                                        qrCodeScan.setOnClickListener(c -> {
+                                                        /*qrCodeScan.setOnClickListener(c -> {
                                                             if (editText != null &&
                                                                     !editText.getText().toString().equals("") &&
                                                                     !editText.getText().toString().equals("---") &&
@@ -263,10 +263,10 @@ public class OrganizedEventInfo extends Thread {
                                                                     !editText.getText().toString().equals("---")) {
                                                                 launcher.launch(new ScanOptions());
                                                             }
-                                                        });
+                                                        });*/
 
                                                         terminaEvento.setEnabled(true);
-                                                        terminaEvento.setOnClickListener(c -> {
+                                                        /*terminaEvento.setOnClickListener(c -> {
                                                             NetworkCallback callback = new NetworkCallback(f.requireActivity());
                                                             if (!callback.isOnline(f.requireActivity())) {
                                                                 setNoConnectionDialog();
@@ -278,7 +278,7 @@ public class OrganizedEventInfo extends Thread {
                                                                     ex.printStackTrace();
                                                                 }
                                                             }
-                                                        });
+                                                        });*/
                                                     }
                                                 }
                                             }

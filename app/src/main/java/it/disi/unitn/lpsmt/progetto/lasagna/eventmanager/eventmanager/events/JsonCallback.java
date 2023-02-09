@@ -19,7 +19,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatab
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEvents.PrivEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.PubEvAdapter;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagementFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import retrofit2.Call;
@@ -95,12 +94,11 @@ public class JsonCallback implements Callback<JsonObject> {
         switch(type) {
             case "org": {
                 if(day != null) {
-                    p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList(), day);
+                    p1 = new OrgEvAdapter(new EventCallback(), ev.getList(), day);
                 } else {
-                    p1 = new OrgEvAdapter(f, new EventCallback(), ev.getList());
+                    p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                 }
 
-                Log.i("f4s", f.toString());
                 if(f instanceof EventManagementFragment) {
                     DBOrgEvents dbOrg = new DBOrgEvents(f, "updateAll", ev.getList(), mRecyclerView);
                     dbOrg.start();

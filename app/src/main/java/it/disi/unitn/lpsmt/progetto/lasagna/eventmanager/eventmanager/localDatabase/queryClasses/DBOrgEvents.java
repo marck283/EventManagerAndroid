@@ -1,11 +1,22 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +26,11 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.OrgEvDAO;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.OrgEvent;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 
 public class DBOrgEvents extends DBThread {
 
@@ -25,11 +38,13 @@ public class DBOrgEvents extends DBThread {
 
     private final OrgEvDAO orgEvDAO;
 
-    private final String action, eventName;
+    private final String action, eventName, eventId;
 
     private final List<Event> events; //Lista degli eventi organizzati da un utente
 
     private final RecyclerView recView;
+
+    private final View v;
 
     public DBOrgEvents(@NonNull Fragment f, @NonNull String action, @NonNull List<Event> events,
                        @NonNull RecyclerView recView) {
@@ -40,6 +55,8 @@ public class DBOrgEvents extends DBThread {
         this.events = events;
         this.recView = recView;
         eventName = null;
+        eventId = null;
+        v = null;
     }
 
     public DBOrgEvents(@NonNull Fragment f, @NonNull String action, @NonNull RecyclerView recView) {
@@ -54,6 +71,8 @@ public class DBOrgEvents extends DBThread {
                 false);
         this.recView.setLayoutManager(lm);
         eventName = null;
+        eventId = null;
+        v = null;
     }
 
     public DBOrgEvents(@NonNull Fragment f, @NonNull String action, @NonNull String eventName,
@@ -69,6 +88,20 @@ public class DBOrgEvents extends DBThread {
                 false);
         this.recView.setLayoutManager(lm);
         this.eventName = eventName;
+        eventId = null;
+        v = null;
+    }
+
+    public DBOrgEvents(@NonNull Fragment f, @NonNull String eventId, @NonNull View v) {
+        super(f.requireActivity());
+        orgEvDAO = db.getOrgEvDAO();
+        this.f = f;
+        action = "getEventById";
+        recView = null;
+        events = null;
+        eventName = null;
+        this.eventId = eventId;
+        this.v = v;
     }
 
     private void updateAll() {
@@ -105,7 +138,7 @@ public class DBOrgEvents extends DBThread {
         }
         f.requireActivity().runOnUiThread(() -> {
             recView.invalidate();
-            EventAdapter p1 = new OrgEvAdapter(f, new EventCallback(), helpList);
+            EventAdapter p1 = new OrgEvAdapter(new EventCallback(), helpList);
             p1.submitList(helpList);
             recView.setAdapter(p1);
         });
@@ -119,7 +152,7 @@ public class DBOrgEvents extends DBThread {
             f.requireActivity().runOnUiThread(() -> {
                 AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
                 dialog.setTitle(R.string.no_org_event);
-                dialog.setMessage(f.getString(R.string.no_org_event_message));
+                dialog.setMessage(f.getString(R.string.no_org_event_with_this_name));
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                 dialog.show();
             });
@@ -132,10 +165,91 @@ public class DBOrgEvents extends DBThread {
                     o.getCategory(), o.getEventPic(), o.getOrgName(), o.getLuogoEv(), o.getDurata()));
         }
         f.requireActivity().runOnUiThread(() -> {
-            EventAdapter p1 = new OrgEvAdapter(f, new EventCallback(), helpList);
+            EventAdapter p1 = new OrgEvAdapter(new EventCallback(), helpList);
             p1.submitList(helpList);
             recView.setAdapter(p1);
         });
+    }
+
+    private void getEventById() {
+        OrgEvent event = orgEvDAO.getOrgEventById(eventId);
+
+        if (f.isAdded()) {
+            f.requireActivity().runOnUiThread(() -> {
+                ImageView iView = v.findViewById(R.id.imageView3);
+                Bitmap bm = event.decodeBase64();
+                if (bm != null) {
+                    Glide.with(v).load(bm).into(iView);
+                }
+
+                TextView evName = v.findViewById(R.id.textView6);
+                evName.setText(f.getString(R.string.info_on_event, event.getName()));
+
+                TextInputLayout evDay = v.findViewById(R.id.spinner2);
+                MaterialAutoCompleteTextView dayText = evDay.findViewById(R.id.orgDateTextView);
+
+                ArrayList<CharSequence> dayArr = new ArrayList<>();
+                dayArr.add("---");
+                for (LuogoEv l : event.getLuogoEv()) {
+                    String[] dateArr = l.getData().split("-");
+                    dayArr.add(dateArr[1] + "/" + dateArr[0] + "/" + dateArr[2]);
+                }
+
+                dayText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (evDay.getEditText() != null &&
+                                !evDay.getEditText().getText().toString().equals("---")) {
+                            TextView address = v.findViewById(R.id.textView15);
+                            final int pos = dayArr.indexOf(evDay.getEditText().getText().toString());
+
+                            address.setText(f.getString(R.string.event_address, event.getLuogoEv()
+                                    .get(pos - 1).getAddress()));
+                            address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                            TextInputLayout spinner = v.findViewById(R.id.spinner);
+                            MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
+
+                            ArrayList<CharSequence> hourArr = new ArrayList<>();
+                            hourArr.add("---");
+
+                            String[] dayArr = evDay.getEditText().getText().toString().split("/");
+                            String day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
+                            for (LuogoEv l : event.getOrari(day)) {
+                                hourArr.add(l.getOra());
+                            }
+
+                            hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
+                                    R.layout.list_item, hourArr));
+                        } else {
+                            TextInputLayout hour = v.findViewById(R.id.spinner);
+                            MaterialAutoCompleteTextView hourTextView = hour.findViewById(R.id.orgHourTextView);
+                            hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
+                                    R.layout.list_item, new ArrayList<>()));
+                            hourTextView.setText("");
+
+                            TextView address = v.findViewById(R.id.textView15);
+                            address.setText(f.getString(R.string.event_address, ""));
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                dayText.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, dayArr));
+
+                TextView duration = v.findViewById(R.id.textView12);
+                String[] durata = event.getDurata().split(":");
+                duration.setText(f.getString(R.string.duration, durata[0], durata[1], durata[2]));
+            });
+        }
     }
 
     public void run() {
@@ -153,6 +267,10 @@ public class DBOrgEvents extends DBThread {
             }
             case "getEventsByName": {
                 getEventsByName();
+                break;
+            }
+            case "getEventById": {
+                getEventById();
                 break;
             }
         }

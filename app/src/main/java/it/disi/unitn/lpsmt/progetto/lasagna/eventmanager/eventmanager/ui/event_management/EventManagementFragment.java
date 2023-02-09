@@ -96,7 +96,15 @@ public class EventManagementFragment extends Fragment {
                     }
                 });
 
-        searchEvents(null, view, launcher);
+        if (callback.isOnline(requireActivity())) {
+            searchEvents(null, view, launcher);
+        } else {
+            DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+            orgEvs.start();
+            callback.registerNetworkCallback();
+            callback.addDefaultNetworkActiveListener(() -> searchEvents(null, view, launcher));
+            callback.unregisterNetworkCallback();
+        }
 
         FloatingActionButton fab = view.findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(c -> {
@@ -105,24 +113,26 @@ public class EventManagementFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_eventSearchFragment, b);
         });
 
-        if(callback.isOnline(requireActivity())) {
-            mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> searchEvents(
-                    mViewModel.getEvName().getValue(), view, launcher));
-        } else {
-            DBOrgEvents orgEvs;
-            if(mViewModel.getEvName().getValue() == null) {
-                orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+
+        mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> {
+            if (callback.isOnline(requireActivity())) {
+                searchEvents(o, view, launcher);
             } else {
-                orgEvs = new DBOrgEvents(this, "getEventsByName", mViewModel.getEvName().getValue(),
-                        view.findViewById(R.id.eventRecyclerView));
+                DBOrgEvents orgEvs;
+                if (o == null) {
+                    orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+                } else {
+                    orgEvs = new DBOrgEvents(this, "getEventsByName", o,
+                            view.findViewById(R.id.eventRecyclerView));
+                }
+                orgEvs.start();
             }
-            orgEvs.start();
-        }
+        });
     }
 
     private void searchEvents(@Nullable String evName,
                               @NonNull View view, @Nullable ActivityResultLauncher<Intent> launcher) {
-        if(evName != null && !evName.equals("")) {
+        if (evName != null && !evName.equals("")) {
             mViewModel.getOrgEvents(this, view, userJwt, evName, launcher);
         } else {
             mViewModel.getOrgEvents(this, view, userJwt, launcher);

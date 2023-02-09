@@ -1,9 +1,11 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket;
 
+import android.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -38,6 +40,14 @@ public class TicketInfo extends Thread {
         this.f = f;
     }
 
+    public void setAlertDialog(@StringRes int title, @StringRes int message) {
+        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+        dialog.setTitle(title);
+        dialog.setMessage(f.getString(message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
+    }
+
     public void run() {
         Request request = new Request.Builder()
                 .addHeader("x-access-token", userId)
@@ -48,12 +58,16 @@ public class TicketInfo extends Thread {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //Nulla qui...
+                try {
+                    throw e;
+                } catch(IOException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.body() != null) {
+                if(response.body() != null && response.isSuccessful()) {
                     Gson gson = new GsonBuilder().create();
                     Ticket ticket = Ticket.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                     f.requireActivity().runOnUiThread(() -> {
@@ -65,6 +79,17 @@ public class TicketInfo extends Thread {
                         }
                     });
                     response.body().close();
+                } else {
+                    switch(response.code()) {
+                        case 400: {
+                            setAlertDialog(R.string.malformed_request_or_invalid_date, R.string.malformed_request_or_invalid_date_message);
+                            break;
+                        }
+                        case 404: {
+                            setAlertDialog(R.string.no_ticket, R.string.no_ticket_message);
+                            break;
+                        }
+                    }
                 }
             }
         });

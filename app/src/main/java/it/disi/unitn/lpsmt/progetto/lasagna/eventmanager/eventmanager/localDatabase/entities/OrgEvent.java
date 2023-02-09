@@ -150,6 +150,18 @@ public class OrgEvent implements Serializable {
         luogoEv = val;
     }
 
+    public List<LuogoEv> getOrari(@NonNull String day) {
+        ArrayList<LuogoEv> res = new ArrayList<>();
+
+        for(LuogoEv l: luogoEv) {
+            if(l.getData().equals(day)) {
+                res.add(l);
+            }
+        }
+
+        return res;
+    }
+
     @NonNull
     public String getDurata() {
         return durata;

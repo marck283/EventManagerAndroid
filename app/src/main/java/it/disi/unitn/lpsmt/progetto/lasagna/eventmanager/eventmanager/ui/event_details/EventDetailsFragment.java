@@ -20,8 +20,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
@@ -30,6 +32,7 @@ import java.util.Objects;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 
@@ -241,20 +244,63 @@ public class EventDetailsFragment extends Fragment {
                                 }
                             }
                         });
+
+                Button qrCodeScan = view.findViewById(R.id.button8),
+                        terminaEvento = view.findViewById(R.id.button12),
+                        annullaEvento = view.findViewById(R.id.button13);
+
                 if (callback.isOnline(requireActivity())) {
                     mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                             day, launcher, loginLauncher);
                 } else {
-                    //Nessuna connessione ad Internet
-                    setNoConnectionDialog();
+                    //Nessuna connessione ad Internet. Acquisire i dati dal database e visualizzarli a schermo
+                    AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                    dialog.setTitle(R.string.no_connection);
+                    dialog.setMessage(getString(R.string.buttons_disabled));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+
+                    qrCodeScan.setEnabled(false);
+                    terminaEvento.setEnabled(false);
+                    annullaEvento.setEnabled(false);
+
+                    DBOrgEvents events = new DBOrgEvents(this, eventId, view);
+                    events.start();
+
                     callback.registerNetworkCallback();
-                    callback.addDefaultNetworkActiveListener(() ->
-                            mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                    day, launcher, null));
+                    callback.addDefaultNetworkActiveListener(() -> {
+                        qrCodeScan.setEnabled(true);
+                        terminaEvento.setEnabled(true);
+                        annullaEvento.setEnabled(true);
+                    });
                     callback.unregisterNetworkCallback();
                 }
 
-                Button annullaEvento = view.findViewById(R.id.button13);
+                qrCodeScan.setOnClickListener(c -> {
+                    EditText editText = spinner.getEditText(), editText1 = spinner2.getEditText();
+                    if (editText != null &&
+                            !editText.getText().toString().equals("") &&
+                            !editText.getText().toString().equals("---") &&
+                            editText1 != null && !editText.getText().toString().equals("") &&
+                            !editText.getText().toString().equals("---")) {
+                        launcher.launch(new ScanOptions());
+                    }
+                });
+
+                terminaEvento.setOnClickListener(c -> {
+                    MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
+                    if (!callback.isOnline(requireActivity())) {
+                        setNoConnectionDialog();
+                    } else {
+                        try {
+                            mViewModel.terminateEvent(nvm.getToken().getValue(),
+                                    this, eventId, day, hourTextView.getText().toString(), view);
+                        } catch (NullPointerException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+
                 annullaEvento.setOnClickListener(c -> {
                     if (!callback.isOnline(requireActivity())) {
                         setNoConnectionDialog();

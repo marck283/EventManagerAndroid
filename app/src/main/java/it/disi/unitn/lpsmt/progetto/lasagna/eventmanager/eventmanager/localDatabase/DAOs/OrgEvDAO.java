@@ -16,8 +16,13 @@ public interface OrgEvDAO {
             "FROM OrgEvents O WHERE O.name = :evName")
     List<OrgEvent> getOrgEventsByName(@NonNull String evName);
 
-    @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata  FROM OrgEvents O")
+    @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
+            "FROM OrgEvents O")
     List<OrgEvent> getAllOrgEvents();
+
+    @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
+            "FROM OrgEvents O WHERE O.idevent = :idevent")
+    OrgEvent getOrgEventById(@NonNull String idevent);
 
     @Query("DELETE FROM OrgEvents")
     void deleteAll();

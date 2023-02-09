@@ -220,6 +220,10 @@
     <string name="event_creation_error">Errore durante la creazione dell\'evento</string>
     <string name="event_creation_error_message">Si è verificato un errore durante la creazione dell\'evento. Si prega di controllare che tutti i campi siano stati compilati correttamente.</string>
     <string name="org_event_search">Filtra gli eventi che hai organizzato</string>
+    <string name="malformed_request_or_invalid_date">Richiesta malformata o data non valida</string>
+    <string name="malformed_request_or_invalid_date_message">Stai visualizzando questo errore perché la richiesta ricevuta dal server è malformata o perché la data in essa comunicata non è valida. Si prega di contattare lo sviluppatore per risolvere il problema.</string>
+    <string name="no_ticket">Nessun biglietto trovato</string>
+    <string name="no_ticket_message">Nessun biglietto associato a questo evento è stato trovato per questo utente.</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>
@@ -244,4 +248,6 @@
     <string name="maps_fragment">Mappa</string>
     <string name="service_unavailable_message">Il servizio è temporaneamente non disponibile. Si prega di riprovare più tardi. Ci scusiamo per l\'inconveniente.</string>
     <string name="no_connection_message_short">Nessuna connessione Internet è attiva al momento. Si prega di riprovare più tardi.</string>
+    <string name="no_org_event_with_this_name">L\'utente non ha organizzato alcun evento con questo nome.</string>
+    <string name="buttons_disabled">Nessuna connessione Internet è attualmente disponibile. Per questo motivo, i bottoni per la scansione del biglietto e per la terminazione e l\'annullamento dell\'evento sono stati disabilitati.</string>
 </resources>

@@ -214,8 +214,8 @@
     <string name="user_not_registered_message">The user was not registered to this event.</string>
     <string name="deletion_404">Registration not found</string>
     <string name="deletion_404_message">No registration was found for the given user and the given event.</string>
-    <string name="insert_review_title">Insert review title...</string>
-    <string name="insert_review_description">Insert review description...</string>
+    <string name="insert_review_title">Insert review title…</string>
+    <string name="insert_review_description">Insert review description…</string>
     <string name="review_rating">Rating</string>
     <string name="review_rating_bar">Rating bar</string>
     <string name="write_a_review">Write a review to this event!</string>
@@ -255,4 +255,10 @@
     <string name="service_unavailable_message">The service is temporarily unavailable. Please try again later. We apologize for the inconvenience.</string>
     <string name="org_event_search">Filter organized events</string>
     <string name="no_connection_message_short">No internet connection is available at this time. Please try again later.</string>
+    <string name="malformed_request_or_invalid_date">Malformed request or invalid date</string>
+    <string name="malformed_request_or_invalid_date_message">You are seeing this error either because the server has received a malformed request or because the date that was sent is not valid. Please contact the developer to solve this issue.</string>
+    <string name="no_ticket">No ticket found</string>
+    <string name="no_ticket_message">No ticket was found for this user.</string>
+    <string name="no_org_event_with_this_name">The user did not organize any event with this name.</string>
+    <string name="buttons_disabled">No Internet connection is currently available. For this reason, the QR code scanning and event termination and canceling buttons have been disabled. Please try again later.</string>
 </resources>

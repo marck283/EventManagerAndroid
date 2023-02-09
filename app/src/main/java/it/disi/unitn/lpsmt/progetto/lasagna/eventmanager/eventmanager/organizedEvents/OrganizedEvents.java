@@ -42,11 +42,13 @@ public class OrganizedEvents {
         orgEv = null;
         orgEvWD = retro.create(OrgEvInterfaceWithData.class);
         mRecyclerView = layout.findViewById(recyclerViewId);
-        RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
-                false);
-        mRecyclerView.setLayoutManager(lm);
-        OrgEvAdapter p1 = new OrgEvAdapter(f, new EventCallback());
-        mRecyclerView.setAdapter(p1);
+        f.requireActivity().runOnUiThread(() -> {
+            RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
+                    false);
+            mRecyclerView.setLayoutManager(lm);
+            OrgEvAdapter p1 = new OrgEvAdapter(new EventCallback());
+            mRecyclerView.setAdapter(p1);
+        });
         this.launcher = launcher;
         evName = null;
     }
@@ -61,11 +63,13 @@ public class OrganizedEvents {
         orgEvWD = null;
         orgEv = retro.create(OrganizedEventsInterface.class);
         mRecyclerView = layout.findViewById(recyclerViewId);
-        RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
-                false);
-        mRecyclerView.setLayoutManager(lm);
-        OrgEvAdapter p1 = new OrgEvAdapter(f, new EventCallback());
-        mRecyclerView.setAdapter(p1);
+        f.requireActivity().runOnUiThread(() -> {
+            RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
+                    false);
+            mRecyclerView.setLayoutManager(lm);
+            OrgEvAdapter p1 = new OrgEvAdapter(new EventCallback());
+            mRecyclerView.setAdapter(p1);
+        });
         this.launcher = launcher;
         this.evName = evName;
     }
@@ -73,7 +77,6 @@ public class OrganizedEvents {
     //Perché la chiamata a questa funzione non restituisce nulla quando cerco di ottenere
     //gli eventi organizzati da un certo utente con almeno un evento organizzato?
 
-    //Perché questa chiamata permette di visualizzare solo un evento organizzato?
     public void getOrgEvents(@NonNull String authToken, @Nullable String data) {
         Call<JsonObject> call;
         if(data != null) {
