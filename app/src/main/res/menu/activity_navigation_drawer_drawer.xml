@@ -15,14 +15,14 @@
             android:title="@string/menu_user_calendar"
             android:onClick="hideAllFragments" />
         <item
-            android:id="@+id/nav_user_settings"
-            android:icon="@drawable/ic_user_settings"
-            android:title="@string/menu_settings"
-            android:onClick="hideAllFragments" />
-        <item
             android:id="@+id/nav_user_profile"
             android:icon="@drawable/ic_user_profile"
             android:title="@string/user_profile"
+            android:onClick="hideAllFragments" />
+        <item
+            android:id="@+id/nav_user_settings"
+            android:icon="@drawable/ic_user_settings"
+            android:title="@string/menu_settings"
             android:onClick="hideAllFragments" />
         <item
             android:id="@+id/nav_logout"

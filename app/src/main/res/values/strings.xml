@@ -262,4 +262,6 @@
     <string name="no_ticket_message">No ticket was found for this user.</string>
     <string name="no_org_event_with_this_name">The user did not organize any event with this name.</string>
     <string name="buttons_disabled">No Internet connection is currently available. For this reason, the QR code scanning and event termination  buttons have been disabled. Please try again later.</string>
+    <string name="illegal_max_or_min_age">Illegal maximum or minimum age</string>
+    <string name="illegal_max_or_min_age_message">At least one of the selected values is illegal. Please insert only integer values.</string>
 </resources>
