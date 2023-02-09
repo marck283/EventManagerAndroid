@@ -21,6 +21,7 @@ public class GSignIn {
 
     public GSignIn(@NonNull Activity a) {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                //La prossima riga è da rimuovere
                 .requestScopes(new Scope("https://www.googleapis.com/auth/user.birthday.read"))
                 .requestEmail()
                 .requestProfile()
