@@ -31,7 +31,6 @@ import org.jetbrains.annotations.Contract;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
@@ -44,8 +43,6 @@ public class EventRestrictionsFragment extends Fragment {
 
     private SpeechRecognizer speechRecognizer;
     private Intent speechRecognizerIntent;
-
-    private NavigationSharedViewModel nsvm;
 
     private ActivityResultLauncher<Intent> loginLauncher;
 
@@ -66,7 +63,6 @@ public class EventRestrictionsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(EventRestrictionsViewModel.class);
         evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-        nsvm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
 
         CheckBox etaMin = view.findViewById(R.id.minimumAgeCheckBox), etaMax = view.findViewById(R.id.maximumAgeCheckBox);
         TextInputLayout etaMinLayout = view.findViewById(R.id.minimum_age_text_layout);
