@@ -117,4 +117,8 @@ public class LuogoEv extends Address {
     public String getAddress() {
         return indirizzo + ", " + civNum + ", " + cap + " " + citta + " " + provincia;
     }
+
+    public String getAddressWOCap() {
+        return indirizzo + ", " + civNum + ", " + citta + ", " + provincia;
+    }
 }

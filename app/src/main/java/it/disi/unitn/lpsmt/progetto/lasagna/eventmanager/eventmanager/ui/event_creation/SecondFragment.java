@@ -79,7 +79,7 @@ public class SecondFragment extends Fragment {
         String[] dataArr = luogoEv.getData().split("-");
         t1.setText(dataArr[1] + "/" + dataArr[0] + "/" + dataArr[2]);
         t2.setText(luogoEv.getOra());
-        t3.setText(luogoEv.getAddress());
+        t3.setText(luogoEv.getAddressWOCap());
         t4.setText(String.valueOf(luogoEv.getMaxPers()));
 
         ImageView modifyDestination = view.findViewById(R.id.imageView4);
