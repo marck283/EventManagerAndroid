@@ -89,6 +89,12 @@ public class Authentication {
                     }
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
+
+                    SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("accessToken", "");
+                    editor.putString("userId", "");
+                    editor.apply();
                     if (response.code() == 401) {
                         a.runOnUiThread(() -> {
                             AlertDialog dialog = new AlertDialog.Builder(a).create();
@@ -97,6 +103,17 @@ public class Authentication {
                             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                             dialog.show();
                         });
+                    }
+                    if(a instanceof NavigationDrawerActivity) {
+                        a.runOnUiThread(() ->
+                                ((NavigationDrawerActivity)a).updateUI("logout", null,
+                                        null, null, false));
+                        ((NavigationDrawerActivity)a).getViewModel().setToken("");
+                    } else {
+                        if(a instanceof LoginActivity) {
+                            a.setResult(Activity.RESULT_OK, i);
+                            a.finish();
+                        }
                     }
                 }
             }

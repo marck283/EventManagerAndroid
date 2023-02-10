@@ -50,6 +50,12 @@ public class EventDetailsFragment extends Fragment {
 
     private ActivityResultLauncher<Intent> loginLauncher;
 
+    private SharedPreferences prefs;
+
+    private String token = "";
+
+    private View view;
+
     public void setEventId(@NonNull String val) {
         eventId = val;
     }
@@ -67,6 +73,33 @@ public class EventDetailsFragment extends Fragment {
         return new EventDetailsFragment();
     }
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+        token = prefs.getString("accessToken", "");
+
+        loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    switch (result.getResultCode()) {
+                        case Activity.RESULT_OK: {
+                            token = prefs.getString("accessToken", "");
+                            mViewModel.registerUser(token, eventId, this, day, time, null);
+                            break;
+                        }
+                        case Activity.RESULT_CANCELED: {
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("accessToken", "");
+                            editor.apply();
+                            Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
+                            ((NavigationDrawerActivity) requireActivity())
+                                    .updateUI("logout", "", "", "", false);
+                            break;
+                        }
+                    }
+                });
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -78,17 +111,20 @@ public class EventDetailsFragment extends Fragment {
         }
         switch (screenType) {
             case "pub": {
-                return inflater.inflate(R.layout.public_event_info, container, false);
+                view = inflater.inflate(R.layout.public_event_info, container, false);
+                break;
             }
             case "iscr": {
-                return inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
+                view = inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
+                break;
             }
             case "org": {
-                return inflater.inflate(R.layout.dettagli_evento_organizzatore, container, false);
+                view = inflater.inflate(R.layout.dettagli_evento_organizzatore, container, false);
+                break;
             }
         }
 
-        return null;
+        return view;
     }
 
     @Override
@@ -99,46 +135,23 @@ public class EventDetailsFragment extends Fragment {
 
         switch (screenType) {
             case "pub": {
-                //Controllare questo blocco con un utente non registrato... dovrebbe reindirizzare
-                //all'Activity di login, ma qualcosa non funziona...
-                loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                        result -> {
-                            switch (result.getResultCode()) {
-                                case Activity.RESULT_OK: {
-                                    mViewModel.getEventInfo("pub", eventId, view, this, nvm.getToken().getValue(),
-                                            day, launcher, null);
-                                    break;
-                                }
-                                case Activity.RESULT_CANCELED: {
-                                    SharedPreferences prefs =
-                                            requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putString("accessToken", "");
-                                    editor.apply();
-                                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
-                                    ((NavigationDrawerActivity) requireActivity())
-                                            .updateUI("logout", "", "", "", false);
-                                    break;
-                                }
-                            }
-                        });
                 mViewModel.getEventInfo("pub", eventId, view, this, null, null,
                         null, null);
 
-                Button b = view.findViewById(R.id.sign_up_button);
+                Button b = view.findViewById(R.id.cLayout).findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
                 b.setOnClickListener(c -> {
-                    if (eventId != null && day != null && !day.equals("") && !day.equals("---") &&
-                            time != null && !time.equals("") && !time.equals("---") && nvm.getToken() != null &&
+                    TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.dateArray);
+                    EditText spinnerText = spinner.getEditText(), spinner2Text = spinner2.getEditText();
+                    if (eventId != null && spinnerText != null && !spinnerText.getText().toString().equals("")
+                            && !spinnerText.getText().toString().equals("---") &&
+                            spinner2Text != null && !spinner2Text.getText().toString().equals("") &&
+                            !spinner2Text.getText().toString().equals("---") && nvm.getToken() != null &&
                             nvm.getToken().getValue() != null) {
-                        String[] dayArr = day.split("/");
+                        String[] dayArr = spinnerText.getText().toString().split("/");
                         day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
-
-                        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                        String token = prefs.getString("accessToken", "");
-                        if (!token.equals("")) {
-                            mViewModel.registerUser(token, eventId, this, day, time, loginLauncher);
-                        }
+                        time = spinner2Text.getText().toString();
+                        mViewModel.registerUser(token, eventId, this, day, time, loginLauncher);
                     }
                 });
 

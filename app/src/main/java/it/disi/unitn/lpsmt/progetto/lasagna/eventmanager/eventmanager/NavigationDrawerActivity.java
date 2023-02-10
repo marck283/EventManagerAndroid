@@ -282,6 +282,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             Glide.with(l.getContext()).load(acc.getPhotoUrl()).apply(new RequestOptions().override(ivwidth, ivheight))
                     .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
         }
+
+        DrawerLayout d = findViewById(R.id.drawer_layout);
+        d.closeDrawers();
     }
 
     public void revokeAccess(MenuItem item) {
@@ -294,16 +297,17 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 account.setAccount(null);
                 vm.setToken("");
                 editor.putString("accessToken", "");
+                editor.apply();
                 updateUI("logout", null, null, null, false);
             });
         } else {
             accessToken = null;
             editor.putString("accessToken", "");
+            editor.apply();
             LoginManager.getInstance().logOut();
             vm.setToken("");
             updateUI("logout", null, null, null, false);
         }
-        editor.apply();
 
         navigate(R.id.nav_event_list);
     }

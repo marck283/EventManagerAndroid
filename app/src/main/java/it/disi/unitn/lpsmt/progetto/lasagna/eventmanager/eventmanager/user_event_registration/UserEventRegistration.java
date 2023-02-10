@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class UserEventRegistration extends Thread {
 
     public UserEventRegistration(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
                                  @NonNull String time, @NonNull EventDetailsFragment f,
-                                 @NonNull ActivityResultLauncher<Intent> launcher) {
+                                 @Nullable ActivityResultLauncher<Intent> launcher) {
         client = new OkHttpClient();
         this.f = f;
         this.accessToken = accessToken;
@@ -43,11 +44,13 @@ public class UserEventRegistration extends Thread {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-        ad.setTitle(title);
-        ad.setMessage(f.getString(message));
-        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        ad.show();
+        f.requireActivity().runOnUiThread(() -> {
+            AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
+            ad.setTitle(title);
+            ad.setMessage(f.getString(message));
+            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            ad.show();
+        });
     }
 
     public void run() {
@@ -82,28 +85,35 @@ public class UserEventRegistration extends Thread {
                 switch(response.code()) {
                     case 201: {
                         //Successo
-                        f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.event_registration_success_title, R.string.event_registration_success));
+                        setAlertDialog(R.string.event_registration_success_title, R.string.event_registration_success);
                         break;
                     }
                     case 400: {
                         //Richiesta malformata
-                        f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.malformed_request, R.string.malformed_request_message));
+                        setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
                         break;
                     }
                     case 401: {
-                        Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
-                        launcher.launch(loginIntent);
+                        if(launcher != null) {
+                            Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
+                            launcher.launch(loginIntent);
+                        } else {
+                            setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+                        }
                         break;
                     }
-                    case 403: {
-                        if(response.body() != null) {
-                            f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.error, R.string.max_pers_reached_or_user_already_registered));
-                        }
+                    case 403:
+                    case 404: {
+                        setAlertDialog(R.string.error, R.string.max_pers_reached_or_user_already_registered);
                         break;
                     }
                     case 500: {
                         //Errore interno al server
-                        f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.internal_server_error, R.string.service_unavailable));
+                        setAlertDialog(R.string.internal_server_error, R.string.service_unavailable);
+                        break;
+                    }
+                    case 503: {
+                        setAlertDialog(R.string.request_timeout, R.string.request_timeout_message);
                         break;
                     }
                 }
