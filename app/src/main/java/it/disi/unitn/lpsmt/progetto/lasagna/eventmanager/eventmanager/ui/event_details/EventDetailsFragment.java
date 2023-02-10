@@ -307,6 +307,7 @@ public class EventDetailsFragment extends Fragment {
                     } else {
                         try {
                             //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
+                            //Ricordarsi anche di aggiornare "token" all'interno del launcher!
                             mViewModel.terminateEvent(token,
                                     this, eventId, day, hourTextView.getText().toString(), view);
                         } catch (NullPointerException ex) {
@@ -321,6 +322,7 @@ public class EventDetailsFragment extends Fragment {
                         return;
                     }
                     //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
+                    //Ricordarsi anche di aggiornare "token" all'interno del launcher!
                     mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this, view);
                 });
             }
