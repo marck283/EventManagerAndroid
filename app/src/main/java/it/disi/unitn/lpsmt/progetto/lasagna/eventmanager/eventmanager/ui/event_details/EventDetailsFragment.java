@@ -306,7 +306,8 @@ public class EventDetailsFragment extends Fragment {
                         setNoConnectionDialog();
                     } else {
                         try {
-                            mViewModel.terminateEvent(nvm.getToken().getValue(),
+                            //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
+                            mViewModel.terminateEvent(token,
                                     this, eventId, day, hourTextView.getText().toString(), view);
                         } catch (NullPointerException ex) {
                             ex.printStackTrace();
@@ -319,6 +320,7 @@ public class EventDetailsFragment extends Fragment {
                         setNoConnectionDialog();
                         return;
                     }
+                    //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
                     mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this, view);
                 });
             }
