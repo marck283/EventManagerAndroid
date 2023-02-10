@@ -13,22 +13,27 @@ import com.google.gson.JsonObject;
  */
 public class LoggedInUser {
 
-    private String token, email, id, self, profilePic;
+    private String token, email, name, id, self, profilePic;
 
     public LoggedInUser() {
         //Costruttore vuoto
     }
 
-    public LoggedInUser(String token, String email, String id, String self, String profilePic) {
+    public LoggedInUser(String token, String email, String name, String id, String self, String profilePic) {
         this.token = token;
         this.email = email;
         this.id = id;
         this.self = self;
         this.profilePic = profilePic;
+        this.name = name;
     }
 
     public String getToken() {
         return token;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
@@ -55,7 +60,8 @@ public class LoggedInUser {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
         LoggedInUser user = new LoggedInUser(fromJson(gs1, "token", json), fromJson(gs1, "email", json),
-                fromJson(gs1, "id", json), fromJson(gs1, "self", json), fromJson(gs1, "profilePic", json));
+                fromJson(gs1, "name", json), fromJson(gs1, "id", json), fromJson(gs1, "self", json),
+                fromJson(gs1, "profilePic", json));
         Log.i("OK", json.toString());
         return user;
     }

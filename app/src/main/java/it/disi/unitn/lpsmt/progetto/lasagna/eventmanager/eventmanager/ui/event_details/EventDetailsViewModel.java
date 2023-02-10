@@ -115,7 +115,7 @@ public class EventDetailsViewModel extends ViewModel {
     }
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
-                             @NonNull String day, @NonNull String time, @NonNull ActivityResultLauncher<Intent> launcher) {
+                             @NonNull String day, @NonNull String time, @Nullable ActivityResultLauncher<Intent> launcher) {
         callback = new NetworkCallback(f.requireActivity());
         if(callback.isOnline(f.requireActivity())) {
             UserEventRegistration uer = new UserEventRegistration(accessToken, eventId, day, time, f, launcher);
@@ -141,6 +141,8 @@ public class EventDetailsViewModel extends ViewModel {
                         @NonNull String day, @NonNull String hour, @NonNull EventDetailsFragment f) {
         callback = new NetworkCallback(f.requireActivity());
         if(callback.isOnline(f.requireActivity())) {
+            String[] dataArr = day.split("/");
+            day = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
             CheckQRCode check = new CheckQRCode(userJwt, qrCode, eventId, day, hour, f);
             check.start();
         } else {

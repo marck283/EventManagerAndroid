@@ -226,6 +226,9 @@
     <string name="no_ticket_message">Nessun biglietto associato a questo evento è stato trovato per questo utente.</string>
     <string name="illegal_max_or_min_age">Età massima o minima non consentita</string>
     <string name="illegal_max_or_min_age_message">Almeno uno dei valori inseriti non è consentito. Si prega di inserire solamente valori numerici interi.</string>
+    <string name="request_timeout">Timeout richiesta raggiunto</string>
+    <string name="request_timeout_message">Si è verificato un timeout della richiesta. Si prega di contattare lo sviluppatore per risolvere il problema.</string>
+    <string name="parameter_not_set">non impostato</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>

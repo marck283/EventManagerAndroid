@@ -47,7 +47,7 @@ public class FacebookLogin {
                 NetworkCallback callback = new NetworkCallback(a);
                 if(callback.isOnline(a)) {
                     loginManager.logInWithReadPermissions(a,
-                            List.of("public_profile", "email", "birthday"));
+                            List.of("public_profile", "email"));
                 } else {
                     AlertDialog dialog = new AlertDialog.Builder(a).create();
                     dialog.setTitle(R.string.no_connection);
@@ -86,16 +86,16 @@ public class FacebookLogin {
                             CsrfToken token = new CsrfToken();
                             token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook", i);
 
-                            Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
-                            a.setResult(Activity.RESULT_OK, i);
+                            //Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
+                            //a.setResult(Activity.RESULT_OK, i);
                         } else {
                             Log.i("nullResult", "Risposta null");
                             a.setResult(Activity.RESULT_CANCELED);
+                            a.finish();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                         a.setResult(Activity.RESULT_OK, i);
-                    } finally {
                         a.finish();
                     }
                 });

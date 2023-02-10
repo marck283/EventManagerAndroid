@@ -90,7 +90,7 @@ public class OnlineUserInfo extends Thread {
                             if (userInfo.getString("tel") != null && !userInfo.getString("tel").equals("")) {
                                 phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
                             } else {
-                                phone.setText(f.getString(R.string.phone, "non presente"));
+                                phone.setText(f.getString(R.string.phone, f.getString(R.string.parameter_not_set)));
                             }
 
                             TextView numEvOrg = v.findViewById(R.id.numEvOrg);

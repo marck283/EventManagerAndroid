@@ -55,22 +55,22 @@ public class EventCreation extends Thread {
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
         f.requireActivity().runOnUiThread(() -> {
-                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                    dialog.setTitle(title);
-                    dialog.setMessage(f.getString(message));
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-                        dialog1.dismiss();
-                        f.requireActivity().finish();
-                    });
-                    dialog.show();
-                });
+            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(f.getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                dialog1.dismiss();
+                f.requireActivity().finish();
+            });
+            dialog.show();
+        });
     }
 
     public void run() {
         JSONObject jsonObject = evm.toJson();
         String url;
 
-        if(!evm.getPrivEvent()) {
+        if (!evm.getPrivEvent()) {
             url = "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici";
         } else {
             url = "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPrivati";
@@ -89,14 +89,14 @@ public class EventCreation extends Thread {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {
                     throw e;
-                } catch(Throwable ex) {
+                } catch (Throwable ex) {
                     ex.printStackTrace();
                 }
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                switch(response.code()) {
+                switch (response.code()) {
                     case 201: {
                         setAlertDialog(R.string.event_creation_ok_title, R.string.event_creation_ok_message);
                         break;
@@ -108,7 +108,7 @@ public class EventCreation extends Thread {
                     }
 
                     case 401: {
-                        if(i != null) {
+                        if (i != null) {
                             i.launch(loginIntent);
                         }
                         break;

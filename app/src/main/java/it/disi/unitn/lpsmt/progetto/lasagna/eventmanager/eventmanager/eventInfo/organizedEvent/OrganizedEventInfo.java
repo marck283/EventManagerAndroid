@@ -13,7 +13,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +33,6 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
@@ -179,41 +177,7 @@ public class OrganizedEventInfo extends Thread {
                                     if (evDay.getEditText() != null &&
                                             !evDay.getEditText().getText().toString().equals("---")) {
                                         TextView address = v.findViewById(R.id.textView15);
-                                        final int pos = dayArr.indexOf(evDay.getEditText().getText().toString());
-
-                                        address.setText(f.getString(R.string.event_address, event.getLuogoEv()
-                                                .get(pos - 1).getAddress()));
-                                        address.setOnClickListener(c -> {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                Geocoder geocoder = new Geocoder(f.requireActivity());
-                                                geocoder.getFromLocationName(address.getText().toString(), 5, addresses -> {
-                                                    if (addresses.size() > 0) {
-                                                        startGoogleMaps(f, address, addresses);
-                                                    } else {
-                                                        noSuchAddressDialog(f);
-                                                    }
-                                                });
-                                            } else {
-                                                Thread t1 = new Thread() {
-                                                    public void run() {
-                                                        List<Address> addresses;
-                                                        try {
-                                                            Geocoder geocoder = new Geocoder(f.requireActivity());
-                                                            addresses = geocoder.getFromLocationName(address.getText().toString(), 5);
-                                                            if (addresses != null && addresses.size() > 0) {
-                                                                startGoogleMaps(f, address, addresses);
-                                                            } else {
-                                                                f.requireActivity().runOnUiThread(() -> noSuchAddressDialog(f));
-                                                            }
-                                                        } catch (IOException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                };
-                                                t1.start();
-                                            }
-                                        });
-                                        address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                        //final int pos = dayArr.indexOf(evDay.getEditText().getText().toString());
 
                                         TextInputLayout spinner = v.findViewById(R.id.spinner);
                                         MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
@@ -242,6 +206,39 @@ public class OrganizedEventInfo extends Thread {
                                             public void onTextChanged(CharSequence s, int start, int before, int count) {
                                                 Button qrCodeScan = v.findViewById(R.id.button8),
                                                         terminaEvento = v.findViewById(R.id.button12);
+                                                address.setText(f.getString(R.string.event_address,
+                                                        event.getLuogo(day, hourTextView.getText().toString()).getAddress()));
+                                                address.setOnClickListener(c -> {
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                        Geocoder geocoder = new Geocoder(f.requireActivity());
+                                                        geocoder.getFromLocationName(address.getText().toString(), 5, addresses -> {
+                                                            if (addresses.size() > 0) {
+                                                                startGoogleMaps(f, address, addresses);
+                                                            } else {
+                                                                noSuchAddressDialog(f);
+                                                            }
+                                                        });
+                                                    } else {
+                                                        Thread t1 = new Thread() {
+                                                            public void run() {
+                                                                List<Address> addresses;
+                                                                try {
+                                                                    Geocoder geocoder = new Geocoder(f.requireActivity());
+                                                                    addresses = geocoder.getFromLocationName(address.getText().toString(), 5);
+                                                                    if (addresses != null && addresses.size() > 0) {
+                                                                        startGoogleMaps(f, address, addresses);
+                                                                    } else {
+                                                                        f.requireActivity().runOnUiThread(() -> noSuchAddressDialog(f));
+                                                                    }
+                                                                } catch (IOException e) {
+                                                                    e.printStackTrace();
+                                                                }
+                                                            }
+                                                        };
+                                                        t1.start();
+                                                    }
+                                                });
+                                                address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                                                 //EditText editText = spinner.getEditText(), editText1 = evDay.getEditText();
                                                 String[] day1 = dayText.getText().toString().split("/");
                                                 if (day1.length > 1) {
@@ -308,8 +305,14 @@ public class OrganizedEventInfo extends Thread {
                             dayText.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, dayArr));
 
                             TextView duration = v.findViewById(R.id.textView12);
-                            String[] durata = event.getDurata().split(":");
-                            duration.setText(f.getString(R.string.duration, durata[0], durata[1], durata[2]));
+                            String eventDurata = event.getDurata();
+                            if(event.getDurata() == null || event.getDurata().equals("")) {
+                                duration.setText(f.getString(R.string.duration,
+                                        "0", "0", "0"));
+                            } else {
+                                String[] durata = eventDurata.split(":");
+                                duration.setText(f.getString(R.string.duration, durata[0], durata[1], durata[2]));
+                            }
                         });
                     }
                     response.body().close();

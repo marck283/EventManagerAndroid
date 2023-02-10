@@ -1,6 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,17 +32,17 @@ public class EventListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Bundle args = getArguments();
+        /*Bundle args = getArguments();
         if (args != null && args.getString("accessToken") != null) {
             idToken = args.getString("accessToken");
         } else {
             if (savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
                 idToken = savedInstanceState.getString("accessToken");
-            }
+            }*/
             if(savedInstanceState != null && savedInstanceState.getBoolean("prompt")) {
                 prompt = savedInstanceState.getBoolean("prompt");
             }
-        }
+        //}
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,6 +66,9 @@ public class EventListFragment extends Fragment {
         super.onViewCreated(v, savedInstanceState);
         vm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
         eventListViewModel = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
+
+        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+        idToken = prefs.getString("accessToken", "");
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -89,6 +94,8 @@ public class EventListFragment extends Fragment {
         }
 
         if(callback.isOnline(requireActivity())) {
+            //eventListViewModel.getEvents(this, root, idToken, null, null);
+
             vm.getToken().observe(requireActivity(), o -> {
                 if(callback.isOnline(requireActivity())) {
                     idToken = o;
@@ -142,12 +149,11 @@ public class EventListFragment extends Fragment {
             });
         } else {
             setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
-            ((NavigationDrawerActivity)requireActivity()).updateUI("logout", null, null, false);
+            ((NavigationDrawerActivity)requireActivity()).updateUI("logout", null, null, null, false);
         }
     }
 
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("accessToken", idToken);
         outState.putBoolean("prompt", prompt);
     }
 }

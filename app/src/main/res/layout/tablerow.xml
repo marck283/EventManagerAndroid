@@ -7,32 +7,26 @@
 
     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
         android:id="@+id/textView32"
-        android:layout_width="87dp"
+        android:layout_width="92dp"
         android:theme="@style/Theme.MaterialComponents.Light"
         android:layout_height="wrap_content" />
 
     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
         android:id="@+id/textView30"
-        android:layout_width="77dp"
+        android:layout_width="87dp"
         android:theme="@style/Theme.MaterialComponents.Light"
         android:layout_height="wrap_content" />
 
     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
         android:id="@+id/textView31"
-        android:layout_width="82dp"
+        android:layout_width="92dp"
         android:theme="@style/Theme.MaterialComponents.Light"
         android:layout_height="wrap_content" />
 
     <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableTextView
         android:id="@+id/textView29"
-        android:layout_width="81dp"
+        android:layout_width="91dp"
         android:layout_height="wrap_content"
         android:theme="@style/Theme.MaterialComponents.Light" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:contentDescription="@string/modify_destination"
-        android:layout_width="24dp"
-        android:layout_height="20dp"
-        app:srcCompat="@drawable/ic_event_creation" />
 </TableRow>

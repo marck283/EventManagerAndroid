@@ -124,12 +124,7 @@ public class EventViewModel extends ViewModel {
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
         try {
-            JSONArray arr = new JSONArray();
-            arr.put(giorni);
-            arr.put(ore);
-            arr.put(minuti);
-            jsonObject.put("durata", arr);
-
+            jsonObject.put("descrizione", description);
             jsonObject.put("categoria", categoria);
             jsonObject.put("nomeAtt", nomeAtt);
             jsonObject.put("luogoEv", toJSONArray());
@@ -138,7 +133,11 @@ public class EventViewModel extends ViewModel {
             jsonObject.put("eventPic", base64Image);
 
             if(!privEvent) {
-                jsonObject.put("descrizione", description);
+                JSONArray arr = new JSONArray();
+                arr.put(giorni);
+                arr.put(ore);
+                arr.put(minuti);
+                jsonObject.put("durata", arr);
                 jsonObject.put("etaMin", etaMin);
                 jsonObject.put("etaMax", etaMax);
             }
