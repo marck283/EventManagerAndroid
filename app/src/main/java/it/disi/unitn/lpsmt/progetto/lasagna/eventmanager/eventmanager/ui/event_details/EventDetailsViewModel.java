@@ -115,7 +115,7 @@ public class EventDetailsViewModel extends ViewModel {
     }
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
-                             @NonNull String day, @NonNull String time, @NonNull ActivityResultLauncher<Intent> launcher) {
+                             @NonNull String day, @NonNull String time, @Nullable ActivityResultLauncher<Intent> launcher) {
         callback = new NetworkCallback(f.requireActivity());
         if(callback.isOnline(f.requireActivity())) {
             UserEventRegistration uer = new UserEventRegistration(accessToken, eventId, day, time, f, launcher);
