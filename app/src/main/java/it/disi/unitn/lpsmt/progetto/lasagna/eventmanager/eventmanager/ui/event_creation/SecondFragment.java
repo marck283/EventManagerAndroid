@@ -82,7 +82,7 @@ public class SecondFragment extends Fragment {
         t3.setText(luogoEv.getAddressWOCap());
         t4.setText(String.valueOf(luogoEv.getMaxPers()));
 
-        ImageView modifyDestination = view.findViewById(R.id.imageView4);
+        /*ImageView modifyDestination = view.findViewById(R.id.imageView4);
         modifyDestination.setOnClickListener(c -> {
             Bundle b = new Bundle();
 
@@ -92,7 +92,7 @@ public class SecondFragment extends Fragment {
             b.putInt("numPosti", luogoEv.getPostiRimanenti());
 
             NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment, b);
-        });
+        });*/
         ++countRows;
     }
 }

@@ -111,7 +111,7 @@ public class Authentication {
                         ((NavigationDrawerActivity)a).getViewModel().setToken("");
                     } else {
                         if(a instanceof LoginActivity) {
-                            a.setResult(Activity.RESULT_OK, i);
+                            a.setResult(Activity.RESULT_CANCELED, i);
                             a.finish();
                         }
                     }

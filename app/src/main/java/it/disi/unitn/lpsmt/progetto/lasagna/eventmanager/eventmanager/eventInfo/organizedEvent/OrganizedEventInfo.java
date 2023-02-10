@@ -309,7 +309,12 @@ public class OrganizedEventInfo extends Thread {
 
                             TextView duration = v.findViewById(R.id.textView12);
                             String[] durata = event.getDurata().split(":");
-                            duration.setText(f.getString(R.string.duration, durata[0], durata[1], durata[2]));
+                            if(event.getDurata() == null || event.getDurata().equals("")) {
+                                duration.setText(f.getString(R.string.duration,
+                                        f.getString(R.string.parameter_not_set), "", ""));
+                            } else {
+                                duration.setText(f.getString(R.string.duration, durata[0], durata[1], durata[2]));
+                            }
                         });
                     }
                     response.body().close();

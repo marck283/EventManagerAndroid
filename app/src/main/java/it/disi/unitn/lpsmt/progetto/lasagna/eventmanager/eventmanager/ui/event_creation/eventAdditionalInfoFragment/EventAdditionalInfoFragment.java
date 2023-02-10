@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -162,13 +164,20 @@ public class EventAdditionalInfoFragment extends Fragment {
     }
 
     private void sendRequest(@NonNull View view) {
-        EditText description = view.findViewById(R.id.event_description);
+        //EditText description = view.findViewById(R.id.event_description);
         if(evm.getPrivEvent()) {
-            description.setVisibility(View.INVISIBLE);
+            //description.setVisibility(View.INVISIBLE);
+
+            RelativeLayout dhm = view.findViewById(R.id.relativeLayout2);
+            dhm.setVisibility(View.INVISIBLE);
+
+            TextView evDuration = view.findViewById(R.id.textView40);
+            evDuration.setVisibility(View.INVISIBLE);
         }
 
         Button forward = view.findViewById(R.id.button14);
         forward.setOnClickListener(c -> {
+            EditText description = view.findViewById(R.id.event_description);
             String giorni, ore, minuti, descrizione = description.getText().toString();
             EditText editGiorni = view.findViewById(R.id.duration_days), editOre = view.findViewById(R.id.duration_hours),
                     editMins = view.findViewById(R.id.duration_mins);
@@ -177,39 +186,44 @@ public class EventAdditionalInfoFragment extends Fragment {
             minuti = editMins.getText().toString();
             evm.setDescription(descrizione);
 
-            try {
-                evm.setGiorni(Integer.parseInt(giorni));
-                evm.setOre(Integer.parseInt(ore));
-                evm.setMinuti(Integer.parseInt(minuti));
-            } catch(NumberFormatException ex) {
-                setAlertDialog(R.string.illegal_duration_format, R.string.illegal_duration_format_message);
-            }
-
             String image = evm.getBase64Image();
             if(image == null || image.equals("")) {
                 setAlertDialog(R.string.no_event_picture, R.string.missing_event_image);
             } else {
                 String description1 = evm.getDescription();
-                if(!evm.getPrivEvent() && (description1 == null || description1.equals(""))) {
+                if(/*!evm.getPrivEvent() && */(description1 == null || description1.equals(""))) {
                     setAlertDialog(R.string.no_event_description, R.string.missing_event_description);
                 } else {
-                    if(evm.getGiorni() < 0 || evm.getOre() < 0 || evm.getMinuti() < 0) {
-                        setAlertDialog(R.string.wrong_duration, R.string.wrong_duration_value);
+                    if(evm.getPrivEvent()) {
+                        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                        mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
                     } else {
-                        if(evm.getOre() >= 24) {
-                            setAlertDialog(R.string.illegal_hours_value, R.string.illegal_hours_message);
-                        } else {
-                            if(evm.getMinuti() >= 60) {
-                                setAlertDialog(R.string.illegal_minutes_value, R.string.illegal_minutes_message);
+                        try {
+                            evm.setGiorni(Integer.parseInt(giorni));
+                            evm.setOre(Integer.parseInt(ore));
+                            evm.setMinuti(Integer.parseInt(minuti));
+
+                            if(evm.getGiorni() < 0 || evm.getOre() < 0 || evm.getMinuti() < 0) {
+                                setAlertDialog(R.string.wrong_duration, R.string.wrong_duration_value);
                             } else {
-                                if(!evm.getPrivEvent()) {
-                                    Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
+                                if(evm.getOre() >= 24) {
+                                    setAlertDialog(R.string.illegal_hours_value, R.string.illegal_hours_message);
                                 } else {
-                                    //Poiché l'evento è privato, fai partire la sua creazione da qui...
-                                    SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                                    mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
+                                    if(evm.getMinuti() >= 60) {
+                                        setAlertDialog(R.string.illegal_minutes_value, R.string.illegal_minutes_message);
+                                    } else {
+                                        if(!evm.getPrivEvent()) {
+                                            Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
+                                        } /*else {
+                                            //Poiché l'evento è privato, fai partire la sua creazione da qui...
+                                            SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                                            mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
+                                        }*/
+                                    }
                                 }
                             }
+                        } catch(NumberFormatException ex) {
+                            setAlertDialog(R.string.illegal_duration_format, R.string.illegal_duration_format_message);
                         }
                     }
                 }
