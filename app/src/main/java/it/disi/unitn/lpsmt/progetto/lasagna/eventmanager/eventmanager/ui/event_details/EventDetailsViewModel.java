@@ -141,6 +141,8 @@ public class EventDetailsViewModel extends ViewModel {
                         @NonNull String day, @NonNull String hour, @NonNull EventDetailsFragment f) {
         callback = new NetworkCallback(f.requireActivity());
         if(callback.isOnline(f.requireActivity())) {
+            String[] dataArr = day.split("/");
+            day = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
             CheckQRCode check = new CheckQRCode(userJwt, qrCode, eventId, day, hour, f);
             check.start();
         } else {
