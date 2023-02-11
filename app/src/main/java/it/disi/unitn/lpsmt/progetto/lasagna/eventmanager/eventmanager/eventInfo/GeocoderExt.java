@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.location.Address;
