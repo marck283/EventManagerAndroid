@@ -95,7 +95,7 @@ public class FacebookLogin {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        a.setResult(Activity.RESULT_OK, i);
+                        a.setResult(Activity.RESULT_CANCELED);
                         a.finish();
                     }
                 });

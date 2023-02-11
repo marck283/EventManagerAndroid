@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_nav_user_calendar_to_nav_user_profile"
             app:destination="@id/nav_user_profile" />
+        <action
+            android:id="@+id/action_nav_user_calendar_to_nav_event_list2"
+            app:destination="@id/nav_event_list" />
     </fragment>
 
     <fragment
