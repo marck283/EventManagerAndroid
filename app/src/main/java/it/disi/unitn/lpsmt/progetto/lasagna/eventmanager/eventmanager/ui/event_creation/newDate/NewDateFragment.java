@@ -181,9 +181,10 @@ public class NewDateFragment extends DialogFragment {
                 setAlertDialog(R.string.no_value_title, getString(R.string.no_value));
             }*/
             if (beginDate.getText() != null && beginTime.getText() != null && seats.getText() != null &&
-                    (parseBeginDate(beginDate.getText().toString())) &&
-                    (parseBeginHour(beginTime.getText().toString())) &&
-                    (parseSeats(seats.getText().toString()))) {
+                    parseBeginDate(beginDate.getText().toString()) &&
+                    parseBeginHour(beginTime.getText().toString()) &&
+                    (evm.getPrivEvent() || (!evm.getPrivEvent() &&
+                    parseSeats(seats.getText().toString())))) {
                 mViewModel.setOk(true);
                 NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
             }

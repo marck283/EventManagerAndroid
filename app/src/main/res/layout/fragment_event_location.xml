@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textView38"
                 android:layout_width="match_parent"
                 android:layout_height="37dp"
@@ -32,51 +32,86 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/location_address"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="320dp"
                 android:layout_height="63dp"
                 android:layout_marginTop="28dp"
-                android:hint="@string/insert_address"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView38" />
+                app:layout_constraintTop_toBottomOf="@+id/textView38">
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/location_city"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/location_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/insert_address" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lCityLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="140dp"
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                android:hint="@string/insert_city"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.36"
-                app:layout_constraintStart_toEndOf="@+id/house_number"
-                app:layout_constraintTop_toBottomOf="@+id/location_address" />
+                app:layout_constraintStart_toEndOf="@+id/hnInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/lInputLayout">
 
-            <Spinner
-                android:id="@+id/province"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/location_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/insert_city" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/pLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="151dp"
                 android:layout_height="65dp"
                 android:layout_marginTop="36dp"
-                android:contentDescription="@string/category_selection"
+                android:labelFor="@+id/province"
+                android:hint="@string/province"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.344"
-                app:layout_constraintStart_toEndOf="@+id/zipcode"
-                app:layout_constraintTop_toBottomOf="@+id/location_city" />
+                app:layout_constraintStart_toEndOf="@+id/zLayout"
+                app:layout_constraintTop_toBottomOf="@+id/lCityLayout">
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/zipcode"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/province"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:inputType="none"
+                    android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/zLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="142dp"
                 android:layout_height="67dp"
                 android:layout_marginStart="36dp"
                 android:layout_marginTop="36dp"
-                android:ems="10"
-                android:hint="@string/insert_postal_code"
-                android:inputType="number"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/house_number" />
+                app:layout_constraintTop_toBottomOf="@+id/hnInputLayout">
 
-            <Button
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/zipcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:ems="10"
+                    android:hint="@string/insert_postal_code"
+                    android:inputType="number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/button6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -87,28 +122,23 @@
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/textView41"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="@string/province"
-                app:layout_constraintStart_toStartOf="@+id/province"
-                app:layout_constraintTop_toTopOf="@+id/province" />
-
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/house_number"
-                android:layout_width="141dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/hnInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="155dp"
                 android:layout_height="57dp"
                 android:layout_marginStart="36dp"
                 android:layout_marginTop="16dp"
-                android:hint="@string/insert_house_number"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/location_address" />
+                app:layout_constraintTop_toBottomOf="@+id/lInputLayout">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/house_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/insert_house_number" />
+
+            </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.cardview.widget.CardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
