@@ -18,26 +18,41 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/begin_time"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/btInputLayout"
                 android:layout_width="303dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="16dp"
-                android:hint="@string/insert_hour"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.488"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/begin_date" />
+                app:layout_constraintTop_toBottomOf="@+id/bdInputLayout">
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/begin_date"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/begin_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/insert_hour"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bdInputLayout"
                 android:layout_width="305dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="8dp"
-                android:hint="@string/insert_date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView35" />
+                app:layout_constraintTop_toBottomOf="@+id/textView35">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/begin_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/insert_date" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/button3"
@@ -50,16 +65,24 @@
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.TableEditText
-                android:id="@+id/seats_value"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/seatsLayout"
                 android:layout_width="302dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="12dp"
-                android:hint="@string/insert_seats"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.482"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/begin_time" />
+                app:layout_constraintTop_toBottomOf="@+id/btInputLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/seats_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/insert_seats"
+                    android:inputType="number"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/textView35"

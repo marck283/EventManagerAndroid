@@ -118,7 +118,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/spinner2"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="165dp"
             android:layout_height="52dp"
             android:layout_marginTop="52dp"
@@ -133,6 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/select_date"
+                android:textAlignment="center"
                 android:enabled="false" />
 
         </com.google.android.material.textfield.TextInputLayout>

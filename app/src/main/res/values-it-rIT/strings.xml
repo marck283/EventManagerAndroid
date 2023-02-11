@@ -61,8 +61,8 @@
     <string name="no_value_title">Alcuni campi sono vuoti</string>
     <string name="incorrect_hour_format_title">Formato ora non corretto</string>
     <string name="incorrect_hour_format">Formato ora non corretto.</string>
-    <string name="incorrect_location_format_title">Formato campo \"luogo\" non corretto</string>
-    <string name="incorrect_location_format">Formato campo \"luogo\" non corretto.</string>
+    <string name="incorrect_location_format_title">Indirizzo non valido</string>
+    <string name="incorrect_location_format">L\'indirizzo fornito non è valido.</string>
     <string name="insert_venue_address">Inserisci indirizzo evento</string>
     <string name="insert_address">Inserisci indirizzo…</string>
     <string name="insert_city">Comune…</string>
@@ -255,4 +255,6 @@
     <string name="no_connection_message_short">Nessuna connessione Internet è attiva al momento. Si prega di riprovare più tardi.</string>
     <string name="no_org_event_with_this_name">L\'utente non ha organizzato alcun evento con questo nome.</string>
     <string name="buttons_disabled">Nessuna connessione Internet è attualmente disponibile. Per questo motivo, i bottoni per la scansione del biglietto e per la terminazione e l\'annullamento dell\'evento sono stati disabilitati.</string>
+    <string name="no_org_event_at_this_time">L\'utente non ha organizzato questo evento all\'ora specificata.</string>
+    <string name="non_numeric_year_inserted">E\' stato inserito un valore non numerico come anno.</string>
 </resources>

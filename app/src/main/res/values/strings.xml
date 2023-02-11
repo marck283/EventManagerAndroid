@@ -72,7 +72,7 @@
     <string name="incorrect_hour_format_title">Incorrect hour format</string>
     <string name="incorrect_hour_format">Incorrect hour format.</string>
     <string name="incorrect_location_format_title">Incorrect location format</string>
-    <string name="incorrect_location_format">Incorrect location format.</string>
+    <string name="incorrect_location_format">The given address is not valid.</string>
     <string name="insert_venue_address">Insert venue address</string>
     <string name="insert_address">Insert address…</string>
     <string name="insert_city">Insert city…</string>
@@ -267,4 +267,6 @@
     <string name="request_timeout">Request timeout reached</string>
     <string name="request_timeout_message">A request timeout has been reached. Please contact the developer to solve this issue.</string>
     <string name="parameter_not_set">not set</string>
+    <string name="no_org_event_at_this_time">The user did not organize this event at the given time.</string>
+    <string name="non_numeric_year_inserted">A non-numeric year was inserted.</string>
 </resources>
