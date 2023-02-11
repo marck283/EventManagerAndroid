@@ -50,7 +50,6 @@ public class OrgEvent implements Serializable {
     @ColumnInfo(name = "luogoEv")
     private ArrayList<LuogoEv> luogoEv;
 
-    @NonNull
     @ColumnInfo(name = "durata")
     private String durata;
 

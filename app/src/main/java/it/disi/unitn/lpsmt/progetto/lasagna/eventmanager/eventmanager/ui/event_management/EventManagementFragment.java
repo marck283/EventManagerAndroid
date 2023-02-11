@@ -95,6 +95,10 @@ public class EventManagementFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    public void onStart() {
+        super.onStart();
 
         if (callback.isOnline(requireActivity())) {
             searchEvents(null, view, launcher);

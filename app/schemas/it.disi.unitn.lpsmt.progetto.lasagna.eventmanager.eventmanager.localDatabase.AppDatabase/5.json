@@ -1,0 +1,151 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "11653030f88ca0c389ffd6e44878df63",
+    "entities": [
+      {
+        "tableName": "Users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL DEFAULT '0', `email` TEXT NOT NULL, `nome` TEXT, `profilePic` TEXT, `tel` TEXT, `eventiCreati` TEXT, `eventiIscritto` TEXT, `numEvOrg` INTEGER, `valutazioneMedia` REAL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true,
+            "defaultValue": "'0'"
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nome",
+            "columnName": "nome",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "profilePic",
+            "columnName": "profilePic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tel",
+            "columnName": "tel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eventiCreati",
+            "columnName": "eventiCreati",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eventiIscritto",
+            "columnName": "eventiIscritto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "numEvOrg",
+            "columnName": "numEvOrg",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "valutazioneMedia",
+            "columnName": "valutazioneMedia",
+            "affinity": "REAL",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "OrgEvents",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `idevent` TEXT NOT NULL, `self` TEXT NOT NULL, `name` TEXT NOT NULL, `category` TEXT NOT NULL, `eventPic` TEXT NOT NULL, `orgName` TEXT NOT NULL, `luogoEv` TEXT NOT NULL, `durata` TEXT, PRIMARY KEY(`idevent`))",
+        "fields": [
+          {
+            "fieldPath": "eventType",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idevent",
+            "columnName": "idevent",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "self",
+            "columnName": "self",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "eventPic",
+            "columnName": "eventPic",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orgName",
+            "columnName": "orgName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "luogoEv",
+            "columnName": "luogoEv",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durata",
+            "columnName": "durata",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "idevent"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '11653030f88ca0c389ffd6e44878df63')"
+    ]
+  }
+}

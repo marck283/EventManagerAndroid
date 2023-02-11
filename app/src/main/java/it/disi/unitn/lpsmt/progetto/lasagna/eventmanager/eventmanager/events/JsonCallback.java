@@ -99,7 +99,7 @@ public class JsonCallback implements Callback<JsonObject> {
                     p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                 }
 
-                if(f instanceof EventManagementFragment) {
+                if(f instanceof EventManagementFragment && f.isAdded()) {
                     DBOrgEvents dbOrg = new DBOrgEvents(f, "updateAll", ev.getList(), mRecyclerView);
                     dbOrg.start();
                 }

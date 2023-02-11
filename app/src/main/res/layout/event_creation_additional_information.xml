@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView37"
         android:layout_width="350dp"
         android:layout_height="41dp"
@@ -18,20 +18,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/event_description"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="217dp"
         android:layout_height="56dp"
         android:layout_marginTop="24dp"
-        android:autofillHints="true"
-        android:ems="10"
-        android:hint="@string/event_description"
-        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView37" />
+        app:layout_constraintTop_toBottomOf="@+id/textView37"
+        app:endIconDrawable="@drawable/ic_record_voice"
+        app:endIconMode="custom">
 
-    <TextView
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/event_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints="true"
+            android:ems="10"
+            android:hint="@string/event_description"
+            android:inputType="textPersonName" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textView40"
         android:layout_width="177dp"
         android:layout_height="29dp"
@@ -42,7 +52,7 @@
         android:textSize="9pt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_description" />
+        app:layout_constraintTop_toBottomOf="@+id/edInputLayout" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
@@ -52,51 +62,71 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView40">
 
-        <EditText
-            android:id="@+id/duration_days"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="115dp"
             android:layout_height="55dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
             android:layout_marginStart="47dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="7dp"
             android:layout_marginBottom="29dp"
-            android:layout_toStartOf="@+id/duration_hours"
-            android:autofillHints="true"
-            android:ems="10"
-            android:hint="@string/days"
-            android:inputType="textPersonName" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/dhInputLayout">
 
-        <EditText
-            android:id="@+id/duration_hours"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/duration_days"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="true"
+                android:hint="@string/days"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dhInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="78dp"
             android:layout_height="57dp"
-            android:layout_alignParentBottom="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="28dp"
-            android:layout_toStartOf="@+id/duration_mins"
-            android:autofillHints="true"
-            android:ems="10"
-            android:hint="@string/hours"
-            android:inputType="textPersonName" />
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/dmInputLayout">
 
-        <EditText
-            android:id="@+id/duration_mins"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/duration_hours"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="true"
+                android:hint="@string/hours"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dmInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="112dp"
             android:layout_height="56dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="38dp"
             android:layout_marginBottom="28dp"
-            android:autofillHints="true"
-            android:ems="10"
-            android:hint="@string/minutes"
-            android:inputType="textPersonName" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/duration_mins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:autofillHints="true"
+                android:hint="@string/minutes"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -106,7 +136,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button14"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -118,7 +148,7 @@
             android:layout_marginBottom="39dp"
             android:text="@string/continue_forward" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textView43"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -138,7 +168,6 @@
             android:layout_marginBottom="15dp"
             android:layout_toStartOf="@+id/textView43"
             android:contentDescription="@string/floating_action_button"
-            app:srcCompat="@drawable/ic_event_creation" />
+            app:srcCompat="@android:drawable/ic_input_add" />
     </RelativeLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

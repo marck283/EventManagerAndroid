@@ -48,13 +48,17 @@ public class EventDetailsFragment extends Fragment {
 
     private ActivityResultLauncher<ScanOptions> launcher;
 
-    private ActivityResultLauncher<Intent> loginLauncher;
+    private ActivityResultLauncher<Intent> loginLauncher, loginLauncher1;
 
     private SharedPreferences prefs;
 
     private String token = "";
 
     private View view;
+
+    private NetworkCallback callback;
+
+    private TextInputLayout spinner, spinner2;
 
     public void setEventId(@NonNull String val) {
         eventId = val;
@@ -98,109 +102,24 @@ public class EventDetailsFragment extends Fragment {
                         }
                     }
                 });
-    }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
         Bundle b = getArguments();
         if (b != null) {
             screenType = b.getString("eventType");
             eventId = b.getString("eventId");
             day = b.getString("day");
         }
-        switch (screenType) {
-            case "pub": {
-                view = inflater.inflate(R.layout.public_event_info, container, false);
-                break;
-            }
-            case "iscr": {
-                view = inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
-                break;
-            }
-            case "org": {
-                view = inflater.inflate(R.layout.dettagli_evento_organizzatore, container, false);
-                break;
-            }
-        }
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(EventDetailsViewModel.class);
-        nvm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
-
-        switch (screenType) {
-            case "pub": {
-                mViewModel.getEventInfo("pub", eventId, view, this, null, null,
-                        null, null);
-
-                Button b = view.findViewById(R.id.cLayout).findViewById(R.id.sign_up_button);
-                b.setEnabled(false);
-                b.setOnClickListener(c -> {
-                    TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.dateArray);
-                    EditText spinnerText = spinner.getEditText(), spinner2Text = spinner2.getEditText();
-                    if (eventId != null && spinnerText != null && !spinnerText.getText().toString().equals("")
-                            && !spinnerText.getText().toString().equals("---") &&
-                            spinner2Text != null && !spinner2Text.getText().toString().equals("") &&
-                            !spinner2Text.getText().toString().equals("---") && nvm.getToken() != null &&
-                            nvm.getToken().getValue() != null) {
-                        String[] dayArr = spinnerText.getText().toString().split("/");
-                        day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
-                        time = spinner2Text.getText().toString();
-                        mViewModel.registerUser(token, eventId, this, day, time, loginLauncher);
-                    }
-                });
-
-                ((TextView) view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
-                ((TextView) view.findViewById(R.id.duration)).setText(getString(R.string.duration, "", "", ""));
-                ((TextView) view.findViewById(R.id.organizerName)).setText(getString(R.string.organizer, ""));
-
-                Button ratings = view.findViewById(R.id.show_ratings);
-                ratings.setOnClickListener(c -> {
-                    Bundle b1 = new Bundle();
-                    b1.putString("eventId", eventId);
-                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_reviewsFragment, b1);
-                });
-
-                break;
-            }
-            case "iscr": {
-                TextView organizer = view.findViewById(R.id.textView16), dayTextView = view.findViewById(R.id.textView11),
-                        time = view.findViewById(R.id.textView20), duration = view.findViewById(R.id.textView39),
-                        address = view.findViewById(R.id.textView42);
-                organizer.setText(getString(R.string.organizer, ""));
-                dayTextView.setText(getString(R.string.day_not_selectable, ""));
-                time.setText(getString(R.string.time_not_selectable, ""));
-                duration.setText(getString(R.string.duration, "", "", ""));
-                address.setText(getString(R.string.event_address, ""));
-
-                ActivityResultLauncher<Intent> loginLauncher = registerForActivityResult(
-                        new ActivityResultContracts.StartActivityForResult(),
-                        result -> {
-                            if (result.getResultCode() == Activity.RESULT_OK) {
-                                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
-                                        day, null, null);
-                            }
-                        });
-
-                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
-                        day, null, loginLauncher);
-                break;
-            }
-            case "org": {
-                TextView duration = view.findViewById(R.id.textView12);
-                duration.setText(getString(R.string.duration, "", "", ""));
-
-                TextView address = view.findViewById(R.id.textView15);
-                address.setText(getString(R.string.event_address, ""));
-
-                TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.spinner2);
-                NetworkCallback callback = new NetworkCallback(requireActivity());
-
+        if(screenType.equals("iscr")) {
+            loginLauncher1 = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
+                                    day, null, null);
+                        }
+                    });
+        } else {
+            if(screenType.equals("org")) {
                 launcher = registerForActivityResult(new ScanContract(),
                         result -> {
                             if (result.getContents() != null && spinner.getEditText() != null &&
@@ -257,6 +176,100 @@ public class EventDetailsFragment extends Fragment {
                                 }
                             }
                         });
+            }
+        }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        switch (screenType) {
+            case "pub": {
+                view = inflater.inflate(R.layout.public_event_info, container, false);
+                break;
+            }
+            case "iscr": {
+                view = inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
+                break;
+            }
+            case "org": {
+                view = inflater.inflate(R.layout.dettagli_evento_organizzatore, container, false);
+                break;
+            }
+        }
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewModel = new ViewModelProvider(this).get(EventDetailsViewModel.class);
+        nvm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
+    }
+
+    public void onStart() {
+        super.onStart();
+
+        switch (screenType) {
+            case "pub": {
+                mViewModel.getEventInfo("pub", eventId, view, this, null, null,
+                        null, null);
+
+                Button b = view.findViewById(R.id.cLayout).findViewById(R.id.sign_up_button);
+                b.setEnabled(false);
+                b.setOnClickListener(c -> {
+                    TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.dateArray);
+                    EditText spinnerText = spinner.getEditText(), spinner2Text = spinner2.getEditText();
+                    if (eventId != null && spinnerText != null && !spinnerText.getText().toString().equals("")
+                            && !spinnerText.getText().toString().equals("---") &&
+                            spinner2Text != null && !spinner2Text.getText().toString().equals("") &&
+                            !spinner2Text.getText().toString().equals("---") && nvm.getToken() != null &&
+                            nvm.getToken().getValue() != null) {
+                        String[] dayArr = spinnerText.getText().toString().split("/");
+                        day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
+                        time = spinner2Text.getText().toString();
+                        mViewModel.registerUser(token, eventId, this, day, time, loginLauncher);
+                    }
+                });
+
+                ((TextView) view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
+                ((TextView) view.findViewById(R.id.duration)).setText(getString(R.string.duration, "", "", ""));
+                ((TextView) view.findViewById(R.id.organizerName)).setText(getString(R.string.organizer, ""));
+
+                Button ratings = view.findViewById(R.id.show_ratings);
+                ratings.setOnClickListener(c -> {
+                    Bundle b1 = new Bundle();
+                    b1.putString("eventId", eventId);
+                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_reviewsFragment, b1);
+                });
+
+                break;
+            }
+            case "iscr": {
+                TextView organizer = view.findViewById(R.id.textView16), dayTextView = view.findViewById(R.id.textView11),
+                        time = view.findViewById(R.id.textView20), duration = view.findViewById(R.id.textView39),
+                        address = view.findViewById(R.id.textView42);
+                organizer.setText(getString(R.string.organizer, ""));
+                dayTextView.setText(getString(R.string.day_not_selectable, ""));
+                time.setText(getString(R.string.time_not_selectable, ""));
+                duration.setText(getString(R.string.duration, "", "", ""));
+                address.setText(getString(R.string.event_address, ""));
+
+                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
+                        day, null, loginLauncher1);
+                break;
+            }
+            case "org": {
+                TextView duration = view.findViewById(R.id.textView12);
+                duration.setText(getString(R.string.duration, "", "", ""));
+
+                TextView address = view.findViewById(R.id.textView15);
+                address.setText(getString(R.string.event_address, ""));
+
+                spinner = view.findViewById(R.id.spinner);
+                spinner2 = view.findViewById(R.id.spinner2);
+                callback = new NetworkCallback(requireActivity());
 
                 Button qrCodeScan = view.findViewById(R.id.button8),
                         terminaEvento = view.findViewById(R.id.button12),

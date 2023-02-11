@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,15 +36,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.Contract;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
 
 public class EventAdditionalInfoFragment extends Fragment {
 
@@ -52,6 +60,9 @@ public class EventAdditionalInfoFragment extends Fragment {
 
     private View view;
     private ActivityResultLauncher<Intent> loginLauncher;
+
+    private SpeechRecognizer rec;
+    private Intent speechRecognizerIntent;
 
     @NonNull
     @Contract(" -> new")
@@ -163,11 +174,20 @@ public class EventAdditionalInfoFragment extends Fragment {
         dialog.show();
     }
 
+    private void createSpeechListener(@IdRes int resId) {
+        rec = SpeechRecognizer.createSpeechRecognizer(view.getContext());
+        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        rec.setRecognitionListener(new EventSpeechRecognizer(view, resId));
+
+        SpeechOnTouchListener speech = new SpeechOnTouchListener(rec, speechRecognizerIntent);
+        speech.performClick();
+    }
+
     private void sendRequest(@NonNull View view) {
         //EditText description = view.findViewById(R.id.event_description);
         if(evm.getPrivEvent()) {
-            //description.setVisibility(View.INVISIBLE);
-
             RelativeLayout dhm = view.findViewById(R.id.relativeLayout2);
             dhm.setVisibility(View.INVISIBLE);
 
@@ -175,15 +195,36 @@ public class EventAdditionalInfoFragment extends Fragment {
             evDuration.setVisibility(View.INVISIBLE);
         }
 
+        TextInputLayout edInputLayout = view.findViewById(R.id.edInputLayout);
+        edInputLayout.setEndIconOnClickListener(c -> createSpeechListener(R.id.event_description));
+        TextInputEditText description = edInputLayout.findViewById(R.id.event_description);
+
+        TextInputLayout dInputLayout = view.findViewById(R.id.dInputLayout),
+                dhInputLayout = view.findViewById(R.id.dhInputLayout),
+                dmInputLayout = view.findViewById(R.id.dmInputLayout);
+        dInputLayout.setEndIconOnClickListener(c -> createSpeechListener(R.id.duration_days));
+        dhInputLayout.setEndIconOnClickListener(c -> createSpeechListener(R.id.duration_hours));
+        dmInputLayout.setEndIconOnClickListener(c -> createSpeechListener(R.id.duration_mins));
+        TextInputEditText editGiorni = dInputLayout.findViewById(R.id.duration_days),
+                editOre = dhInputLayout.findViewById(R.id.duration_hours),
+                editMins = dmInputLayout.findViewById(R.id.duration_mins);
+
         Button forward = view.findViewById(R.id.button14);
         forward.setOnClickListener(c -> {
-            EditText description = view.findViewById(R.id.event_description);
-            String giorni, ore, minuti, descrizione = description.getText().toString();
-            EditText editGiorni = view.findViewById(R.id.duration_days), editOre = view.findViewById(R.id.duration_hours),
-                    editMins = view.findViewById(R.id.duration_mins);
-            giorni = editGiorni.getText().toString();
-            ore = editOre.getText().toString();
-            minuti = editMins.getText().toString();
+            String giorni = "", ore = "", minuti = "", descrizione = "";
+            if(description.getText() != null) {
+                descrizione = description.getText().toString();
+            }
+
+            if(editGiorni.getText() != null) {
+                giorni = editGiorni.getText().toString();
+            }
+            if(editOre.getText() != null) {
+                ore = editOre.getText().toString();
+            }
+            if(editMins.getText() != null) {
+                minuti = editMins.getText().toString();
+            }
             evm.setDescription(descrizione);
 
             String image = evm.getBase64Image();
