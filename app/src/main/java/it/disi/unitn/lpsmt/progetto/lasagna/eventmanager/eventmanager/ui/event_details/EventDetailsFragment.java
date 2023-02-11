@@ -113,9 +113,17 @@ public class EventDetailsFragment extends Fragment {
             loginLauncher1 = registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
-                                    day, null, null);
+                        switch(result.getResultCode()) {
+                            case Activity.RESULT_OK: {
+                                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
+                                        day, null, null);
+                                break;
+                            }
+                            case Activity.RESULT_CANCELED: {
+                                //Ritorna alla schermata principale, reimpostando il token alla stringa vuota
+                                //e chiedendo all'Activity NavigationDrawerActivity di reimpostare il suo menù
+                                //a quello riservato agli utenti non autenticati.
+                            }
                         }
                     });
         } else {
