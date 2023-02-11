@@ -230,6 +230,8 @@
     <string name="request_timeout_message">Si è verificato un timeout della richiesta. Si prega di contattare lo sviluppatore per risolvere il problema.</string>
     <string name="parameter_not_set">non impostato</string>
     <string name="empty_seats_field_message">Non è stato inserito alcun valore valido per il campo \"posti\". Si prega di riprovare inserendo un valore numerico intero positivo o pari a zero.</string>
+    <string name="no_reviews">Nessuna recensione trovata</string>
+    <string name="no_reviews_message">Non è stata trovata alcuna recensione per questo evento.</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>

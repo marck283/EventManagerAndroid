@@ -240,6 +240,7 @@ public class EventDetailsFragment extends Fragment {
                 Button ratings = view.findViewById(R.id.show_ratings);
                 ratings.setOnClickListener(c -> {
                     Bundle b1 = new Bundle();
+                    b1.putString("screenType", screenType);
                     b1.putString("eventId", eventId);
                     Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_reviewsFragment, b1);
                 });

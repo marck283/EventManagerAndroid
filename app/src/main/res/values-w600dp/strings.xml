@@ -269,4 +269,6 @@
     <string name="no_org_event_at_this_time">The user did not organize this event at the given time.</string>
     <string name="non_numeric_year_inserted">A non-numeric year was inserted.</string>
     <string name="empty_seats_field_message">No valid value for the \"seats\" field has been inserted. Please try inserting a positive or null integer value for this field.</string>
+    <string name="no_reviews">No reviews found</string>
+    <string name="no_reviews_message">No reviews have been found for this event.</string>
 </resources>

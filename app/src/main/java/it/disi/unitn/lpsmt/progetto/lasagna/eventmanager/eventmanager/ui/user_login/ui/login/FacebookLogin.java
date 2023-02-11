@@ -116,6 +116,7 @@ public class FacebookLogin {
                 dialog.setMessage(a.getString(R.string.facebook_login_error));
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
                     dialog1.dismiss();
+                    a.setResult(Activity.RESULT_CANCELED);
                     a.finish();
                 });
                 dialog.show();

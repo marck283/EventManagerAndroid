@@ -19,7 +19,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 public class ReviewsFragment extends Fragment {
 
     private ReviewsViewModel mViewModel1;
-    private String id = "";
+    private String id = "", screenType = "";
     private View root;
 
     @NonNull
@@ -34,6 +34,7 @@ public class ReviewsFragment extends Fragment {
         Bundle b = getArguments();
         if(b != null) {
             id = b.getString("eventId");
+            screenType = b.getString("screenType");
         }
 
         root = inflater.inflate(R.layout.fragment_reviews, container, false);
@@ -49,7 +50,7 @@ public class ReviewsFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-        mViewModel1.getReviews(this, root.findViewById(R.id.frameLayout5), id);
+        mViewModel1.getReviews(this, root.findViewById(R.id.frameLayout5), id, screenType);
     }
 
 }

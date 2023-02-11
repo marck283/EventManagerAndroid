@@ -1,9 +1,12 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.eventReviews;
 
+import android.app.AlertDialog;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,18 +27,22 @@ import okhttp3.ResponseBody;
 
 public class ReviewsRequest extends Thread {
     private final OkHttpClient client = new OkHttpClient();
-    private final String eventId;
+    private final String eventId, screenType;
     private final RecyclerView rv;
     private final Request request;
     private ReviewAdapter adapter;
     private final ReviewsFragment f;
 
-    public ReviewsRequest(@NonNull ReviewsFragment f, @NonNull View layout, @NonNull String id) {
+    private final View v;
+
+    public ReviewsRequest(@NonNull ReviewsFragment f, @NonNull View layout, @NonNull String id, @NonNull String screenType) {
         eventId = id;
+        this.screenType = screenType;
         this.f = f;
         request = new Request.Builder()
                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/recensioni")
                 .build();
+        v = layout;
         rv = layout.findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
@@ -72,12 +79,28 @@ public class ReviewsRequest extends Thread {
                     ReviewList list = new ReviewList();
                     list.parseJSON(jsonArr);
 
-                    adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList());
+                    if(list.getList() == null || list.getList().size() == 0) {
+                        f.requireActivity().runOnUiThread(() -> {
+                            AlertDialog dialog = new AlertDialog.Builder(f.requireContext()).create();
+                            dialog.setTitle(R.string.no_reviews);
+                            dialog.setMessage(f.getString(R.string.no_reviews_message));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                                dialog1.dismiss();
+                                Bundle b = new Bundle();
+                                b.putString("eventType", screenType);
+                                b.putString("eventId", eventId);
+                                Navigation.findNavController(v).navigate(R.id.action_reviewsFragment_to_eventDetailsFragment, b);
+                            });
+                            dialog.show();
+                        });
+                    } else {
+                        adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList());
 
-                    f.requireActivity().runOnUiThread(() -> {
-                        adapter.submitList(list.getList());
-                        rv.setAdapter(adapter);
-                    });
+                        f.requireActivity().runOnUiThread(() -> {
+                            adapter.submitList(list.getList());
+                            rv.setAdapter(adapter);
+                        });
+                    }
                 }
             }
         });
