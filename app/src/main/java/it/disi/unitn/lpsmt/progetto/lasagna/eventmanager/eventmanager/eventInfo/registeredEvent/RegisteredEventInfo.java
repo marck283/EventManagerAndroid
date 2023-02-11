@@ -3,9 +3,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.location.Address;
-import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,7 +14,6 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
@@ -31,9 +27,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan.QRCodeRenderingFragment;
@@ -75,26 +71,6 @@ public class RegisteredEventInfo extends Thread {
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
             dialog.show();
         });
-    }
-
-    private void noSuchAddressDialog(@NonNull Fragment f) {
-        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-        dialog.setTitle(R.string.no_such_address);
-        dialog.setMessage(f.getString(R.string.address_not_registered));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
-    }
-
-    private void startGoogleMaps(@NonNull EventDetailsFragment f, @NonNull TextView indirizzo,
-                                 @NonNull List<Address> addresses) {
-        Address address = addresses.get(0);
-
-        Uri gmURI = Uri.parse("geo:" + address.getLatitude() + "," + address.getLongitude()
-                + "?q=" + indirizzo.getText().toString());
-        Intent i = new Intent(Intent.ACTION_VIEW, gmURI);
-        i.setPackage("com.google.android.apps.maps");
-
-        f.requireActivity().startActivity(i);
     }
 
     public void run() {
@@ -152,32 +128,11 @@ public class RegisteredEventInfo extends Thread {
                                     TextView address = v.findViewById(R.id.textView42);
                                     address.setText(f.getString(R.string.event_address, event.getLuogoEv().toString()));
                                     address.setOnClickListener(c -> {
-                                        Geocoder geocoder = new Geocoder(f.requireActivity());
+                                        GeocoderExt geocoder = new GeocoderExt(f, address);
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                            geocoder.getFromLocationName(address.getText().toString(), 5, addresses -> {
-                                                if (addresses.size() > 0) {
-                                                    startGoogleMaps(f, address, addresses);
-                                                } else {
-                                                    noSuchAddressDialog(f);
-                                                }
-                                            });
+                                            geocoder.fromLocationName(address.getText().toString(), 5);
                                         } else {
-                                            Thread t1 = new Thread() {
-                                                public void run() {
-                                                    List<Address> addresses;
-                                                    try {
-                                                        addresses = geocoder.getFromLocationName(address.getText().toString(), 5);
-                                                        if (addresses != null && addresses.size() > 0) {
-                                                            startGoogleMaps(f, address, addresses);
-                                                        } else {
-                                                            f.requireActivity().runOnUiThread(() -> noSuchAddressDialog(f));
-                                                        }
-                                                    } catch (IOException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                }
-                                            };
-                                            t1.start();
+                                            geocoder.fromLocationNameThread(address.getText().toString(), 5);
                                         }
                                     });
 

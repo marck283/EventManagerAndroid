@@ -3,9 +3,11 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localData
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent.OrganizedEvent;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
@@ -205,13 +208,6 @@ public class DBOrgEvents extends DBThread {
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (evDay.getEditText() != null &&
                                 !evDay.getEditText().getText().toString().equals("---")) {
-                            TextView address = v.findViewById(R.id.textView15);
-                            final int pos = dayArr.indexOf(evDay.getEditText().getText().toString());
-
-                            address.setText(f.getString(R.string.event_address, event.getLuogoEv()
-                                    .get(pos - 1).getAddress()));
-                            address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
                             TextInputLayout spinner = v.findViewById(R.id.spinner);
                             MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
 
@@ -224,8 +220,68 @@ public class DBOrgEvents extends DBThread {
                                 hourArr.add(l.getOra());
                             }
 
+                            hourTextView.setText("");
+
                             hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
                                     R.layout.list_item, hourArr));
+
+                            hourTextView.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                                }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    TextView address = v.findViewById(R.id.textView15);
+                                    if(hourTextView.getText() != null && !hourTextView.getText().toString().equals("") &&
+                                    !hourTextView.getText().toString().equals("---")) {
+                                        Button qrCodeScan = v.findViewById(R.id.button8),
+                                                terminaEvento = v.findViewById(R.id.button12);
+                                        String[] day1 = dayText.getText().toString().split("/");
+
+                                        if (day1.length > 1) {
+                                            String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
+
+                                            LuogoEv luogo = event.getLuogo(day2,
+                                                    hourTextView.getText().toString());
+                                            if(luogo == null) {
+                                                f.requireActivity().runOnUiThread(() -> {
+                                                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                                    dialog.setTitle(R.string.error);
+                                                    dialog.setMessage(f.getString(R.string.no_org_event_at_this_time));
+                                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                                                            (dialog1, which) -> dialog1.dismiss());
+                                                    dialog.show();
+                                                });
+                                                return;
+                                            }
+
+                                            qrCodeScan.setEnabled(false);
+                                            terminaEvento.setEnabled(false);
+
+                                            address.setText(f.getString(R.string.event_address,
+                                                    luogo.getAddress()));
+                                            address.setOnClickListener(c -> {
+                                                GeocoderExt geocoder = new GeocoderExt(f, address);
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                    geocoder.fromLocationName(address.getText().toString(), 5);
+                                                } else {
+                                                    geocoder.fromLocationNameThread(address.getText().toString(), 5);
+                                                }
+                                            });
+                                            address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                        }
+                                    } else {
+                                        address.setText(f.getString(R.string.event_address, ""));
+                                    }
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) {
+
+                                }
+                            });
                         } else {
                             TextInputLayout hour = v.findViewById(R.id.spinner);
                             MaterialAutoCompleteTextView hourTextView = hour.findViewById(R.id.orgHourTextView);
