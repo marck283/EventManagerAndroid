@@ -2,13 +2,10 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 
 import android.app.AlertDialog;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +13,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -28,6 +24,7 @@ import java.util.regex.Pattern;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.text_masks.Mask;
 
 public class NewDateFragment extends DialogFragment {
 
@@ -103,6 +100,7 @@ public class NewDateFragment extends DialogFragment {
 
     private boolean parseSeats(@NonNull /*EditText*/ String t3) {
         if (t3/*.getText() == null || t3.getText().toString()*/.equals("")) {
+            setAlertDialog(R.string.error, getString(R.string.empty_seats_field_message));
             return false;
         }
 
@@ -156,6 +154,7 @@ public class NewDateFragment extends DialogFragment {
                 timeOK = parseBeginHour(beginTime.getText().toString());
             }
         });
+        beginTime.addTextChangedListener(new Mask("##:##"));
 
         TextInputLayout beginDateInputLayout = view.findViewById(R.id.bdInputLayout);
         TextInputEditText beginDate = beginDateInputLayout.findViewById(R.id.begin_date);
@@ -165,6 +164,7 @@ public class NewDateFragment extends DialogFragment {
                 dateOK = parseBeginDate(beginDate.getText().toString());
             }
         });
+        beginDate.addTextChangedListener(new Mask("##/##/####"));
 
         Button b = view.findViewById(R.id.button3);
         b.setOnClickListener(c -> {
@@ -181,13 +181,11 @@ public class NewDateFragment extends DialogFragment {
                 setAlertDialog(R.string.no_value_title, getString(R.string.no_value));
             }*/
             if (beginDate.getText() != null && beginTime.getText() != null && seats.getText() != null &&
-                    (dateOK || parseBeginDate(beginDate.getText().toString())) &&
-                    (timeOK || parseBeginHour(beginTime.getText().toString())) &&
-                    (seatsOK || parseSeats(seats.getText().toString()))) {
+                    (parseBeginDate(beginDate.getText().toString())) &&
+                    (parseBeginHour(beginTime.getText().toString())) &&
+                    (parseSeats(seats.getText().toString()))) {
                 mViewModel.setOk(true);
                 NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
-            } else {
-                setAlertDialog(R.string.no_value_title, getString(R.string.no_value));
             }
         });
     }
