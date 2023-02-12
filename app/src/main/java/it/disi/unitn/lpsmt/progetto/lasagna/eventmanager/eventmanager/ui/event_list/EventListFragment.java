@@ -66,9 +66,6 @@ public class EventListFragment extends Fragment {
         super.onViewCreated(v, savedInstanceState);
         vm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
         eventListViewModel = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
-
-        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-        idToken = prefs.getString("accessToken", "");
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -77,6 +74,10 @@ public class EventListFragment extends Fragment {
         dialog.setMessage(getString(message));
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
         dialog.show();
+    }
+
+    public EventListViewModel getViewModel() {
+        return eventListViewModel;
     }
 
     public void onStart() {
@@ -94,15 +95,26 @@ public class EventListFragment extends Fragment {
         }
 
         if(callback.isOnline(requireActivity())) {
+            SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+            idToken = prefs.getString("accessToken", "");
             //eventListViewModel.getEvents(this, root, idToken, null, null);
+
+            /*RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+            if (rv != null) {
+                rv.invalidate();
+            }*/
+
+            eventListViewModel.getEvents(this, root, idToken, null, null);
 
             vm.getToken().observe(requireActivity(), o -> {
                 if(callback.isOnline(requireActivity())) {
-                    idToken = o;
+                    if(o != null) {
+                        idToken = o;
 
-                    RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-                    if (rv != null) {
-                        rv.invalidate();
+                        RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                        if (rv != null) {
+                            rv.invalidate();
+                        }
                     }
                     eventListViewModel.getEvents(this, root, idToken,
                             eventListViewModel.getEvName().getValue(), eventListViewModel.getOrgName().getValue());

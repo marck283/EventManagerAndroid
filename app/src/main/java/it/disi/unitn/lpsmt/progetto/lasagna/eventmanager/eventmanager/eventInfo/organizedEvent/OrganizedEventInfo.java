@@ -161,33 +161,37 @@ public class OrganizedEventInfo extends Thread {
 
                                             @Override
                                             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                                Button qrCodeScan = v.findViewById(R.id.button8),
-                                                        terminaEvento = v.findViewById(R.id.button12);
-                                                address.setText(f.getString(R.string.event_address,
-                                                        event.getLuogo(day, hourTextView.getText().toString()).getAddress()));
-                                                address.setOnClickListener(c -> {
-                                                    GeocoderExt geocoder = new GeocoderExt(f, address);
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                        geocoder.fromLocationName(address.getText().toString(), 5);
-                                                    } else {
-                                                        geocoder.fromLocationNameThread(address.getText().toString(), 5);
-                                                    }
-                                                });
-                                                address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                                if(hourTextView.getText() != null &&
+                                                        !hourTextView.getText().toString().equals("") &&
+                                                        !hourTextView.getText().toString().equals("---")) {
+                                                    Button qrCodeScan = v.findViewById(R.id.button8),
+                                                            terminaEvento = v.findViewById(R.id.button12);
+                                                    address.setText(f.getString(R.string.event_address,
+                                                            event.getLuogo(day, hourTextView.getText().toString()).getAddress()));
+                                                    address.setOnClickListener(c -> {
+                                                        GeocoderExt geocoder = new GeocoderExt(f, address);
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                            geocoder.fromLocationName(address.getText().toString(), 5);
+                                                        } else {
+                                                            geocoder.fromLocationNameThread(address.getText().toString(), 5);
+                                                        }
+                                                    });
+                                                    address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-                                                String[] day1 = dayText.getText().toString().split("/");
-                                                if (day1.length > 1) {
-                                                    String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
-                                                    if (event.getEventType().equals("priv") || (
-                                                            !dayText.getText().toString().equals("---") &&
-                                                                    !hourTextView.getText().toString().equals("---") &&
-                                                                    event.getLuogo(day2,
-                                                                            hourTextView.getText().toString()).getTerminato())) {
-                                                        qrCodeScan.setEnabled(false);
-                                                        terminaEvento.setEnabled(false);
-                                                    } else {
-                                                        qrCodeScan.setEnabled(true);
-                                                        terminaEvento.setEnabled(true);
+                                                    String[] day1 = dayText.getText().toString().split("/");
+                                                    if (day1.length > 1) {
+                                                        String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
+                                                        if (event.getEventType().equals("priv") || (
+                                                                !dayText.getText().toString().equals("---") &&
+                                                                        !hourTextView.getText().toString().equals("---") &&
+                                                                        event.getLuogo(day2,
+                                                                                hourTextView.getText().toString()).getTerminato())) {
+                                                            qrCodeScan.setEnabled(false);
+                                                            terminaEvento.setEnabled(false);
+                                                        } else {
+                                                            qrCodeScan.setEnabled(true);
+                                                            terminaEvento.setEnabled(true);
+                                                        }
                                                     }
                                                 }
                                             }

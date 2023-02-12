@@ -4,6 +4,7 @@
 
     <queries>
         <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
+        <provider android:authorities="com.facebook.orca.provider.PlatformProvider" />
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -61,7 +62,7 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
-        <activity
+        <!--<activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
@@ -72,7 +73,7 @@
 
                 <data android:scheme="32029c7c252db41bdde3411e6504ae4c" />
             </intent-filter>
-        </activity>
+        </activity>-->
         <activity
             android:name=".ui.user_login.ui.login.LoginActivity"
             android:exported="false"

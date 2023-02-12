@@ -9,12 +9,15 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventList;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import retrofit2.Call;
@@ -79,7 +82,8 @@ public class Authentication {
                     final String email = info.getEmail(), profilePic = info.getProfilePic(), name = info.getName();
                     if(a instanceof NavigationDrawerActivity) {
                         a.runOnUiThread(() ->
-                                ((NavigationDrawerActivity)a).updateUI("login", email, name, profilePic, true));
+                                ((NavigationDrawerActivity)a)
+                                        .updateUI("login", email, name, profilePic, true));
                         ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
                     } else {
                         if(a instanceof LoginActivity) {
