@@ -30,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,18 +78,21 @@ public class EventAdditionalInfoFragment extends Fragment {
     }
 
     private void setImage(Uri uri) {
-        if(uri != null) {
-            try {
-                final Bitmap selectedImage = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
-                updateEventImage(encodeImage(selectedImage));
-            } catch(FileNotFoundException ex) {
-                AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                dialog.setTitle(R.string.file_not_found);
-                dialog.setMessage(getString(R.string.file_not_found));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
-            } catch (IOException e) {
-                e.printStackTrace();
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            if(uri != null) {
+                try {
+                    final Bitmap selectedImage = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+                    updateEventImage(encodeImage(selectedImage));
+                } catch(FileNotFoundException ex) {
+                    AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                    dialog.setTitle(R.string.file_not_found);
+                    dialog.setMessage(getString(R.string.file_not_found));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -121,7 +123,8 @@ public class EventAdditionalInfoFragment extends Fragment {
 
         loginLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if(result != null && result.getData() != null) {
+                    Activity activity = getActivity();
+                    if(result != null && result.getData() != null && activity != null && isAdded()) {
                         SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                         String jwt = prefs.getString("accessToken", "");
                         mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
@@ -158,20 +161,26 @@ public class EventAdditionalInfoFragment extends Fragment {
         evm.setBase64Image(uri);
         Log.i("image", uri);
         Toast t;
-        if(evm.getBase64Image() != null && !evm.getBase64Image().equals("")) {
-            t = Toast.makeText(requireActivity(), R.string.add_image_success, Toast.LENGTH_SHORT);
-        } else {
-            t = Toast.makeText(requireActivity(), R.string.add_image_no_success, Toast.LENGTH_SHORT);
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            if(evm.getBase64Image() != null && !evm.getBase64Image().equals("")) {
+                t = Toast.makeText(requireActivity(), R.string.add_image_success, Toast.LENGTH_SHORT);
+            } else {
+                t = Toast.makeText(requireActivity(), R.string.add_image_no_success, Toast.LENGTH_SHORT);
+            }
+            t.show();
         }
-        t.show();
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-        dialog.setTitle(title);
-        dialog.setMessage(getString(message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        }
     }
 
     private void createSpeechListener(@IdRes int resId) {
@@ -236,8 +245,11 @@ public class EventAdditionalInfoFragment extends Fragment {
                     setAlertDialog(R.string.no_event_description, R.string.missing_event_description);
                 } else {
                     if(evm.getPrivEvent()) {
-                        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                        mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
+                        Activity activity = getActivity();
+                        if(activity != null && isAdded()) {
+                            SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                            mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
+                        }
                     } else {
                         try {
                             evm.setGiorni(Integer.parseInt(giorni));

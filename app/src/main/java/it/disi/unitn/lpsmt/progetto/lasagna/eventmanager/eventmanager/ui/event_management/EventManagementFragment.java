@@ -52,7 +52,6 @@ public class EventManagementFragment extends Fragment {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -63,8 +62,6 @@ public class EventManagementFragment extends Fragment {
         if (b != null) {
             userJwt = b.getString("userJwt");
         }
-
-        callback = new NetworkCallback(requireActivity());
 
         view = inflater.inflate(R.layout.fragment_event_management, container, false);
 
@@ -86,12 +83,15 @@ public class EventManagementFragment extends Fragment {
                             break;
                         }
                         case Activity.RESULT_CANCELED: {
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("accessToken", "");
-                            editor.apply();
-                            Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_nav_event_list);
-                            ((NavigationDrawerActivity) requireActivity()).updateUI("logout",
-                                    "", "", "", false);
+                            Activity activity = getActivity();
+                            if(activity != null && isAdded()) {
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString("accessToken", "");
+                                editor.apply();
+                                Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_nav_event_list);
+                                ((NavigationDrawerActivity) requireActivity()).updateUI("logout",
+                                        "", "", "", false);
+                            }
                         }
                     }
                 });
@@ -100,14 +100,19 @@ public class EventManagementFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        if (callback.isOnline(requireActivity())) {
-            searchEvents(null, view, launcher);
-        } else {
-            DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
-            orgEvs.start();
-            callback.registerNetworkCallback();
-            callback.addDefaultNetworkActiveListener(() -> searchEvents(null, view, launcher));
-            callback.unregisterNetworkCallback();
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            callback = new NetworkCallback(requireActivity());
+            prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+            if (callback.isOnline(requireActivity())) {
+                searchEvents(null, view, launcher);
+            } else {
+                DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+                orgEvs.start();
+                callback.registerNetworkCallback();
+                callback.addDefaultNetworkActiveListener(() -> searchEvents(null, view, launcher));
+                callback.unregisterNetworkCallback();
+            }
         }
 
         FloatingActionButton fab = view.findViewById(R.id.floatingActionButton2);
@@ -119,17 +124,20 @@ public class EventManagementFragment extends Fragment {
 
 
         mViewModel.getEvName().observe(getViewLifecycleOwner(), o -> {
-            if (callback.isOnline(requireActivity())) {
-                searchEvents(o, view, launcher);
-            } else {
-                DBOrgEvents orgEvs;
-                if (o == null) {
-                    orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+            Activity activity1 = getActivity();
+            if(activity1 != null && isAdded()) {
+                if (callback.isOnline(requireActivity())) {
+                    searchEvents(o, view, launcher);
                 } else {
-                    orgEvs = new DBOrgEvents(this, "getEventsByName", o,
-                            view.findViewById(R.id.eventRecyclerView));
+                    DBOrgEvents orgEvs;
+                    if (o == null) {
+                        orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
+                    } else {
+                        orgEvs = new DBOrgEvents(this, "getEventsByName", o,
+                                view.findViewById(R.id.eventRecyclerView));
+                    }
+                    orgEvs.start();
                 }
-                orgEvs.start();
             }
         });
     }

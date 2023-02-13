@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -106,7 +107,8 @@ public class OrganizedEventInfo extends Thread {
                     OrganizedEvent event = OrganizedEvent.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                     Log.i("OK", "OK");
 
-                    if (f.isAdded()) {
+                    Activity activity = f.getActivity();
+                    if (activity != null && f.isAdded()) {
                         f.requireActivity().runOnUiThread(() -> {
                             ImageView iView = v.findViewById(R.id.imageView3);
                             Bitmap bm = event.decodeBase64();

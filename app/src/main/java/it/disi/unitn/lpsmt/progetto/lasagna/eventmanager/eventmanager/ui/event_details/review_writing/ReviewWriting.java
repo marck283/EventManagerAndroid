@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
@@ -46,11 +47,14 @@ public class ReviewWriting extends Fragment {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-        dialog.setTitle(title);
-        dialog.setMessage(getString(message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        }
     }
 
     @Override

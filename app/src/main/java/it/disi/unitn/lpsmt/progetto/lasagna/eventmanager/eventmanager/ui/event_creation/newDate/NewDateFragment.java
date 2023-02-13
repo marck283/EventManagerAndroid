@@ -140,7 +140,6 @@ public class NewDateFragment extends DialogFragment {
         } else {
             seats.setOnFocusChangeListener((v, hasFocus) -> {
                 if(!hasFocus && seats.getText() != null) {
-                    //seatsOK = parseSeats(seats.getText());
                     seatsOK = parseSeats(seats.getText().toString());
                 }
             });
@@ -150,7 +149,6 @@ public class NewDateFragment extends DialogFragment {
         TextInputEditText beginTime = beginTimeLayout.findViewById(R.id.begin_time);
         beginTime.setOnFocusChangeListener((v, hasFocus) -> {
             if(!hasFocus && beginTime.getText() != null) {
-                //parseBeginDate(beginTimeLayout.getEditText());
                 timeOK = parseBeginHour(beginTime.getText().toString());
             }
         });
@@ -160,7 +158,6 @@ public class NewDateFragment extends DialogFragment {
         TextInputEditText beginDate = beginDateInputLayout.findViewById(R.id.begin_date);
         beginDate.setOnFocusChangeListener((v, hasFocus) -> {
             if(!hasFocus && beginDate.getText() != null) {
-                //dateOK = parseBeginDate(beginDate.getText());
                 dateOK = parseBeginDate(beginDate.getText().toString());
             }
         });
@@ -168,18 +165,6 @@ public class NewDateFragment extends DialogFragment {
 
         Button b = view.findViewById(R.id.button3);
         b.setOnClickListener(c -> {
-            //EditText t = view.findViewById(R.id.begin_date);
-            //EditText t1 = view.findViewById(R.id.begin_time);
-            //EditText t3 = view.findViewById(R.id.seats_value);
-            /*if ((t.getText() != null && t1.getText() != null && t3.getText() != null && !evm.getPrivEvent()) ||
-                    (evm.getPrivEvent() && t.getText() != null && t1.getText() != null)) {
-                if (dateOK && parseBeginHour(t1) && parseSeats(t3)) {
-                    mViewModel.setOk(true);
-                    NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
-                }
-            } else {
-                setAlertDialog(R.string.no_value_title, getString(R.string.no_value));
-            }*/
             if (beginDate.getText() != null && beginTime.getText() != null && seats.getText() != null &&
                     parseBeginDate(beginDate.getText().toString()) &&
                     parseBeginHour(beginTime.getText().toString()) &&

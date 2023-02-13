@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -99,7 +100,8 @@ public class RegisteredEventInfo extends Thread {
                             String body = response.body().string();
                             RegisteredEvent event = RegisteredEvent.parseJSON(gson.fromJson(body, JsonObject.class));
 
-                            if (f.isAdded()) {
+                            Activity activity = f.getActivity();
+                            if (activity != null && f.isAdded()) {
                                 f.requireActivity().runOnUiThread(() -> {
                                     ImageView image = v.findViewById(R.id.eventPicture);
                                     Glide.with(v).load(event.decodeBase64()).into(image);

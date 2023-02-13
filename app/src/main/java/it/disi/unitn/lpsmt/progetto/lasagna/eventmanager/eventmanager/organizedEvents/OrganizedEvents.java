@@ -74,9 +74,6 @@ public class OrganizedEvents {
         this.evName = evName;
     }
 
-    //Perché la chiamata a questa funzione non restituisce nulla quando cerco di ottenere
-    //gli eventi organizzati da un certo utente con almeno un evento organizzato?
-
     public void getOrgEvents(@NonNull String authToken, @Nullable String data) {
         Call<JsonObject> call;
         if(data != null) {

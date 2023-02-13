@@ -95,9 +95,13 @@ public class EventDetailsFragment extends Fragment {
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("accessToken", "");
                             editor.apply();
-                            Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
-                            ((NavigationDrawerActivity) requireActivity())
-                                    .updateUI("logout", "", "", "", false);
+
+                            Activity activity = getActivity();
+                            if(activity != null && isAdded()) {
+                                ((NavigationDrawerActivity) requireActivity())
+                                        .updateUI("logout", "", "", "", false);
+                                Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
+                            }
                             break;
                         }
                     }
@@ -130,11 +134,13 @@ public class EventDetailsFragment extends Fragment {
             if(screenType.equals("org")) {
                 launcher = registerForActivityResult(new ScanContract(),
                         result -> {
+                    Activity activity = getActivity();
                             if (result.getContents() != null && spinner.getEditText() != null &&
                                     spinner.getEditText().getText() != null &&
                                     !spinner.getEditText().getText().toString().equals("---") &&
                                     spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
-                                    !spinner2.getEditText().getText().toString().equals("---")) {
+                                    !spinner2.getEditText().getText().toString().equals("---") &&
+                            activity != null && isAdded()) {
                                 SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                                 String token = prefs.getString("accessToken", "");
                                 if (!token.equals("")) {
@@ -158,28 +164,34 @@ public class EventDetailsFragment extends Fragment {
                         result -> {
                             switch (result.getResultCode()) {
                                 case Activity.RESULT_OK: {
-                                    if (callback.isOnline(requireActivity())) {
-                                        mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                                day, launcher, null);
-                                    } else {
-                                        setNoConnectionDialog();
-                                        callback.registerNetworkCallback();
-                                        callback.addDefaultNetworkActiveListener(() ->
-                                                mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                                        day, launcher, null));
-                                        callback.unregisterNetworkCallback();
+                                    Activity activity = getActivity();
+                                    if(activity != null && isAdded()) {
+                                        if (callback.isOnline(requireActivity())) {
+                                            mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                                    day, launcher, null);
+                                        } else {
+                                            setNoConnectionDialog();
+                                            callback.registerNetworkCallback();
+                                            callback.addDefaultNetworkActiveListener(() ->
+                                                    mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                                            day, launcher, null));
+                                            callback.unregisterNetworkCallback();
+                                        }
                                     }
                                     break;
                                 }
                                 case Activity.RESULT_CANCELED: {
-                                    SharedPreferences prefs =
-                                            requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putString("accessToken", "");
-                                    editor.apply();
-                                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
-                                    ((NavigationDrawerActivity) requireActivity())
-                                            .updateUI("logout", "", "", "", false);
+                                    Activity activity = getActivity();
+                                    if(activity != null && isAdded()) {
+                                        SharedPreferences prefs =
+                                                requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = prefs.edit();
+                                        editor.putString("accessToken", "");
+                                        editor.apply();
+                                        Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
+                                        ((NavigationDrawerActivity) requireActivity())
+                                                .updateUI("logout", "", "", "", false);
+                                    }
                                     break;
                                 }
                             }
@@ -278,37 +290,40 @@ public class EventDetailsFragment extends Fragment {
 
                 spinner = view.findViewById(R.id.spinner);
                 spinner2 = view.findViewById(R.id.spinner2);
-                callback = new NetworkCallback(requireActivity());
 
                 Button qrCodeScan = view.findViewById(R.id.button8),
                         terminaEvento = view.findViewById(R.id.button12),
                         annullaEvento = view.findViewById(R.id.button13);
 
-                if (callback.isOnline(requireActivity())) {
-                    mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                            day, launcher, loginLauncher);
-                } else {
-                    //Nessuna connessione ad Internet. Acquisire i dati dal database e visualizzarli a schermo
-                    AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                    dialog.setTitle(R.string.no_connection);
-                    dialog.setMessage(getString(R.string.buttons_disabled));
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    dialog.show();
+                Activity activity = getActivity();
+                if(activity != null && isAdded()) {
+                    callback = new NetworkCallback(requireActivity());
+                    if (callback.isOnline(requireActivity())) {
+                        mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                day, launcher, loginLauncher);
+                    } else {
+                        //Nessuna connessione ad Internet. Acquisire i dati dal database e visualizzarli a schermo
+                        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+                        dialog.setTitle(R.string.no_connection);
+                        dialog.setMessage(getString(R.string.buttons_disabled));
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        dialog.show();
 
-                    qrCodeScan.setEnabled(false);
-                    terminaEvento.setEnabled(false);
-                    annullaEvento.setEnabled(false);
+                        qrCodeScan.setEnabled(false);
+                        terminaEvento.setEnabled(false);
+                        annullaEvento.setEnabled(false);
 
-                    DBOrgEvents events = new DBOrgEvents(this, eventId, view);
-                    events.start();
+                        DBOrgEvents events = new DBOrgEvents(this, eventId, view);
+                        events.start();
 
-                    callback.registerNetworkCallback();
-                    callback.addDefaultNetworkActiveListener(() -> {
-                        qrCodeScan.setEnabled(true);
-                        terminaEvento.setEnabled(true);
-                        annullaEvento.setEnabled(true);
-                    });
-                    callback.unregisterNetworkCallback();
+                        callback.registerNetworkCallback();
+                        callback.addDefaultNetworkActiveListener(() -> {
+                            qrCodeScan.setEnabled(true);
+                            terminaEvento.setEnabled(true);
+                            annullaEvento.setEnabled(true);
+                        });
+                        callback.unregisterNetworkCallback();
+                    }
                 }
 
                 qrCodeScan.setOnClickListener(c -> {
@@ -324,39 +339,48 @@ public class EventDetailsFragment extends Fragment {
 
                 terminaEvento.setOnClickListener(c -> {
                     MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
-                    if (!callback.isOnline(requireActivity())) {
-                        setNoConnectionDialog();
-                    } else {
-                        try {
-                            //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
-                            //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-                            mViewModel.terminateEvent(token,
-                                    this, eventId, day, hourTextView.getText().toString(), view);
-                        } catch (NullPointerException ex) {
-                            ex.printStackTrace();
+                    Activity activity1 = getActivity();
+                    if(activity1 != null && isAdded()) {
+                        if (!callback.isOnline(requireActivity())) {
+                            setNoConnectionDialog();
+                        } else {
+                            try {
+                                //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
+                                //Ricordarsi anche di aggiornare "token" all'interno del launcher!
+                                mViewModel.terminateEvent(token,
+                                        this, eventId, day, hourTextView.getText().toString(), view);
+                            } catch (NullPointerException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                     }
                 });
 
                 annullaEvento.setOnClickListener(c -> {
-                    if (!callback.isOnline(requireActivity())) {
-                        setNoConnectionDialog();
-                        return;
+                    Activity activity2 = getActivity();
+                    if(activity2 != null && isAdded()) {
+                        if (!callback.isOnline(requireActivity())) {
+                            setNoConnectionDialog();
+                            return;
+                        }
+                        //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
+                        //Ricordarsi anche di aggiornare "token" all'interno del launcher!
+                        mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this, view);
                     }
-                    //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
-                    //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-                    mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this, view);
                 });
             }
         }
     }
 
     private void setNoConnectionDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-        dialog.setTitle(R.string.no_connection);
-        dialog.setMessage(getString(R.string.no_connection_message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+            dialog.setTitle(R.string.no_connection);
+            dialog.setMessage(getString(R.string.no_connection_message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        }
     }
 
     public EventDetailsViewModel getViewModel() {

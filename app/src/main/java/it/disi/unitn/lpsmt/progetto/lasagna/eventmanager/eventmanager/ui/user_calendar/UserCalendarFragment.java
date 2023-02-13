@@ -47,9 +47,12 @@ public class UserCalendarFragment extends Fragment {
                             break;
                         }
                         case Activity.RESULT_CANCELED: {
-                            ((NavigationDrawerActivity)requireActivity()).updateUI("logout",
-                                    null, null, null, false);
-                            Navigation.findNavController(view).navigate(R.id.action_nav_user_calendar_to_nav_event_list);
+                            Activity activity = getActivity();
+                            if(activity != null && isAdded()) {
+                                ((NavigationDrawerActivity)requireActivity()).updateUI("logout",
+                                        null, null, null, false);
+                                Navigation.findNavController(view).navigate(R.id.action_nav_user_calendar_to_nav_event_list);
+                            }
                             break;
                         }
                     }

@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_p
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,12 +59,6 @@ public class UserProfileFragment extends Fragment {
         super.onViewCreated(v, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(UserProfileViewModel.class);
         ms = new ViewModelProvider(requireActivity()).get(MenuSettingsViewModel.class);
-        prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-
-        String token = prefs.getString("accessToken", "");
-        if(!token.equals("")) {
-            toEventManagement(token);
-        }
 
         TextView username = v.findViewById(R.id.username), user_email = v.findViewById(R.id.email);
         username.setText(getString(R.string.username, ""));
@@ -77,21 +72,33 @@ public class UserProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+
+            String token = prefs.getString("accessToken", "");
+            if(!token.equals("")) {
+                toEventManagement(token);
+            }
+        }
+
         mViewModel.getUserInfo(this, prefs.getString("accessToken", ""), v.findViewById(R.id.frameLayout2));
 
-        ms.getChecked().observe(requireActivity(), o -> {
-            if(!((boolean) o)) {
-                v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
-            } else {
-                v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
-            }
-        });
+        if(activity != null && isAdded()) {
+            ms.getChecked().observe(requireActivity(), o -> {
+                if(!((boolean) o)) {
+                    v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
+                } else {
+                    v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
+                }
+            });
 
-        SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", Context.MODE_PRIVATE);
-        if(sp.getBoolean("showTel", false)) {
-            v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
-        } else {
-            v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
+            SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", Context.MODE_PRIVATE);
+            if(sp.getBoolean("showTel", false)) {
+                v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
+            } else {
+                v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -18,15 +19,18 @@ public class UserProfileViewModel extends ViewModel {
     public void getUserInfo(@NonNull Fragment f, @NonNull String accessToken, @NonNull ConstraintLayout l) {
         //Ottiene le informazioni personali dell'utente e le memorizza in un database, oppure, se la connessione Internet non
         //è disponibile, cerca tali informazioni nel database stesso.
-        NetworkCallback nc = new NetworkCallback(f.requireActivity());
-        if(nc.isOnline(f.requireActivity())) {
-            OnlineUserInfo onlineUserInfo = new OnlineUserInfo(accessToken, l, f);
-            onlineUserInfo.start();
-        } else {
-            //Ottieni i dati dell'utente dal database, se disponibili
-            SharedPreferences prefs = f.requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-            DBUser dbUser = new DBUser(prefs.getString("userId", ""), "getAll", l, f);
-            dbUser.start();
+        Activity activity1 = f.getActivity();
+        if(activity1 != null && f.isAdded()) {
+            NetworkCallback nc = new NetworkCallback(f.requireActivity());
+            if(nc.isOnline(f.requireActivity())) {
+                OnlineUserInfo onlineUserInfo = new OnlineUserInfo(accessToken, l, f);
+                onlineUserInfo.start();
+            } else {
+                //Ottieni i dati dell'utente dal database, se disponibili
+                SharedPreferences prefs = f.requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                DBUser dbUser = new DBUser(prefs.getString("userId", ""), "getAll", l, f);
+                dbUser.start();
+            }
         }
     }
 

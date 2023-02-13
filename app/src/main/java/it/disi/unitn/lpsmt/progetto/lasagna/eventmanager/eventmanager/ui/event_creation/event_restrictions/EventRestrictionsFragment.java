@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -118,7 +119,8 @@ public class EventRestrictionsFragment extends Fragment {
 
         loginLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if(result != null && result.getData() != null) {
+                    Activity activity = getActivity();
+                    if(result != null && result.getData() != null && activity != null && isAdded()) {
                         SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                         String jwt = prefs.getString("accessToken", "");
                         mViewModel.createPublicEvent(this, jwt, evm, loginLauncher);
@@ -148,8 +150,11 @@ public class EventRestrictionsFragment extends Fragment {
                 setAlertDialog(R.string.illegal_min_age, R.string.min_eta_gt_max_eta_message);
             } else {
                 //Valori OK, ora crea l'evento...
-                SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm, null);
+                Activity activity = getActivity();
+                if(activity != null && isAdded()) {
+                    SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm, null);
+                }
             }
         });
     }
@@ -174,11 +179,14 @@ public class EventRestrictionsFragment extends Fragment {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-        dialog.setTitle(title);
-        dialog.setMessage(getString(message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
+        Activity activity = getActivity();
+        if(activity != null && isAdded()) {
+            AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        }
     }
 
     public void onDestroy() {

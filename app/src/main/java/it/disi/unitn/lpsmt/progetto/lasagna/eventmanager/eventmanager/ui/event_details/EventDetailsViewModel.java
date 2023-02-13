@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
@@ -26,31 +27,40 @@ public class EventDetailsViewModel extends ViewModel {
     private NetworkCallback callback;
 
     private void setNoConnectionDialog(@NonNull EventDetailsFragment f) {
-        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-        dialog.setTitle(R.string.no_connection);
-        dialog.setMessage(f.getString(R.string.no_connection_message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> dialog1.dismiss());
-        dialog.show();
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+            dialog.setTitle(R.string.no_connection);
+            dialog.setMessage(f.getString(R.string.no_connection_message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> dialog1.dismiss());
+            dialog.show();
+        }
     }
 
     public void terminateEvent(@NonNull String accessToken, @NonNull EventDetailsFragment f,
                                @NonNull String eventId, @NonNull String data, @NonNull String ora, @NonNull View v) {
-        callback = new NetworkCallback(f.requireActivity());
-        if(callback.isOnline(f.requireActivity())) {
-            TerminateEvent terminate = new TerminateEvent(accessToken, eventId, data, ora, v, f);
-            terminate.start();
-        } else {
-            setNoConnectionDialog(f);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            callback = new NetworkCallback(f.requireActivity());
+            if(callback.isOnline(f.requireActivity())) {
+                TerminateEvent terminate = new TerminateEvent(accessToken, eventId, data, ora, v, f);
+                terminate.start();
+            } else {
+                setNoConnectionDialog(f);
+            }
         }
     }
 
     public void deleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
                             @NonNull View v) {
-        if(callback.isOnline(f.requireActivity())) {
-            DeleteEvent deleteEvent = new DeleteEvent(accessToken, eventId, f, v);
-            deleteEvent.start();
-        } else {
-            setNoConnectionDialog(f);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            if(callback.isOnline(f.requireActivity())) {
+                DeleteEvent deleteEvent = new DeleteEvent(accessToken, eventId, f, v);
+                deleteEvent.start();
+            } else {
+                setNoConnectionDialog(f);
+            }
         }
     }
 
@@ -100,53 +110,65 @@ public class EventDetailsViewModel extends ViewModel {
                              @NonNull EventDetailsFragment f, @Nullable String userJwt,
                              @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
                              @Nullable ActivityResultLauncher<Intent> loginLauncher) {
-        callback = new NetworkCallback(f.requireActivity());
-        if(callback.isOnline(f.requireActivity())) {
-            requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher);
-        } else {
-            //Aggiungi un listener per cercare le informazioni sull'evento quando sarà tornata la connessione ad Internet.
-            callback.registerNetworkCallback();
-            callback.addDefaultNetworkActiveListener(() ->
-                            requestEventInfo(which, eventId, view, f, userJwt, data, launcher,
-                                    loginLauncher));
-            callback.unregisterNetworkCallback();
-            setNoConnectionDialog(f);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            callback = new NetworkCallback(f.requireActivity());
+            if(callback.isOnline(f.requireActivity())) {
+                requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher);
+            } else {
+                //Aggiungi un listener per cercare le informazioni sull'evento quando sarà tornata la connessione ad Internet.
+                callback.registerNetworkCallback();
+                callback.addDefaultNetworkActiveListener(() ->
+                        requestEventInfo(which, eventId, view, f, userJwt, data, launcher,
+                                loginLauncher));
+                callback.unregisterNetworkCallback();
+                setNoConnectionDialog(f);
+            }
         }
     }
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
                              @NonNull String day, @NonNull String time, @Nullable ActivityResultLauncher<Intent> launcher) {
-        callback = new NetworkCallback(f.requireActivity());
-        if(callback.isOnline(f.requireActivity())) {
-            UserEventRegistration uer = new UserEventRegistration(accessToken, eventId, day, time, f, launcher);
-            uer.start();
-        } else {
-            setNoConnectionDialog(f);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            callback = new NetworkCallback(f.requireActivity());
+            if(callback.isOnline(f.requireActivity())) {
+                UserEventRegistration uer = new UserEventRegistration(accessToken, eventId, day, time, f, launcher);
+                uer.start();
+            } else {
+                setNoConnectionDialog(f);
+            }
         }
     }
 
     public void deleteTicket(@NonNull String accessToken, @NonNull String ticketId,
                              @NonNull String eventId, @NonNull EventDetailsFragment f,
                              @NonNull String data, @NonNull String ora) {
-        callback = new NetworkCallback(f.requireActivity());
-        if(callback.isOnline(f.requireActivity())) {
-            DeleteTicket delete = new DeleteTicket(eventId, ticketId, accessToken, f, data, ora);
-            delete.start();
-        } else {
-            setNoConnectionDialog(f);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            callback = new NetworkCallback(f.requireActivity());
+            if(callback.isOnline(f.requireActivity())) {
+                DeleteTicket delete = new DeleteTicket(eventId, ticketId, accessToken, f, data, ora);
+                delete.start();
+            } else {
+                setNoConnectionDialog(f);
+            }
         }
     }
 
     public void checkQR(@NonNull String userJwt, @NonNull String qrCode, @NonNull String eventId,
                         @NonNull String day, @NonNull String hour, @NonNull EventDetailsFragment f) {
-        callback = new NetworkCallback(f.requireActivity());
-        if(callback.isOnline(f.requireActivity())) {
-            String[] dataArr = day.split("/");
-            day = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
-            CheckQRCode check = new CheckQRCode(userJwt, qrCode, eventId, day, hour, f);
-            check.start();
-        } else {
-            setNoConnectionDialog(f);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            callback = new NetworkCallback(f.requireActivity());
+            if(callback.isOnline(f.requireActivity())) {
+                String[] dataArr = day.split("/");
+                day = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
+                CheckQRCode check = new CheckQRCode(userJwt, qrCode, eventId, day, hour, f);
+                check.start();
+            } else {
+                setNoConnectionDialog(f);
+            }
         }
     }
 }
