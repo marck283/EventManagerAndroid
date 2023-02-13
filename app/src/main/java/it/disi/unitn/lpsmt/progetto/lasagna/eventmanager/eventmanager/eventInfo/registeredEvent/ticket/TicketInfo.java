@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,13 +42,16 @@ public class TicketInfo extends Thread {
     }
 
     public void setAlertDialog(@StringRes int title, @StringRes int message) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(f.getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
-        });
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            f.requireActivity().runOnUiThread(() -> {
+                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                dialog.setTitle(title);
+                dialog.setMessage(f.getString(message));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+            });
+        }
     }
 
     public void run() {
@@ -72,14 +76,18 @@ public class TicketInfo extends Thread {
                 if(response.body() != null && response.isSuccessful()) {
                     Gson gson = new GsonBuilder().create();
                     Ticket ticket = Ticket.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
-                    f.requireActivity().runOnUiThread(() -> {
-                        try {
-                            ImageView imageViewQrCode = v.findViewById(R.id.qrCode);
-                            Glide.with(v).load(ticket.getQR()).into(imageViewQrCode);
-                        } catch(Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
+
+                    Activity activity = f.getActivity();
+                    if(activity != null && f.isAdded()) {
+                        f.requireActivity().runOnUiThread(() -> {
+                            try {
+                                ImageView imageViewQrCode = v.findViewById(R.id.qrCode);
+                                Glide.with(v).load(ticket.getQR()).into(imageViewQrCode);
+                            } catch(Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    }
                     response.body().close();
                 } else {
                     switch(response.code()) {
