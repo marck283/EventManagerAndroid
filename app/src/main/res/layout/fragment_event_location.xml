@@ -73,7 +73,7 @@
                 android:id="@+id/pLayout"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="151dp"
-                android:layout_height="65dp"
+                android:layout_height="67dp"
                 android:layout_marginTop="36dp"
                 android:labelFor="@+id/province"
                 android:hint="@string/province"

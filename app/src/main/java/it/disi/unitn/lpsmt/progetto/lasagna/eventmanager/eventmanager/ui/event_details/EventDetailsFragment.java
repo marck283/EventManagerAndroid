@@ -134,13 +134,11 @@ public class EventDetailsFragment extends Fragment {
             if(screenType.equals("org")) {
                 launcher = registerForActivityResult(new ScanContract(),
                         result -> {
-                    Activity activity = getActivity();
                             if (result.getContents() != null && spinner.getEditText() != null &&
                                     spinner.getEditText().getText() != null &&
                                     !spinner.getEditText().getText().toString().equals("---") &&
                                     spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
-                                    !spinner2.getEditText().getText().toString().equals("---") &&
-                            activity != null && isAdded()) {
+                                    !spinner2.getEditText().getText().toString().equals("---")) {
                                 SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                                 String token = prefs.getString("accessToken", "");
                                 if (!token.equals("")) {
