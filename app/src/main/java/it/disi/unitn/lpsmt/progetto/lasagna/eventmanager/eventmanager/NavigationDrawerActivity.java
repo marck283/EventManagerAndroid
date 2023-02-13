@@ -277,9 +277,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
 
             GoogleSignInAccount acc = account.getAccount();
-            username.setText(getString(R.string.profileName, acc.getDisplayName()));
-            email.setText(getString(R.string.email, email));
-            Glide.with(l.getContext()).load(acc.getPhotoUrl()).apply(new RequestOptions().override(ivwidth, ivheight))
+            username.setText(getString(R.string.profileName, name));
+            email.setText(getString(R.string.email, emailF));
+            Glide.with(l.getContext()).load(pictureF).apply(new RequestOptions().override(ivwidth, ivheight))
                     .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
         }
 
