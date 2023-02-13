@@ -87,6 +87,12 @@ public class Authentication {
                         ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
                     } else {
                         if(a instanceof LoginActivity) {
+                            if(i != null && which.equals("google")) {
+                                i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",
+                                        email);
+                                i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
+                                        profilePic);
+                            }
                             a.setResult(Activity.RESULT_OK, i);
                             a.finish();
                         }

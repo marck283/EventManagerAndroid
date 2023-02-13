@@ -78,31 +78,25 @@ public class FacebookLogin {
                 parameters.putString("fields", "id,name,picture,email");
                 GraphRequest req1 = new GraphRequest(accessToken, accessToken.getUserId(),
                         parameters, HttpMethod.GET, graphResponse -> {
-                    try {
-                        JSONObject jsonObject = graphResponse.getJSONObject();
-                        if(jsonObject != null) {
-                            Profile p = new Profile(jsonObject);
+                    JSONObject jsonObject = graphResponse.getJSONObject();
+                    if(jsonObject != null) {
+                        Profile p = new Profile(jsonObject);
 
-                            // Riscrivere questa parte e metodo setupIntent() in modo da sincronizzare
-                            // la modifica del token di accesso nelle SharedPreferences con la NavigationDrawerActivity...
-                            i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
-                            i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",
-                                    jsonObject.getString("email"));
-                            i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
-                                    jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));
+                        // Riscrivere questa parte e metodo setupIntent() in modo da sincronizzare
+                        // la modifica del token di accesso nelle SharedPreferences con la NavigationDrawerActivity...
+                        i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
+                        /*i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",
+                                jsonObject.getString("email"));
+                        i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
+                                jsonObject.getJSONObject("picture").getJSONObject("data").getString("url"));*/
 
-                            CsrfToken token = new CsrfToken();
-                            token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook", i);
+                        CsrfToken token = new CsrfToken();
+                        token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook", i);
 
-                            //Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
-                            //a.setResult(Activity.RESULT_OK, i);
-                        } else {
-                            Log.i("nullResult", "Risposta null");
-                            a.setResult(Activity.RESULT_CANCELED);
-                            a.finish();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        //Log.i("picture", jsonObject.getJSONArray("picture").getJSONObject(0).getJSONObject("data").getString("url"));
+                        //a.setResult(Activity.RESULT_OK, i);
+                    } else {
+                        Log.i("nullResult", "Risposta null");
                         a.setResult(Activity.RESULT_CANCELED);
                         a.finish();
                     }

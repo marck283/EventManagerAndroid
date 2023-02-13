@@ -112,15 +112,24 @@ public class UserInfo {
     }
 
     private String stringFromJson(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
-        return gs1.fromJson(json.get(name), String.class);
+        if(json.get(name) != null) {
+            return gs1.fromJson(json.get(name), String.class);
+        }
+        return "";
     }
 
     private Integer integerFromJson(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
-        return gs1.fromJson(json.get(name), Integer.class);
+        if(json.get(name) != null) {
+            return gs1.fromJson(json.get(name), Integer.class);
+        }
+        return 0;
     }
 
     private Double doubleFromJson(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
-        return gs1.fromJson(json.get(name), Double.class);
+        if(json.get(name) != null) {
+            return gs1.fromJson(json.get(name), Double.class);
+        }
+        return 0.0;
     }
 
     @NonNull

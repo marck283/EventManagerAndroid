@@ -100,7 +100,6 @@ public class EventListFragment extends Fragment {
                     }
                 });
                 setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
-                ((NavigationDrawerActivity) requireActivity()).updateUI("logout", null, null, null, false);
             } else {
                 idToken = prefs.getString("accessToken", "");
                 eventListViewModel.getEvents(this, root, idToken, null, null);

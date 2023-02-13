@@ -250,7 +250,25 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             return;
         }
 
-        if(account.getAccount() == null) {
+        if(request.equals("logout")) {
+            LoginManager.getInstance().logOut();
+            showNotLoggedIn(username, email);
+        } else {
+            //L'utente è autenticato con Google; ottieni il token di accesso al server e mostra la UI aggiornata.
+            navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
+
+            //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
+            //Log.i("id", profile.getId());
+            username.setText(getString(R.string.profileName, /*profile.getName()*/name));
+            if(emailF != null && !emailF.equals("")) {
+                email.setText(getString(R.string.email, emailF));
+            }
+
+            Glide.with(l.getContext()).load(pictureF).apply(new RequestOptions().override(ivwidth, ivheight))
+                    .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
+        }
+
+        /*if(account.getAccount() == null) {
             if(Profile.getCurrentProfile() == null || accessToken.isExpired()) {
                 showNotLoggedIn(username, email);
             } else {
@@ -263,7 +281,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
                     //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
                     //Log.i("id", profile.getId());
-                    username.setText(getString(R.string.profileName, /*profile.getName()*/name));
+                    username.setText(getString(R.string.profileName, /*profile.getName()*//*name));
                     if(emailF != null && !emailF.equals("")) {
                         email.setText(getString(R.string.email, emailF));
                     }
@@ -281,7 +299,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             email.setText(getString(R.string.email, emailF));
             Glide.with(l.getContext()).load(pictureF).apply(new RequestOptions().override(ivwidth, ivheight))
                     .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
-        }
+        }*/
 
         DrawerLayout d = findViewById(R.id.drawer_layout);
         d.closeDrawers();
