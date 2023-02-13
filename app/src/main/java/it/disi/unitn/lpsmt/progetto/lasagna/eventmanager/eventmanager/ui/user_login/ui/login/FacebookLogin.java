@@ -15,6 +15,7 @@ import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -41,6 +42,9 @@ public class FacebookLogin {
         callbackManager = CallbackManager.Factory.create();
         loginButton = a.findViewById(R.id.login_button);
         loginManager = LoginManager.getInstance();
+
+        LoginBehavior behavior = LoginBehavior.KATANA_ONLY;
+        loginManager.setLoginBehavior(behavior);
 
         if(!loginButton.hasOnClickListeners()) {
             loginButton.setOnClickListener(c -> {

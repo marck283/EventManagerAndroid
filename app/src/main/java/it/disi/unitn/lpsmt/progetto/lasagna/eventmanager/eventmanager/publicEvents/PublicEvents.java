@@ -37,12 +37,13 @@ public class PublicEvents {
      */
     public PublicEvents(@NonNull Fragment f, @NonNull View layout) {
         //Limito il numero di thread a disposizione per non inondare il server di richieste
-        executor = Executors.newFixedThreadPool(10);
+        executor = Executors.newFixedThreadPool(5);
         Dispatcher dispatcher = new Dispatcher(executor);
-        dispatcher.setMaxRequests(2);
-        dispatcher.setMaxRequestsPerHost(2);
+        dispatcher.setMaxRequests(5);
+        dispatcher.setMaxRequestsPerHost(5);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(false)
                 .dispatcher(dispatcher) //Imposto il dispatcher delle richieste
                 .build();
         Retrofit retro = new Retrofit.Builder()

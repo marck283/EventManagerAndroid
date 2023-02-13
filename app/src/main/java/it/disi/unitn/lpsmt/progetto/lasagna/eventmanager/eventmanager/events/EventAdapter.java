@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class EventAdapter extends ListAdapter<Event, EventHolder> {
-    private final List<Event> evList;
+    private List<Event> evList;
 
     public EventAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
         super(diffCallback);
@@ -81,9 +81,8 @@ public abstract class EventAdapter extends ListAdapter<Event, EventHolder> {
 
     public void clearEventList() {
         if(evList != null && evList.size() > 0) {
-            int size = evList.size();
             evList.clear();
-            notifyItemRangeRemoved(0, size);
+            notifyDataSetChanged();
         }
     }
 

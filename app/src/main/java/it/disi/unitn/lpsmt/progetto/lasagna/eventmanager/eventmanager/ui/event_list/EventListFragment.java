@@ -80,9 +80,12 @@ public class EventListFragment extends Fragment {
         }
     }
 
+    public EventListViewModel getViewModel() {
+        return eventListViewModel;
+    }
+
     public void onStart() {
         super.onStart();
-
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
             SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
@@ -104,11 +107,13 @@ public class EventListFragment extends Fragment {
 
             /*vm.getToken().observe(requireActivity(), o -> {
                 if(callback.isOnline(requireActivity())) {
-                    idToken = o;
+                    if(o != null) {
+                        idToken = o;
 
-                    RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-                    if (rv != null) {
-                        rv.invalidate();
+                        RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                        if (rv != null) {
+                            rv.invalidate();
+                        }
                     }
                     eventListViewModel.getEvents(this, root, idToken,
                             eventListViewModel.getEvName().getValue(), eventListViewModel.getOrgName().getValue());

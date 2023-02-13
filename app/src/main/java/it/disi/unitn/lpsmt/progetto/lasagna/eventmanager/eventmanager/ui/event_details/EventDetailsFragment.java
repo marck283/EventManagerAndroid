@@ -241,11 +241,11 @@ public class EventDetailsFragment extends Fragment {
                 b.setOnClickListener(c -> {
                     TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.dateArray);
                     EditText spinnerText = spinner.getEditText(), spinner2Text = spinner2.getEditText();
+                    String token = prefs.getString("accessToken", "");
                     if (eventId != null && spinnerText != null && !spinnerText.getText().toString().equals("")
                             && !spinnerText.getText().toString().equals("---") &&
                             spinner2Text != null && !spinner2Text.getText().toString().equals("") &&
-                            !spinner2Text.getText().toString().equals("---") && nvm.getToken() != null &&
-                            nvm.getToken().getValue() != null) {
+                            !spinner2Text.getText().toString().equals("---")) {
                         String[] dayArr = spinnerText.getText().toString().split("/");
                         day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
                         time = spinner2Text.getText().toString();
