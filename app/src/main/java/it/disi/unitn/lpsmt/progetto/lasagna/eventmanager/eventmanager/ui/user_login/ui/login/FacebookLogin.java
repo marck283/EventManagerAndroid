@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_l
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -43,7 +44,12 @@ public class FacebookLogin {
         loginButton = a.findViewById(R.id.login_button);
         loginManager = LoginManager.getInstance();
 
-        LoginBehavior behavior = LoginBehavior.KATANA_ONLY;
+        LoginBehavior behavior;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            behavior = LoginBehavior.KATANA_ONLY;
+        } else {
+            behavior = LoginBehavior.WEB_ONLY;
+        }
         loginManager.setLoginBehavior(behavior);
 
         loginButton.setOnClickListener(c -> {
