@@ -278,7 +278,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
             GoogleSignInAccount acc = account.getAccount();
             username.setText(getString(R.string.profileName, acc.getDisplayName()));
-            email.setText(getString(R.string.email, acc.getEmail()));
+            email.setText(getString(R.string.email, email));
             Glide.with(l.getContext()).load(acc.getPhotoUrl()).apply(new RequestOptions().override(ivwidth, ivheight))
                     .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
         }

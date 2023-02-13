@@ -4,6 +4,7 @@
 
     <queries>
         <provider android:authorities="com.facebook.katana.provider.PlatformProvider" />
+        <package android:name="com.facebook.katana" />
     </queries>
 
     <uses-permission android:name="android.permission.INTERNET" />

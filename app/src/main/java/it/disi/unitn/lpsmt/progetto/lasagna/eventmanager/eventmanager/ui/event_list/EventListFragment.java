@@ -40,9 +40,9 @@ public class EventListFragment extends Fragment {
             if (savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
                 idToken = savedInstanceState.getString("accessToken");
             }*/
-            if(savedInstanceState != null && savedInstanceState.getBoolean("prompt")) {
-                prompt = savedInstanceState.getBoolean("prompt");
-            }
+        if (savedInstanceState != null && savedInstanceState.getBoolean("prompt")) {
+            prompt = savedInstanceState.getBoolean("prompt");
+        }
         //}
     }
 
@@ -71,7 +71,7 @@ public class EventListFragment extends Fragment {
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
         Activity activity = getActivity();
-        if(activity != null && isAdded()) {
+        if (activity != null && isAdded()) {
             AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
             dialog.setTitle(title);
             dialog.setMessage(getString(message));
@@ -87,74 +87,80 @@ public class EventListFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Activity activity = getActivity();
-        if(activity != null && isAdded()) {
+        if (activity != null && isAdded()) {
             SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
             idToken = prefs.getString("accessToken", "");
 
             NetworkCallback callback = new NetworkCallback(requireActivity());
-            if(!callback.isOnline(requireActivity())) {
+            if (!callback.isOnline(requireActivity())) {
                 root.findViewById(R.id.eventSearch).setOnClickListener(c -> {
-                    if(prompt) {
+                    if (prompt) {
                         setAlertDialog(R.string.no_connection, R.string.no_connection_message);
                         prompt = false;
                     }
                 });
                 setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
-                ((NavigationDrawerActivity)requireActivity()).updateUI("logout", null, null, null, false);
+                ((NavigationDrawerActivity) requireActivity()).updateUI("logout", null, null, null, false);
             } else {
                 idToken = prefs.getString("accessToken", "");
                 eventListViewModel.getEvents(this, root, idToken, null, null);
 
-            /*vm.getToken().observe(requireActivity(), o -> {
-                if(callback.isOnline(requireActivity())) {
-                    if(o != null) {
-                        idToken = o;
+                vm.getToken().observe(requireActivity(), o -> {
+                    if(isAdded()) {
+                        if (callback.isOnline(requireActivity())) {
+                            if (o.equals("")) {
+                                idToken = o;
 
-                        RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-                        if (rv != null) {
-                            rv.invalidate();
+                                RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                                if (rv != null) {
+                                    rv.invalidate();
+                                }
+                            }
+                            eventListViewModel.getEvents(this, root, idToken,
+                                    eventListViewModel.getEvName().getValue(), eventListViewModel.getOrgName().getValue());
+                        } else {
+                            if (prompt) {
+                                setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
+                                prompt = false;
+                            }
                         }
                     }
-                    eventListViewModel.getEvents(this, root, idToken,
-                            eventListViewModel.getEvName().getValue(), eventListViewModel.getOrgName().getValue());
-                } else {
-                    if(prompt) {
-                        setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
-                        prompt = false;
-                    }
-                }
-            });*/
+                });
 
                 eventListViewModel.getEvName().observe(getViewLifecycleOwner(), o -> {
-                    if(callback.isOnline(requireActivity())) {
-                        if(o != null) {
-                            RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-                            if (rv != null) {
-                                rv.invalidate();
+                    if(isAdded()) {
+                        if (callback.isOnline(requireActivity())) {
+                            if (o != null) {
+                                RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                                if (rv != null) {
+                                    rv.invalidate();
+                                }
+                                eventListViewModel.getEvents(this, root, idToken, o, eventListViewModel.getOrgName().getValue());
                             }
-                            eventListViewModel.getEvents(this, root, idToken, o, eventListViewModel.getOrgName().getValue());
-                        }
-                    } else {
-                        if(prompt) {
-                            setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
-                            prompt = false;
+                        } else {
+                            if (prompt) {
+                                setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
+                                prompt = false;
+                            }
                         }
                     }
                 });
 
                 eventListViewModel.getOrgName().observe(getViewLifecycleOwner(), o -> {
-                    if(callback.isOnline(requireActivity())) {
-                        if(o != null) {
-                            RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
-                            if (rv != null) {
-                                rv.invalidate();
+                    if(isAdded()) {
+                        if (callback.isOnline(requireActivity())) {
+                            if (o != null) {
+                                RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
+                                if (rv != null) {
+                                    rv.invalidate();
+                                }
+                                eventListViewModel.getEvents(this, root, idToken, eventListViewModel.getEvName().getValue(), o);
                             }
-                            eventListViewModel.getEvents(this, root, idToken, eventListViewModel.getEvName().getValue(), o);
-                        }
-                    } else {
-                        if(prompt) {
-                            setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
-                            prompt = false;
+                        } else {
+                            if (prompt) {
+                                setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
+                                prompt = false;
+                            }
                         }
                     }
                 });
