@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
@@ -27,13 +28,19 @@ public class EventManagementViewModel extends ViewModel {
 
     public void getOrgEvents(@NonNull Fragment f, @NonNull View v, @NonNull String userJwt,
                              @Nullable ActivityResultLauncher<Intent> launcher) {
-        OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, launcher);
-        orgEvs.getOrgEvents(userJwt, null);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, launcher);
+            orgEvs.getOrgEvents(userJwt, null);
+        }
     }
 
     public void getOrgEvents(@NonNull Fragment f, @NonNull View v, @NonNull String userJwt,
                              @NonNull String evName, @Nullable ActivityResultLauncher<Intent> launcher) {
-        OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, evName, launcher);
-        orgEvs.getOrgEventsWithName(userJwt);
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, evName, launcher);
+            orgEvs.getOrgEventsWithName(userJwt);
+        }
     }
 }

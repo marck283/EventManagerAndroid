@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.event_creation;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 
@@ -54,16 +55,19 @@ public class EventCreation extends Thread {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(f.getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-                dialog1.dismiss();
-                f.requireActivity().finish();
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            f.requireActivity().runOnUiThread(() -> {
+                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                dialog.setTitle(title);
+                dialog.setMessage(f.getString(message));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                    dialog1.dismiss();
+                    f.requireActivity().finish();
+                });
+                dialog.show();
             });
-            dialog.show();
-        });
+        }
     }
 
     public void run() {

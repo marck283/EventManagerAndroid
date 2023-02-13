@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
@@ -177,7 +178,8 @@ public class DBOrgEvents extends DBThread {
     private void getEventById() {
         OrgEvent event = orgEvDAO.getOrgEventById(eventId);
 
-        if (f.isAdded()) {
+        Activity activity = f.getActivity();
+        if (activity != null && f.isAdded()) {
             f.requireActivity().runOnUiThread(() -> {
                 ImageView iView = v.findViewById(R.id.imageView3);
                 Bitmap bm = event.decodeBase64();

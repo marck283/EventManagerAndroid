@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -67,52 +68,55 @@ public class OnlineUserInfo extends Thread {
                         JsonObject res = gson1.fromJson(response.body().string(), JsonObject.class);
                         final UserInfo userInfo = user.parseJSON(res);
 
-                        DBUser dbUser = new DBUser(f.requireActivity(), "setProfile", v, userInfo);
-                        if(!dbUser.checkUser(userInfo.getId())) {
-                            dbUser.start();
-                        } else {
-                            dbUser.insert();
+                        Activity activity = f.getActivity();
+                        if(activity != null && f.isAdded()) {
+                            DBUser dbUser = new DBUser(f.requireActivity(), "setProfile", v, userInfo);
+                            if(!dbUser.checkUser(userInfo.getId())) {
+                                dbUser.start();
+                            } else {
+                                dbUser.insert();
+                            }
+
+                            //Imposta la schermata del profilo dell'utente
+                            f.requireActivity().runOnUiThread(() -> {
+                                ImageView iv = v.findViewById(R.id.profilePic);
+                                Glide.with(f.requireActivity()).load(userInfo.getString("profilePic"))
+                                        .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
+
+                                TextView username = v.findViewById(R.id.username);
+                                username.setText(f.getString(R.string.username, userInfo.getString("nome")));
+
+                                TextView email = v.findViewById(R.id.email);
+                                email.setText(f.getString(R.string.user_email, userInfo.getString("email")));
+
+                                TextView phone = v.findViewById(R.id.phone_value);
+                                if (userInfo.getString("tel") != null && !userInfo.getString("tel").equals("")) {
+                                    phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
+                                } else {
+                                    phone.setText(f.getString(R.string.phone, f.getString(R.string.parameter_not_set)));
+                                }
+
+                                TextView numEvOrg = v.findViewById(R.id.numEvOrg);
+                                numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
+
+                                Button rating = v.findViewById(R.id.rating);
+                                if (userInfo.getNumEvOrg() == 0 || userInfo.getValutazioneMedia() == 0.0) {
+                                    rating.setEnabled(false);
+                                    rating.setVisibility(View.INVISIBLE);
+                                } else {
+                                    rating.setEnabled(true);
+                                    rating.setVisibility(View.VISIBLE);
+                                    final double meanRating = userInfo.getValutazioneMedia();
+                                    rating.setOnClickListener(c -> {
+                                        AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
+                                        ad.setTitle(R.string.personal_rating);
+                                        ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
+                                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
+                                        ad.show();
+                                    });
+                                }
+                            });
                         }
-
-                        //Imposta la schermata del profilo dell'utente
-                        f.requireActivity().runOnUiThread(() -> {
-                            ImageView iv = v.findViewById(R.id.profilePic);
-                            Glide.with(f.requireActivity()).load(userInfo.getString("profilePic"))
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
-
-                            TextView username = v.findViewById(R.id.username);
-                            username.setText(f.getString(R.string.username, userInfo.getString("nome")));
-
-                            TextView email = v.findViewById(R.id.email);
-                            email.setText(f.getString(R.string.user_email, userInfo.getString("email")));
-
-                            TextView phone = v.findViewById(R.id.phone_value);
-                            if (userInfo.getString("tel") != null && !userInfo.getString("tel").equals("")) {
-                                phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
-                            } else {
-                                phone.setText(f.getString(R.string.phone, f.getString(R.string.parameter_not_set)));
-                            }
-
-                            TextView numEvOrg = v.findViewById(R.id.numEvOrg);
-                            numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
-
-                            Button rating = v.findViewById(R.id.rating);
-                            if (userInfo.getNumEvOrg() == 0 || userInfo.getValutazioneMedia() == 0.0) {
-                                rating.setEnabled(false);
-                                rating.setVisibility(View.INVISIBLE);
-                            } else {
-                                rating.setEnabled(true);
-                                rating.setVisibility(View.VISIBLE);
-                                final double meanRating = userInfo.getValutazioneMedia();
-                                rating.setOnClickListener(c -> {
-                                    AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
-                                    ad.setTitle(R.string.personal_rating);
-                                    ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
-                                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
-                                    ad.show();
-                                });
-                            }
-                        });
                     } else {
                         Log.i("onlineResponse", "Utente non trovato");
                     }

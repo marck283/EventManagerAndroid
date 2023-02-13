@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.eventReviews;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -79,27 +80,32 @@ public class ReviewsRequest extends Thread {
                     ReviewList list = new ReviewList();
                     list.parseJSON(jsonArr);
 
+                    Activity activity = f.getActivity();
                     if(list.getList() == null || list.getList().size() == 0) {
-                        f.requireActivity().runOnUiThread(() -> {
-                            AlertDialog dialog = new AlertDialog.Builder(f.requireContext()).create();
-                            dialog.setTitle(R.string.no_reviews);
-                            dialog.setMessage(f.getString(R.string.no_reviews_message));
-                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-                                dialog1.dismiss();
-                                Bundle b = new Bundle();
-                                b.putString("eventType", screenType);
-                                b.putString("eventId", eventId);
-                                Navigation.findNavController(v).navigate(R.id.action_reviewsFragment_to_eventDetailsFragment, b);
+                        if(activity != null && f.isAdded()) {
+                            f.requireActivity().runOnUiThread(() -> {
+                                AlertDialog dialog = new AlertDialog.Builder(f.requireContext()).create();
+                                dialog.setTitle(R.string.no_reviews);
+                                dialog.setMessage(f.getString(R.string.no_reviews_message));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                                    dialog1.dismiss();
+                                    Bundle b = new Bundle();
+                                    b.putString("eventType", screenType);
+                                    b.putString("eventId", eventId);
+                                    Navigation.findNavController(v).navigate(R.id.action_reviewsFragment_to_eventDetailsFragment, b);
+                                });
+                                dialog.show();
                             });
-                            dialog.show();
-                        });
+                        }
                     } else {
                         adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList());
 
-                        f.requireActivity().runOnUiThread(() -> {
-                            adapter.submitList(list.getList());
-                            rv.setAdapter(adapter);
-                        });
+                        if(activity != null && f.isAdded()) {
+                            f.requireActivity().runOnUiThread(() -> {
+                                adapter.submitList(list.getList());
+                                rv.setAdapter(adapter);
+                            });
+                        }
                     }
                 }
             }

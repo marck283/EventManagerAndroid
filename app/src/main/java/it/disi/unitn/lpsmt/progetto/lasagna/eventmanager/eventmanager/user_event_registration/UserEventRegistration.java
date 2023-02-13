@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.user_event_registration;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.util.Log;
@@ -44,13 +45,16 @@ public class UserEventRegistration extends Thread {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-            ad.setTitle(title);
-            ad.setMessage(f.getString(message));
-            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            ad.show();
-        });
+        Activity activity = f.getActivity();
+        if(activity != null && f.isAdded()) {
+            f.requireActivity().runOnUiThread(() -> {
+                AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
+                ad.setTitle(title);
+                ad.setMessage(f.getString(message));
+                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                ad.show();
+            });
+        }
     }
 
     public void run() {
@@ -94,7 +98,8 @@ public class UserEventRegistration extends Thread {
                         break;
                     }
                     case 401: {
-                        if(launcher != null) {
+                        Activity activity = f.getActivity();
+                        if(launcher != null && activity != null && f.isAdded()) {
                             Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
                             launcher.launch(loginIntent);
                         } else {

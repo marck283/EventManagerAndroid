@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.util.Log;
@@ -99,9 +100,12 @@ public class JsonCallback implements Callback<JsonObject> {
                     p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                 }
 
-                if(f instanceof EventManagementFragment && f.isAdded()) {
-                    DBOrgEvents dbOrg = new DBOrgEvents(f, "updateAll", ev.getList(), mRecyclerView);
-                    dbOrg.start();
+                if(f != null) {
+                    Activity activity = f.getActivity();
+                    if(f instanceof EventManagementFragment && activity != null && f.isAdded()) {
+                        DBOrgEvents dbOrg = new DBOrgEvents(f, "updateAll", ev.getList(), mRecyclerView);
+                        dbOrg.start();
+                    }
                 }
                 break;
             }
@@ -156,23 +160,32 @@ public class JsonCallback implements Callback<JsonObject> {
                 switch(response.code()) {
                     case 401: {
                         if(f != null && launcher != null) {
-                            Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
-                            launcher.launch(loginIntent);
+                            Activity activity = f.getActivity();
+                            if(activity != null && f.isAdded()) {
+                                Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
+                                launcher.launch(loginIntent);
+                            }
                         }
                         break;
                     }
                     case 404: {
                         if(f != null) {
-                            f.requireActivity().runOnUiThread(() -> {
-                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                                dialog.setTitle(R.string.no_org_event);
-                                dialog.setMessage(f.getString(R.string.no_org_event_message));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                                dialog.show();
-                            });
+                            Activity activity = f.getActivity();
+                            if(activity != null && f.isAdded()) {
+                                f.requireActivity().runOnUiThread(() -> {
+                                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                    dialog.setTitle(R.string.no_org_event);
+                                    dialog.setMessage(f.getString(R.string.no_org_event_message));
+                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                    dialog.show();
+                                });
+                                f.requireActivity().runOnUiThread(() -> {
+                                    initAdapter(f, new EventList(), day);
+                                    p1.clearEventList();
+                                    mRecyclerView.setAdapter(p1);
+                                });
+                            }
                         }
-                        p1.clearEventList();
-                        mRecyclerView.setAdapter(p1);
                         break;
                     }
                 }

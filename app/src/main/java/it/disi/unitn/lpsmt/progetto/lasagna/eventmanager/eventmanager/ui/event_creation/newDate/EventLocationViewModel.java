@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.location.Address;
 import android.location.Geocoder;
@@ -51,14 +52,21 @@ public class EventLocationViewModel extends ViewModel {
             if (indirizzo != null && indirizzo.contains(luogo.getAddress())) {
                 ok.postValue(true);
                 evm.setLuogoEv(luogo);
-                f.requireActivity().runOnUiThread(() ->
-                        NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
+
+                Activity activity = f.getActivity();
+                if(activity != null && f.isAdded()) {
+                    f.requireActivity().runOnUiThread(() ->
+                            NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
+                }
                 break;
             } else {
                 ++i;
                 if(i == addresses.size()) {
-                    f.requireActivity().runOnUiThread(() ->
-                            setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format)));
+                    Activity activity = f.getActivity();
+                    if(activity != null && f.isAdded()) {
+                        f.requireActivity().runOnUiThread(() ->
+                                setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format)));
+                    }
                 }
             }
         }
@@ -339,7 +347,10 @@ public class EventLocationViewModel extends ViewModel {
                             if (addresses != null && !addresses.isEmpty()) {
                                 setAddress(addresses, luogo, evm);
                             } else {
-                                f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result)));
+                                Activity activity = f.getActivity();
+                                if(activity != null && f.isAdded()) {
+                                    f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result)));
+                                }
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

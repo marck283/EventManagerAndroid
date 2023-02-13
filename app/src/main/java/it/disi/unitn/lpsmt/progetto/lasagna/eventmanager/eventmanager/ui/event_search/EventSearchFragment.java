@@ -6,6 +6,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -80,11 +81,14 @@ public class EventSearchFragment extends DialogFragment {
         root.findViewById(R.id.search_for_event_name).setOnClickListener(c -> {
             EditText t1 = root.findViewById(R.id.nomeAtt2);
             if(t1.getText().toString().equals("")) {
-                AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
-                ad.setTitle(R.string.event_name_field_empty);
-                ad.setMessage(getString(R.string.event_name_field_empty_message));
-                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                ad.show();
+                Activity activity = getActivity();
+                if(activity != null && isAdded()) {
+                    AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
+                    ad.setTitle(R.string.event_name_field_empty);
+                    ad.setMessage(getString(R.string.event_name_field_empty_message));
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    ad.show();
+                }
             } else {
                 if(parent.equals("EventListFragment")) {
                     elvm.setEvName(t1.getText().toString());
@@ -111,11 +115,14 @@ public class EventSearchFragment extends DialogFragment {
                 searchForOrgName.setOnClickListener(c -> {
                     EditText t = root.findViewById(R.id.organizerName);
                     if(t.getText().toString().equals("")) {
-                        AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
-                        ad.setTitle(R.string.org_name_field_empty);
-                        ad.setMessage(getString(R.string.org_name_field_empty_message));
-                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                        ad.show();
+                        Activity activity = getActivity();
+                        if(activity != null && isAdded()) {
+                            AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
+                            ad.setTitle(R.string.org_name_field_empty);
+                            ad.setMessage(getString(R.string.org_name_field_empty_message));
+                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                            ad.show();
+                        }
                     } else {
                         elvm.setOrgName(t.getText().toString());
                         dismiss();

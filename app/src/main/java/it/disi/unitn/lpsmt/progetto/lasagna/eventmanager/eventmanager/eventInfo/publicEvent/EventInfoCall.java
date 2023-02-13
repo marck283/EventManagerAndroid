@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent;
 
+import android.app.Activity;
 import android.graphics.Paint;
 import android.os.Build;
 import android.text.Editable;
@@ -69,7 +70,8 @@ public class EventInfoCall extends Thread {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if (response.body() != null && response.isSuccessful() && f.isAdded()) {
+                Activity activity = f.getActivity();
+                if (response.body() != null && response.isSuccessful() && activity != null && f.isAdded()) {
                     EventInfo ei = new EventInfo();
 
                     Gson gson = new GsonBuilder().create();

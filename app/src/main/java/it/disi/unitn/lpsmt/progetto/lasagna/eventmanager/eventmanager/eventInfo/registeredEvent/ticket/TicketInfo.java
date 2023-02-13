@@ -41,11 +41,13 @@ public class TicketInfo extends Thread {
     }
 
     public void setAlertDialog(@StringRes int title, @StringRes int message) {
-        AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-        dialog.setTitle(title);
-        dialog.setMessage(f.getString(message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
+        f.requireActivity().runOnUiThread(() -> {
+            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+            dialog.setTitle(title);
+            dialog.setMessage(f.getString(message));
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+            dialog.show();
+        });
     }
 
     public void run() {
@@ -83,6 +85,10 @@ public class TicketInfo extends Thread {
                     switch(response.code()) {
                         case 400: {
                             setAlertDialog(R.string.malformed_request_or_invalid_date, R.string.malformed_request_or_invalid_date_message);
+                            break;
+                        }
+                        case 401: {
+                            setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
                             break;
                         }
                         case 404: {
