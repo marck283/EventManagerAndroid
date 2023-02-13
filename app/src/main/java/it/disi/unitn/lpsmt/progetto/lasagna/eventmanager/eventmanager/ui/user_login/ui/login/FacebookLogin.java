@@ -43,7 +43,7 @@ public class FacebookLogin {
         loginButton = a.findViewById(R.id.login_button);
         loginManager = LoginManager.getInstance();
 
-        LoginBehavior behavior = LoginBehavior.KATANA_ONLY;
+        LoginBehavior behavior = LoginBehavior.WEB_ONLY;
         loginManager.setLoginBehavior(behavior);
 
         if(!loginButton.hasOnClickListeners()) {
