@@ -134,7 +134,7 @@ public class EventListFragment extends Fragment {
                                 if (rv != null) {
                                     rv.invalidate();
                                 }
-                                eventListViewModel.getEvents(this, root, idToken, o, eventListViewModel.getOrgName().getValue());
+                                eventListViewModel.getEvents(this, root, idToken, o, /*null*/eventListViewModel.getOrgName().getValue());
                             }
                         } else {
                             if (prompt) {
@@ -153,7 +153,7 @@ public class EventListFragment extends Fragment {
                                 if (rv != null) {
                                     rv.invalidate();
                                 }
-                                eventListViewModel.getEvents(this, root, idToken, eventListViewModel.getEvName().getValue(), o);
+                                eventListViewModel.getEvents(this, root, idToken, /*null*/eventListViewModel.getEvName().getValue(), o);
                             }
                         } else {
                             if (prompt) {
