@@ -193,6 +193,42 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             CsrfToken token = new CsrfToken();
             token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
         }
+
+        //Soluzione al problema visivo del menù sbagliato quando la connessione ad Internet non è presente
+        //all'apertura dell'applicazione
+        /*NetworkCallback callback = new NetworkCallback(this);
+        if(!callback.isOnline(this)) {
+            updateUI("logout", null, null, null, false);
+            callback.registerNetworkCallback();
+            callback.addDefaultNetworkActiveListener(() -> {
+                SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+                String accessToken = prefs.getString("accessToken", "");
+                if(accessToken.equals("")) {
+                    updateUI("logout", null, null, null, false);
+                    if(prompt) {
+                        setAlertDialog(false);
+                        prompt = false;
+                    }
+                } else {
+                    CsrfToken token = new CsrfToken();
+                    token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
+                }
+            });
+            callback.unregisterNetworkCallback();
+        } else {
+            SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+            String accessToken = prefs.getString("accessToken", "");
+            if(accessToken.equals("")) {
+                updateUI("logout", null, null, null, false);
+                if(prompt) {
+                    setAlertDialog(false);
+                    prompt = false;
+                }
+            } else {
+                CsrfToken token = new CsrfToken();
+                token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
+            }
+        }*/
     }
 
     public NavigationSharedViewModel getViewModel() {
