@@ -73,6 +73,11 @@ public class Authentication {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
 
+                    //Il nome della SharedPreference qui utilizzata dovrebbe essere
+                    //it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.AccTok
+
+                    //Ne consegue, quindi, che tale nome dovrebbe essere modificato anche in tutte le
+                    //altre istanze di SharedPreferences che richiamano questa SharedPreference.
                     SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("accessToken", info.getToken());

@@ -93,6 +93,11 @@ public class UserProfileFragment extends Fragment {
                 }
             });
 
+            //Il nome della SharedPreference qui utilizzata dovrebbe essere
+            //it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.MenuSettingsSharedPreferences
+
+            //Ne consegue anche qui che il nome qui fornito dovrebbe essere modificato per tutte le
+            //istanze di SharedPreferences che richiamano questa specifica Shared Preference.
             SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", Context.MODE_PRIVATE);
             if(sp.getBoolean("showTel", false)) {
                 v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
