@@ -163,6 +163,7 @@ public class OrganizedEventInfo extends Thread {
 
                                             @Override
                                             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                //L'ultima condizione di questo blocco if non ci dovrebbe essere
                                                 if(hourTextView.getText() != null && !hourTextView.getText().toString().equals("") &&
                                                         !hourTextView.getText().toString().equals("---")) {
                                                     if(hourTextView.getText().toString().equals("---")) {
