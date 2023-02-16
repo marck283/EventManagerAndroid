@@ -338,6 +338,15 @@ public class EventDetailsFragment extends Fragment {
                 terminaEvento.setOnClickListener(c -> {
                     MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
                     Activity activity1 = getActivity();
+                    /*EditText editText1 = spinner2.getEditText();
+                    if(day == null) {
+                        if(editText1 != null && !editText1.getText().toString().equals("") &&
+                                !editText1.getText().toString().equals("---")) {
+                            day = editText1.getText().toString();
+                            String[] dayArr = day.split("/");
+                            day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
+                        }
+                    }*/
                     if(activity1 != null && isAdded()) {
                         if (!callback.isOnline(requireActivity())) {
                             setNoConnectionDialog();
@@ -345,6 +354,9 @@ public class EventDetailsFragment extends Fragment {
                             try {
                                 //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
                                 //Ricordarsi anche di aggiornare "token" all'interno del launcher!
+                                /*if(day == null || day.equals("") || day.equals("---")) {
+                                    return;
+                                }*/
                                 mViewModel.terminateEvent(token,
                                         this, eventId, day, hourTextView.getText().toString(), view);
                             } catch (NullPointerException ex) {

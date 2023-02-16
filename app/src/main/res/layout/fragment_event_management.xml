@@ -32,10 +32,11 @@
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Questa componente dovrebbe avere un'altezza pari ad una dimensione definita, non wrap_content! -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/eventRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="518dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
