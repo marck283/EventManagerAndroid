@@ -33,6 +33,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
 
+        <!-- Questa dovrebbe essere una componente TextInputEditText -->
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/category"
             android:layout_width="match_parent"
