@@ -71,132 +71,139 @@ public class EventInfoCall extends Thread {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 Activity activity = f.getActivity();
+
+                //Le ultime due condizioni di questa riga dovrebbero essere commentate
                 if (response.body() != null && response.isSuccessful() && activity != null && f.isAdded()) {
                     EventInfo ei = new EventInfo();
 
                     Gson gson = new GsonBuilder().create();
                     final EventInfo ei1 = ei.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
 
-                    f.requireActivity().runOnUiThread(() -> {
-                        //Ora imposta il layout in base alla schermata visualizzata
-                        ImageView imgView = v.findViewById(R.id.eventPicture);
-                        imgView.setImageBitmap(ei1.decodeBase64());
+                    //Activity activity = f.getActivity();
 
-                        TextView title = v.findViewById(R.id.title);
-                        title.setText(ei1.getNomeAtt());
+                    //E riportate qui
+                    //if(activity != null && f.isAdded()) {
+                        f.requireActivity().runOnUiThread(() -> {
+                            //Ora imposta il layout in base alla schermata visualizzata
+                            ImageView imgView = v.findViewById(R.id.eventPicture);
+                            imgView.setImageBitmap(ei1.decodeBase64());
 
-                        TextView organizerName = v.findViewById(R.id.organizerName);
-                        organizerName.setText(f.getString(R.string.organizer, ei1.getOrgName()));
+                            TextView title = v.findViewById(R.id.title);
+                            title.setText(ei1.getNomeAtt());
 
-                        TextView durata = v.findViewById(R.id.duration);
-                        String[] durataArr = ei1.getDurata().split(":");
-                        durata.setText(f.getString(R.string.duration, durataArr[0], durataArr[1], durataArr[2]));
+                            TextView organizerName = v.findViewById(R.id.organizerName);
+                            organizerName.setText(f.getString(R.string.organizer, ei1.getOrgName()));
 
-                        f.setEventId(ei1.getId());
+                            TextView durata = v.findViewById(R.id.duration);
+                            String[] durataArr = ei1.getDurata().split(":");
+                            durata.setText(f.getString(R.string.duration, durataArr[0], durataArr[1], durataArr[2]));
 
-                        ArrayList<CharSequence> dateArr = new ArrayList<>();
-                        dateArr.add("---");
-                        dateArr.addAll(ei1.getLuoghi());
+                            f.setEventId(ei1.getId());
 
-                        TextInputLayout spinner = v.findViewById(R.id.spinner), spinner1 = v.findViewById(R.id.dateArray);
+                            ArrayList<CharSequence> dateArr = new ArrayList<>();
+                            dateArr.add("---");
+                            dateArr.addAll(ei1.getLuoghi());
 
-                        MaterialAutoCompleteTextView textView = spinner.findViewById(R.id.actv),
-                                textView1 = spinner1.findViewById(R.id.actv1);
+                            TextInputLayout spinner = v.findViewById(R.id.spinner), spinner1 = v.findViewById(R.id.dateArray);
 
-                        textView.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, dateArr));
+                            MaterialAutoCompleteTextView textView = spinner.findViewById(R.id.actv),
+                                    textView1 = spinner1.findViewById(R.id.actv1);
 
-                        textView.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                //Nothing
-                            }
+                            textView.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, dateArr));
 
-                            @Override
-                            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                TextView indirizzo = v.findViewById(R.id.event_address);
+                            textView.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    //Nothing
+                                }
 
-                                if (!s.toString().equals("---")) {
-                                    Log.i("item", s.toString());
-                                    f.setDay(s.toString());
-                                    f.setTime("");
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    TextView indirizzo = v.findViewById(R.id.event_address);
 
-                                    indirizzo.setText(f.getString(R.string.event_address, ""));
+                                    if (!s.toString().equals("---")) {
+                                        Log.i("item", s.toString());
+                                        f.setDay(s.toString());
+                                        f.setTime("");
 
-                                    ArrayList<CharSequence> orariArr = new ArrayList<>();
-                                    orariArr.add("---");
+                                        indirizzo.setText(f.getString(R.string.event_address, ""));
 
-                                    String[] dataArr = s.toString().split("/");
-                                    String data = String.join("-", dataArr[1], dataArr[0], dataArr[2]);
-                                    orariArr.addAll(ei1.getOrari(data));
-                                    textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, orariArr));
-                                    textView1.addTextChangedListener(new TextWatcher() {
-                                        @Override
-                                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                            //Nothing
-                                        }
+                                        ArrayList<CharSequence> orariArr = new ArrayList<>();
+                                        orariArr.add("---");
 
-                                        @Override
-                                        public void onTextChanged(CharSequence s1, int start, int before, int count) {
-                                            if (!s.toString().equals("---")) {
-                                                f.setTime(s1.toString());
+                                        String[] dataArr = s.toString().split("/");
+                                        String data = String.join("-", dataArr[1], dataArr[0], dataArr[2]);
+                                        orariArr.addAll(ei1.getOrari(data));
+                                        textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, orariArr));
+                                        textView1.addTextChangedListener(new TextWatcher() {
+                                            @Override
+                                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                                //Nothing
+                                            }
 
-                                                indirizzo.setOnClickListener(c -> {
-                                                    GeocoderExt geocoder = new GeocoderExt(f, indirizzo);
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                        geocoder.fromLocationName(indirizzo.getText().toString(), 5);
-                                                    } else {
-                                                        geocoder.fromLocationNameThread(indirizzo.getText().toString(), 5);
-                                                    }
-                                                });
+                                            @Override
+                                            public void onTextChanged(CharSequence s1, int start, int before, int count) {
+                                                if (!s.toString().equals("---")) {
+                                                    f.setTime(s1.toString());
 
-                                                LuogoEv le = ei1.getLuogo(data, s1.toString());
-                                                if (le != null) {
-                                                    indirizzo.setPaintFlags(indirizzo.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                                                    indirizzo.setText(f.getString(R.string.event_address, le.getAddress()));
-                                                }
-
-                                                try {
-                                                    SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-                                                    Button b = v.findViewById(R.id.sign_up_button);
-
-                                                    if (le != null) {
-                                                        Date toCheck = sdformat.parse(le.getData());
-                                                        Date d = new Date();
-                                                        if (le.getTerminato() || (toCheck != null &&
-                                                                sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0)
-                                                                || le.getPostiRimanenti() == 0) {
-                                                            b.setEnabled(false);
-                                                            b.setText(f.getString(R.string.registrations_closed));
+                                                    indirizzo.setOnClickListener(c -> {
+                                                        GeocoderExt geocoder = new GeocoderExt(f, indirizzo);
+                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                            geocoder.fromLocationName(indirizzo.getText().toString(), 5);
                                                         } else {
-                                                            b.setEnabled(true);
+                                                            geocoder.fromLocationNameThread(indirizzo.getText().toString(), 5);
                                                         }
-                                                    } else {
-                                                        b.setEnabled(false);
+                                                    });
+
+                                                    LuogoEv le = ei1.getLuogo(data, s1.toString());
+                                                    if (le != null) {
+                                                        indirizzo.setPaintFlags(indirizzo.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                                        indirizzo.setText(f.getString(R.string.event_address, le.getAddress()));
                                                     }
-                                                } catch (ParseException ex) {
-                                                    Log.i("ParseException", "ParseException");
+
+                                                    try {
+                                                        SimpleDateFormat sdformat = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+                                                        Button b = v.findViewById(R.id.sign_up_button);
+
+                                                        if (le != null) {
+                                                            Date toCheck = sdformat.parse(le.getData());
+                                                            Date d = new Date();
+                                                            if (le.getTerminato() || (toCheck != null &&
+                                                                    sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0)
+                                                                    || le.getPostiRimanenti() == 0) {
+                                                                b.setEnabled(false);
+                                                                b.setText(f.getString(R.string.registrations_closed));
+                                                            } else {
+                                                                b.setEnabled(true);
+                                                            }
+                                                        } else {
+                                                            b.setEnabled(false);
+                                                        }
+                                                    } catch (ParseException ex) {
+                                                        Log.i("ParseException", "ParseException");
+                                                    }
                                                 }
                                             }
-                                        }
 
-                                        @Override
-                                        public void afterTextChanged(Editable s) {
-                                            //Nothing
-                                        }
-                                    });
-                                } else {
-                                    textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, new ArrayList<>()));
-                                    textView1.setText("");
-                                    indirizzo.setText(f.getString(R.string.event_address, ""));
+                                            @Override
+                                            public void afterTextChanged(Editable s) {
+                                                //Nothing
+                                            }
+                                        });
+                                    } else {
+                                        textView1.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, new ArrayList<>()));
+                                        textView1.setText("");
+                                        indirizzo.setText(f.getString(R.string.event_address, ""));
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void afterTextChanged(Editable s) {
-                                //Nothing
-                            }
+                                @Override
+                                public void afterTextChanged(Editable s) {
+                                    //Nothing
+                                }
+                            });
                         });
-                    });
+                    //}
                 }
             }
         });

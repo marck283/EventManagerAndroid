@@ -89,6 +89,9 @@ public class ReviewsRequest extends Thread {
                                 dialog.setMessage(f.getString(R.string.no_reviews_message));
                                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
                                     dialog1.dismiss();
+
+                                    //Queste righe sono da rimuovere per risolvere il problema della navigazione
+                                    //in caso di assenza di recensioni
                                     Bundle b = new Bundle();
                                     b.putString("eventType", screenType);
                                     b.putString("eventId", eventId);
