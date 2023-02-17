@@ -207,7 +207,7 @@
     <string name="review_rating_bar">Barra di valutazione</string>
     <string name="post_review">Pubblica</string>
     <string name="wrong_rating">Valore valutazione non consentito</string>
-    <string name="wrong_rating_message">La valutazione deve avere un valore corrispondente ad almeno una stella.</string>
+    <string name="wrong_rating_message">La valutazione deve avere un valore corrispondente ad almeno mezza stella.</string>
     <string name="invalid_qr_code_message">Il codice QR fornito non è valido.</string>
     <string name="event_management">Gestione eventi</string>
     <string name="no_org_event">Nessun evento trovato</string>

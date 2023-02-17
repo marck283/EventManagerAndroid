@@ -221,7 +221,7 @@
     <string name="write_a_review">Write a review to this event!</string>
     <string name="post_review">Publish</string>
     <string name="wrong_rating">Illegal rating value</string>
-    <string name="wrong_rating_message">The ratig must be greater than or equal to one star.</string>
+    <string name="wrong_rating_message">The ratig must be greater than or equal to half a star.</string>
     <string name="no_review_description">Missing review description</string>
     <string name="no_review_description_message">The description field is mandatory.</string>
     <string name="no_review_title">Missing review title</string>
