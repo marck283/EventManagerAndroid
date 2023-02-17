@@ -166,6 +166,10 @@ public class RegisteredEventInfo extends Thread {
                                         writeReview.setEnabled(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato());
                                     } else {
                                         try {
+                                            //Soluzione (solo per alcuni dispositivi) all'eccezione
+                                            //ParseException: unparseable date: posizionare
+                                            //SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+                                            //al posto della seguente riga di codice
                                             DateFormat df = DateFormat.getDateInstance();
                                             Date now = new Date(), eventDateTime = df.parse(dateTime);
                                             writeReview.setEnabled(!now.before(eventDateTime) || event.getLuogoEv().getTerminato());

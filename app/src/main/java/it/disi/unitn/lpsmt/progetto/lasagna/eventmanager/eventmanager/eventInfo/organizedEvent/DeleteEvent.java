@@ -61,6 +61,10 @@ public class DeleteEvent extends Thread {
                     }
                     case 200: {
                         setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
+
+                        //Questa riga sarebbe da rimuovere per risolvere il problema della navigazione
+                        //nella direzione sbagliata quando si annulla un evento passando per la
+                        //tabella degli eventi organizzati
                         f.requireActivity().runOnUiThread(() ->
                                 Navigation.findNavController(v).navigate(
                                         R.id.action_eventDetailsFragment_to_user_calendar_dialog));
