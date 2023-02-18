@@ -16,9 +16,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.jetbrains.annotations.Contract;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -37,6 +41,15 @@ public class NewDateFragment extends DialogFragment {
     @NonNull
     public static NewDateFragment newInstance() {
         return new NewDateFragment();
+    }
+
+    @NonNull
+    @Contract(pure = true)
+    private String padStart(@NonNull String s) {
+        if(s.length() < 2) {
+            return "0" + s;
+        }
+        return s;
     }
 
     @Override
@@ -58,14 +71,25 @@ public class NewDateFragment extends DialogFragment {
                 } else {
                     pattern = Pattern.compile("(((10|09|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
                             "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}");
+
+                    //Regex corretta
+                    /*pattern = Pattern.compile("((([12]0|[01]9|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
+                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}");*/
                 }
                 if (pattern.matcher(beginDate).find()) {
                     SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
+
+                    //Soluzione al problema dell'inserimento della data corrente
+                    /*Calendar calendar = new GregorianCalendar(Locale.ITALIAN);
+                    String today = padStart(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))) + "/"
+                            + padStart(String.valueOf(calendar.get(Calendar.MONTH) + 1))
+                            + "/" + calendar.get(Calendar.YEAR);*/
+
                     boolean over = false;
                     Date toCheck = sdformat.parse(beginDate);
-                    Date d = new Date();
+                    Date d = new Date()/*sdformat.parse(today)*/;
 
-                    if (toCheck != null && toCheck.compareTo(d) > 0) {
+                    if (toCheck != null && toCheck.compareTo(d) >= 0) {
                         over = true;
 
                         String[] dataArr = beginDate.split("/");
@@ -89,10 +113,23 @@ public class NewDateFragment extends DialogFragment {
         return false;
     }
 
-    private boolean parseBeginHour(@NonNull String t1) {
+    private boolean parseBeginHour(@NonNull String t1/*, @NonNull String date*/) {
         if (Pattern.compile("([0-1]\\d|2[0-3]):[0-5]\\d").matcher(/*String.valueOf(t1.getText())*/t1).matches()) {
-            mViewModel.setOra(/*String.valueOf(t1.getText())*/t1);
-            return true;
+            //Soluzione al problema dell'orario passato per la giornata corrente
+            /*if(dateOK) {
+                Date now = new Date();
+                String[] dateArr = date.split("/"), hourArr = t1.split(":");
+                Calendar calendar = new GregorianCalendar(Integer.parseInt(dateArr[2]),
+                        Integer.parseInt(dateArr[1]), Integer.parseInt(dateArr[0]), Integer.parseInt(hourArr[0]),
+                        Integer.parseInt(hourArr[1]));
+                if(now.before(calendar.getTime())) {*/
+                    mViewModel.setOra(/*String.valueOf(t1.getText())*/t1);
+                    return true;
+                /*} else {
+                    setAlertDialog(R.string.incorrect_hour_value, getString(R.string.incorrect_hour_value_message));
+                }
+            }*/
+            //return false;
         }
         setAlertDialog(R.string.incorrect_hour_format_title, getString(R.string.incorrect_hour_format));
         return false;
@@ -145,15 +182,6 @@ public class NewDateFragment extends DialogFragment {
             });
         }
 
-        TextInputLayout beginTimeLayout = view.findViewById(R.id.btInputLayout);
-        TextInputEditText beginTime = beginTimeLayout.findViewById(R.id.begin_time);
-        beginTime.setOnFocusChangeListener((v, hasFocus) -> {
-            if(!hasFocus && beginTime.getText() != null) {
-                timeOK = parseBeginHour(beginTime.getText().toString());
-            }
-        });
-        beginTime.addTextChangedListener(new Mask("##:##"));
-
         TextInputLayout beginDateInputLayout = view.findViewById(R.id.bdInputLayout);
         TextInputEditText beginDate = beginDateInputLayout.findViewById(R.id.begin_date);
         beginDate.setOnFocusChangeListener((v, hasFocus) -> {
@@ -163,11 +191,29 @@ public class NewDateFragment extends DialogFragment {
         });
         beginDate.addTextChangedListener(new Mask("##/##/####"));
 
+        TextInputLayout beginTimeLayout = view.findViewById(R.id.btInputLayout);
+        TextInputEditText beginTime = beginTimeLayout.findViewById(R.id.begin_time);
+        beginTime.setOnFocusChangeListener((v, hasFocus) -> {
+            if(!hasFocus && beginTime.getText() != null/* && beginDate.getText() != null*/) {
+                timeOK = parseBeginHour(beginTime.getText().toString()/*, beginDate.getText().toString()*/);
+            }
+        });
+        beginTime.addTextChangedListener(new Mask("##:##"));
+
+        /*TextInputLayout beginDateInputLayout = view.findViewById(R.id.bdInputLayout);
+        TextInputEditText beginDate = beginDateInputLayout.findViewById(R.id.begin_date);
+        beginDate.setOnFocusChangeListener((v, hasFocus) -> {
+            if(!hasFocus && beginDate.getText() != null) {
+                dateOK = parseBeginDate(beginDate.getText().toString());
+            }
+        });
+        beginDate.addTextChangedListener(new Mask("##/##/####"));*/
+
         Button b = view.findViewById(R.id.button3);
         b.setOnClickListener(c -> {
             if (beginDate.getText() != null && beginTime.getText() != null && seats.getText() != null &&
                     parseBeginDate(beginDate.getText().toString()) &&
-                    parseBeginHour(beginTime.getText().toString()) &&
+                    parseBeginHour(beginTime.getText().toString()/*, beginDate.getText().toString()*/) &&
                     (evm.getPrivEvent() || (!evm.getPrivEvent() &&
                     parseSeats(seats.getText().toString())))) {
                 mViewModel.setOk(true);

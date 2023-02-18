@@ -232,6 +232,8 @@
     <string name="empty_seats_field_message">Non è stato inserito alcun valore valido per il campo \"posti\". Si prega di riprovare inserendo un valore numerico intero positivo o pari a zero.</string>
     <string name="no_reviews">Nessuna recensione trovata</string>
     <string name="no_reviews_message">Non è stata trovata alcuna recensione per questo evento.</string>
+    <string name="incorrect_hour_value">Orario non corretto</string>
+    <string name="incorrect_hour_value_message">Non è possibile fornire orari passati.</string>
     <string name="title">Titolo</string>
     <string name="insert_review_title">Inserisci titolo recensione…</string>
     <string name="write_a_review">Scrivi una recensione su questo evento!</string>
