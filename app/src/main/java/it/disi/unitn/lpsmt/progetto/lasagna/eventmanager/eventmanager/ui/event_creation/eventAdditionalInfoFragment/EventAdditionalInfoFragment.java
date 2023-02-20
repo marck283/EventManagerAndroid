@@ -125,7 +125,9 @@ public class EventAdditionalInfoFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     Activity activity = getActivity();
                     if(result != null && result.getData() != null && activity != null && isAdded()) {
-                        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                        SharedPreferences prefs = requireActivity().getSharedPreferences(
+                                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                Context.MODE_PRIVATE);
                         String jwt = prefs.getString("accessToken", "");
                         mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
                     }
@@ -247,8 +249,11 @@ public class EventAdditionalInfoFragment extends Fragment {
                     if(evm.getPrivEvent()) {
                         Activity activity = getActivity();
                         if(activity != null && isAdded()) {
-                            SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                            mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
+                            SharedPreferences prefs = requireActivity().getSharedPreferences(
+                                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                    Context.MODE_PRIVATE);
+                            mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""),
+                                    evm, loginLauncher);
                         }
                     } else {
                         try {
@@ -265,13 +270,7 @@ public class EventAdditionalInfoFragment extends Fragment {
                                     if(evm.getMinuti() >= 60) {
                                         setAlertDialog(R.string.illegal_minutes_value, R.string.illegal_minutes_message);
                                     } else {
-                                        if(!evm.getPrivEvent()) {
-                                            Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
-                                        } /*else {
-                                            //Poiché l'evento è privato, fai partire la sua creazione da qui...
-                                            SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
-                                            mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""), evm, loginLauncher);
-                                        }*/
+                                        Navigation.findNavController(view).navigate(R.id.action_eventAdditionalInfoFragment_to_eventRestrictionsFragment2);
                                     }
                                 }
                             }

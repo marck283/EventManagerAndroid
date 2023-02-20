@@ -26,8 +26,10 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
@@ -168,9 +170,9 @@ public class RegisteredEventInfo extends Thread {
                                         try {
                                             //Soluzione (solo per alcuni dispositivi) all'eccezione
                                             //ParseException: unparseable date: posizionare
-                                            //SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
+                                            SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
                                             //al posto della seguente riga di codice
-                                            DateFormat df = DateFormat.getDateInstance();
+                                            //DateFormat df = DateFormat.getDateInstance();
                                             Date now = new Date(), eventDateTime = df.parse(dateTime);
                                             writeReview.setEnabled(!now.before(eventDateTime) || event.getLuogoEv().getTerminato());
                                         } catch(ParseException ex) {

@@ -121,7 +121,9 @@ public class EventRestrictionsFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     Activity activity = getActivity();
                     if(result != null && result.getData() != null && activity != null && isAdded()) {
-                        SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                        SharedPreferences prefs = requireActivity().getSharedPreferences(
+                                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                Context.MODE_PRIVATE);
                         String jwt = prefs.getString("accessToken", "");
                         mViewModel.createPublicEvent(this, jwt, evm, loginLauncher);
                     }
@@ -140,7 +142,8 @@ public class EventRestrictionsFragment extends Fragment {
                     setAlertDialog(R.string.illegal_min_age, R.string.min_eta_gt_max_eta_message);
                 } else {
                     //Valori OK, ora crea l'evento...
-                    SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    SharedPreferences prefs = requireActivity().getSharedPreferences(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
                     mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm, null);
                 }
             } else {
@@ -152,7 +155,8 @@ public class EventRestrictionsFragment extends Fragment {
                 //Valori OK, ora crea l'evento...
                 Activity activity = getActivity();
                 if(activity != null && isAdded()) {
-                    SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    SharedPreferences prefs = requireActivity().getSharedPreferences(
+                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
                     mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm, null);
                 }
             }

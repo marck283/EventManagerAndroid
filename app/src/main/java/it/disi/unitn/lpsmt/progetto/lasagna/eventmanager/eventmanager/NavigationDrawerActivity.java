@@ -181,7 +181,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         account = new GSignIn(this);
         vm.init(this);
 
-        SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+        /*SharedPreferences prefs = getSharedPreferences(
+                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
         String accessToken = prefs.getString("accessToken", "");
         if(accessToken.equals("")) {
             updateUI("logout", null, null, null, false);
@@ -192,16 +193,17 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         } else {
             CsrfToken token = new CsrfToken();
             token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
-        }
+        }*/
 
         //Soluzione al problema visivo del menù sbagliato quando la connessione ad Internet non è presente
         //all'apertura dell'applicazione
-        /*NetworkCallback callback = new NetworkCallback(this);
+        NetworkCallback callback = new NetworkCallback(this);
         if(!callback.isOnline(this)) {
             updateUI("logout", null, null, null, false);
             callback.registerNetworkCallback();
             callback.addDefaultNetworkActiveListener(() -> {
-                SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+                SharedPreferences prefs = getSharedPreferences(
+                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
                 String accessToken = prefs.getString("accessToken", "");
                 if(accessToken.equals("")) {
                     updateUI("logout", null, null, null, false);
@@ -216,7 +218,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             });
             callback.unregisterNetworkCallback();
         } else {
-            SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+            SharedPreferences prefs = getSharedPreferences(
+            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
             String accessToken = prefs.getString("accessToken", "");
             if(accessToken.equals("")) {
                 updateUI("logout", null, null, null, false);
@@ -228,7 +231,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 CsrfToken token = new CsrfToken();
                 token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
             }
-        }*/
+        }
     }
 
     public NavigationSharedViewModel getViewModel() {
@@ -342,7 +345,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     public void revokeAccess(MenuItem item) {
-        SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("it.disi.unitn.lpsmt.progetto.lasagna" +
+                ".eventmanager.eventmanager.AccTok", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         if(account.getAccount() != null) {
             Task<Void> t = account.signOut();
@@ -376,7 +380,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     private void signInCheck(int resultCode, Intent data, @NonNull String which, int requestCode) {
-        SharedPreferences prefs = getSharedPreferences("AccTok", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(
+                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
         switch(resultCode) {
@@ -466,7 +471,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         //Salva il token di accesso nelle SharedPreferences per utilizzarlo al successivo accesso all'app.
         Log.i("exitToken", vm.getToken().getValue());
-        SharedPreferences prefs = getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(
+                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("accessToken", vm.getToken().getValue());
         editor.apply();

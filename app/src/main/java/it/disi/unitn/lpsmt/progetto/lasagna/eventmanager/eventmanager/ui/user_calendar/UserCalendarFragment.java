@@ -78,7 +78,8 @@ public class UserCalendarFragment extends Fragment {
         v.setOnDateChangeListener((v1, d, m, y) -> {
             Bundle b = new Bundle();
 
-            SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+            SharedPreferences prefs = requireActivity().getSharedPreferences(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
             String token = prefs.getString("accessToken", "");
             if (token.equals("")) {
                 //Eseguire login, poi permettere la visualizzazione degli eventi

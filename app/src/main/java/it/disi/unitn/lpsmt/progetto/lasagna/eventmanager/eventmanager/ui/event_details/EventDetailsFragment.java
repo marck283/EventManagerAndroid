@@ -80,7 +80,8 @@ public class EventDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+        prefs = requireActivity().getSharedPreferences(
+                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
         token = prefs.getString("accessToken", "");
 
         loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -139,7 +140,9 @@ public class EventDetailsFragment extends Fragment {
                                     !spinner.getEditText().getText().toString().equals("---") &&
                                     spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
                                     !spinner2.getEditText().getText().toString().equals("---")) {
-                                SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                                SharedPreferences prefs = requireActivity().getSharedPreferences(
+                                        "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                        Context.MODE_PRIVATE);
                                 String token = prefs.getString("accessToken", "");
                                 if (!token.equals("")) {
                                     if (callback.isOnline(requireActivity())) {
@@ -182,13 +185,17 @@ public class EventDetailsFragment extends Fragment {
                                     Activity activity = getActivity();
                                     if(activity != null && isAdded()) {
                                         SharedPreferences prefs =
-                                                requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                                                requireActivity().getSharedPreferences(
+                                                        "it.disi.unitn.lpsmt.progetto.lasagna" +
+                                                                ".eventmanager.eventmanager.AccTok",
+                                                        Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = prefs.edit();
                                         editor.putString("accessToken", "");
                                         editor.apply();
                                         Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
                                         ((NavigationDrawerActivity) requireActivity())
-                                                .updateUI("logout", "", "", "", false);
+                                                .updateUI("logout", "", "", "",
+                                                        false);
                                     }
                                     break;
                                 }
@@ -338,7 +345,7 @@ public class EventDetailsFragment extends Fragment {
                 terminaEvento.setOnClickListener(c -> {
                     MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
                     Activity activity1 = getActivity();
-                    /*EditText editText1 = spinner2.getEditText();
+                    EditText editText1 = spinner2.getEditText();
                     if(day == null) {
                         if(editText1 != null && !editText1.getText().toString().equals("") &&
                                 !editText1.getText().toString().equals("---")) {
@@ -346,7 +353,7 @@ public class EventDetailsFragment extends Fragment {
                             String[] dayArr = day.split("/");
                             day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
                         }
-                    }*/
+                    }
                     if(activity1 != null && isAdded()) {
                         if (!callback.isOnline(requireActivity())) {
                             setNoConnectionDialog();
@@ -354,9 +361,9 @@ public class EventDetailsFragment extends Fragment {
                             try {
                                 //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
                                 //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-                                /*if(day == null || day.equals("") || day.equals("---")) {
+                                if(day == null || day.equals("") || day.equals("---")) {
                                     return;
-                                }*/
+                                }
                                 mViewModel.terminateEvent(token,
                                         this, eventId, day, hourTextView.getText().toString(), view);
                             } catch (NullPointerException ex) {

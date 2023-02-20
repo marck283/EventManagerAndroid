@@ -74,7 +74,8 @@ public class UserProfileFragment extends Fragment {
 
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
-            prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+            prefs = requireActivity().getSharedPreferences(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
 
             String token = prefs.getString("accessToken", "");
             if(!token.equals("")) {
@@ -98,7 +99,9 @@ public class UserProfileFragment extends Fragment {
 
             //Ne consegue anche qui che il nome qui fornito dovrebbe essere modificato per tutte le
             //istanze di SharedPreferences che richiamano questa specifica Shared Preference.
-            SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", Context.MODE_PRIVATE);
+            SharedPreferences sp = requireActivity().getSharedPreferences(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
+                    Context.MODE_PRIVATE);
             if(sp.getBoolean("showTel", false)) {
                 v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
             } else {

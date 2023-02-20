@@ -27,7 +27,8 @@ public class UserProfileViewModel extends ViewModel {
                 onlineUserInfo.start();
             } else {
                 //Ottieni i dati dell'utente dal database, se disponibili
-                SharedPreferences prefs = f.requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                SharedPreferences prefs = f.requireActivity().getSharedPreferences(
+                        "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
                 DBUser dbUser = new DBUser(prefs.getString("userId", ""), "getAll", l, f);
                 dbUser.start();
             }

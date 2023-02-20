@@ -39,7 +39,9 @@ public class MenuSettingsFragment extends Fragment {
         view.findViewById(R.id.button4).setOnClickListener(v -> showInfo());
         ((SwitchMaterial)view.findViewById(R.id.switch1)).setOnCheckedChangeListener((c, c1) -> {
             menuSettingsViewModel.setChecked(c1);
-            SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", MODE_PRIVATE);
+            SharedPreferences sp = requireActivity().getSharedPreferences(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
+                    MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
             if(menuSettingsViewModel != null && menuSettingsViewModel.getChecked().getValue() != null) {
                 editor.putBoolean("showTel", menuSettingsViewModel.getChecked().getValue());
@@ -53,7 +55,9 @@ public class MenuSettingsFragment extends Fragment {
             if(menuSettingsViewModel.getChecked().getValue() != null) {
                 ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(menuSettingsViewModel.getChecked().getValue());
             } else {
-                SharedPreferences sp = requireActivity().getSharedPreferences("MenuSettingsSharedPreferences", MODE_PRIVATE);
+                SharedPreferences sp = requireActivity().getSharedPreferences(
+                        "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
+                        MODE_PRIVATE);
                 ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(sp.getBoolean("showTel", false));
             }
         }

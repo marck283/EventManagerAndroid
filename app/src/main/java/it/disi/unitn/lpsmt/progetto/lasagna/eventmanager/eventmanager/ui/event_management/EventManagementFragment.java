@@ -103,7 +103,8 @@ public class EventManagementFragment extends Fragment {
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
             callback = new NetworkCallback(requireActivity());
-            prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+            prefs = requireActivity().getSharedPreferences(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
             if (callback.isOnline(requireActivity())) {
                 searchEvents(null, view, launcher);
             } else {

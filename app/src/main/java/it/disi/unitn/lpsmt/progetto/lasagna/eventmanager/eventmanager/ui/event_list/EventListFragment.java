@@ -88,7 +88,8 @@ public class EventListFragment extends Fragment {
         super.onStart();
         Activity activity = getActivity();
         if (activity != null && isAdded()) {
-            SharedPreferences prefs = requireActivity().getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+            SharedPreferences prefs = requireActivity().getSharedPreferences(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
             idToken = prefs.getString("accessToken", "");
 
             NetworkCallback callback = new NetworkCallback(requireActivity());

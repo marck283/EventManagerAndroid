@@ -78,7 +78,9 @@ public class Authentication {
 
                     //Ne consegue, quindi, che tale nome dovrebbe essere modificato anche in tutte le
                     //altre istanze di SharedPreferences che richiamano questa SharedPreference.
-                    SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    SharedPreferences prefs = a.getSharedPreferences(
+                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                            Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("accessToken", info.getToken());
                     editor.putString("userId", info.getId());
@@ -105,7 +107,9 @@ public class Authentication {
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
 
-                    SharedPreferences prefs = a.getSharedPreferences("AccTok", Context.MODE_PRIVATE);
+                    SharedPreferences prefs = a.getSharedPreferences(
+                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                            Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putString("accessToken", "");
                     editor.putString("userId", "");
