@@ -71,19 +71,19 @@ public class EventInfoCall extends Thread {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Activity activity = f.getActivity();
+                //Activity activity = f.getActivity();
 
                 //Le ultime due condizioni di questa riga dovrebbero essere commentate
-                if (response.body() != null && response.isSuccessful() && activity != null && f.isAdded()) {
+                if (response.body() != null && response.isSuccessful()/* && activity != null && f.isAdded()*/) {
                     EventInfo ei = new EventInfo();
 
                     Gson gson = new GsonBuilder().create();
                     final EventInfo ei1 = ei.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
 
-                    //Activity activity = f.getActivity();
+                    Activity activity = f.getActivity();
 
                     //E riportate qui
-                    //if(activity != null && f.isAdded()) {
+                    if(activity != null && f.isAdded()) {
                         f.requireActivity().runOnUiThread(() -> {
                             //Ora imposta il layout in base alla schermata visualizzata
                             ImageView imgView = v.findViewById(R.id.eventPicture);
@@ -204,7 +204,7 @@ public class EventInfoCall extends Thread {
                                 }
                             });
                         });
-                    //}
+                    }
                 }
             }
         });

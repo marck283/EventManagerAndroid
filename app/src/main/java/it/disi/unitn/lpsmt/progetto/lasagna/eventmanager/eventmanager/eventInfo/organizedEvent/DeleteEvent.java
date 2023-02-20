@@ -64,9 +64,9 @@ public class DeleteEvent extends Thread {
 
                         //Questa riga sarebbe da rimuovere per risolvere il problema della navigazione
                         //nella direzione sbagliata quando si annulla un evento
-                        f.requireActivity().runOnUiThread(() ->
+                        /*f.requireActivity().runOnUiThread(() ->
                                 Navigation.findNavController(v).navigate(
-                                        R.id.action_eventDetailsFragment_to_user_calendar_dialog));
+                                        R.id.action_eventDetailsFragment_to_user_calendar_dialog));*/
                         break;
                     }
                     case 404: {

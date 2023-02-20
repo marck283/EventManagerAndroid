@@ -92,10 +92,10 @@ public class ReviewsRequest extends Thread {
 
                                     //Queste righe sono da rimuovere per risolvere il problema della navigazione
                                     //in caso di assenza di recensioni
-                                    Bundle b = new Bundle();
+                                    /*Bundle b = new Bundle();
                                     b.putString("eventType", screenType);
                                     b.putString("eventId", eventId);
-                                    Navigation.findNavController(v).navigate(R.id.action_reviewsFragment_to_eventDetailsFragment, b);
+                                    Navigation.findNavController(v).navigate(R.id.action_reviewsFragment_to_eventDetailsFragment, b);*/
                                 });
                                 dialog.show();
                             });
