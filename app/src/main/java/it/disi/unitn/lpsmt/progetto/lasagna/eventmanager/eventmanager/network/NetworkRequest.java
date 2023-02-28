@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network;
 
 import android.util.Pair;
 

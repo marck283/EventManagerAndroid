@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
