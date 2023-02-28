@@ -86,6 +86,9 @@ public class UserCalendarFragment extends Fragment {
                 Intent login = new Intent(requireContext(), LoginActivity.class);
                 launcher.launch(login);
             } else {
+                this.d = d;
+                this.m = m;
+                this.y = y;
                 b.putString("idToken", token);
                 b.putInt("day", d);
                 b.putInt("month", m + 1);

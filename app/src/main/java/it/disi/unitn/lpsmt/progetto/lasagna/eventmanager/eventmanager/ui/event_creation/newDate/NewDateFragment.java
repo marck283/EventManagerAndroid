@@ -36,7 +36,7 @@ public class NewDateFragment extends DialogFragment {
 
     private EventViewModel evm;
 
-    private boolean dateOK = false, timeOK = false, seatsOK = false;
+    private boolean dateOK = false;
 
     @NonNull
     public static NewDateFragment newInstance() {
@@ -59,24 +59,19 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseBeginDate(@NonNull String t) {
-        String beginDate = /*String.valueOf(t.getText())*/t;
-        if (beginDate.length() == 10) {
+        if (t.length() == 10) {
             try {
                 Pattern pattern;
-                int substr = Integer.parseInt(beginDate.substring(6));
+                int substr = Integer.parseInt(t.substring(6));
                 if (substr % 400 == 0 || (substr % 100 == 0 && substr % 4 != 0)) {
                     //Anno bisestile
                     pattern = Pattern.compile("(((10|[0-2][1-9])/02)|(([23]0|[0-2][1-9])/" +
                             "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}");
                 } else {
-                    /*pattern = Pattern.compile("(((10|09|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
-                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}");*/
-
-                    //Regex corretta
                     pattern = Pattern.compile("((([12]0|[01]9|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
                             "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}");
                 }
-                if (pattern.matcher(beginDate).find()) {
+                if (pattern.matcher(t).find()) {
                     SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
 
                     //Soluzione al problema dell'inserimento della data corrente
@@ -86,15 +81,15 @@ public class NewDateFragment extends DialogFragment {
                             + "/" + calendar.get(Calendar.YEAR);
 
                     boolean over = false;
-                    Date toCheck = sdformat.parse(beginDate);
-                    Date d = /*new Date()*/sdformat.parse(today);
+                    Date toCheck = sdformat.parse(t);
+                    Date d = sdformat.parse(today);
 
                     if (toCheck != null && toCheck.compareTo(d) >= 0) {
                         over = true;
 
-                        String[] dataArr = beginDate.split("/");
-                        beginDate = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
-                        mViewModel.setData(beginDate);
+                        String[] dataArr = t.split("/");
+                        t = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
+                        mViewModel.setData(t);
                     } else {
                         setAlertDialog(R.string.wrong_date, getString(R.string.date_less_than_current_date));
                     }
@@ -114,7 +109,7 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseBeginHour(@NonNull String t1, @NonNull String date) {
-        if (Pattern.compile("([0-1]\\d|2[0-3]):[0-5]\\d").matcher(/*String.valueOf(t1.getText())*/t1).matches()) {
+        if (Pattern.compile("([0-1]\\d|2[0-3]):[0-5]\\d").matcher(t1).matches()) {
             //Soluzione al problema dell'orario passato per la giornata corrente
             if(dateOK) {
                 Date now = new Date();
@@ -135,16 +130,16 @@ public class NewDateFragment extends DialogFragment {
         return false;
     }
 
-    private boolean parseSeats(@NonNull /*EditText*/ String t3) {
-        if (t3/*.getText() == null || t3.getText().toString()*/.equals("")) {
+    private boolean parseSeats(@NonNull String t3) {
+        if (t3.equals("")) {
             setAlertDialog(R.string.error, getString(R.string.empty_seats_field_message));
             return false;
         }
 
         Pattern pattern = Pattern.compile("[1-9]\\d*");
         try {
-            if (pattern.matcher(/*String.valueOf(t3.getText())*/t3).find()) {
-                mViewModel.setPosti(Integer.parseInt(/*String.valueOf(t3.getText())*/t3));
+            if (pattern.matcher(t3).find()) {
+                mViewModel.setPosti(Integer.parseInt(t3));
                 return true;
             }
             setAlertDialog(R.string.incorrect_seats_format, getString(R.string.incorrect_seats_format));
@@ -173,11 +168,10 @@ public class NewDateFragment extends DialogFragment {
         TextInputEditText seats = seatsLayout.findViewById(R.id.seats_value);
         if (evm.getPrivEvent()) {
             view.findViewById(R.id.seats_value).setVisibility(View.GONE);
-            seatsOK = true;
         } else {
             seats.setOnFocusChangeListener((v, hasFocus) -> {
                 if(!hasFocus && seats.getText() != null) {
-                    seatsOK = parseSeats(seats.getText().toString());
+                    parseSeats(seats.getText().toString());
                 }
             });
         }
@@ -195,7 +189,7 @@ public class NewDateFragment extends DialogFragment {
         TextInputEditText beginTime = beginTimeLayout.findViewById(R.id.begin_time);
         beginTime.setOnFocusChangeListener((v, hasFocus) -> {
             if(!hasFocus && beginTime.getText() != null && beginDate.getText() != null) {
-                timeOK = parseBeginHour(beginTime.getText().toString(), beginDate.getText().toString());
+                parseBeginHour(beginTime.getText().toString(), beginDate.getText().toString());
             }
         });
         beginTime.addTextChangedListener(new Mask("##:##"));

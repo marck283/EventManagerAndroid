@@ -93,10 +93,6 @@ public class SpinnerArrayAdapter extends ArrayAdapter<CharSequence> {
         super.add(string);
     }
 
-    public void addAll(ArrayList<String> arr) {
-        super.addAll(arr);
-    }
-
     @NonNull
     public static SpinnerArrayAdapter createFromResources(@NonNull Activity c, @ArrayRes int arrayList,
                                                           @LayoutRes int textViewResId, @LayoutRes int dropDownViewResource) {

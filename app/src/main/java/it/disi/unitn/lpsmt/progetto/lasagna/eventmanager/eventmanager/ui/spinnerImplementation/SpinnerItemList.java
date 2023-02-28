@@ -76,10 +76,6 @@ public class SpinnerItemList extends androidx.appcompat.widget.AppCompatSpinner 
         super.setOnItemSelectedListener(listener);
     }
 
-    public SpinnerOnItemSelectedListener getListener() {
-        return listener;
-    }
-
     public void setAdapter(@NonNull Fragment f, @LayoutRes int layoutRes, @IdRes int idRes,
                            List<CharSequence> items) {
         adapter = new SpinnerArrayAdapter(f.requireContext(), layoutRes, idRes);

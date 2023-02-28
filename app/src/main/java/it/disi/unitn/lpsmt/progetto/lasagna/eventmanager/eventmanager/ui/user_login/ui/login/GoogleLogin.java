@@ -3,7 +3,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_l
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.net.Network;
 import android.util.Log;
 
 import androidx.annotation.NonNull;

@@ -32,6 +32,7 @@ import org.jetbrains.annotations.Contract;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
@@ -136,28 +137,16 @@ public class EventRestrictionsFragment extends Fragment {
             checkEtaValues("min", etaMin, etaMinEdit, R.string.illegal_min_age, R.string.illegal_min_age_message);
             checkEtaValues("max", etaMax, etaMaxEdit, R.string.illegal_max_age, R.string.illegal_max_age_message);
 
-            /*if((etaMin.isChecked() && etaMinEdit.getText() != null && !etaMinEdit.getText().toString().equals("")) ||
-                    (etaMax.isChecked() && etaMaxEdit.getText() != null && !etaMaxEdit.getText().toString().equals(""))) {
-                if(etaMin.isChecked() && etaMax.isChecked() && evm.getEtaMin() > evm.getEtaMax()) {
-                    setAlertDialog(R.string.illegal_min_age, R.string.min_eta_gt_max_eta_message);
-                } else {
-                    //Valori OK, ora crea l'evento...
-                    SharedPreferences prefs = requireActivity().getSharedPreferences(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-                    mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm, null);
-                }
-            } else {
-                setAlertDialog(R.string.illegal_max_or_min_age, R.string.illegal_max_or_min_age_message);
-            }*/
             if(etaMin.isChecked() && etaMax.isChecked() && evm.getEtaMin() > evm.getEtaMax()) {
                 setAlertDialog(R.string.illegal_min_age, R.string.min_eta_gt_max_eta_message);
             } else {
                 //Valori OK, ora crea l'evento...
                 Activity activity = getActivity();
                 if(activity != null && isAdded()) {
-                    SharedPreferences prefs = requireActivity().getSharedPreferences(
-                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-                    mViewModel.createPublicEvent(this, prefs.getString("accessToken", ""), evm, null);
+                    SharedPrefs prefs = new SharedPrefs(
+                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                            requireActivity());
+                    mViewModel.createPublicEvent(this, prefs.getString("accessToken"), evm, null);
                 }
             }
         });

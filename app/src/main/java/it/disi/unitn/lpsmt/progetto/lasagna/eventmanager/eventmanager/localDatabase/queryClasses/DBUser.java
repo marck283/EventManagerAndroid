@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs.UserDAO;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.helpers.UserInfo;
 
 public class DBUser extends DBThread {
     private final String action, id;
@@ -73,9 +72,9 @@ public class DBUser extends DBThread {
         synchronized(this) {
             switch(action) {
                 case "getAll": {
-                    UserInfo u = user.getUser(id);
+                    User u = user.getUser(id);
 
-                    profilePic = u.getString("profilePic");
+                    profilePic = u.getProfilePic();
 
                     a.runOnUiThread(() -> {
                         //Imposta la schermata del profilo dell'utente
@@ -85,13 +84,13 @@ public class DBUser extends DBThread {
                         }
 
                         TextView username = v.findViewById(R.id.username);
-                        username.setText(f.getString(R.string.username, u.getString("nome")));
+                        username.setText(f.getString(R.string.username, u.getNome()));
 
                         TextView email = v.findViewById(R.id.email);
-                        email.setText(f.getString(R.string.user_email, u.getString("email")));
+                        email.setText(f.getString(R.string.user_email, u.getEmail()));
 
                         TextView phone = v.findViewById(R.id.phone_value);
-                        phone.setText(f.getString(R.string.phone, u.getString("tel")));
+                        phone.setText(f.getString(R.string.phone, u.getTel()));
 
                         TextView numEvOrg = v.findViewById(R.id.numEvOrg);
                         numEvOrg.setText(f.getString(R.string.numEvOrg, u.getNumEvOrg()));

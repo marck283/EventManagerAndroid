@@ -2,22 +2,18 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentic
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.facebook.AccessToken;
 import com.google.gson.JsonObject;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventList;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListFragment;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.data.model.LoggedInUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import retrofit2.Call;
@@ -69,22 +65,16 @@ public class Authentication {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                 Log.i("response", String.valueOf(response));
+
+                SharedPrefs prefs = new SharedPrefs(
+                        "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", a);
+
                 if (response.isSuccessful() && response.body() != null) {
                     LoggedInUser info = new LoggedInUser();
                     info = info.parseJSON(response.body());
 
-                    //Il nome della SharedPreference qui utilizzata dovrebbe essere
-                    //it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.AccTok
-
-                    //Ne consegue, quindi, che tale nome dovrebbe essere modificato anche in tutte le
-                    //altre istanze di SharedPreferences che richiamano questa SharedPreference.
-                    SharedPreferences prefs = a.getSharedPreferences(
-                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                            Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("accessToken", info.getToken());
-                    editor.putString("userId", info.getId());
-                    editor.apply();
+                    prefs.setString("accessToken", info.getToken());
+                    prefs.setString("userId", info.getId());
 
                     final String email = info.getEmail(), profilePic = info.getProfilePic(), name = info.getName();
                     if(a instanceof NavigationDrawerActivity) {
@@ -107,13 +97,9 @@ public class Authentication {
                 } else {
                     Log.i("null1", "Unsuccessful or null response");
 
-                    SharedPreferences prefs = a.getSharedPreferences(
-                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                            Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("accessToken", "");
-                    editor.putString("userId", "");
-                    editor.apply();
+                    prefs.setString("accessToken", "");
+                    prefs.setString("userId", "");
+
                     if (response.code() == 401) {
                         a.runOnUiThread(() -> {
                             AlertDialog dialog = new AlertDialog.Builder(a).create();
@@ -135,6 +121,7 @@ public class Authentication {
                         }
                     }
                 }
+                prefs.apply();
             }
 
             /**

@@ -22,8 +22,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,12 +41,10 @@ import org.jetbrains.annotations.Contract;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
 public class EventAdditionalInfoFragment extends Fragment {
 
@@ -59,9 +55,6 @@ public class EventAdditionalInfoFragment extends Fragment {
 
     private View view;
     private ActivityResultLauncher<Intent> loginLauncher;
-
-    private SpeechRecognizer rec;
-    private Intent speechRecognizerIntent;
 
     @NonNull
     @Contract(" -> new")
@@ -186,14 +179,8 @@ public class EventAdditionalInfoFragment extends Fragment {
     }
 
     private void createSpeechListener(@IdRes int resId) {
-        rec = SpeechRecognizer.createSpeechRecognizer(view.getContext());
-        speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        rec.setRecognitionListener(new EventSpeechRecognizer(view, resId));
-
-        SpeechOnTouchListener speech = new SpeechOnTouchListener(rec, speechRecognizerIntent);
-        speech.performClick();
+        SpeechRecognizerInterface speechInterface = new SpeechRecognizerInterface(view, resId);
+        speechInterface.performClick();
     }
 
     private void sendRequest(@NonNull View view) {
@@ -243,7 +230,7 @@ public class EventAdditionalInfoFragment extends Fragment {
                 setAlertDialog(R.string.no_event_picture, R.string.missing_event_image);
             } else {
                 String description1 = evm.getDescription();
-                if(/*!evm.getPrivEvent() && */(description1 == null || description1.equals(""))) {
+                if(description1 == null || description1.equals("")) {
                     setAlertDialog(R.string.no_event_description, R.string.missing_event_description);
                 } else {
                     if(evm.getPrivEvent()) {

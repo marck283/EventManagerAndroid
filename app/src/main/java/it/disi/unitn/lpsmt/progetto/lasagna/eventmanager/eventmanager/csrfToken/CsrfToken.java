@@ -24,7 +24,7 @@ import okhttp3.Response;
 public class CsrfToken {
 
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
-    public void getCsrfToken(@NonNull Activity a, Object o, @Nullable String gJwt, @Nullable AccessToken fbJwt,
+    public void getCsrfToken(@NonNull Activity a, @NonNull Authentication o, @Nullable String gJwt, @Nullable AccessToken fbJwt,
                              @NonNull String which, @Nullable Intent i) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -48,9 +48,7 @@ public class CsrfToken {
                         Gson gson = new GsonBuilder().create();
                         ApiCSRFClass token1 = token.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                         Log.i("token1", String.valueOf(token1.getToken()));
-                        if (o instanceof Authentication) {
-                            ((Authentication) o).login(a, token1.getToken(), gJwt, fbJwt, which, i);
-                        }
+                        o.login(a, token1.getToken(), gJwt, fbJwt, which, i);
                     } else {
                         Log.i("null", "Unsuccessful or null response");
                     }

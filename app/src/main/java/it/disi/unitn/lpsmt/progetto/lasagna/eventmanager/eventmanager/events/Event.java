@@ -49,15 +49,6 @@ public class Event {
         this.durata = durata;
     }
 
-    //Metodo di stampa per il debug
-    public void print() {
-        Log.i("info", id);
-        Log.i("info", eventid);
-        Log.i("info", self);
-        Log.i("info", name);
-        Log.i("info", orgName);
-    }
-
     /**
      * Decodifica il valore della stringa base64 che rappresenta l'immagine dell'evento in Bitmap.
      * @return Il valore decodificato in tipo Bitmap

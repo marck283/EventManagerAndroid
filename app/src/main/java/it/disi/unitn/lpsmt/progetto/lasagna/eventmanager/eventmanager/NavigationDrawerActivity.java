@@ -45,6 +45,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
@@ -180,20 +181,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         account = new GSignIn(this);
         vm.init(this);
-
-        /*SharedPreferences prefs = getSharedPreferences(
-                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
-        String accessToken = prefs.getString("accessToken", "");
-        if(accessToken.equals("")) {
-            updateUI("logout", null, null, null, false);
-            if(prompt) {
-                setAlertDialog(false);
-                prompt = false;
-            }
-        } else {
-            CsrfToken token = new CsrfToken();
-            token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
-        }*/
 
         //Soluzione al problema visivo del menù sbagliato quando la connessione ad Internet non è presente
         //all'apertura dell'applicazione
@@ -379,10 +366,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         launcher.launch(intent);
     }
 
-    private void signInCheck(int resultCode, Intent data, @NonNull String which, int requestCode) {
-        SharedPreferences prefs = getSharedPreferences(
-                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+    private void signInCheck(int resultCode, Intent data, @NonNull String which) {
+        SharedPrefs prefs = new SharedPrefs(
+                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
 
         switch(resultCode) {
             case Activity.RESULT_OK: {
@@ -397,13 +383,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     } else {
                         account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
                     }
-                    vm.setToken(account.getAccount().getIdToken());
-
-                    editor.putString("accessToken", vm.getToken().getValue());
-                    editor.apply();
-
-                    updateUI("login", account.getAccount().getEmail(), account.getAccount().getDisplayName(),
-                            account.getAccount().getPhotoUrl().toString(), true);
+                    vm.setToken(prefs.getString("accessToken"));
                 } else {
                     //Facebook login
                     String email, picture = null;
@@ -419,7 +399,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         email = null;
                     }
                     if(accessToken != null) {
-                        vm.setToken(prefs.getString("accessToken", ""));
+                        vm.setToken(prefs.getString("accessToken"));
                         profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
                         updateUI("login", email, profile.getName(), picture, true);
                     } else {
@@ -442,9 +422,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) {
             if(data != null && data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
-                signInCheck(resultCode, data, "google", requestCode);
+                signInCheck(resultCode, data, "google");
             } else {
-                signInCheck(resultCode, data, "facebook", requestCode);
+                signInCheck(resultCode, data, "facebook");
             }
         }
         if(requestCode == REQ_SIGN_IN_EV_CREATION && resultCode == Activity.RESULT_OK) {

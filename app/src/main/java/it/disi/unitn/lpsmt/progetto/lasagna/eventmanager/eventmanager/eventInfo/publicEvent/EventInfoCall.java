@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
@@ -71,10 +70,7 @@ public class EventInfoCall extends Thread {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                //Activity activity = f.getActivity();
-
-                //Le ultime due condizioni di questa riga dovrebbero essere commentate
-                if (response.body() != null && response.isSuccessful()/* && activity != null && f.isAdded()*/) {
+                if (response.body() != null && response.isSuccessful()) {
                     EventInfo ei = new EventInfo();
 
                     Gson gson = new GsonBuilder().create();

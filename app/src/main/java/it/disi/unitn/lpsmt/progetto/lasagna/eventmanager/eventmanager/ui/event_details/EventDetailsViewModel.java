@@ -51,12 +51,11 @@ public class EventDetailsViewModel extends ViewModel {
         }
     }
 
-    public void deleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
-                            @NonNull View v) {
+    public void deleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
             if(callback.isOnline(f.requireActivity())) {
-                DeleteEvent deleteEvent = new DeleteEvent(accessToken, eventId, f, v);
+                DeleteEvent deleteEvent = new DeleteEvent(accessToken, eventId, f);
                 deleteEvent.start();
             } else {
                 setNoConnectionDialog(f);

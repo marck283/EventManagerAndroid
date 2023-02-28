@@ -1,9 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket.delete_ticket;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -11,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

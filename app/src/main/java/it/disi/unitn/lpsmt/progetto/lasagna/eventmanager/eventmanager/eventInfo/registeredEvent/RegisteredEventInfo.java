@@ -24,7 +24,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -168,11 +167,7 @@ public class RegisteredEventInfo extends Thread {
                                         writeReview.setEnabled(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato());
                                     } else {
                                         try {
-                                            //Soluzione (solo per alcuni dispositivi) all'eccezione
-                                            //ParseException: unparseable date: posizionare
                                             SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-                                            //al posto della seguente riga di codice
-                                            //DateFormat df = DateFormat.getDateInstance();
                                             Date now = new Date(), eventDateTime = df.parse(dateTime);
                                             writeReview.setEnabled(!now.before(eventDateTime) || event.getLuogoEv().getTerminato());
                                         } catch(ParseException ex) {

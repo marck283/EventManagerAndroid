@@ -27,7 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class JsonCallback implements Callback<JsonObject> {
-    private final String type, evName;
+    private final String type;
     private String day;
     private EventAdapter p1;
     private final RecyclerView mRecyclerView;
@@ -45,7 +45,6 @@ public class JsonCallback implements Callback<JsonObject> {
         this.day = day;
         executor = null;
         launcher = null;
-        evName = null;
     }
 
     public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day,
@@ -56,7 +55,6 @@ public class JsonCallback implements Callback<JsonObject> {
         this.day = day;
         executor = null;
         this.launcher = launcher;
-        evName = null;
     }
 
     public JsonCallback(@Nullable Fragment f, String type, RecyclerView view,
@@ -67,7 +65,6 @@ public class JsonCallback implements Callback<JsonObject> {
         this.day = null;
         executor = null;
         this.launcher = launcher;
-        evName = null;
     }
 
     public JsonCallback(@Nullable Fragment f, String type, RecyclerView view, @Nullable String day,
@@ -78,17 +75,15 @@ public class JsonCallback implements Callback<JsonObject> {
         this.day = day;
         this.executor = executor;
         launcher = null;
-        evName = null;
     }
 
-    public JsonCallback(@Nullable Fragment f, String type, @NonNull String evName, RecyclerView view) {
+    public JsonCallback(@Nullable Fragment f, String type, RecyclerView view) {
         this.type = type;
         mRecyclerView = view;
         this.f = f;
         this.day = null;
         this.executor = null;
         launcher = null;
-        this.evName = evName;
     }
 
     private void initAdapter(@Nullable Fragment f, EventList ev, @Nullable String day) {

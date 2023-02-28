@@ -39,8 +39,4 @@ public class SpinnerOnItemSelectedListener implements AdapterView.OnItemSelected
     public void onNothingSelected(AdapterView<?> parent) {
         //Non implementato
     }
-
-    public LiveData<Object> getItem() {
-        return item;
-    }
 }

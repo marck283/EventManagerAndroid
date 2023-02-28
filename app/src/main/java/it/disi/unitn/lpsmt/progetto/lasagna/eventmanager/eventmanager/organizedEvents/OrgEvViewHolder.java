@@ -5,7 +5,6 @@ import android.view.View;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.button.MaterialButton;

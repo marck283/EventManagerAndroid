@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
@@ -82,17 +81,6 @@ public class SecondFragment extends Fragment {
         t3.setText(luogoEv.getAddressWOCap());
         t4.setText(String.valueOf(luogoEv.getMaxPers()));
 
-        /*ImageView modifyDestination = view.findViewById(R.id.imageView4);
-        modifyDestination.setOnClickListener(c -> {
-            Bundle b = new Bundle();
-
-            b.putString("data", luogoEv.getData());
-            b.putString("ora", luogoEv.getOra());
-            b.putString("indirizzo", luogoEv.toString());
-            b.putInt("numPosti", luogoEv.getPostiRimanenti());
-
-            NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment, b);
-        });*/
         ++countRows;
     }
 }

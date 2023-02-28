@@ -1,10 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,12 +18,10 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentFirstBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 
 public class FirstFragment extends Fragment {
@@ -34,8 +29,7 @@ public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
     private EventViewModel evm;
 
-    private SpeechRecognizer speechRecognizer;
-    private Intent speechRecognizerIntent;
+    private SpeechRecognizerInterface speechInterface;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,14 +42,8 @@ public class FirstFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         binding.nomeAtt.setEndIconOnClickListener(c -> {
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(binding.getRoot().getContext());
-            speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(binding.getRoot(), R.id.category));
-
-            SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
-            speech.performClick();
+            speechInterface = new SpeechRecognizerInterface(binding.getRoot(), R.id.category);
+            speechInterface.performClick();
         });
         binding.button5.setOnClickListener(c -> {
             if (binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
@@ -126,8 +114,8 @@ public class FirstFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (speechRecognizer != null) {
-            speechRecognizer.destroy();
+        if (speechInterface != null) {
+            speechInterface.destroy();
         }
         binding = null;
     }

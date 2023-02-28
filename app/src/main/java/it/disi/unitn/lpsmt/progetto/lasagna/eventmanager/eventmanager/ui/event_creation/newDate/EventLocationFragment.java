@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -81,20 +80,6 @@ public class EventLocationFragment extends DialogFragment {
             TextInputLayout zLayout = view.findViewById(R.id.zLayout);
             TextInputEditText t3 = zLayout.findViewById(R.id.zipcode);
 
-            //spinner.setOnItemSelectedListener(itemSelected);
-
-            /*itemSelected.getItem().observe(requireActivity(), o -> {
-                if(o instanceof String && !o.equals("") && !o.equals("---")) {
-                    mViewModel.setProvincia((String) o);
-                    mViewModel.parseAddress(evm.getPrivEvent(), t, t1, t2, t3, evm, ndvm);
-                } else {
-                    AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
-                    ad.setTitle(R.string.no_province_selected);
-                    ad.setMessage(getString(R.string.invalid_province));
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    ad.show();
-                }
-            });*/
             if(spinner.getText() != null && !spinner.getText().toString().equals("---")) {
                 mViewModel.setProvincia(spinner.getText().toString());
                 mViewModel.parseAddress(evm.getPrivEvent(), t, t1, t2, t3, evm, ndvm);

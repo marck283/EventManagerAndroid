@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
@@ -80,10 +79,6 @@ public class EventListFragment extends Fragment {
         }
     }
 
-    public EventListViewModel getViewModel() {
-        return eventListViewModel;
-    }
-
     public void onStart() {
         super.onStart();
         Activity activity = getActivity();
@@ -135,7 +130,7 @@ public class EventListFragment extends Fragment {
                                 if (rv != null) {
                                     rv.invalidate();
                                 }
-                                eventListViewModel.getEvents(this, root, idToken, o, /*null*/eventListViewModel.getOrgName().getValue());
+                                eventListViewModel.getEvents(this, root, idToken, o, null/*eventListViewModel.getOrgName().getValue()*/);
                             }
                         } else {
                             if (prompt) {
@@ -154,7 +149,7 @@ public class EventListFragment extends Fragment {
                                 if (rv != null) {
                                     rv.invalidate();
                                 }
-                                eventListViewModel.getEvents(this, root, idToken, /*null*/eventListViewModel.getEvName().getValue(), o);
+                                eventListViewModel.getEvents(this, root, idToken, null/*eventListViewModel.getEvName().getValue()*/, o);
                             }
                         } else {
                             if (prompt) {

@@ -2,20 +2,18 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localData
 
 import androidx.annotation.NonNull;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.helpers.UserInfo;
 
 @Dao
 public interface UserDAO {
 
     @Query("SELECT U.id, U.profilePic, U.nome, U.email, U.tel, U.numEvOrg, U.valutazioneMedia FROM Users U WHERE U.id = :id")
-    UserInfo getUser(@NonNull String id);
+    User getUser(@NonNull String id);
 
     @Insert
     void insert(User u);

@@ -19,7 +19,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 
 public class GeocoderExt {
-    private Geocoder geocoder;
+    private final Geocoder geocoder;
 
     private final Fragment f;
 

@@ -16,11 +16,11 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment;
 
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
-    private View itemView;
+    private final View itemView;
     private TextView userName, rating;
     private ImageView userPic;
 
-    private ReviewsFragment f;
+    private final ReviewsFragment f;
 
     public ReviewViewHolder(@NonNull ReviewsFragment f, @NonNull View itemView) {
         super(itemView);

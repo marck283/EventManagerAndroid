@@ -382,7 +382,7 @@ public class EventDetailsFragment extends Fragment {
                         }
                         //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
                         //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-                        mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this, view);
+                        mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this);
                     }
                 });
             }

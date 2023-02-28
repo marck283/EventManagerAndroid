@@ -12,8 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.jetbrains.annotations.Contract;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class QRCodeRenderingFragment extends DialogFragment {

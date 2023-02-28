@@ -2,12 +2,10 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,22 +26,18 @@ import okhttp3.ResponseBody;
 
 public class ReviewsRequest extends Thread {
     private final OkHttpClient client = new OkHttpClient();
-    private final String eventId, screenType;
+    private final String eventId;
     private final RecyclerView rv;
     private final Request request;
     private ReviewAdapter adapter;
     private final ReviewsFragment f;
 
-    private final View v;
-
-    public ReviewsRequest(@NonNull ReviewsFragment f, @NonNull View layout, @NonNull String id, @NonNull String screenType) {
+    public ReviewsRequest(@NonNull ReviewsFragment f, @NonNull View layout, @NonNull String id) {
         eventId = id;
-        this.screenType = screenType;
         this.f = f;
         request = new Request.Builder()
                 .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/recensioni")
                 .build();
-        v = layout;
         rv = layout.findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
@@ -87,16 +81,8 @@ public class ReviewsRequest extends Thread {
                                 AlertDialog dialog = new AlertDialog.Builder(f.requireContext()).create();
                                 dialog.setTitle(R.string.no_reviews);
                                 dialog.setMessage(f.getString(R.string.no_reviews_message));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-                                    dialog1.dismiss();
-
-                                    //Queste righe sono da rimuovere per risolvere il problema della navigazione
-                                    //in caso di assenza di recensioni
-                                    /*Bundle b = new Bundle();
-                                    b.putString("eventType", screenType);
-                                    b.putString("eventId", eventId);
-                                    Navigation.findNavController(v).navigate(R.id.action_reviewsFragment_to_eventDetailsFragment, b);*/
-                                });
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) ->
+                                        dialog1.dismiss());
                                 dialog.show();
                             });
                         }

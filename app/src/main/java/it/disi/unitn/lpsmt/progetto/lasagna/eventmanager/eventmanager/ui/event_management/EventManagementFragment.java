@@ -7,9 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,6 +27,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.Navigation
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 
 public class EventManagementFragment extends Fragment {
 
@@ -36,7 +35,7 @@ public class EventManagementFragment extends Fragment {
 
     private String userJwt;
 
-    private SharedPreferences prefs;
+    private SharedPrefs prefs;
 
     private NetworkCallback callback;
 
@@ -78,16 +77,15 @@ public class EventManagementFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     switch (result.getResultCode()) {
                         case RESULT_OK: {
-                            userJwt = prefs.getString("accessToken", "");
+                            userJwt = prefs.getString("accessToken");
                             searchEvents(mViewModel.getEvName().getValue(), view, null);
                             break;
                         }
                         case Activity.RESULT_CANCELED: {
                             Activity activity = getActivity();
                             if(activity != null && isAdded()) {
-                                SharedPreferences.Editor editor = prefs.edit();
-                                editor.putString("accessToken", "");
-                                editor.apply();
+                                prefs.setString("accessToken", "");
+                                prefs.apply();
                                 Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_nav_event_list);
                                 ((NavigationDrawerActivity) requireActivity()).updateUI("logout",
                                         "", "", "", false);
@@ -103,8 +101,8 @@ public class EventManagementFragment extends Fragment {
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
             callback = new NetworkCallback(requireActivity());
-            prefs = requireActivity().getSharedPreferences(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
+            prefs = new SharedPrefs(
+                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", requireActivity());
             if (callback.isOnline(requireActivity())) {
                 searchEvents(null, view, launcher);
             } else {

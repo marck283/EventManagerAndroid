@@ -89,7 +89,7 @@ public class OrganizedEvents {
         Call<JsonObject> call;
         if(evName != null) {
             call = orgEv.orgEv(authToken, evName);
-            call.enqueue(new JsonCallback(f, "org", evName, mRecyclerView));
+            call.enqueue(new JsonCallback(f, "org", mRecyclerView));
         }
     }
 }

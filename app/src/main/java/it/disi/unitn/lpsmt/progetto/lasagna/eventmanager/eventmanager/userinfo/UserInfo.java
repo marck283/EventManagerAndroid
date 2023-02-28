@@ -1,10 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -14,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UserInfo {
@@ -48,33 +42,6 @@ public class UserInfo {
 
     public String getId() {
         return id;
-    }
-
-    /**
-     * Decodifica il valore della stringa che rappresenta l'immagine dell'evento in Bitmap.
-     * @return Il valore decodificato in tipo Bitmap
-     */
-    public Bitmap decodeBase64(@NonNull String profilePic) {
-        Bitmap bitmap = null;
-        if(!profilePic.equals("")) {
-            Log.i("profilePic", profilePic);
-            byte[] decodedImg = null;
-            try {
-                decodedImg = Base64.decode(profilePic
-                        .replace("data:image/png;base64,", "")
-                        .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-            } catch(IllegalArgumentException ex) {
-                decodedImg = profilePic.getBytes();
-            } finally {
-                Log.i("decodedBytes", Arrays.toString(decodedImg));
-                if(decodedImg != null) {
-                    bitmap = BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
-                } else {
-                    Log.i("nullImg", "Nessuna immagine");
-                }
-            }
-        }
-        return bitmap;
     }
 
     public String getString(@NonNull String string) {
@@ -118,16 +85,16 @@ public class UserInfo {
         return "";
     }
 
-    private Integer integerFromJson(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
-        if(json.get(name) != null) {
-            return gs1.fromJson(json.get(name), Integer.class);
+    private Integer integerFromJson(@NonNull Gson gs1, @NonNull JsonObject json) {
+        if(json.get("numEvOrg") != null) {
+            return gs1.fromJson(json.get("numEvOrg"), Integer.class);
         }
         return 0;
     }
 
-    private Double doubleFromJson(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
-        if(json.get(name) != null) {
-            return gs1.fromJson(json.get(name), Double.class);
+    private Double doubleFromJson(@NonNull Gson gs1, @NonNull JsonObject json) {
+        if(json.get("valutazioneMedia") != null) {
+            return gs1.fromJson(json.get("valutazioneMedia"), Double.class);
         }
         return 0.0;
     }
@@ -150,8 +117,8 @@ public class UserInfo {
 
         return new UserInfo(stringFromJson(gs1, "id", json), stringFromJson(gs1, "picture", json),
                 stringFromJson(gs1, "nome", json), stringFromJson(gs1, "email", json),
-                stringFromJson(gs1, "tel", json), integerFromJson(gs1, "numEvOrg", json),
-                doubleFromJson(gs1, "valutazioneMedia", json), fromJsonArr(gs1, "EventiIscritto", json),
+                stringFromJson(gs1, "tel", json), integerFromJson(gs1, json),
+                doubleFromJson(gs1, json), fromJsonArr(gs1, "EventiIscritto", json),
                 fromJsonArr(gs1, "EventiCreati", json));
     }
 }

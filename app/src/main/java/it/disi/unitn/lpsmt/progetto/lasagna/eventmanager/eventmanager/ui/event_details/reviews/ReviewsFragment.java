@@ -50,7 +50,7 @@ public class ReviewsFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-        mViewModel1.getReviews(this, root.findViewById(R.id.frameLayout5), id, screenType);
+        mViewModel1.getReviews(this, root.findViewById(R.id.frameLayout5), id);
     }
 
 }

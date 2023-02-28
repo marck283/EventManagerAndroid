@@ -3,7 +3,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 

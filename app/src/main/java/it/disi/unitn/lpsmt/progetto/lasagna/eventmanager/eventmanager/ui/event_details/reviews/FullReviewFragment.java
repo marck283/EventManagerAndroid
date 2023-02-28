@@ -15,13 +15,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.textview.MaterialTextView;
 
+import org.jetbrains.annotations.Contract;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.eventReviews.Review;
 
 public class FullReviewFragment extends Fragment {
     private Review review;
-    private View root;
 
+    @NonNull
+    @Contract(" -> new")
     public static FullReviewFragment newInstance() {
         return new FullReviewFragment();
     }
@@ -34,8 +37,7 @@ public class FullReviewFragment extends Fragment {
             review = (Review)b.getSerializable("review");
         }
 
-        root = inflater.inflate(R.layout.fragment_full_review, container, false);
-        return root;
+        return inflater.inflate(R.layout.fragment_full_review, container, false);
     }
 
     @Override

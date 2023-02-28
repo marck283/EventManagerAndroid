@@ -16,7 +16,7 @@ public class PrivEvViewHolder extends EventHolder {
     private final MaterialButton t;
     private final View v;
 
-    private String day;
+    private final String day;
 
     public PrivEvViewHolder(@NonNull View itemView, @NonNull String day) {
         super(itemView);

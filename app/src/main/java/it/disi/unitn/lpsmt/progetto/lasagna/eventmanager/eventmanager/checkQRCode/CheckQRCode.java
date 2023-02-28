@@ -55,7 +55,11 @@ public class CheckQRCode extends Thread {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                //Nulla qui...
+                try {
+                    throw e;
+                } catch(IOException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             @Override

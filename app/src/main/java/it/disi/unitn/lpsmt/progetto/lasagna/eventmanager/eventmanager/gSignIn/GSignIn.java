@@ -10,7 +10,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.tasks.Task;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -28,14 +27,6 @@ public class GSignIn {
 
         gsi = GoogleSignIn.getClient(a, gso);
         account = GoogleSignIn.getLastSignedInAccount(a);
-    }
-
-    public GoogleSignInAccount silentSignIn() throws ApiException {
-        Task<GoogleSignInAccount> task = gsi.silentSignIn();
-        if(!task.isSuccessful()) {
-            return null;
-        }
-        return task.getResult(ApiException.class);
     }
 
     public GoogleSignInAccount getAccount() {
