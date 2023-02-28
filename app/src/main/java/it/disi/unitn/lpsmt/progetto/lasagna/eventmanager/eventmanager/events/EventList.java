@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventList {
-    List<Event> pubEvList;
+    final List<Event> pubEvList;
 
     public EventList() {
         pubEvList = new ArrayList<>();
