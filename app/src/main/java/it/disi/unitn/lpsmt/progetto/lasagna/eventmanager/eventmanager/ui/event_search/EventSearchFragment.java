@@ -8,15 +8,12 @@ import androidx.lifecycle.ViewModelProvider;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +22,10 @@ import android.widget.EditText;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Locale;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagementViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
 public class EventSearchFragment extends DialogFragment {
 
@@ -41,9 +35,7 @@ public class EventSearchFragment extends DialogFragment {
 
     private EventListViewModel elvm;
 
-    private SpeechRecognizer speechRecognizer;
-
-    private Intent speechRecognizerIntent;
+    private SpeechRecognizerInterface speechRecognizer;
 
     private String parent;
 
@@ -137,26 +129,14 @@ public class EventSearchFragment extends DialogFragment {
 
         TextInputLayout text1 = root.findViewById(R.id.orgName);
         text1.setEndIconOnClickListener(c -> {
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(root.getContext());
-            speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(root, R.id.organizerName));
-
-            SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
-            speech.performClick();
+            speechRecognizer = new SpeechRecognizerInterface(root, R.id.organizerName);
+            speechRecognizer.performClick();
         });
 
         TextInputLayout text2 = root.findViewById(R.id.nomeAtt4);
         text2.setEndIconOnClickListener(c -> {
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(root.getContext());
-            speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(root, R.id.nomeAtt2));
-
-            SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
-            speech.performClick();
+            speechRecognizer = new SpeechRecognizerInterface(root, R.id.nomeAtt2);
+            speechRecognizer.performClick();
         });
     }
 

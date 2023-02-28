@@ -16,8 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.speech.RecognizerIntent;
-import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,13 +27,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.Contract;
 
-import java.util.Locale;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.EventSpeechRecognizer;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechOnTouchListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
 public class EventRestrictionsFragment extends Fragment {
 
@@ -43,8 +38,7 @@ public class EventRestrictionsFragment extends Fragment {
 
     private EventViewModel evm;
 
-    private SpeechRecognizer speechRecognizer;
-    private Intent speechRecognizerIntent;
+    private SpeechRecognizerInterface speechRecognizer;
 
     private ActivityResultLauncher<Intent> loginLauncher;
 
@@ -96,25 +90,13 @@ public class EventRestrictionsFragment extends Fragment {
             });
 
             etaMinLayout.setEndIconOnClickListener(c -> {
-                speechRecognizer = SpeechRecognizer.createSpeechRecognizer(view.getContext());
-                speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(view, R.id.minimum_age_text_view));
-
-                SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
-                speech.performClick();
+                speechRecognizer = new SpeechRecognizerInterface(view, R.id.minimum_age_text_view);
+                speechRecognizer.performClick();
             });
 
             etaMaxLayout.setEndIconOnClickListener(c -> {
-                speechRecognizer = SpeechRecognizer.createSpeechRecognizer(view.getContext());
-                speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-                speechRecognizer.setRecognitionListener(new EventSpeechRecognizer(view, R.id.maximum_age_text_view));
-
-                SpeechOnTouchListener speech = new SpeechOnTouchListener(speechRecognizer, speechRecognizerIntent);
-                speech.performClick();
+                speechRecognizer = new SpeechRecognizerInterface(view, R.id.maximum_age_text_view);
+                speechRecognizer.performClick();
             });
         }
 
