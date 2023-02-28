@@ -59,11 +59,6 @@ public class SecondFragment extends Fragment {
                 NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment));
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     public void addInfo(@NonNull View view, @NonNull LuogoEv luogoEv) {
         //Crea una riga della tabella
         TableLayout l = view.findViewById(R.id.tableLayout);

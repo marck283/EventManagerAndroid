@@ -93,8 +93,4 @@ public class EventLocationFragment extends DialogFragment {
         });
     }
 
-    public void onStart() {
-        super.onStart();
-    }
-
 }

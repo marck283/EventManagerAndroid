@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class SpinnerOnItemSelectedListener implements AdapterView.OnItemSelectedListener {

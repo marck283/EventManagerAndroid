@@ -16,12 +16,16 @@ import java.util.ArrayList;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class EventInfo {
-    private String id, nomeAtt, categoria, organizzatore, eventPic;
-    private String durata;
+    private final String id, nomeAtt, categoria, organizzatore, eventPic, durata;
     private boolean terminato;
     private ArrayList<LuogoEv> luogoEvento;
 
     public EventInfo() {
+        id = "";
+        nomeAtt = "";
+        categoria = "";
+        organizzatore = "";
+        eventPic = "";
         durata = "";
         terminato = false;
     }

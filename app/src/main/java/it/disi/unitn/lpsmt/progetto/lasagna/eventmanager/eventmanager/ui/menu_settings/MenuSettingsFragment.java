@@ -63,11 +63,6 @@ public class MenuSettingsFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     private void showInfo() {
         AlertDialog dialog = new AlertDialog.Builder(this.requireContext()).create();
         dialog.setTitle(R.string.app_version);

@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.DAOs;
+package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.daos;
 
 import androidx.annotation.NonNull;
 import androidx.room.Dao;
