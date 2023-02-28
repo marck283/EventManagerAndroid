@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent;
 
 import android.app.AlertDialog;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 
@@ -8,17 +9,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class TerminateEvent extends Thread {
-    private final OkHttpClient client;
+
+    private final NetworkRequest request;
 
     private final String eventId, accessToken, data, ora;
 
@@ -28,7 +33,7 @@ public class TerminateEvent extends Thread {
 
     public TerminateEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull String data,
                           @NonNull String ora, @NonNull View v, @NonNull Fragment f) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.eventId = eventId;
         this.data = data;
         this.ora = ora;
@@ -52,12 +57,13 @@ public class TerminateEvent extends Thread {
                 .add("data", data)
                 .add("ora", ora)
                 .build();
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", accessToken)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/terminaEvento/" + eventId)
-                .patch(body)
-                .build();
-        client.newCall(request).enqueue(new OrganizerCallback() {
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", accessToken));
+        request.getPatchRequest(body, headers,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/terminaEvento/" + eventId);
+        Request req = request.getPatchRequest(body, headers,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/terminaEvento/" + eventId);
+        request.enqueue(req, new OrganizerCallback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 switch (response.code()) {

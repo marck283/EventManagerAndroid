@@ -1,26 +1,30 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent;
 
 import android.app.AlertDialog;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class DeleteEvent extends Thread {
-    private final OkHttpClient client;
+    private final NetworkRequest request;
     private final String accessToken, eventId;
 
     private final Fragment f;
 
     public DeleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull Fragment f) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.accessToken = accessToken;
         this.eventId = eventId;
         this.f = f;
@@ -37,12 +41,11 @@ public class DeleteEvent extends Thread {
     }
 
     public void run() {
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", accessToken)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/annullaEvento/" + eventId)
-                .delete()
-                .build();
-        client.newCall(request).enqueue(new OrganizerCallback() {
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", accessToken));
+        Request req = request.getDeleteRequest(headers,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/annullaEvento/" + eventId);
+        request.enqueue(req, new OrganizerCallback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 switch (response.code()) {

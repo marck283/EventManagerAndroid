@@ -1,23 +1,27 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket.delete_ticket;
 
 import android.app.AlertDialog;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class DeleteTicket extends Thread {
     private final String eventId, ticketId, userJwt, data, ora;
-    private final OkHttpClient client;
+
+    private final NetworkRequest request;
 
     private final Fragment f;
 
@@ -26,7 +30,7 @@ public class DeleteTicket extends Thread {
         this.eventId = eventId;
         this.ticketId = ticketId;
         this.userJwt = userJwt;
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.f = f;
         this.data = data;
         this.ora = ora;
@@ -43,14 +47,13 @@ public class DeleteTicket extends Thread {
     }
 
     public void run() {
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", userJwt)
-                .addHeader("data", data)
-                .addHeader("ora", ora)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni/" + ticketId)
-                .delete()
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", userJwt));
+        headers.add(new Pair<>("data", data));
+        headers.add(new Pair<>("ora", ora));
+        Request req = request.getDeleteRequest(headers,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni/" + ticketId);
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

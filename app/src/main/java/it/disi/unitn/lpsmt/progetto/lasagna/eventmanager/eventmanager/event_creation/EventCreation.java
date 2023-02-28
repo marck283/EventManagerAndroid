@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.event_cre
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.util.Pair;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -12,13 +13,15 @@ import androidx.fragment.app.Fragment;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -28,7 +31,7 @@ public class EventCreation extends Thread {
 
     private final EventViewModel evm;
 
-    private final OkHttpClient client;
+    private final NetworkRequest request;
 
     private final Fragment f;
 
@@ -38,7 +41,7 @@ public class EventCreation extends Thread {
     public EventCreation(@NonNull Fragment f, @NonNull String jwt, @NonNull EventViewModel evm) {
         userJwt = jwt;
         this.evm = evm;
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.f = f;
         i = null;
         loginIntent = null;
@@ -48,7 +51,7 @@ public class EventCreation extends Thread {
                          @NonNull ActivityResultLauncher<Intent> i, @NonNull Intent loginIntent) {
         userJwt = jwt;
         this.evm = evm;
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.f = f;
         this.i = i;
         this.loginIntent = loginIntent;
@@ -83,12 +86,10 @@ public class EventCreation extends Thread {
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
                 jsonObject.toString());
 
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .addHeader("x-access-token", userJwt)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", userJwt));
+        Request req = request.getPostRequest(body, headers, url);
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

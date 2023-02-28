@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Pair;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -10,12 +11,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -24,7 +27,7 @@ public class PostReview extends Thread {
     private final String userId, eventId, titolo, motivazione;
     private final float valutazione;
 
-    private final OkHttpClient client;
+    private final NetworkRequest request;
 
     private final Fragment f;
 
@@ -32,7 +35,7 @@ public class PostReview extends Thread {
 
     public PostReview(@NonNull String userId, @NonNull String eventId, @NonNull String titolo,
                       @NonNull String motivazione, float valutazione, @NonNull Fragment f, @NonNull View v) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.userId = userId;
         this.eventId = eventId;
         this.titolo = titolo;
@@ -57,12 +60,11 @@ public class PostReview extends Thread {
         //La valutazione deve essere espressa in decimi.
         RequestBody body = new FormBody.Builder().add("title", titolo)
                 .add("evaluation", String.valueOf(2 * valutazione)).add("description", motivazione).build();
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", userId)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/Recensioni/" + eventId)
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", userId));
+        Request req = request.getPostRequest(body, headers,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/Recensioni/" + eventId);
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

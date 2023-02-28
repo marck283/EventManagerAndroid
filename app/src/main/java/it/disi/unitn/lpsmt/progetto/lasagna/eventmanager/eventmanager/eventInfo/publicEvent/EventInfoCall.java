@@ -29,17 +29,17 @@ import java.util.Locale;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class EventInfoCall extends Thread {
 
-    private final OkHttpClient client;
+    private final NetworkRequest request;
 
     private final String eventId;
 
@@ -48,17 +48,16 @@ public class EventInfoCall extends Thread {
     private final EventDetailsFragment f;
 
     public EventInfoCall(@NonNull String eventId, @NonNull View v, @NonNull EventDetailsFragment f) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.eventId = eventId;
         this.v = v;
         this.f = f;
     }
 
     public void run() {
-        Request request = new Request.Builder()
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        Request req = request.getRequest(new ArrayList<>(),
+                "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId);
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

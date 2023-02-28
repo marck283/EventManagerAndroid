@@ -9,6 +9,7 @@ import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,21 +26,23 @@ import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import okhttp3.Call;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class OrganizedEventInfo extends Thread {
-    private final OkHttpClient client;
+
+    private final NetworkRequest request;
 
     private final String userJwt, eventId;
 
@@ -53,7 +56,7 @@ public class OrganizedEventInfo extends Thread {
 
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
                               @NonNull String evId, @NonNull String day) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.userJwt = userJwt;
         eventId = evId;
         this.v = v;
@@ -65,7 +68,7 @@ public class OrganizedEventInfo extends Thread {
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
                               @NonNull String evId,
                               @NonNull ActivityResultLauncher<Intent> loginLauncher) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.userJwt = userJwt;
         eventId = evId;
         this.v = v;
@@ -76,7 +79,7 @@ public class OrganizedEventInfo extends Thread {
 
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
                               @NonNull String evId) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.userJwt = userJwt;
         eventId = evId;
         this.v = v;
@@ -86,20 +89,14 @@ public class OrganizedEventInfo extends Thread {
     }
 
     public void run() {
-        Request request;
+        Request req;
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", userJwt));
         if (day != null) {
-            request = new Request.Builder()
-                    .addHeader("x-access-token", userJwt)
-                    .addHeader("date", day)
-                    .url("https://eventmanagerzlf.herokuapp.com/api/v2/InfoEventoOrg/" + eventId)
-                    .build();
-        } else {
-            request = new Request.Builder()
-                    .addHeader("x-access-token", userJwt)
-                    .url("https://eventmanagerzlf.herokuapp.com/api/v2/InfoEventoOrg/" + eventId)
-                    .build();
+            headers.add(new Pair<>("date", day));
         }
-        client.newCall(request).enqueue(new OrganizerCallback() {
+        req = request.getRequest(headers, "https://eventmanagerzlf.herokuapp.com/api/v2/InfoEventoOrg/" + eventId);
+        request.enqueue(req, new OrganizerCallback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 Gson gson = new Gson();

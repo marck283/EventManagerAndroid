@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -11,20 +12,23 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class UserEventRegistration extends Thread {
-    private final OkHttpClient client;
+
+    private final NetworkRequest request;
 
     private final EventDetailsFragment f;
 
@@ -35,7 +39,7 @@ public class UserEventRegistration extends Thread {
     public UserEventRegistration(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
                                  @NonNull String time, @NonNull EventDetailsFragment f,
                                  @Nullable ActivityResultLauncher<Intent> launcher) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.f = f;
         this.accessToken = accessToken;
         this.eventId = eventId;
@@ -61,16 +65,15 @@ public class UserEventRegistration extends Thread {
         Log.i("day", day);
         Log.i("time", time);
 
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", accessToken));
         RequestBody body = new FormBody.Builder()
                 .add("data", day)
                 .add("ora", time)
                 .build();
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", accessToken)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni")
-                .post(body)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        Request req = request.getPostRequest(body, headers,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni");
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

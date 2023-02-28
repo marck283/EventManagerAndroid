@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,23 +28,25 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan.QRCodeRenderingFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class RegisteredEventInfo extends Thread {
-    private final OkHttpClient client;
+    private final NetworkRequest request;
 
     private final String userJwt, eventId, data;
 
@@ -56,7 +59,7 @@ public class RegisteredEventInfo extends Thread {
     public RegisteredEventInfo(@NonNull String userJwt, @NonNull String eventId, @NonNull EventDetailsFragment f,
                                @NonNull View v, @NonNull String data,
                                @NonNull ActivityResultLauncher<Intent> loginLauncher) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.userJwt = userJwt;
         this.eventId = eventId;
         this.f = f;
@@ -76,12 +79,11 @@ public class RegisteredEventInfo extends Thread {
     }
 
     public void run() {
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", userJwt)
-                .addHeader("data", data)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/InfoEventoIscr/" + eventId)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", userJwt));
+        headers.add(new Pair<>("data", data));
+        Request req = request.getRequest(headers, "https://eventmanagerzlf.herokuapp.com/api/v2/InfoEventoIscr/" + eventId);
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

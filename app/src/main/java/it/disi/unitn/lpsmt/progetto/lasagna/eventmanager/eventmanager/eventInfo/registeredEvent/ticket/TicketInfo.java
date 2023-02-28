@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -15,24 +16,27 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class TicketInfo extends Thread {
     private final String eventId, userId, data, ora;
-    private final OkHttpClient client;
     private final View v;
 
     private final Fragment f;
 
+    private final NetworkRequest request;
+
     public TicketInfo(@NonNull Fragment f, @NonNull View v, @NonNull String eventId,
                       @NonNull String userId, @NonNull String data, @NonNull String ora) {
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.eventId = eventId;
         this.userId = userId;
         this.data = data;
@@ -55,13 +59,12 @@ public class TicketInfo extends Thread {
     }
 
     public void run() {
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", userId)
-                .addHeader("giorno", data)
-                .addHeader("ora", ora)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/ticket/" + eventId)
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", userId));
+        headers.add(new Pair<>("giorno", data));
+        headers.add(new Pair<>("ora", ora));
+        Request req = request.getRequest(headers, "https://eventmanagerzlf.herokuapp.com/api/v2/ticket/" + eventId);
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

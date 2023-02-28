@@ -16,28 +16,26 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class ReviewsRequest extends Thread {
-    private final OkHttpClient client = new OkHttpClient();
-    private final String eventId;
+    private final NetworkRequest request;
     private final RecyclerView rv;
-    private final Request request;
+    private final Request req;
     private ReviewAdapter adapter;
     private final ReviewsFragment f;
 
     public ReviewsRequest(@NonNull ReviewsFragment f, @NonNull View layout, @NonNull String id) {
-        eventId = id;
         this.f = f;
-        request = new Request.Builder()
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/recensioni")
-                .build();
+        request = new NetworkRequest();
+        req = request.getRequest(null,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + id + "/recensioni");
         rv = layout.findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
@@ -48,7 +46,7 @@ public class ReviewsRequest extends Thread {
     }
 
     public void run() {
-        client.newCall(request).enqueue(new Callback() {
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

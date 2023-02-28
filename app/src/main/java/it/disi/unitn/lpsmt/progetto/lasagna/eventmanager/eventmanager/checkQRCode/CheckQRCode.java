@@ -2,22 +2,26 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.checkQRCo
 
 import android.app.AlertDialog;
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class CheckQRCode extends Thread {
-    private final OkHttpClient client;
+
+    private final NetworkRequest request;
     private final String userJwt, qrCode, eventid, day, hour;
 
     private final Fragment f;
@@ -26,7 +30,7 @@ public class CheckQRCode extends Thread {
                        @NonNull String day, @NonNull String hour, @NonNull Fragment f) {
         this.userJwt = userJwt;
         this.qrCode = qrCode;
-        client = new OkHttpClient();
+        request = new NetworkRequest();
         this.f = f;
         this.eventid = eventid;
         this.day = day;
@@ -44,15 +48,15 @@ public class CheckQRCode extends Thread {
     }
 
     public void run() {
-        Request request = new Request.Builder()
-                .addHeader("x-access-token", userJwt)
-                .addHeader("eventoid", eventid)
-                .addHeader("day", day)
-                .addHeader("hour", hour)
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/QRCodeCheck/" + qrCode)
-                .build();
+        List<Pair<String, String>> headers = new ArrayList<>();
+        headers.add(new Pair<>("x-access-token", userJwt));
+        headers.add(new Pair<>("eventoid", eventid));
+        headers.add(new Pair<>("day", day));
+        headers.add(new Pair<>("hour", hour));
+        Request req = request.getRequest(headers,
+                "https://eventmanagerzlf.herokuapp.com/api/v2/QRCodeCheck/" + qrCode);
         Log.i("code", qrCode);
-        client.newCall(request).enqueue(new Callback() {
+        request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {

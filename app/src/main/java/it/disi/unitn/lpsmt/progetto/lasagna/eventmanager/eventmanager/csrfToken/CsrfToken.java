@@ -13,11 +13,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.networkRequests.NetworkRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -26,11 +27,9 @@ public class CsrfToken {
     //Come associo il token CSRF alla classe di autenticazione senza dimenticare che potrebbe servirmi anche per altre classi in futuro?
     public void getCsrfToken(@NonNull Activity a, @NonNull Authentication o, @Nullable String gJwt, @Nullable AccessToken fbJwt,
                              @NonNull String which, @Nullable Intent i) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("https://eventmanagerzlf.herokuapp.com/api/v2/csrfToken")
-                .build();
-        client.newCall(request).enqueue(new Callback() {
+        NetworkRequest req = new NetworkRequest();
+        Request request = req.getRequest(new ArrayList<>(), "https://eventmanagerzlf.herokuapp.com/api/v2/csrfToken");
+        req.enqueue(request, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 try {
