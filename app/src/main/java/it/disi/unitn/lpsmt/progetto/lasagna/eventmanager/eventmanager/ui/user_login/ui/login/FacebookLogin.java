@@ -82,8 +82,8 @@ public class FacebookLogin {
                         Profile p = new Profile(jsonObject);
                         i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
 
-                        CsrfToken token = new CsrfToken();
-                        token.getCsrfToken(a, new Authentication(), null, accessToken, "facebook", i);
+                        CsrfToken token = new CsrfToken(a, null, accessToken, "facebook", i);
+                        token.start();
                     } else {
                         Log.i("nullResult", "Risposta null");
                         a.setResult(Activity.RESULT_CANCELED);

@@ -61,9 +61,9 @@ public class GoogleLogin {
             // Signed in successfully, update the database and return to caller with the results
 
             Intent intent = a.setUpIntent("google", null);
-            CsrfToken token = new CsrfToken();
+            CsrfToken token = new CsrfToken(a, signIn.getAccount().getIdToken(), null, "google", intent);
             signIn.setAccount(completedTask.getResult());
-            token.getCsrfToken(a, new Authentication(), signIn.getAccount().getIdToken(), null, "google", intent);
+            token.start();
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.

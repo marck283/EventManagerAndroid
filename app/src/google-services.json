@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "666454225517-v4l6tieseu1btb83s0d2prtlgnvqc2j6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager",
+            "certificate_hash": "8fe51098fdf5a436ff722a9733fa34af4c8238d0"
+          }
+        },
+        {
           "client_id": "666454225517-itbjsj8g0hp5rq3hmbcg8ieg4mi9o5s3.apps.googleusercontent.com",
           "client_type": 3
         }

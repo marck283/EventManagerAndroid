@@ -23,7 +23,7 @@
     <string name="log_in">Log In</string>
     <string name="log_in_text">Log in to unlock all the system\'s features!</string>
     <string name="title_activity_login" translatable="false">LoginActivity</string>
-    <string name="server_client_id" translatable="false">22819640695-40ie511a43vdbh8p82o5uhm6b62529rm.apps.googleusercontent.com</string>
+    <string name="server_client_id" translatable="false">666454225517-itbjsj8g0hp5rq3hmbcg8ieg4mi9o5s3.apps.googleusercontent.com</string>
     <string name="profileName" translatable="false">%1$s</string>
     <string name="email" translatable="false">%1$s</string>
     <string name="show_phone_number">Show phone number in profile details</string>

@@ -16,13 +16,14 @@ import java.util.concurrent.Executors;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.JsonCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PublicEvents {
+public class PublicEvents/* extends ServerOperation*/ {
     private final PublicEventsInterface pubEv;
     private final RecyclerView mRecyclerView;
 

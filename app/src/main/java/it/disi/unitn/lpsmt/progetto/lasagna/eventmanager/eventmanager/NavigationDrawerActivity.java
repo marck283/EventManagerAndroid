@@ -40,7 +40,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.authentication.Authentication;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
@@ -199,8 +198,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         prompt = false;
                     }
                 } else {
-                    CsrfToken token = new CsrfToken();
-                    token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
+                    CsrfToken token = new CsrfToken(this, accessToken, null, "google", null);
+                    token.start();
                 }
             });
             callback.unregisterNetworkCallback();
@@ -215,8 +214,8 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     prompt = false;
                 }
             } else {
-                CsrfToken token = new CsrfToken();
-                token.getCsrfToken(this, new Authentication(), accessToken, null, "google", null);
+                CsrfToken token = new CsrfToken(this, accessToken, null, "google", null);
+                token.start();
             }
         }
     }
@@ -294,39 +293,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
         }
 
-        /*if(account.getAccount() == null) {
-            if(Profile.getCurrentProfile() == null || accessToken.isExpired()) {
-                showNotLoggedIn(username, email);
-            } else {
-                if(request.equals("logout")) {
-                    LoginManager.getInstance().logOut();
-                    showNotLoggedIn(username, email);
-                } else {
-                    //L'utente è autenticato con Google; ottieni il token di accesso al server e mostra la UI aggiornata.
-                    navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
-
-                    //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
-                    //Log.i("id", profile.getId());
-                    username.setText(getString(R.string.profileName, /*profile.getName()*//*name));
-                    if(emailF != null && !emailF.equals("")) {
-                        email.setText(getString(R.string.email, emailF));
-                    }
-
-                    Glide.with(l.getContext()).load(pictureF).apply(new RequestOptions().override(ivwidth, ivheight))
-                            .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
-                }
-            }
-        } else {
-            //L'utente è autenticato con Google; ottieni il token di accesso al server e mostra la UI aggiornata.
-            navView.inflateMenu(R.menu.activity_navigation_drawer_drawer);
-
-            GoogleSignInAccount acc = account.getAccount();
-            username.setText(getString(R.string.profileName, name));
-            email.setText(getString(R.string.email, emailF));
-            Glide.with(l.getContext()).load(pictureF).apply(new RequestOptions().override(ivwidth, ivheight))
-                    .optionalCircleCrop().into((ImageView) l.findViewById(R.id.imageView));
-        }*/
-
         DrawerLayout d = findViewById(R.id.drawer_layout);
         d.closeDrawers();
     }
@@ -375,6 +341,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                 //Autenticato con successo a Google o Facebook, ora autentica al server e
                 //mostra i dati del profilo richiesti
 
+                String email, picture = null;
                 if(which.equals("google")) {
                     //Google login
                     GoogleSignInAccount gSignIn = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount");
@@ -384,9 +351,13 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
                     }
                     vm.setToken(prefs.getString("accessToken"));
+                    if(data != null) {
+                        email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
+                        picture = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture");
+                        updateUI("login", email, account.getAccount().getDisplayName(), picture, false);
+                    }
                 } else {
                     //Facebook login
-                    String email, picture = null;
                     if(data != null) {
                         accessToken = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken");
                         email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
