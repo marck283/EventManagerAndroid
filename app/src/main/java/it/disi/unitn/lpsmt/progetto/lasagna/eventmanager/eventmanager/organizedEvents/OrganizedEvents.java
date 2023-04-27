@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents;
 
 import android.content.Intent;
+import android.util.Pair;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -13,16 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.JsonCallback;
-import retrofit2.Call;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
+import okhttp3.Call;
+import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class OrganizedEvents {
-    private final OrganizedEventsInterface orgEv;
+public class OrganizedEvents extends ServerOperation {
+    //private final OrganizedEventsInterface orgEv;
 
-    private final OrgEvInterfaceWithData orgEvWD;
+    //private final OrgEvInterfaceWithData orgEvWD;
 
     private final RecyclerView mRecyclerView;
 
@@ -32,15 +39,20 @@ public class OrganizedEvents {
 
     private final String evName;
 
+    private final NetworkRequest nreq;
+
+    private final List<Pair<String, String>> list;
+
     public OrganizedEvents(@IdRes int recyclerViewId, @NonNull Fragment f, @NonNull View layout,
                            @Nullable ActivityResultLauncher<Intent> launcher) {
-        Retrofit retro = new Retrofit.Builder()
+        super();
+        /*Retrofit retro = new Retrofit.Builder()
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build();*/
         this.f = f;
-        orgEv = null;
-        orgEvWD = retro.create(OrgEvInterfaceWithData.class);
+        //orgEv = null;
+        //orgEvWD = retro.create(OrgEvInterfaceWithData.class);
         mRecyclerView = layout.findViewById(recyclerViewId);
         f.requireActivity().runOnUiThread(() -> {
             RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
@@ -51,17 +63,20 @@ public class OrganizedEvents {
         });
         this.launcher = launcher;
         evName = null;
+        nreq = getNetworkRequest();
+        list = new ArrayList<>();
     }
 
     public OrganizedEvents(@IdRes int recyclerViewId, @NonNull Fragment f, @NonNull View layout,
                            @Nullable String evName, @Nullable ActivityResultLauncher<Intent> launcher) {
-        Retrofit retro = new Retrofit.Builder()
+        super();
+        /*Retrofit retro = new Retrofit.Builder()
                 .baseUrl("https://eventmanagerzlf.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build();*/
         this.f = f;
-        orgEvWD = null;
-        orgEv = retro.create(OrganizedEventsInterface.class);
+        //orgEvWD = null;
+        //orgEv = retro.create(OrganizedEventsInterface.class);
         mRecyclerView = layout.findViewById(recyclerViewId);
         f.requireActivity().runOnUiThread(() -> {
             RecyclerView.LayoutManager lm = new LinearLayoutManager(layout.getContext(), LinearLayoutManager.VERTICAL,
@@ -72,24 +87,37 @@ public class OrganizedEvents {
         });
         this.launcher = launcher;
         this.evName = evName;
+        nreq = getNetworkRequest();
+        list = new ArrayList<>();
     }
 
     public void getOrgEvents(@NonNull String authToken, @Nullable String data) {
-        Call<JsonObject> call;
+        Pair<String, String> token = new Pair<>("x-access-token", authToken);
+        list.add(token);
+        Request req;
         if(data != null) {
-            call = orgEvWD.orgEv(authToken, data);
-            call.enqueue(new JsonCallback(f, "org", mRecyclerView, data, launcher));
+            /*call = orgEvWD.orgEv(authToken, data);
+            call.enqueue(new JsonCallback(f, "org", mRecyclerView, data, launcher));*/
+            req = nreq.getRequest(list, getBaseUrl() + "/api/v2/EventOrgList/" + data);
+            nreq.enqueue(req, new JsonCallback(f, "org", mRecyclerView, data, launcher));
         } else {
-            call = orgEvWD.orgEv(authToken);
-            call.enqueue(new JsonCallback(f, "org", mRecyclerView, launcher));
+            /*call = orgEvWD.orgEv(authToken);
+            call.enqueue(new JsonCallback(f, "org", mRecyclerView, launcher));*/
+            req = nreq.getRequest(list, getBaseUrl() + "/api/v2/EventOrgList");
+            nreq.enqueue(req, new JsonCallback(f, "org", mRecyclerView, launcher));
         }
     }
 
     public void getOrgEventsWithName(@NonNull String authToken) {
-        Call<JsonObject> call;
+        Pair<String, String> token = new Pair<>("x-access-token", authToken), ename = new Pair<>("name", evName);
+        list.add(token);
+        list.add(ename);
+
         if(evName != null) {
-            call = orgEv.orgEv(authToken, evName);
-            call.enqueue(new JsonCallback(f, "org", mRecyclerView));
+            /*call = orgEv.orgEv(authToken, evName);
+            call.enqueue(new JsonCallback(f, "org", mRecyclerView));*/
+            Request req = nreq.getRequest(list, getBaseUrl() + "/api/v2/EventOrgList");
+            nreq.enqueue(req, new JsonCallback(f, "org", mRecyclerView));
         }
     }
 }

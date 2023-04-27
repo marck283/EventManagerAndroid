@@ -10,15 +10,21 @@ import java.io.IOException;
 import java.io.InvalidObjectException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import okhttp3.Dispatcher;
 import okhttp3.ResponseBody;
 
 public abstract class ServerOperation extends Thread {
-    private final String baseUrl;
-    private final NetworkRequest request;
+    private String baseUrl;
+    private NetworkRequest request;
 
     public ServerOperation() {
         baseUrl = "https://eventmanager-uo29.onrender.com";
         request = new NetworkRequest();
+    }
+
+    public void createOperation(@NotNull Dispatcher dispatcher) {
+        baseUrl = "https://eventmanager-uo29.onrender.com";
+        request = new NetworkRequest(dispatcher);
     }
 
     public String getBaseUrl() {

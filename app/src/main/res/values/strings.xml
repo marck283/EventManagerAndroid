@@ -32,7 +32,7 @@
     <string name="no_session_content">There is no existing session. Would you like to log in?</string>
     <string name="no_session_title">You are not authenticated!</string>
     <string name="facebook_app_id" translatable="false">1143189906271722</string>
-    <string name="facebook_client_token" translatable="false">d1000d7e9d1e66a5a81886fa17b1b62b</string>
+    <string name="facebook_client_token" translatable="false">d8ff410b34a7cc9fc3f9b66ebef0a76d</string>
     <string name="events_organized_text_view">Events that you organized</string>
     <string name="events_participate_text_view">Events to which you will participate</string>
     <string name="no_connection">No Internet connection available</string>

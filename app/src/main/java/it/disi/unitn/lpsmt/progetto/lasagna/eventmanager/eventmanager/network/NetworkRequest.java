@@ -4,9 +4,12 @@ import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import okhttp3.Callback;
+import okhttp3.Dispatcher;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -18,12 +21,21 @@ public class NetworkRequest {
         client = new OkHttpClient();
     }
 
+    public NetworkRequest(@NotNull Dispatcher dispatcher) {
+        client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(false)
+                .dispatcher(dispatcher)
+                .build();
+    }
+
     private Request.Builder getRequestBuilder(List<Pair<String, String>> headers) {
         Request.Builder builder = new Request.Builder();
 
         if(headers != null && headers.size() > 0) {
             for(Pair<String, String> header: headers) {
-                builder.addHeader(header.first, header.second);
+                if(header.second != null && !header.second.equals("")) {
+                    builder.addHeader(header.first, header.second);
+                }
             }
         }
 

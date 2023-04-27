@@ -30,8 +30,10 @@ public class EventListViewModel extends ViewModel {
         return orgName;
     }
 
-    public void getEvents(@NonNull Fragment f, @NonNull View layout, String accessToken, @Nullable String nomeAtt, @Nullable String orgName) {
-        PublicEvents pubEv = new PublicEvents(f, layout);
-        pubEv.getEvents(accessToken, nomeAtt, null, null, null, null, orgName);
+    public void getEvents(@NonNull Fragment f, @NonNull View layout, String accessToken,
+                          @Nullable String nomeAtt, @Nullable String orgName) {
+        PublicEvents pubEv = new PublicEvents(f, layout, accessToken, nomeAtt, null,
+                null, null, null, orgName);
+        pubEv.start();
     }
 }

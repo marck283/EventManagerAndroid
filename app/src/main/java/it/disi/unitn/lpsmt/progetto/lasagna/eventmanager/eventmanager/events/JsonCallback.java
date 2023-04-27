@@ -11,8 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -22,11 +25,11 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.privateEve
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.publicEvents.PubEvAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagementFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
-public class JsonCallback implements Callback<JsonObject> {
+public class JsonCallback implements Callback {
     private final String type;
     private String day;
     private EventAdapter p1;
@@ -132,23 +135,29 @@ public class JsonCallback implements Callback<JsonObject> {
      * @param response
      */
     @Override
-    public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+    public void onResponse(@NonNull Call call, @NonNull Response response) {
         EventList ev = new EventList();
         if(response.body() != null) {
             if(response.isSuccessful()) {
-                Log.i("orgEvResponse", String.valueOf(response.body()));
-                ev = ev.parseJSON(response.body());
-                if(ev != null && ev.getList().size() > 0) {
-                    initAdapter(f, ev, day);
-                    p1.submitList(ev.getList());
-                    mRecyclerView.setAdapter(p1);
+                try {
+                    Log.i("orgEvResponse", String.valueOf(response.body()));
 
-                    if(executor != null) {
-                        //Chiudo la pool di connessioni per terminare i thread in essa contenuti
-                        executor.shutdown();
+                    Gson gson = new GsonBuilder().create();
+                    ev = ev.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
+                    if(ev != null && ev.getList().size() > 0) {
+                        initAdapter(f, ev, day);
+                        p1.submitList(ev.getList());
+                        mRecyclerView.setAdapter(p1);
+
+                        if(executor != null) {
+                            //Chiudo la pool di connessioni per terminare i thread in essa contenuti
+                            executor.shutdown();
+                        }
+                    } else {
+                        Log.i("nullP", "Event list is null");
                     }
-                } else {
-                    Log.i("nullP", "Event list is null");
+                } catch(IOException ex) {
+                    ex.printStackTrace();
                 }
             } else {
                 Log.i("fail", "Unsuccessful operation");
@@ -201,7 +210,7 @@ public class JsonCallback implements Callback<JsonObject> {
      * @param t
      */
     @Override
-    public void onFailure(@NonNull Call<JsonObject> call, @NonNull Throwable t) {
+    public void onFailure(@NonNull Call call, @NonNull IOException t) {
         try {
             throw t;
         } catch (Throwable e) {

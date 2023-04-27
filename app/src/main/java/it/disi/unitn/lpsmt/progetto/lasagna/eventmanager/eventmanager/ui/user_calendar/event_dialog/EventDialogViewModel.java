@@ -29,7 +29,7 @@ public class EventDialogViewModel extends ViewModel {
         OrganizedEvents orgEv = new OrganizedEvents(R.id.organizer_recycler_view, f, l, null);
         orgEv.getOrgEvents(authToken, data);
 
-        PrivateEvents privEv = new PrivateEvents(l);
-        privEv.getPersonalEvents(authToken, data);
+        PrivateEvents privEv = new PrivateEvents(l, authToken, data);
+        privEv.start();
     }
 }
