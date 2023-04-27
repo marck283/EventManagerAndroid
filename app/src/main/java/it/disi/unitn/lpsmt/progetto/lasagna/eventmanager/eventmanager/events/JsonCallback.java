@@ -147,7 +147,13 @@ public class JsonCallback implements Callback {
                     if(ev != null && ev.getList().size() > 0) {
                         initAdapter(f, ev, day);
                         p1.submitList(ev.getList());
-                        mRecyclerView.setAdapter(p1);
+
+                        if(f != null) {
+                            Activity activity = f.getActivity();
+                            if(activity != null && f.isAdded()) {
+                                f.requireActivity().runOnUiThread(() -> mRecyclerView.setAdapter(p1));
+                            }
+                        }
 
                         if(executor != null) {
                             //Chiudo la pool di connessioni per terminare i thread in essa contenuti

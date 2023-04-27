@@ -14,12 +14,13 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class CheckQRCode extends Thread {
+public class CheckQRCode extends ServerOperation {
 
     private final NetworkRequest request;
     private final String userJwt, qrCode, eventid, day, hour;
@@ -30,7 +31,7 @@ public class CheckQRCode extends Thread {
                        @NonNull String day, @NonNull String hour, @NonNull Fragment f) {
         this.userJwt = userJwt;
         this.qrCode = qrCode;
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.f = f;
         this.eventid = eventid;
         this.day = day;
@@ -54,7 +55,7 @@ public class CheckQRCode extends Thread {
         headers.add(new Pair<>("day", day));
         headers.add(new Pair<>("hour", hour));
         Request req = request.getRequest(headers,
-                "https://eventmanagerzlf.herokuapp.com/api/v2/QRCodeCheck/" + qrCode);
+                getBaseUrl() + "/api/v2/QRCodeCheck/" + qrCode);
         Log.i("code", qrCode);
         request.enqueue(req, new Callback() {
             @Override

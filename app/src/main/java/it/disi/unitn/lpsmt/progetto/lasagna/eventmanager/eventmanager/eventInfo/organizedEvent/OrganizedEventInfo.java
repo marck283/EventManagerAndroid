@@ -32,6 +32,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.GeocoderExt;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
@@ -40,7 +41,7 @@ import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class OrganizedEventInfo extends Thread {
+public class OrganizedEventInfo extends ServerOperation {
 
     private final NetworkRequest request;
 
@@ -56,7 +57,7 @@ public class OrganizedEventInfo extends Thread {
 
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
                               @NonNull String evId, @NonNull String day) {
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.userJwt = userJwt;
         eventId = evId;
         this.v = v;
@@ -68,7 +69,7 @@ public class OrganizedEventInfo extends Thread {
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
                               @NonNull String evId,
                               @NonNull ActivityResultLauncher<Intent> loginLauncher) {
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.userJwt = userJwt;
         eventId = evId;
         this.v = v;
@@ -79,7 +80,7 @@ public class OrganizedEventInfo extends Thread {
 
     public OrganizedEventInfo(@NonNull View v, @NonNull EventDetailsFragment f, @NonNull String userJwt,
                               @NonNull String evId) {
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.userJwt = userJwt;
         eventId = evId;
         this.v = v;
@@ -95,7 +96,7 @@ public class OrganizedEventInfo extends Thread {
         if (day != null) {
             headers.add(new Pair<>("date", day));
         }
-        req = request.getRequest(headers, "https://eventmanagerzlf.herokuapp.com/api/v2/InfoEventoOrg/" + eventId);
+        req = request.getRequest(headers, getBaseUrl() + "/api/v2/InfoEventoOrg/" + eventId);
         request.enqueue(req, new OrganizerCallback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
@@ -129,7 +130,7 @@ public class OrganizedEventInfo extends Thread {
                             dayText.addTextChangedListener(new TextWatcher() {
                                 @Override
                                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                                    //Nulla da scrivere qui...
                                 }
 
                                 @Override
@@ -155,7 +156,7 @@ public class OrganizedEventInfo extends Thread {
                                         hourTextView.addTextChangedListener(new TextWatcher() {
                                             @Override
                                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                                                //Nulla da scrivere qui...
                                             }
 
                                             @Override
@@ -201,7 +202,7 @@ public class OrganizedEventInfo extends Thread {
 
                                             @Override
                                             public void afterTextChanged(Editable s) {
-
+                                                //Nulla da scrivere qui...
                                             }
                                         });
                                     } else {
@@ -218,7 +219,7 @@ public class OrganizedEventInfo extends Thread {
 
                                 @Override
                                 public void afterTextChanged(Editable s) {
-
+                                    //Nulla da scrivere qui...
                                 }
                             });
                             dayText.setAdapter(new SpinnerArrayAdapter(f.requireContext(), R.layout.list_item, dayArr));

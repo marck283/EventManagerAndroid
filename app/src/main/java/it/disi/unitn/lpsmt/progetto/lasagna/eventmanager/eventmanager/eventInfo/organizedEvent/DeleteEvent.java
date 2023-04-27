@@ -12,19 +12,20 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
 import okhttp3.Call;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DeleteEvent extends Thread {
+public class DeleteEvent extends ServerOperation {
     private final NetworkRequest request;
     private final String accessToken, eventId;
 
     private final Fragment f;
 
     public DeleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull Fragment f) {
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.accessToken = accessToken;
         this.eventId = eventId;
         this.f = f;
@@ -43,8 +44,7 @@ public class DeleteEvent extends Thread {
     public void run() {
         List<Pair<String, String>> headers = new ArrayList<>();
         headers.add(new Pair<>("x-access-token", accessToken));
-        Request req = request.getDeleteRequest(headers,
-                "https://eventmanagerzlf.herokuapp.com/api/v2/annullaEvento/" + eventId);
+        Request req = request.getDeleteRequest(headers, getBaseUrl() + "/api/v2/annullaEvento/" + eventId);
         request.enqueue(req, new OrganizerCallback() {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
