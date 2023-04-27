@@ -10,7 +10,8 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="393dp"
-        android:layout_height="396dp"
+        android:layout_height="wrap_content"
+        android:maxHeight="396dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -36,8 +37,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/orgName"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-                android:layout_width="291dp"
-                android:layout_height="95dp"
+                android:layout_width="294dp"
+                android:layout_height="94dp"
                 android:hint="@string/search_by_organizer_name"
                 app:endIconDrawable="@drawable/ic_record_voice"
                 app:endIconMode="custom"
@@ -89,9 +90,12 @@
                 android:id="@+id/search_for_event_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="18dp"
                 android:text="@string/search_for_event_name"
+                app:layout_constraintBottom_toTopOf="@+id/search_for_org_name"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orgName" />
 
@@ -99,12 +103,11 @@
                 android:id="@+id/search_for_org_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="18dp"
                 android:text="@string/search_for_org_name"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.504"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_for_event_name" />
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

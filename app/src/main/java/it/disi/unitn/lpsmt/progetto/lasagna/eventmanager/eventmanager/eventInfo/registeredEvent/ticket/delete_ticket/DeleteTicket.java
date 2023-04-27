@@ -13,12 +13,13 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DeleteTicket extends Thread {
+public class DeleteTicket extends ServerOperation {
     private final String eventId, ticketId, userJwt, data, ora;
 
     private final NetworkRequest request;
@@ -30,7 +31,7 @@ public class DeleteTicket extends Thread {
         this.eventId = eventId;
         this.ticketId = ticketId;
         this.userJwt = userJwt;
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.f = f;
         this.data = data;
         this.ora = ora;
@@ -52,7 +53,7 @@ public class DeleteTicket extends Thread {
         headers.add(new Pair<>("data", data));
         headers.add(new Pair<>("ora", ora));
         Request req = request.getDeleteRequest(headers,
-                "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni/" + ticketId);
+                getBaseUrl() + "/api/v2/EventiPubblici/" + eventId + "/Iscrizioni/" + ticketId);
         request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

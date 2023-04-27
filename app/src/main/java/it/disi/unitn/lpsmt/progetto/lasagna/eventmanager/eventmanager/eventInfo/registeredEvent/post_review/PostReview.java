@@ -16,6 +16,7 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -23,7 +24,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class PostReview extends Thread {
+public class PostReview extends ServerOperation {
     private final String userId, eventId, titolo, motivazione;
     private final float valutazione;
 
@@ -35,7 +36,7 @@ public class PostReview extends Thread {
 
     public PostReview(@NonNull String userId, @NonNull String eventId, @NonNull String titolo,
                       @NonNull String motivazione, float valutazione, @NonNull Fragment f, @NonNull View v) {
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.userId = userId;
         this.eventId = eventId;
         this.titolo = titolo;
@@ -63,7 +64,7 @@ public class PostReview extends Thread {
         List<Pair<String, String>> headers = new ArrayList<>();
         headers.add(new Pair<>("x-access-token", userId));
         Request req = request.getPostRequest(body, headers,
-                "https://eventmanagerzlf.herokuapp.com/api/v2/Recensioni/" + eventId);
+                getBaseUrl() + "/api/v2/Recensioni/" + eventId);
         request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {

@@ -1,41 +1,28 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.publicEvent.eventReviews;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
-import java.io.IOException;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
-public class ReviewsRequest extends Thread {
-    private final NetworkRequest request;
+public class ReviewsRequest extends ServerOperation {
     private final RecyclerView rv;
-    private final Request req;
-    private ReviewAdapter adapter;
+
+    private final ReviewAdapter adapter;
+
     private final ReviewsFragment f;
+
+    private final String id;
 
     public ReviewsRequest(@NonNull ReviewsFragment f, @NonNull View layout, @NonNull String id) {
         this.f = f;
-        request = new NetworkRequest();
-        req = request.getRequest(null,
-                "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + id + "/recensioni");
         rv = layout.findViewById(R.id.recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
@@ -43,59 +30,12 @@ public class ReviewsRequest extends Thread {
 
         adapter = new ReviewAdapter(new ReviewCallback());
         rv.setAdapter(adapter);
+        this.id = id;
     }
 
     public void run() {
-        request.enqueue(req, new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                try {
-                    throw e;
-                } catch (Throwable e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(!response.isSuccessful() || response.body() == null) {
-                    Log.i("noResponse", String.valueOf(response.code()));
-                } else {
-                    ResponseBody resBody = response.body();
-                    String responseBody = resBody.string();
-
-                    Log.i("response", responseBody);
-
-                    Gson gson = new Gson();
-                    JsonObject r = gson.fromJson(responseBody, JsonObject.class);
-                    JsonArray jsonArr = r.getAsJsonArray("recensioni");
-                    ReviewList list = new ReviewList();
-                    list.parseJSON(jsonArr);
-
-                    Activity activity = f.getActivity();
-                    if(list.getList() == null || list.getList().size() == 0) {
-                        if(activity != null && f.isAdded()) {
-                            f.requireActivity().runOnUiThread(() -> {
-                                AlertDialog dialog = new AlertDialog.Builder(f.requireContext()).create();
-                                dialog.setTitle(R.string.no_reviews);
-                                dialog.setMessage(f.getString(R.string.no_reviews_message));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) ->
-                                        dialog1.dismiss());
-                                dialog.show();
-                            });
-                        }
-                    } else {
-                        adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList());
-
-                        if(activity != null && f.isAdded()) {
-                            f.requireActivity().runOnUiThread(() -> {
-                                adapter.submitList(list.getList());
-                                rv.setAdapter(adapter);
-                            });
-                        }
-                    }
-                }
-            }
-        });
+        NetworkRequest request = getNetworkRequest();
+        Request req = request.getRequest(null, getBaseUrl() + "/api/v2/EventiPubblici/" + id + "/recensioni");
+        request.enqueue(req, new ReviewsCallback(adapter, f, rv));
     }
 }
