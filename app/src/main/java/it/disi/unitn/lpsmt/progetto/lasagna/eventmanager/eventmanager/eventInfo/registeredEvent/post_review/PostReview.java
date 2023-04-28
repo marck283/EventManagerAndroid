@@ -96,8 +96,6 @@ public class PostReview extends ServerOperation {
                         break;
                     }
                     case 401: {
-                        //Qui dovrei implementare un metodo per eseguire il login dell'utente e
-                        //far partire un'altra richiesta verso il server...
                         Intent loginIntent = new Intent(f.requireContext(), LoginActivity.class);
                         loginLauncher.launch(loginIntent);
                         break;

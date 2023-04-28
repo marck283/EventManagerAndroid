@@ -33,18 +33,35 @@ public class PublicEvents extends ServerOperation {
     private final String token, nomeAtt, categoria, durata, indirizzo, citta, orgName;
 
     /**
-     * Costruisce l'oggetto PublicEvents.
+     * Costruisce l'oggetto PublicEvents applicando i filtri specificati. Si noti che, per ottenere
+     * gli eventi filtrati, è richiesto che l'utente sia in possesso di un token di autorizzazione
+     * (fornito ad ogni accesso al sistema).
+     * @param f Il Fragment su cui mostrare gli eventi restituiti come risultato della richiesta.
+     *          Questo parametro non pu&ograve; essere null.
      * @param layout L'istanza di View a cui il costruttore si appoggia per trovare la RecyclerView
-     *               a cui agganciare gli eventi ricevuti. Non può essere null.
+     *               a cui agganciare gli eventi ricevuti. Questo parametro non pu&ograve; essere null.
+     * @param token Il token dell'utente restituito dal sistema in fase di autenticazione. Questo
+     *              parametro pu&ograve; essere null.
+     * @param nomeAtt Il nome dell'attività su cui filtrare gli eventi. Questo parametro pu&ograve; essere null.
+     * @param categoria La categoria (a scelta tra Sport, Spettacolo, Manifestazione, Viaggio e Altro)
+     *                  su cui filtrare gli eventi cercati. Questo parametro pu&ograve; essere null.
+     * @param durata La durata su cui filtrare gli eventi. Il formato di questo parametro deve essere
+     *               "giorni:ore:minuti". Questo parametro pu&ograve; essere null.
+     * @param indirizzo L'indirizzo del luogo di un evento su cui filtrare il risultato. Questo parametro
+     *                  pu&ograve; essere null.
+     * @param citta La citt&agrave; o il comune su cui filtrare il risultato. Questo parametro pu&ograve;
+     *              essere null.
+     * @param orgName Il nome dell'utente organizzatore su cui filtrare il risultato. Questo parametro
+     *                pu&ograve; essere null.
      */
     public PublicEvents(@NonNull Fragment f, @NonNull View layout, @Nullable String token, @Nullable String nomeAtt,
                         @Nullable String categoria, @Nullable String durata,
                         @Nullable String indirizzo, @Nullable String citta, @Nullable String orgName) {
         //Limito il numero di thread a disposizione per non inondare il server di richieste
-        executor = Executors.newFixedThreadPool(5);
+        executor = Executors.newFixedThreadPool(1);
         Dispatcher dispatcher = new Dispatcher(executor);
-        dispatcher.setMaxRequests(5);
-        dispatcher.setMaxRequestsPerHost(5);
+        dispatcher.setMaxRequests(1);
+        dispatcher.setMaxRequestsPerHost(1);
 
         super.createOperation(dispatcher);
 
@@ -67,14 +84,10 @@ public class PublicEvents extends ServerOperation {
     }
 
     /**
-     * Esegue la chiamata all'API remota e ottiene gli eventi pubblici presenti.
-     * I parametri indicati di seguito, quando non diversamente indicato, non possono essere null, ma
-     * possono essere utilizzati per filtrare gli eventi in base alle preferenze dell'utente.
-     * Si noti che, per eseguire tale azione, è richiesto che l'utente sia in possesso di un token di
-     * autorizzazione (fornito ad ogni accesso al sistema).
+     * Esegue la chiamata all'API remota e ottiene gli eventi pubblici presenti secondo i filtri
+     * applicati dall'utente.
      */
     public void run() {
-        //Implement request with token header
         Pair<String, String> gtoken = new Pair<>("x-access-token", token), nomeAct = new Pair<>("nomeAtt", nomeAtt),
                 category = new Pair<>("categoria", categoria), duration = new Pair<>("durata", durata),
                 address = new Pair<>("indirizzo", indirizzo), city = new Pair<>("citta", citta),
