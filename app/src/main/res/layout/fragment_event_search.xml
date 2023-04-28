@@ -7,10 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.event_search.EventSearchFragment">
 
-
     <androidx.cardview.widget.CardView
         android:layout_width="393dp"
-        android:layout_height="wrap_content"
+        android:layout_height="649dp"
         android:maxHeight="396dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +21,7 @@
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="392dp"
+                android:layout_width="391dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/event_search"
@@ -37,8 +36,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/orgName"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-                android:layout_width="294dp"
-                android:layout_height="94dp"
+                android:layout_width="292dp"
+                android:layout_height="77dp"
                 android:hint="@string/search_by_organizer_name"
                 app:endIconDrawable="@drawable/ic_record_voice"
                 app:endIconMode="custom"
@@ -50,8 +49,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/organizerName"
                     android:layout_width="match_parent"
-                    android:layout_height="67dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_height="59dp"
                     android:autofillHints="name"
                     android:inputType="text"
                     android:padding="10dp"
@@ -86,28 +84,126 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/search_for_event_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="18dp"
-                android:text="@string/search_for_event_name"
-                app:layout_constraintBottom_toTopOf="@+id/search_for_org_name"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/category"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="292dp"
+                android:layout_height="77dp"
+                android:hint="@string/search_by_event_category"
+                app:endIconDrawable="@drawable/ic_record_voice"
+                app:endIconMode="custom"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintHorizontal_bias="0.494"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/orgName" />
+                app:layout_constraintTop_toBottomOf="@+id/orgName">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/categoryValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="59dp"
+                    android:autofillHints="name"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/nomeAtt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.496" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/duration"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="292dp"
+                android:layout_height="77dp"
+                android:hint="@string/search_by_event_duration"
+                app:endIconDrawable="@drawable/ic_record_voice"
+                app:endIconMode="custom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.494"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/category">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/durationValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="59dp"
+                    android:autofillHints="name"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/nomeAtt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.496" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/address"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="292dp"
+                android:layout_height="77dp"
+                android:hint="@string/search_by_event_address"
+                app:endIconDrawable="@drawable/ic_record_voice"
+                app:endIconMode="custom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/duration">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/addressValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="59dp"
+                    android:autofillHints="name"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/nomeAtt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.496" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/city"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                android:layout_width="292dp"
+                android:layout_height="77dp"
+                android:hint="@string/search_by_event_city"
+                app:endIconDrawable="@drawable/ic_record_voice"
+                app:endIconMode="custom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/address">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/cityValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="59dp"
+                    android:autofillHints="name"
+                    android:inputType="text"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/nomeAtt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.496" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/search_for_org_name"
+                android:id="@+id/apply_filters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:text="@string/search_for_org_name"
+                android:layout_marginBottom="16dp"
+                android:text="@string/apply_filters"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/reset_filters"
+                app:layout_constraintHorizontal_bias="0.786"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/reset_filters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="48dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/reset_filters"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

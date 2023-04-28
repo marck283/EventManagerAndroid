@@ -119,8 +119,8 @@
     <string name="search">Search</string>
     <string name="both_fields_empty">Both fields are empty</string>
     <string name="fields_empty_message">At least one field must not be empty.</string>
-    <string name="search_for_event_name">Search for event name</string>
-    <string name="search_for_org_name">Search for event organizer</string>
+    <string name="apply_filters">Apply filters</string>
+    <string name="reset_filters">Reset filters</string>
     <string name="insert_org_name">Insert username</string>
     <string name="event_name_field_empty">Event name is empty</string>
     <string name="event_name_field_empty_message">The field \"event name\" cannot be empty if the user wants to filter events for event name.</string>
@@ -273,4 +273,8 @@
     <string name="no_reviews_message">No reviews have been found for this event.</string>
     <string name="incorrect_hour_value">Incorrect time</string>
     <string name="incorrect_hour_value_message">You cannot give past time values.</string>
+    <string name="search_by_event_category">Search by event category</string>
+    <string name="search_by_event_duration">Search by event duration</string>
+    <string name="search_by_event_address">Search by event address</string>
+    <string name="search_by_event_city">Search by event city</string>
 </resources>

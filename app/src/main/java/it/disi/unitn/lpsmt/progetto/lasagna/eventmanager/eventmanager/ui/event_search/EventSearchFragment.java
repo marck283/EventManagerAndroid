@@ -6,8 +6,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -70,57 +68,38 @@ public class EventSearchFragment extends DialogFragment {
         elvm = new ViewModelProvider(requireActivity()).get(EventListViewModel.class);
         emvm = new ViewModelProvider(requireActivity()).get(EventManagementViewModel.class);
 
-        root.findViewById(R.id.search_for_event_name).setOnClickListener(c -> {
-            EditText t1 = root.findViewById(R.id.nomeAtt2);
-            if(t1.getText().toString().equals("")) {
-                Activity activity = getActivity();
-                if(activity != null && isAdded()) {
-                    AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
-                    ad.setTitle(R.string.event_name_field_empty);
-                    ad.setMessage(getString(R.string.event_name_field_empty_message));
-                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    ad.show();
-                }
+        MaterialButton reset_filters = root.findViewById(R.id.reset_filters);
+        root.findViewById(R.id.apply_filters).setOnClickListener(c -> {
+            EditText t = root.findViewById(R.id.organizerName), t1 = root.findViewById(R.id.nomeAtt2),
+            t2 = root.findViewById(R.id.categoryValue), t3 = root.findViewById(R.id.durationValue),
+            t4 = root.findViewById(R.id.addressValue), t5 = root.findViewById(R.id.cityValue);
+            if(parent.equals("EventListFragment")) {
+                elvm.setEvName(t1.getText().toString());
+                elvm.setOrgName(t.getText().toString());
+                elvm.setCategory(t2.getText().toString());
+                elvm.setDuration(t3.getText().toString());
+                elvm.setAddress(t4.getText().toString());
+                elvm.setCity(t5.getText().toString());
             } else {
-                if(parent.equals("EventListFragment")) {
-                    elvm.setEvName(t1.getText().toString());
-                } else {
-                    emvm.setEvName(t1.getText().toString());
-                }
-                dismiss();
+                emvm.setEvName(t1.getText().toString());
             }
+            dismiss();
         });
 
-        MaterialButton searchForOrgName = root.findViewById(R.id.search_for_org_name);
-        TextInputLayout orgName = root.findViewById(R.id.orgName);
-        if(parent.equals("EventManagementFragment")) {
-            searchForOrgName.setEnabled(false);
-            searchForOrgName.setVisibility(View.GONE);
-            orgName.setEnabled(false);
-            orgName.setVisibility(View.GONE);
-        } else {
-            searchForOrgName.setEnabled(true);
-            searchForOrgName.setVisibility(View.VISIBLE);
-            orgName.setEnabled(true);
-            orgName.setVisibility(View.VISIBLE);
-            if(!searchForOrgName.hasOnClickListeners()) {
-                searchForOrgName.setOnClickListener(c -> {
-                    EditText t = root.findViewById(R.id.organizerName);
-                    if(t.getText().toString().equals("")) {
-                        Activity activity = getActivity();
-                        if(activity != null && isAdded()) {
-                            AlertDialog ad = new AlertDialog.Builder(requireActivity()).create();
-                            ad.setTitle(R.string.org_name_field_empty);
-                            ad.setMessage(getString(R.string.org_name_field_empty_message));
-                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                            ad.show();
-                        }
-                    } else {
-                        elvm.setOrgName(t.getText().toString());
-                        dismiss();
-                    }
-                });
-            }
+        if(!reset_filters.hasOnClickListeners()) {
+            reset_filters.setOnClickListener(c -> {
+                if(parent.equals("EventManagementFragment")) {
+                    emvm.setEvName("");
+                } else {
+                    elvm.setEvName("");
+                    elvm.setOrgName("");
+                    elvm.setCategory("");
+                    elvm.setDuration("");
+                    elvm.setAddress("");
+                    elvm.setCity("");
+                }
+                dismiss();
+            });
         }
     }
 
@@ -128,10 +107,15 @@ public class EventSearchFragment extends DialogFragment {
         super.onStart();
 
         TextInputLayout text1 = root.findViewById(R.id.orgName);
-        text1.setEndIconOnClickListener(c -> {
-            speechRecognizer = new SpeechRecognizerInterface(root, R.id.organizerName);
-            speechRecognizer.performClick();
-        });
+        if(parent.equals("EventListFragment")) {
+            text1.setEndIconOnClickListener(c -> {
+                speechRecognizer = new SpeechRecognizerInterface(root, R.id.organizerName);
+                speechRecognizer.performClick();
+            });
+        } else {
+            text1.setEnabled(false);
+            text1.setVisibility(View.GONE);
+        }
 
         TextInputLayout text2 = root.findViewById(R.id.nomeAtt4);
         text2.setEndIconOnClickListener(c -> {

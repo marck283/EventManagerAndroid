@@ -109,8 +109,8 @@
     <string name="search">Cerca</string>
     <string name="both_fields_empty">Entrambi i campi vuoti</string>
     <string name="fields_empty_message">Almeno un campo non deve essere vuoto.</string>
-    <string name="search_for_event_name">Cerca per nome dell\'evento</string>
-    <string name="search_for_org_name">Cerca per organizzatore</string>
+    <string name="apply_filters">Applica filtri</string>
+    <string name="reset_filters">Reimposta filtri</string>
     <string name="insert_org_name">Inserisci nome utente</string>
     <string name="event_name_field_empty">Il campo \"nome evento\" è vuoto</string>
     <string name="event_name_field_empty_message">Il campo \"nome evento\" non può essere vuoto se l\'utente intende utilizzarlo per ottenere eventi basandosi sul suo valore.</string>
@@ -262,4 +262,8 @@
     <string name="buttons_disabled">Nessuna connessione Internet è attualmente disponibile. Per questo motivo, i bottoni per la scansione del biglietto e per la terminazione e l\'annullamento dell\'evento sono stati disabilitati.</string>
     <string name="no_org_event_at_this_time">L\'utente non ha organizzato questo evento all\'ora specificata.</string>
     <string name="non_numeric_year_inserted">E\' stato inserito un valore non numerico come anno.</string>
+    <string name="search_by_event_category">Per categoria dell\'evento</string>
+    <string name="search_by_event_duration">Per durata dell\'evento</string>
+    <string name="search_by_event_address">Per indirizzo dell\'evento</string>
+    <string name="search_by_event_city">Per comune</string>
 </resources>
