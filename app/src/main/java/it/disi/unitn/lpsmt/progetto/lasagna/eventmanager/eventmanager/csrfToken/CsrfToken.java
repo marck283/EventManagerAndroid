@@ -60,14 +60,14 @@ public class CsrfToken extends ServerOperation {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 synchronized (this) {
-                    ApiCSRFClass token = new ApiCSRFClass();
                     if (response.isSuccessful() && response.body() != null) {
                         Gson gson = new GsonBuilder().create();
-                        ApiCSRFClass token1 = token.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
-                        Log.i("token1", String.valueOf(token1.getToken()));
+                        ApiCSRFClass token1 = ApiCSRFClass.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                         o.setActivity(a);
                         o.setCsrfToken(token1.getToken());
-                        o.setIntent(i);
+                        if(i != null) {
+                            o.setIntent(i);
+                        }
                         o.setWhich(which);
                         if(which.equals("google")) {
                             o.setUserToken(gJwt, null);

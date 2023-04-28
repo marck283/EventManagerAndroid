@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -22,14 +20,9 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Jso
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import okhttp3.Dispatcher;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PublicEvents extends ServerOperation {
-    //private final PublicEventsInterface pubEv;
 
     private final RecyclerView mRecyclerView;
 
@@ -55,16 +48,6 @@ public class PublicEvents extends ServerOperation {
 
         super.createOperation(dispatcher);
 
-        /*OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .retryOnConnectionFailure(false)
-                .dispatcher(dispatcher) //Imposto il dispatcher delle richieste
-                .build();
-        Retrofit retro = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        pubEv = retro.create(PublicEventsInterface.class);*/
         this.f = f;
 
         //Imposto la RecyclerView
@@ -108,7 +91,5 @@ public class PublicEvents extends ServerOperation {
         NetworkRequest nreq = getNetworkRequest();
         Request req = nreq.getRequest(list, getBaseUrl() + "/api/v2/eventiCalendarioPubblico");
         nreq.enqueue(req, new JsonCallback(f, "pub", mRecyclerView, null, executor));
-        /*Call<JsonObject> call = pubEv.pubEv(token, nomeAtt, categoria, durata, indirizzo, citta, orgName);
-        call.enqueue(new JsonCallback(f, "pub", mRecyclerView, null, executor));*/
     }
 }

@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,23 +16,14 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Jso
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PrivateEvents extends ServerOperation {
-    //private final PrivateEventsInterface privEv;
     private final RecyclerView mRecyclerView;
 
     private final String authToken, data;
 
     public PrivateEvents(@NonNull View layout, String authToken, String data) {
         super();
-        /*Retrofit retro = new Retrofit.Builder()
-                .baseUrl("https://eventmanagerzlf.herokuapp.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        privEv = retro.create(PrivateEventsInterface.class);*/
 
         //Qui imposta la RecyclerView, il LayoutManager e l'Adapter
         mRecyclerView = layout.findViewById(R.id.personal_recycler_view);
@@ -48,9 +37,6 @@ public class PrivateEvents extends ServerOperation {
     }
 
     public void run() {
-        /*Call<JsonObject> json = privEv.privEv(authToken, data);
-        json.enqueue(new JsonCallback(null, "priv", mRecyclerView, data));*/
-
         Pair<String, String> atoken = new Pair<>("x-access-token", authToken);
 
         List<Pair<String, String>> list = new ArrayList<>();

@@ -17,6 +17,7 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import okhttp3.Call;
@@ -26,7 +27,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class UserEventRegistration extends Thread {
+public class UserEventRegistration extends ServerOperation {
 
     private final NetworkRequest request;
 
@@ -39,7 +40,7 @@ public class UserEventRegistration extends Thread {
     public UserEventRegistration(@NonNull String accessToken, @NonNull String eventId, @NonNull String day,
                                  @NonNull String time, @NonNull EventDetailsFragment f,
                                  @Nullable ActivityResultLauncher<Intent> launcher) {
-        request = new NetworkRequest();
+        request = getNetworkRequest();
         this.f = f;
         this.accessToken = accessToken;
         this.eventId = eventId;
@@ -72,7 +73,7 @@ public class UserEventRegistration extends Thread {
                 .add("ora", time)
                 .build();
         Request req = request.getPostRequest(body, headers,
-                "https://eventmanagerzlf.herokuapp.com/api/v2/EventiPubblici/" + eventId + "/Iscrizioni");
+                getBaseUrl() + "/api/v2/EventiPubblici/" + eventId + "/Iscrizioni");
         request.enqueue(req, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -85,10 +86,6 @@ public class UserEventRegistration extends Thread {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                //Interpretare la risposta di errore (si ricordi che il messaggio di errore è
-                //contenuto nel campo "error" della risposta).
-                //Log.i("response", String.valueOf(response.body()));
-                //Errore sul body della risposta? Perché? Non ci dovrebbe essere un body...
                 switch(response.code()) {
                     case 201: {
                         //Successo
@@ -122,6 +119,11 @@ public class UserEventRegistration extends Thread {
                     }
                     case 503: {
                         setAlertDialog(R.string.request_timeout, R.string.request_timeout_message);
+                        break;
+                    }
+                    default: {
+                        //Errore sconosciuto
+                        setAlertDialog(R.string.unknown_error, R.string.unknown_error_message);
                         break;
                     }
                 }
