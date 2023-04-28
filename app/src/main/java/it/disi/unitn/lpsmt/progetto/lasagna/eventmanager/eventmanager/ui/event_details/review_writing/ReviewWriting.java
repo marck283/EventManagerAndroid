@@ -1,10 +1,13 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.review_writing;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 
 public class ReviewWriting extends Fragment {
 
@@ -29,10 +33,33 @@ public class ReviewWriting extends Fragment {
 
     private String userJwt, eventId;
 
+    private ActivityResultLauncher<Intent> loginLauncher;
+
+    private SharedPrefs prefs;
+
+    private String title, description;
+
+    private float rating;
+
+    private View v;
+
     @NonNull
     @Contract(" -> new")
     public static ReviewWriting newInstance() {
         return new ReviewWriting();
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(result.getResultCode() == Activity.RESULT_OK) {
+                        userJwt = prefs.getString("accessToken");
+                        mViewModel.postReview(userJwt, eventId, rating, title, description, this,
+                                v, loginLauncher);
+                    }
+                });
     }
 
     @Override
@@ -43,7 +70,9 @@ public class ReviewWriting extends Fragment {
             userJwt = b.getString("userId", "");
             eventId = b.getString("eventId", "");
         }
-        return inflater.inflate(R.layout.fragment_review_writing, container, false);
+        v = inflater.inflate(R.layout.fragment_review_writing, container, false);
+
+        return v;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -61,19 +90,22 @@ public class ReviewWriting extends Fragment {
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ReviewWritingViewModel.class);
+        prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                requireActivity());
 
         Button postReview = v.findViewById(R.id.button15);
         postReview.setOnClickListener(c -> {
             TextInputLayout titleLayout = v.findViewById(R.id.title), descriptionLayout = v.findViewById(R.id.description);
             RatingBar ratingBar = v.findViewById(R.id.ratingBar);
-            String title, description;
+
             if(titleLayout.getEditText() != null && !titleLayout.getEditText().getText().toString().equals("")) {
                 title = titleLayout.getEditText().getText().toString();
                 if(descriptionLayout.getEditText() != null && !descriptionLayout.getEditText().getText().toString().equals("")) {
                     description = descriptionLayout.getEditText().getText().toString();
-                    float rating = ratingBar.getRating();
+                    rating = ratingBar.getRating();
                     if(rating >= 0.5) {
-                        mViewModel.postReview(userJwt, eventId, rating, title, description, this, v);
+                        mViewModel.postReview(userJwt, eventId, rating, title, description, this,
+                                v, loginLauncher);
                     } else {
                         //Imposta AlertDialog per valutazione non consentita
                         setAlertDialog(R.string.wrong_rating, R.string.wrong_rating_message);

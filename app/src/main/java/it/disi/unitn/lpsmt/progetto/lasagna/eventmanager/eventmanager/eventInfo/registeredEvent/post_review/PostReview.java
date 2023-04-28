@@ -2,13 +2,17 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Pair;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.List;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -34,8 +39,11 @@ public class PostReview extends ServerOperation {
 
     private final View v;
 
+    private final ActivityResultLauncher<Intent> loginLauncher;
+
     public PostReview(@NonNull String userId, @NonNull String eventId, @NonNull String titolo,
-                      @NonNull String motivazione, float valutazione, @NonNull Fragment f, @NonNull View v) {
+                      @NonNull String motivazione, float valutazione, @NonNull Fragment f,
+                      @NonNull View v, @NotNull ActivityResultLauncher<Intent> loginLauncher) {
         request = getNetworkRequest();
         this.userId = userId;
         this.eventId = eventId;
@@ -44,6 +52,7 @@ public class PostReview extends ServerOperation {
         this.valutazione = valutazione;
         this.f = f;
         this.v = v;
+        this.loginLauncher = loginLauncher;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message,
@@ -89,17 +98,19 @@ public class PostReview extends ServerOperation {
                     case 401: {
                         //Qui dovrei implementare un metodo per eseguire il login dell'utente e
                         //far partire un'altra richiesta verso il server...
+                        Intent loginIntent = new Intent(f.requireContext(), LoginActivity.class);
+                        loginLauncher.launch(loginIntent);
                         break;
                     }
                     case 400: {
-                        // Primo dei due codici usati solo per il debug.
-                        // Non dovrebbero esserci problemi durante l'utilizzo normale dell'applicazione.
+                        // Codice di ritorno utilizzato solo per il debug.
+                        // Non dovrebbero esserci problemi di questo tipo durante l'utilizzo normale
+                        // dell'applicazione.
                         setAlertDialog(R.string.malformed_request, R.string.malformed_request_message,
                                 (dialog1, which) -> dialog1.dismiss());
                         break;
                     }
                     case 500: {
-                        //Secondo dei due codici usati solo per il debug.
                         setAlertDialog(R.string.internal_server_error, R.string.retry_later,
                                 (dialog1, which) -> dialog1.dismiss());
                         break;

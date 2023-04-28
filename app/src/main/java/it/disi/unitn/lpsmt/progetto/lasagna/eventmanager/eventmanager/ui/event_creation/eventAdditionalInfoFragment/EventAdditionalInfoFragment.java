@@ -94,8 +94,7 @@ public class EventAdditionalInfoFragment extends Fragment {
         if(launcher == null) {
             //Posso usare PhotoPicker
             pickMedia.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType((ActivityResultContracts.PickVisualMedia.VisualMediaType)
-                            ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
                     .build());
         } else {
             //Non posso usare PhotoPicker
