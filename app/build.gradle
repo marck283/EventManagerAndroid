@@ -54,15 +54,15 @@ task testClasses {
 dependencies {
     implementation("androidx.room:room-runtime:2.5.1")
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.8.21'))
     annotationProcessor("androidx.room:room-compiler:2.5.1")
-    annotationProcessor('com.github.bumptech.glide:compiler:4.14.2')
+    annotationProcessor('com.github.bumptech.glide:compiler:4.15.1')
 
     implementation 'androidx.browser:browser:1.5.0'
-    implementation 'com.github.bumptech.glide:glide:4.14.2'
-    implementation 'com.facebook.android:facebook-login:15.2.0'
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    implementation 'com.facebook.android:facebook-login:16.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
-    implementation "com.google.android.material:material:1.8.0"
+    implementation "com.google.android.material:material:1.9.0"
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'com.squareup.okhttp3:okhttp@4.10.0'
