@@ -48,7 +48,7 @@ public class EventCreationActivity extends AppCompatActivity {
         }
 
         //Controllo di che siano stati garantiti i permessi necessari a registrare la voce dell'utente
-        //Se i peressi non sono garantiti, allora chiamo checkPermission().
+        //Se i permessi non sono garantiti, allora chiamo checkPermission().
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
             checkPermission();
         }
@@ -75,14 +75,14 @@ public class EventCreationActivity extends AppCompatActivity {
 
     /**
      * Controlla il risultato della richiesta di permessi effettuata.
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param requestCode Il codice della richiesta effettuata
+     * @param permissions I permessi richiesti
+     * @param grantResults Un array di valori per verificare se i permessi richiesti sono stati garantiti
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 23 && grantResults.length > 0 ) {
+        if (requestCode == 23 && grantResults.length > 0) {
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(this,"Permission Granted",Toast.LENGTH_SHORT).show();
         }

@@ -24,10 +24,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.matchers.Matcher;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.text_masks.Mask;
 
 public class NewDateFragment extends DialogFragment {
@@ -61,17 +61,17 @@ public class NewDateFragment extends DialogFragment {
     private boolean parseBeginDate(@NonNull String t) {
         if (t.length() == 10) {
             try {
-                Pattern pattern;
+                Matcher matcher;
                 int substr = Integer.parseInt(t.substring(6));
                 if (substr % 400 == 0 || (substr % 100 == 0 && substr % 4 != 0)) {
                     //Anno bisestile
-                    pattern = Pattern.compile("(((10|[0-2][1-9])/02)|(([23]0|[0-2][1-9])/" +
-                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}");
+                    matcher = new Matcher("(((10|[0-2][1-9])/02)|(([23]0|[0-2][1-9])/" +
+                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}", t);
                 } else {
-                    pattern = Pattern.compile("((([12]0|[01]9|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
-                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}");
+                    matcher = new Matcher("((([12]0|[01]9|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
+                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}", t);
                 }
-                if (pattern.matcher(t).find()) {
+                if (matcher.isValid()) {
                     SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
 
                     //Soluzione al problema dell'inserimento della data corrente
@@ -109,7 +109,8 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseBeginHour(@NonNull String t1, @NonNull String date) {
-        if (Pattern.compile("([0-1]\\d|2[0-3]):[0-5]\\d").matcher(t1).matches()) {
+        Matcher matcher = new Matcher("([0-1]\\d|2[0-3]):[0-5]\\d", t1);
+        if (matcher.matches()) {
             //Soluzione al problema dell'orario passato per la giornata corrente
             if(dateOK) {
                 Date now = new Date();
@@ -131,14 +132,14 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseSeats(@NonNull String t3) {
-        if (t3.equals("")) {
+        if (t3 == null || t3.equals("")) {
             setAlertDialog(R.string.error, getString(R.string.empty_seats_field_message));
             return false;
         }
 
-        Pattern pattern = Pattern.compile("[1-9]\\d*");
+        Matcher matcher = new Matcher("[1-9]\\d*", t3);
         try {
-            if (pattern.matcher(t3).find()) {
+            if (matcher.isValid()) {
                 mViewModel.setPosti(Integer.parseInt(t3));
                 return true;
             }

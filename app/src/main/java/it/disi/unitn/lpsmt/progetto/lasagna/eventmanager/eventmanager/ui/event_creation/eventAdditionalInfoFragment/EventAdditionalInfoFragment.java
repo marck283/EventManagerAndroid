@@ -108,22 +108,27 @@ public class EventAdditionalInfoFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable()) {
-            pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::setImage);
-            pickerAvailable = true;
-        }
 
-        loginLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    Activity activity = getActivity();
-                    if(result != null && result.getData() != null && activity != null && isAdded()) {
-                        SharedPreferences prefs = requireActivity().getSharedPreferences(
-                                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                Context.MODE_PRIVATE);
-                        String jwt = prefs.getString("accessToken", "");
-                        mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
-                    }
-                });
+        try {
+            if(ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable(requireContext())) {
+                pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::setImage);
+                pickerAvailable = true;
+            }
+
+            loginLauncher = registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(), result -> {
+                        Activity activity = getActivity();
+                        if(result != null && result.getData() != null && activity != null && isAdded()) {
+                            SharedPreferences prefs = requireActivity().getSharedPreferences(
+                                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                    Context.MODE_PRIVATE);
+                            String jwt = prefs.getString("accessToken", "");
+                            mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
+                        }
+                    });
+        } catch(IllegalStateException ex) {
+            Log.e("Errore", ex.getLocalizedMessage());
+        }
     }
 
     @Override

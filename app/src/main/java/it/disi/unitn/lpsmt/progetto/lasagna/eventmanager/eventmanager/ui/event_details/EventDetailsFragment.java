@@ -20,21 +20,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
-
-import java.util.Objects;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.AnnullaEventoOnClickListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.QrCodeOnClickListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.RatingsOnClickListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.SignUpOnClickListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.TerminaEventoOnClickListener;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -243,32 +244,15 @@ public class EventDetailsFragment extends Fragment {
 
                 Button b = view.findViewById(R.id.cLayout).findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
-                b.setOnClickListener(c -> {
-                    TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.dateArray);
-                    EditText spinnerText = spinner.getEditText(), spinner2Text = spinner2.getEditText();
-                    String token = prefs.getString("accessToken", "");
-                    if (eventId != null && spinnerText != null && !spinnerText.getText().toString().equals("")
-                            && !spinnerText.getText().toString().equals("---") &&
-                            spinner2Text != null && !spinner2Text.getText().toString().equals("") &&
-                            !spinner2Text.getText().toString().equals("---")) {
-                        String[] dayArr = spinnerText.getText().toString().split("/");
-                        day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
-                        time = spinner2Text.getText().toString();
-                        mViewModel.registerUser(token, eventId, this, day, time, loginLauncher);
-                    }
-                });
+                b.setOnClickListener(new SignUpOnClickListener(prefs, eventId, day, time, mViewModel,
+                        loginLauncher, this));
 
                 ((TextView) view.findViewById(R.id.event_address)).setText(getString(R.string.event_address, ""));
                 ((TextView) view.findViewById(R.id.duration)).setText(getString(R.string.duration, "", "", ""));
                 ((TextView) view.findViewById(R.id.organizerName)).setText(getString(R.string.organizer, ""));
 
                 Button ratings = view.findViewById(R.id.show_ratings);
-                ratings.setOnClickListener(c -> {
-                    Bundle b1 = new Bundle();
-                    b1.putString("screenType", screenType);
-                    b1.putString("eventId", eventId);
-                    Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_reviewsFragment, b1);
-                });
+                ratings.setOnClickListener(new RatingsOnClickListener(screenType, eventId));
 
                 break;
             }
@@ -331,60 +315,13 @@ public class EventDetailsFragment extends Fragment {
                     }
                 }
 
-                qrCodeScan.setOnClickListener(c -> {
-                    EditText editText = spinner.getEditText(), editText1 = spinner2.getEditText();
-                    if (editText != null &&
-                            !editText.getText().toString().equals("") &&
-                            !editText.getText().toString().equals("---") &&
-                            editText1 != null && !editText.getText().toString().equals("") &&
-                            !editText.getText().toString().equals("---")) {
-                        launcher.launch(new ScanOptions());
-                    }
-                });
+                qrCodeScan.setOnClickListener(new QrCodeOnClickListener(spinner, spinner2, launcher));
 
-                terminaEvento.setOnClickListener(c -> {
-                    MaterialAutoCompleteTextView hourTextView = spinner.findViewById(R.id.orgHourTextView);
-                    Activity activity1 = getActivity();
-                    EditText editText1 = spinner2.getEditText();
-                    if(day == null) {
-                        if(editText1 != null && !editText1.getText().toString().equals("") &&
-                                !editText1.getText().toString().equals("---")) {
-                            day = editText1.getText().toString();
-                            String[] dayArr = day.split("/");
-                            day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
-                        }
-                    }
-                    if(activity1 != null && isAdded()) {
-                        if (!callback.isOnline(requireActivity())) {
-                            setNoConnectionDialog();
-                        } else {
-                            try {
-                                //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
-                                //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-                                if(day == null || day.equals("") || day.equals("---")) {
-                                    return;
-                                }
-                                mViewModel.terminateEvent(token,
-                                        this, eventId, day, hourTextView.getText().toString(), view);
-                            } catch (NullPointerException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-                    }
-                });
+                terminaEvento.setOnClickListener(new TerminaEventoOnClickListener(spinner, spinner2,
+                        this, mViewModel, token, eventId, callback));
 
-                annullaEvento.setOnClickListener(c -> {
-                    Activity activity2 = getActivity();
-                    if(activity2 != null && isAdded()) {
-                        if (!callback.isOnline(requireActivity())) {
-                            setNoConnectionDialog();
-                            return;
-                        }
-                        //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
-                        //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-                        mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, this);
-                    }
-                });
+                annullaEvento.setOnClickListener(new AnnullaEventoOnClickListener(this, nvm, callback,
+                        mViewModel, eventId));
             }
         }
     }
