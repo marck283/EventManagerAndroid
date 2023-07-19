@@ -30,6 +30,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.Navigation
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.AnnullaEventoOnClickListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.QrCodeOnClickListener;
@@ -51,7 +52,7 @@ public class EventDetailsFragment extends Fragment {
 
     private ActivityResultLauncher<Intent> loginLauncher, loginLauncher1;
 
-    private SharedPreferences prefs;
+    private SharedPrefs prefs;
 
     private String token = "";
 
@@ -81,22 +82,28 @@ public class EventDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        prefs = requireActivity().getSharedPreferences(
-                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-        token = prefs.getString("accessToken", "");
+        prefs = new SharedPrefs(
+                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", requireActivity());
+        token = prefs.getString("accessToken");
 
         loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     switch (result.getResultCode()) {
                         case Activity.RESULT_OK: {
-                            token = prefs.getString("accessToken", "");
-                            mViewModel.registerUser(token, eventId, this, day, time, null);
+                            token = prefs.getString("accessToken");
+                            if(!token.equals("")) {
+                                mViewModel.registerUser(token, eventId, this, day, time, null);
+                            } else {
+                                AlertDialog d = new AlertDialog.Builder(requireContext()).create();
+                                d.setTitle(R.string.log_in);
+                                d.setMessage(getString(R.string.log_in));
+                                d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                            }
                             break;
                         }
                         case Activity.RESULT_CANCELED: {
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("accessToken", "");
-                            editor.apply();
+                            prefs.setString("accessToken", "");
+                            prefs.apply();
 
                             Activity activity = getActivity();
                             if(activity != null && isAdded()) {

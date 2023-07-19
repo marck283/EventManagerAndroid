@@ -188,9 +188,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             updateUI("logout", null, null, null, false);
             callback.registerNetworkCallback();
             callback.addDefaultNetworkActiveListener(() -> {
-                SharedPreferences prefs = getSharedPreferences(
-                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
-                String accessToken = prefs.getString("accessToken", "");
+                SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                        this);
+                String accessToken = prefs.getString("accessToken");
                 if(accessToken.equals("")) {
                     updateUI("logout", null, null, null, false);
                     if(prompt) {

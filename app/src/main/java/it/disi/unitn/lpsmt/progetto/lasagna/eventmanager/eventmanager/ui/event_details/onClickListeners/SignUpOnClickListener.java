@@ -1,7 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.EditText;
 
@@ -12,12 +11,13 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.jetbrains.annotations.NotNull;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsViewModel;
 
 public class SignUpOnClickListener implements View.OnClickListener {
 
-    private final SharedPreferences prefs;
+    private final SharedPrefs prefs;
 
     private final String eventId;
 
@@ -29,7 +29,7 @@ public class SignUpOnClickListener implements View.OnClickListener {
 
     private final EventDetailsFragment f;
 
-    public SignUpOnClickListener(@NotNull SharedPreferences prefs, @NotNull String eventId,
+    public SignUpOnClickListener(@NotNull SharedPrefs prefs, @NotNull String eventId,
                                  @NotNull String day, @NotNull String time, @NotNull EventDetailsViewModel vm,
                                  @NotNull ActivityResultLauncher<Intent> launcher,
                                  @NotNull EventDetailsFragment f) {
@@ -51,7 +51,7 @@ public class SignUpOnClickListener implements View.OnClickListener {
     public void onClick(View view) {
         TextInputLayout spinner = view.findViewById(R.id.spinner), spinner2 = view.findViewById(R.id.dateArray);
         EditText spinnerText = spinner.getEditText(), spinner2Text = spinner2.getEditText();
-        String token = prefs.getString("accessToken", "");
+        String token = prefs.getString("accessToken");
         if (eventId != null && spinnerText != null && !spinnerText.getText().toString().equals("")
                 && !spinnerText.getText().toString().equals("---") &&
                 spinner2Text != null && !spinner2Text.getText().toString().equals("") &&
