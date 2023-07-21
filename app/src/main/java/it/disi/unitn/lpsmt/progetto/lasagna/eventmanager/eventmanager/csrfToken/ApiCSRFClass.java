@@ -17,9 +17,6 @@ public class ApiCSRFClass {
     private static String csrfToken;
 
     private ApiCSRFClass(@NotNull String token) throws InvalidObjectException {
-        if(token == null) {
-            throw new InvalidObjectException("Il token CSRF non può essere null.");
-        }
         csrfToken = token;
     }
 

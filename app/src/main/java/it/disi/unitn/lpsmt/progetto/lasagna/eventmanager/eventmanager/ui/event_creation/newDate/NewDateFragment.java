@@ -132,7 +132,7 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseSeats(@NonNull String t3) {
-        if (t3 == null || t3.equals("")) {
+        if (t3.equals("")) {
             setAlertDialog(R.string.error, getString(R.string.empty_seats_field_message));
             return false;
         }

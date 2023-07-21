@@ -26,14 +26,7 @@ public class UserEventRegistrationCallback implements Callback {
     private final ActivityResultLauncher<Intent> launcher;
 
     public UserEventRegistrationCallback(@NotNull EventDetailsFragment f, @NotNull ActivityResultLauncher<Intent> launcher) {
-        if(f == null) {
-            throw new IllegalArgumentException("L'istanza di EventDetailsFragment fornita in input e' null.");
-        }
         this.f = f;
-
-        if(launcher == null) {
-            throw new IllegalArgumentException("L'ActivityResultLauncher fornito in input e' null.");
-        }
         this.launcher = launcher;
     }
 

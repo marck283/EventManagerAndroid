@@ -21,9 +21,6 @@ public class QRCodeCallback implements Callback {
     private final Fragment f;
 
     public QRCodeCallback(@NotNull Fragment f) throws InvalidObjectException {
-        if(f == null) {
-            throw new InvalidObjectException("The argument to this constructor cannot be null.");
-        }
         this.f = f;
     }
 

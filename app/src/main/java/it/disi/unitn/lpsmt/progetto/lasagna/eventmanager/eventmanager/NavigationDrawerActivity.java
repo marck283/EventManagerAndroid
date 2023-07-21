@@ -348,11 +348,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
                     }
                     vm.setToken(prefs.getString("accessToken"));
-                    if(data != null) {
-                        email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
-                        picture = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture");
-                        updateUI("login", email, account.getAccount().getDisplayName(), picture, false);
-                    }
+                    email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
+                    picture = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture");
+                    updateUI("login", email, account.getAccount().getDisplayName(), picture, false);
                 } else {
                     //Facebook login
                     if(data != null) {

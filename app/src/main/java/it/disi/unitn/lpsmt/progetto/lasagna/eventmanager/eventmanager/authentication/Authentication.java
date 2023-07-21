@@ -26,15 +26,12 @@ public class Authentication extends ServerOperation {
 
     private Intent intent;
 
-    public void setActivity(@NotNull Activity a) throws InvalidObjectException {
-        if(a == null) {
-            throw new InvalidObjectException("The Activity cannot be set to a null value.");
-        }
+    public void setActivity(@NotNull Activity a) {
         this.a = a;
     }
 
     public void setCsrfToken(@NotNull String token) throws InvalidObjectException {
-        if(token == null || token.equals("")) {
+        if(token.equals("")) {
             throw new InvalidObjectException("The CSRF token cannot be null or an empty string.");
         }
 
@@ -57,16 +54,13 @@ public class Authentication extends ServerOperation {
         }
     }
 
-    public void setIntent(@NotNull Intent i) throws InvalidObjectException {
-        if(i == null) {
-            throw new InvalidObjectException("The Intent argument cannot be null.");
-        }
+    public void setIntent(@NotNull Intent i) {
 
         intent = i;
     }
 
     public void setWhich(@NotNull String w) throws InvalidObjectException {
-        if(w == null || w.equals("")) {
+        if(w.equals("")) {
             throw new InvalidObjectException("The signer of the JWT token was not specified.");
         }
 

@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.InvalidObjectException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
 import okhttp3.Dispatcher;
@@ -36,10 +35,6 @@ public abstract class ServerOperation extends Thread {
     }
 
     public JsonObject parseBody(@NotNull ResponseBody body) throws IOException {
-        if(body == null) {
-            throw new InvalidObjectException("The argument to this method cannot be null");
-        }
-
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(body.string(), JsonObject.class);
     }

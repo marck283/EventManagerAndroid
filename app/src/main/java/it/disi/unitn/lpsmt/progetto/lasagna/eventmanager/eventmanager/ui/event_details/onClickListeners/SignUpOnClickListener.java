@@ -33,10 +33,9 @@ public class SignUpOnClickListener implements View.OnClickListener {
                                  @NotNull String day, @NotNull String time, @NotNull EventDetailsViewModel vm,
                                  @NotNull ActivityResultLauncher<Intent> launcher,
                                  @NotNull EventDetailsFragment f) {
-        if(prefs == null || eventId == null || eventId.equals("") || day == null || day.equals("") ||
-        time == null || time.equals("") || vm == null || launcher == null || f == null) {
-            throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' essere null " +
-                    "o una stringa vuota.");
+        if(eventId.equals("") || day.equals("") || time.equals("")) {
+            throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' essere" +
+                    " una stringa vuota.");
         }
         this.prefs = prefs;
         this.eventId = eventId;

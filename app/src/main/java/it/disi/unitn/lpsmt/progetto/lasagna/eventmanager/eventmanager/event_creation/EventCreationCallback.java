@@ -71,9 +71,7 @@ public class EventCreationCallback implements Callback {
             }
 
             case 401: {
-                if (i != null) {
-                    i.launch(loginIntent);
-                }
+                i.launch(loginIntent);
                 break;
             }
 

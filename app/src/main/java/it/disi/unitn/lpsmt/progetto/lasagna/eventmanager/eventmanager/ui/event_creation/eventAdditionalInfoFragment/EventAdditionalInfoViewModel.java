@@ -16,7 +16,12 @@ public class EventAdditionalInfoViewModel extends ViewModel {
     public void createPrivateEvent(@NonNull Fragment f, @NonNull String jwt, @NonNull EventViewModel evm,
                                    @Nullable ActivityResultLauncher<Intent> launcher) {
         Intent loginIntent = new Intent(f.requireContext(), LoginActivity.class);
-        EventCreation creation = new EventCreation(f, jwt, evm, launcher, loginIntent);
+        EventCreation creation;
+        if(launcher != null) {
+            creation = new EventCreation(f, jwt, evm, launcher, loginIntent);
+        } else {
+            creation = new EventCreation(f, jwt, evm);
+        }
         creation.start();
     }
 }

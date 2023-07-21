@@ -29,9 +29,9 @@ public class AnnullaEventoOnClickListener implements View.OnClickListener {
     public AnnullaEventoOnClickListener(@NotNull EventDetailsFragment f, @NotNull NavigationSharedViewModel nvm,
                                         @NotNull NetworkCallback callback, @NotNull EventDetailsViewModel vm,
                                         @NotNull String eventId) {
-        if(f == null || nvm == null || callback == null || vm == null || eventId == null || eventId.equals("")) {
+        if(eventId.equals("")) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' " +
-                    "essere null o una stringa vuota.");
+                    "essere una stringa vuota.");
         }
 
         this.f = f;

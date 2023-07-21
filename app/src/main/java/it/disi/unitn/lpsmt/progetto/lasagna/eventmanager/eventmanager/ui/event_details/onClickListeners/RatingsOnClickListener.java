@@ -14,7 +14,7 @@ public class RatingsOnClickListener implements View.OnClickListener {
     private final String screenType, eventId;
 
     public RatingsOnClickListener(@NotNull String screenType, @NotNull String eventId) {
-        if(screenType == null || screenType.equals("") || eventId == null || eventId.equals("")) {
+        if(screenType.equals("") || eventId.equals("")) {
             throw new IllegalArgumentException("Nessuno degli argomenti forniti al costruttore puo' essere null.");
         }
 

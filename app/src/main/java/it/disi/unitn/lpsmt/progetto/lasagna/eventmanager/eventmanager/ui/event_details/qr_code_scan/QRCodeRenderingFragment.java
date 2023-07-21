@@ -16,8 +16,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class QRCodeRenderingFragment extends DialogFragment {
 
-    private QRCodeRenderingViewModel mViewModel;
-
     private final String eventId, userId, data, ora;
 
     private View v;
@@ -46,7 +44,7 @@ public class QRCodeRenderingFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(QRCodeRenderingViewModel.class);
+        QRCodeRenderingViewModel mViewModel = new ViewModelProvider(this).get(QRCodeRenderingViewModel.class);
         mViewModel.getBarcode(this, v, eventId, userId, data, ora);
     }
 

@@ -66,12 +66,10 @@ public class AuthenticationCallback implements Callback {
                     ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
                 } else {
                     if(a instanceof LoginActivity) {
-                        if(intent != null) {
-                            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",
-                                    email);
-                            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
-                                    profilePic);
-                        }
+                        intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",
+                                email);
+                        intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
+                                profilePic);
                         a.setResult(Activity.RESULT_OK, intent);
                         a.finish();
                     }

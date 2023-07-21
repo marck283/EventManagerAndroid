@@ -21,7 +21,7 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
 
     private final EventDetailsFragment f;
 
-    private String day, time;
+    private String day;
 
     private final EventDetailsViewModel mViewModel;
 
@@ -33,8 +33,7 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
                                         @NotNull EventDetailsFragment f, @NotNull EventDetailsViewModel vm,
                                         @NotNull String token, @NotNull String evId,
                                         @NotNull NetworkCallback callback) {
-        if(s == null || s2 == null || f == null || vm == null || token == null || token.equals("") ||
-        evId == null || evId.equals("") || callback == null) {
+        if(token.equals("") || evId.equals("")) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' " +
                     "essere null o una stringa vuota.");
         }

@@ -18,10 +18,6 @@ public class QrCodeOnClickListener implements View.OnClickListener {
 
     public QrCodeOnClickListener(@NotNull TextInputLayout s, @NotNull TextInputLayout s2,
                                  @NotNull ActivityResultLauncher<ScanOptions> l) {
-        if(s == null || s2 == null || l == null) {
-            throw new IllegalArgumentException("Nessuno degli argomenti forniti a questo costruttore" +
-                    " puo' essere null.");
-        }
         spinner = s;
         spinner2 = s2;
         launcher = l;

@@ -18,9 +18,12 @@ public class AuthObject {
     public String getToken() {
         return csrfToken;
     }
+
     public String getJwt() {
         return googleJwt;
     }
+
+    @Nullable
     public String getUserId() {
         return userId;
     }

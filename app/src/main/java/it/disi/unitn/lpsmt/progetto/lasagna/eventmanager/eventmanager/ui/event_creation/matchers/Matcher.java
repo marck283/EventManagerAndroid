@@ -11,7 +11,7 @@ public class Matcher {
     private final String input;
 
     public Matcher(@NotNull String t, @NotNull String t1) {
-        if(t == null || t.equals("") || t1 == null || t1.equals("")) {
+        if(t.equals("") || t1.equals("")) {
             throw new IllegalArgumentException("Gli argomenti forniti a questo costruttore non possono " +
                     "essere null o una stringa vuota.");
         }
