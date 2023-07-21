@@ -7,9 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -104,10 +102,9 @@ public class EventRestrictionsFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     Activity activity = getActivity();
                     if(result != null && result.getData() != null && activity != null && isAdded()) {
-                        SharedPreferences prefs = requireActivity().getSharedPreferences(
-                                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                Context.MODE_PRIVATE);
-                        String jwt = prefs.getString("accessToken", "");
+                        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                requireActivity());
+                        String jwt = prefs.getString("accessToken");
                         mViewModel.createPublicEvent(this, jwt, evm, loginLauncher);
                     }
                 });

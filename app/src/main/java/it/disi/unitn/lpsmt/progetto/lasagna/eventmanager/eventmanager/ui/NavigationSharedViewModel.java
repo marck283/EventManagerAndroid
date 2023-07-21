@@ -1,22 +1,19 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 
 public class NavigationSharedViewModel extends ViewModel {
     private final MutableLiveData<String> idToken = new MutableLiveData<>();
 
     public void init(@NonNull NavigationDrawerActivity a) {
-        SharedPreferences prefs = a.getSharedPreferences(
-                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-        idToken.setValue(prefs.getString("accessToken", ""));
+        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", a);
+        idToken.setValue(prefs.getString("accessToken"));
     }
 
     public void setToken(@NonNull String token) {

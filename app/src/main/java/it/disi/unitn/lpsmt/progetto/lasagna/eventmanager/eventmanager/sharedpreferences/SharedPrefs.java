@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SharedPrefs {
     private final SharedPreferences prefs;
     private final SharedPreferences.Editor editor;
@@ -21,6 +23,15 @@ public class SharedPrefs {
 
     public String getString(@NonNull String key) {
         return prefs.getString(key, "");
+    }
+
+    public void setBoolean(@NotNull String key, boolean value) {
+        editor.putBoolean(key, value);
+    }
+
+    public boolean getBoolean(@NotNull String key) {
+        boolean res = false;
+        return prefs.getBoolean(key, res);
     }
 
     public void apply() {

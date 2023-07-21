@@ -2,9 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -204,9 +202,9 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             });
             callback.unregisterNetworkCallback();
         } else {
-            SharedPreferences prefs = getSharedPreferences(
-            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", MODE_PRIVATE);
-            String accessToken = prefs.getString("accessToken", "");
+            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                    this);
+            String accessToken = prefs.getString("accessToken");
             if(accessToken.equals("")) {
                 updateUI("logout", null, null, null, false);
                 if(prompt) {
@@ -298,23 +296,22 @@ public class NavigationDrawerActivity extends AppCompatActivity {
     }
 
     public void revokeAccess(MenuItem item) {
-        SharedPreferences prefs = getSharedPreferences("it.disi.unitn.lpsmt.progetto.lasagna" +
-                ".eventmanager.eventmanager.AccTok", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
+        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                this);
         if(account.getAccount() != null) {
             Task<Void> t = account.signOut();
             t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
             t.addOnCompleteListener(c -> {
                 account.setAccount(null);
                 vm.setToken("");
-                editor.putString("accessToken", "");
-                editor.apply();
+                prefs.setString("accessToken", "");
+                prefs.apply();
                 updateUI("logout", null, null, null, false);
             });
         } else {
             accessToken = null;
-            editor.putString("accessToken", "");
-            editor.apply();
+            prefs.setString("accessToken", "");
+            prefs.apply();
             LoginManager.getInstance().logOut();
             vm.setToken("");
             updateUI("logout", null, null, null, false);
@@ -422,11 +419,14 @@ public class NavigationDrawerActivity extends AppCompatActivity {
 
         //Salva il token di accesso nelle SharedPreferences per utilizzarlo al successivo accesso all'app.
         Log.i("exitToken", vm.getToken().getValue());
-        SharedPreferences prefs = getSharedPreferences(
-                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("accessToken", vm.getToken().getValue());
-        editor.apply();
+        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                this);
+        if(vm.getToken().getValue() == null) {
+            prefs.setString("accessToken", "");
+        } else {
+            prefs.setString("accessToken", vm.getToken().getValue());
+        }
+        prefs.apply();
         vm = null;
         account = null;
         accessToken = null;

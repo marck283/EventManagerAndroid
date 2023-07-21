@@ -1,9 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_calendar;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,7 @@ import androidx.navigation.Navigation;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
@@ -78,9 +77,9 @@ public class UserCalendarFragment extends Fragment {
         v.setOnDateChangeListener((v1, d, m, y) -> {
             Bundle b = new Bundle();
 
-            SharedPreferences prefs = requireActivity().getSharedPreferences(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-            String token = prefs.getString("accessToken", "");
+            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                    requireActivity());
+            String token = prefs.getString("accessToken");
             if (token.equals("")) {
                 //Eseguire login, poi permettere la visualizzazione degli eventi
                 Intent login = new Intent(requireContext(), LoginActivity.class);

@@ -9,9 +9,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +41,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
@@ -119,10 +118,9 @@ public class EventAdditionalInfoFragment extends Fragment {
                     new ActivityResultContracts.StartActivityForResult(), result -> {
                         Activity activity = getActivity();
                         if(result != null && result.getData() != null && activity != null && isAdded()) {
-                            SharedPreferences prefs = requireActivity().getSharedPreferences(
-                                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                    Context.MODE_PRIVATE);
-                            String jwt = prefs.getString("accessToken", "");
+                            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                    requireActivity());
+                            String jwt = prefs.getString("accessToken");
                             mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
                         }
                     });
@@ -240,10 +238,9 @@ public class EventAdditionalInfoFragment extends Fragment {
                     if(evm.getPrivEvent()) {
                         Activity activity = getActivity();
                         if(activity != null && isAdded()) {
-                            SharedPreferences prefs = requireActivity().getSharedPreferences(
-                                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                    Context.MODE_PRIVATE);
-                            mViewModel.createPrivateEvent(this, prefs.getString("accessToken", ""),
+                            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                                    requireActivity());
+                            mViewModel.createPrivateEvent(this, prefs.getString("accessToken"),
                                     evm, loginLauncher);
                         }
                     } else {

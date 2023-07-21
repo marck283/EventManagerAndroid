@@ -2,8 +2,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 
 public class EventListFragment extends Fragment {
@@ -32,17 +31,9 @@ public class EventListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*Bundle args = getArguments();
-        if (args != null && args.getString("accessToken") != null) {
-            idToken = args.getString("accessToken");
-        } else {
-            if (savedInstanceState != null && savedInstanceState.getString("accessToken") != null) {
-                idToken = savedInstanceState.getString("accessToken");
-            }*/
         if (savedInstanceState != null && savedInstanceState.getBoolean("prompt")) {
             prompt = savedInstanceState.getBoolean("prompt");
         }
-        //}
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -83,9 +74,9 @@ public class EventListFragment extends Fragment {
         super.onStart();
         Activity activity = getActivity();
         if (activity != null && isAdded()) {
-            SharedPreferences prefs = requireActivity().getSharedPreferences(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-            idToken = prefs.getString("accessToken", "");
+            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                    requireActivity());
+            idToken = prefs.getString("accessToken");
 
             NetworkCallback callback = new NetworkCallback(requireActivity());
             if (!callback.isOnline(requireActivity())) {
@@ -97,7 +88,7 @@ public class EventListFragment extends Fragment {
                 });
                 setAlertDialog(R.string.no_connection, R.string.no_connection_message_short);
             } else {
-                idToken = prefs.getString("accessToken", "");
+                idToken = prefs.getString("accessToken");
                 eventListViewModel.getEvents(this, root, idToken);
 
                 vm.getToken().observe(requireActivity(), o -> {

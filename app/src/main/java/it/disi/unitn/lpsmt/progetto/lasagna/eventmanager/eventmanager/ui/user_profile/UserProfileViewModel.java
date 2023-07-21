@@ -1,8 +1,6 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -11,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo.OnlineUserInfo;
 
 public class UserProfileViewModel extends ViewModel {
@@ -26,9 +25,9 @@ public class UserProfileViewModel extends ViewModel {
                 onlineUserInfo.start();
             } else {
                 //Ottieni i dati dell'utente dal database, se disponibili
-                SharedPreferences prefs = f.requireActivity().getSharedPreferences(
-                        "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
-                DBUser dbUser = new DBUser(prefs.getString("userId", ""), "getAll", l, f);
+                SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                        f.requireActivity());
+                DBUser dbUser = new DBUser(prefs.getString("userId"), "getAll", l, f);
                 dbUser.start();
             }
         }

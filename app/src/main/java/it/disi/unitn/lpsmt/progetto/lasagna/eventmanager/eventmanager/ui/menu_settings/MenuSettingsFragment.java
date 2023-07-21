@@ -1,8 +1,5 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +11,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.android.installreferrer.BuildConfig;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.BuildConfig;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 
 public class MenuSettingsFragment extends Fragment {
     private MenuSettingsViewModel menuSettingsViewModel;
@@ -39,13 +37,11 @@ public class MenuSettingsFragment extends Fragment {
         view.findViewById(R.id.button4).setOnClickListener(v -> showInfo());
         ((SwitchMaterial)view.findViewById(R.id.switch1)).setOnCheckedChangeListener((c, c1) -> {
             menuSettingsViewModel.setChecked(c1);
-            SharedPreferences sp = requireActivity().getSharedPreferences(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
-                    MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
+            SharedPrefs sp = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
+                    requireActivity());
             if(menuSettingsViewModel != null && menuSettingsViewModel.getChecked().getValue() != null) {
-                editor.putBoolean("showTel", menuSettingsViewModel.getChecked().getValue());
-                editor.apply();
+                sp.setBoolean("showTel", menuSettingsViewModel.getChecked().getValue());
+                sp.apply();
             }
         });
         if(savedInstanceState != null) {
@@ -55,10 +51,9 @@ public class MenuSettingsFragment extends Fragment {
             if(menuSettingsViewModel.getChecked().getValue() != null) {
                 ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(menuSettingsViewModel.getChecked().getValue());
             } else {
-                SharedPreferences sp = requireActivity().getSharedPreferences(
-                        "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
-                        MODE_PRIVATE);
-                ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(sp.getBoolean("showTel", false));
+                SharedPrefs sp = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
+                        requireActivity());
+                ((SwitchMaterial)view.findViewById(R.id.switch1)).setChecked(sp.getBoolean("showTel"));
             }
         }
     }

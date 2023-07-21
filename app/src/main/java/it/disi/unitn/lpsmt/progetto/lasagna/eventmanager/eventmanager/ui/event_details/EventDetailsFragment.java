@@ -2,13 +2,12 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.StringRes;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -136,6 +135,11 @@ public class EventDetailsFragment extends Fragment {
                                 //Ritorna alla schermata principale, reimpostando il token alla stringa vuota
                                 //e chiedendo all'Activity NavigationDrawerActivity di reimpostare il suo menù
                                 //a quello riservato agli utenti non autenticati.
+                                prefs.setString("accessToken", "");
+                                Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
+                                ((NavigationDrawerActivity) requireActivity())
+                                        .updateUI("logout", "", "", "",
+                                                false);
                             }
                         }
                     });
@@ -148,17 +152,14 @@ public class EventDetailsFragment extends Fragment {
                                     !spinner.getEditText().getText().toString().equals("---") &&
                                     spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
                                     !spinner2.getEditText().getText().toString().equals("---")) {
-                                SharedPreferences prefs = requireActivity().getSharedPreferences(
-                                        "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                        Context.MODE_PRIVATE);
-                                String token = prefs.getString("accessToken", "");
+                                String token = prefs.getString("accessToken");
                                 if (!token.equals("")) {
                                     if (callback.isOnline(requireActivity())) {
                                         mViewModel.checkQR(token, result.getContents(),
                                                 eventId, spinner2.getEditText().getText().toString(),
                                                 spinner.getEditText().getText().toString(), this);
                                     } else {
-                                        setNoConnectionDialog();
+                                        setDialog(R.string.no_connection, R.string.no_connection_message);
                                         callback.registerNetworkCallback();
                                         callback.addDefaultNetworkActiveListener(() ->
                                                 mViewModel.checkQR(token, result.getContents(),
@@ -179,7 +180,7 @@ public class EventDetailsFragment extends Fragment {
                                             mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                                                     day, launcher, null);
                                         } else {
-                                            setNoConnectionDialog();
+                                            setDialog(R.string.no_connection, R.string.no_connection_message);
                                             callback.registerNetworkCallback();
                                             callback.addDefaultNetworkActiveListener(() ->
                                                     mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
@@ -192,14 +193,7 @@ public class EventDetailsFragment extends Fragment {
                                 case Activity.RESULT_CANCELED: {
                                     Activity activity = getActivity();
                                     if(activity != null && isAdded()) {
-                                        SharedPreferences prefs =
-                                                requireActivity().getSharedPreferences(
-                                                        "it.disi.unitn.lpsmt.progetto.lasagna" +
-                                                                ".eventmanager.eventmanager.AccTok",
-                                                        Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = prefs.edit();
-                                        editor.putString("accessToken", "");
-                                        editor.apply();
+                                        prefs.setString("accessToken", "");
                                         Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
                                         ((NavigationDrawerActivity) requireActivity())
                                                 .updateUI("logout", "", "", "",
@@ -299,11 +293,7 @@ public class EventDetailsFragment extends Fragment {
                                 day, launcher, loginLauncher);
                     } else {
                         //Nessuna connessione ad Internet. Acquisire i dati dal database e visualizzarli a schermo
-                        AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-                        dialog.setTitle(R.string.no_connection);
-                        dialog.setMessage(getString(R.string.buttons_disabled));
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                        dialog.show();
+                        setDialog(R.string.no_connection, R.string.buttons_disabled);
 
                         qrCodeScan.setEnabled(false);
                         terminaEvento.setEnabled(false);
@@ -333,12 +323,12 @@ public class EventDetailsFragment extends Fragment {
         }
     }
 
-    private void setNoConnectionDialog() {
+    private void setDialog(@StringRes int title, @StringRes int message) {
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
             AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
-            dialog.setTitle(R.string.no_connection);
-            dialog.setMessage(getString(R.string.no_connection_message));
+            dialog.setTitle(title);
+            dialog.setMessage(getString(message));
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
             dialog.show();
         }

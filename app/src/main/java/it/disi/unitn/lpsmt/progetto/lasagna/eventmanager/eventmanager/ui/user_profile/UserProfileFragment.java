@@ -3,8 +3,6 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_p
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 
 public class UserProfileFragment extends Fragment {
@@ -29,8 +28,6 @@ public class UserProfileFragment extends Fragment {
     private UserProfileViewModel mViewModel;
     private MenuSettingsViewModel ms;
     private View v;
-
-    private SharedPreferences prefs;
 
     @NonNull
     @Contract(" -> new")
@@ -74,18 +71,16 @@ public class UserProfileFragment extends Fragment {
 
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
-            prefs = requireActivity().getSharedPreferences(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", Context.MODE_PRIVATE);
+            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                    requireActivity());
 
-            String token = prefs.getString("accessToken", "");
+            String token = prefs.getString("accessToken");
             if(!token.equals("")) {
                 toEventManagement(token);
             }
-        }
 
-        mViewModel.getUserInfo(this, prefs.getString("accessToken", ""), v.findViewById(R.id.frameLayout2));
+            mViewModel.getUserInfo(this, prefs.getString("accessToken"), v.findViewById(R.id.frameLayout2));
 
-        if(activity != null && isAdded()) {
             ms.getChecked().observe(requireActivity(), o -> {
                 if(!((boolean) o)) {
                     v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
@@ -99,10 +94,9 @@ public class UserProfileFragment extends Fragment {
 
             //Ne consegue anche qui che il nome qui fornito dovrebbe essere modificato per tutte le
             //istanze di SharedPreferences che richiamano questa specifica Shared Preference.
-            SharedPreferences sp = requireActivity().getSharedPreferences(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
-                    Context.MODE_PRIVATE);
-            if(sp.getBoolean("showTel", false)) {
+            SharedPrefs sp = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
+                    requireActivity());
+            if(sp.getBoolean("showTel")) {
                 v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
             } else {
                 v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
