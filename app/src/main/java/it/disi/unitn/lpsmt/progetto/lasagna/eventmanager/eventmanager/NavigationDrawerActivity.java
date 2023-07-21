@@ -418,7 +418,6 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         super.onDestroy();
 
         //Salva il token di accesso nelle SharedPreferences per utilizzarlo al successivo accesso all'app.
-        Log.i("exitToken", vm.getToken().getValue());
         SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
                 this);
         if(vm.getToken().getValue() == null) {
