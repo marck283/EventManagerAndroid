@@ -55,7 +55,6 @@ public class Authentication extends ServerOperation {
     }
 
     public void setIntent(@NotNull Intent i) {
-
         intent = i;
     }
 

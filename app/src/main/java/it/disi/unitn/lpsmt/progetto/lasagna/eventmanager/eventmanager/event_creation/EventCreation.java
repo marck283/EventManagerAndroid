@@ -60,8 +60,7 @@ public class EventCreation extends ServerOperation {
             url = getBaseUrl() + "/api/v2/EventiPrivati";
         }
 
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),
-                jsonObject.toString());
+        RequestBody body = RequestBody.create(jsonObject.toString(), MediaType.parse("application/json; charset=utf-8"));
 
         List<Pair<String, String>> headers = new ArrayList<>();
         headers.add(new Pair<>("x-access-token", userJwt));

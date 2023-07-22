@@ -16,7 +16,7 @@ import java.io.InvalidObjectException;
 public class ApiCSRFClass {
     private static String csrfToken;
 
-    private ApiCSRFClass(@NotNull String token) throws InvalidObjectException {
+    private ApiCSRFClass(@NotNull String token) {
         csrfToken = token;
     }
 
@@ -26,9 +26,6 @@ public class ApiCSRFClass {
 
     @NonNull
     public static ApiCSRFClass parseJSON(@NonNull JsonObject json) throws InvalidObjectException {
-        if(json == null) {
-            throw new InvalidObjectException("L'oggetto JSON contenente il token CSRF non può essere null.");
-        }
 
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();

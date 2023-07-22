@@ -29,10 +29,12 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
 
     private final NetworkCallback callback;
 
+    private final View v;
+
     public TerminaEventoOnClickListener(@NotNull TextInputLayout s, @NotNull TextInputLayout s2,
                                         @NotNull EventDetailsFragment f, @NotNull EventDetailsViewModel vm,
                                         @NotNull String token, @NotNull String evId,
-                                        @NotNull NetworkCallback callback) {
+                                        @NotNull NetworkCallback callback, @NotNull View v) {
         if(token.equals("") || evId.equals("")) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' " +
                     "essere null o una stringa vuota.");
@@ -44,6 +46,7 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
         this.token = token;
         eventId = evId;
         this.callback = callback;
+        this.v = v;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
                         return;
                     }
                     mViewModel.terminateEvent(token,
-                            f, eventId, day, hourTextView.getText().toString(), view);
+                            f, eventId, day, hourTextView.getText().toString(), v);
                 } catch (NullPointerException ex) {
                     ex.printStackTrace();
                 }

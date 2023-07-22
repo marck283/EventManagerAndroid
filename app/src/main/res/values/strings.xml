@@ -278,4 +278,5 @@
     <string name="search_by_event_duration">Search by event duration</string>
     <string name="search_by_event_address">Search by event address</string>
     <string name="search_by_event_city">Search by event city</string>
+    <string name="evm_subtitle">This page shows the events that you have organized and that have not yet been terminated</string>
 </resources>

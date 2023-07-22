@@ -315,7 +315,7 @@ public class EventDetailsFragment extends Fragment {
                 qrCodeScan.setOnClickListener(new QrCodeOnClickListener(spinner, spinner2, launcher));
 
                 terminaEvento.setOnClickListener(new TerminaEventoOnClickListener(spinner, spinner2,
-                        this, mViewModel, token, eventId, callback));
+                        this, mViewModel, token, eventId, callback, view));
 
                 annullaEvento.setOnClickListener(new AnnullaEventoOnClickListener(this, nvm, callback,
                         mViewModel, eventId));
