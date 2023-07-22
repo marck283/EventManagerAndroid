@@ -36,6 +36,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_d
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.RatingsOnClickListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.SignUpOnClickListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.TerminaEventoOnClickListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -314,8 +315,9 @@ public class EventDetailsFragment extends Fragment {
 
                 qrCodeScan.setOnClickListener(new QrCodeOnClickListener(spinner, spinner2, launcher));
 
+                Intent loginIntent = new Intent(requireContext(), LoginActivity.class);
                 terminaEvento.setOnClickListener(new TerminaEventoOnClickListener(spinner, spinner2,
-                        this, mViewModel, token, eventId, callback, view));
+                        this, mViewModel, token, eventId, callback, view, loginLauncher, loginIntent));
 
                 annullaEvento.setOnClickListener(new AnnullaEventoOnClickListener(this, nvm, callback,
                         mViewModel, eventId));

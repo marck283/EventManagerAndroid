@@ -1,10 +1,12 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.organizedEvent;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -32,8 +34,13 @@ public class TerminateEvent extends ServerOperation {
 
     private final Fragment f;
 
+    private final ActivityResultLauncher<Intent> launcher;
+
+    private final Intent loginIntent;
+
     public TerminateEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull String data,
-                          @NonNull String ora, @NonNull View v, @NonNull Fragment f) {
+                          @NonNull String ora, @NonNull View v, @NonNull Fragment f,
+                          @NonNull ActivityResultLauncher<Intent> launcher, @NonNull Intent loginIntent) {
         request = new NetworkRequest();
         this.eventId = eventId;
         this.data = data;
@@ -41,6 +48,8 @@ public class TerminateEvent extends ServerOperation {
         this.v = v;
         this.f = f;
         this.accessToken = accessToken;
+        this.launcher = launcher;
+        this.loginIntent = loginIntent;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -68,6 +77,11 @@ public class TerminateEvent extends ServerOperation {
                 switch (response.code()) {
                     case 400: {
                         setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
+                        break;
+                    }
+                    case 401: {
+                        setAlertDialog(R.string.no_session_title, R.string.no_session_content);
+                        launcher.launch(loginIntent);
                         break;
                     }
                     case 200: {

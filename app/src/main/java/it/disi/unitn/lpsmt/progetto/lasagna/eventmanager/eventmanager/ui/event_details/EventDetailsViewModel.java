@@ -38,12 +38,15 @@ public class EventDetailsViewModel extends ViewModel {
     }
 
     public void terminateEvent(@NonNull String accessToken, @NonNull EventDetailsFragment f,
-                               @NonNull String eventId, @NonNull String data, @NonNull String ora, @NonNull View v) {
+                               @NonNull String eventId, @NonNull String data, @NonNull String ora,
+                               @NonNull View v, @NonNull ActivityResultLauncher<Intent> loginLauncher,
+                               @NonNull Intent loginIntent) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
             callback = new NetworkCallback(f.requireActivity());
             if(callback.isOnline(f.requireActivity())) {
-                TerminateEvent terminate = new TerminateEvent(accessToken, eventId, data, ora, v, f);
+                TerminateEvent terminate = new TerminateEvent(accessToken, eventId, data, ora, v, f,
+                        loginLauncher, loginIntent);
                 terminate.start();
             } else {
                 setNoConnectionDialog(f);

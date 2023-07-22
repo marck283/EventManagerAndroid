@@ -2,8 +2,11 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
+
+import androidx.activity.result.ActivityResultLauncher;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -31,13 +34,19 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
 
     private final View v;
 
+    private final ActivityResultLauncher<Intent> loginLauncher;
+
+    private final Intent loginIntent;
+
     public TerminaEventoOnClickListener(@NotNull TextInputLayout s, @NotNull TextInputLayout s2,
                                         @NotNull EventDetailsFragment f, @NotNull EventDetailsViewModel vm,
                                         @NotNull String token, @NotNull String evId,
-                                        @NotNull NetworkCallback callback, @NotNull View v) {
+                                        @NotNull NetworkCallback callback, @NotNull View v,
+                                        @NotNull ActivityResultLauncher<Intent> loginLauncher,
+                                        @NotNull Intent loginIntent) {
         if(token.equals("") || evId.equals("")) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' " +
-                    "essere null o una stringa vuota.");
+                    "essere una stringa vuota.");
         }
         spinner = s;
         spinner2 = s2;
@@ -47,6 +56,8 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
         eventId = evId;
         this.callback = callback;
         this.v = v;
+        this.loginLauncher = loginLauncher;
+        this.loginIntent = loginIntent;
     }
 
     @Override
@@ -73,7 +84,7 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
                         return;
                     }
                     mViewModel.terminateEvent(token,
-                            f, eventId, day, hourTextView.getText().toString(), v);
+                            f, eventId, day, hourTextView.getText().toString(), v, loginLauncher, loginIntent);
                 } catch (NullPointerException ex) {
                     ex.printStackTrace();
                 }
