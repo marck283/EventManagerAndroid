@@ -13,7 +13,7 @@ public class Matcher {
     public Matcher(@NotNull String t, @NotNull String t1) {
         if(t.equals("") || t1.equals("")) {
             throw new IllegalArgumentException("Gli argomenti forniti a questo costruttore non possono " +
-                    "essere null o una stringa vuota.");
+                    "essere una stringa vuota.");
         }
         input = t1;
         pattern = Pattern.compile(t);
