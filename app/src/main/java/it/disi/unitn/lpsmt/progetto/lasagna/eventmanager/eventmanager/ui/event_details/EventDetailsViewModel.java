@@ -108,10 +108,10 @@ public class EventDetailsViewModel extends ViewModel {
         }
     }
 
-    public void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
-                             @NonNull EventDetailsFragment f, @Nullable String userJwt,
-                             @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
-                             @Nullable ActivityResultLauncher<Intent> loginLauncher) {
+    public Object getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
+                               @NonNull EventDetailsFragment f, @Nullable String userJwt,
+                               @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
+                               @Nullable ActivityResultLauncher<Intent> loginLauncher) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
             callback = new NetworkCallback(f.requireActivity());
@@ -127,6 +127,7 @@ public class EventDetailsViewModel extends ViewModel {
                 setNoConnectionDialog(f);
             }
         }
+        return null;
     }
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull EventDetailsFragment f,
@@ -158,7 +159,7 @@ public class EventDetailsViewModel extends ViewModel {
         }
     }
 
-    public void checkQR(@NonNull String userJwt, @NonNull String qrCode, @NonNull String eventId,
+    public Void checkQR(@NonNull String userJwt, @NonNull String qrCode, @NonNull String eventId,
                         @NonNull String day, @NonNull String hour, @NonNull EventDetailsFragment f) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
@@ -172,5 +173,7 @@ public class EventDetailsViewModel extends ViewModel {
                 setNoConnectionDialog(f);
             }
         }
+
+        return null;
     }
 }

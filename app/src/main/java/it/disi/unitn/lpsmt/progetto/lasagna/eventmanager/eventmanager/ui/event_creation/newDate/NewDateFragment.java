@@ -66,10 +66,10 @@ public class NewDateFragment extends DialogFragment {
                 if (substr % 400 == 0 || (substr % 100 == 0 && substr % 4 != 0)) {
                     //Anno bisestile
                     matcher = new Matcher("(((10|[0-2][1-9])/02)|(([23]0|[0-2][1-9])/" +
-                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}", t);
+                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9][0-9]\\d{2}", t);
                 } else {
                     matcher = new Matcher("((([12]0|[01]9|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
-                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9]\\d{3}", t);
+                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9][0-9]\\d{2}", t);
                 }
                 if (matcher.isValid()) {
                     SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);

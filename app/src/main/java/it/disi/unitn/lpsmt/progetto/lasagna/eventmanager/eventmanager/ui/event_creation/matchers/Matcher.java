@@ -15,8 +15,8 @@ public class Matcher {
             throw new IllegalArgumentException("Gli argomenti forniti a questo costruttore non possono " +
                     "essere null o una stringa vuota.");
         }
-        input = t;
-        pattern = Pattern.compile(t1);
+        input = t1;
+        pattern = Pattern.compile(t);
     }
 
     public boolean isValid() {

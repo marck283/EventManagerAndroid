@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
+
+import java.util.concurrent.FutureTask;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -77,6 +80,17 @@ public class EventDetailsFragment extends Fragment {
     @NonNull
     public static EventDetailsFragment newInstance() {
         return new EventDetailsFragment();
+    }
+
+    private void executeCallback(FutureTask<Void> ft) {
+        if (callback.isOnline(requireActivity())) {
+            ft.run();
+        } else {
+            setDialog(R.string.no_connection, R.string.no_connection_message);
+            callback.registerNetworkCallback();
+            callback.addDefaultNetworkActiveListener(ft::run);
+            callback.unregisterNetworkCallback();
+        }
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -154,8 +168,13 @@ public class EventDetailsFragment extends Fragment {
                                     spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
                                     !spinner2.getEditText().getText().toString().equals("---")) {
                                 String token = prefs.getString("accessToken");
+                                FutureTask<Void> qr = new FutureTask<>(() -> Void.TYPE.cast(mViewModel.checkQR(token,
+                                        result.getContents(),
+                                        eventId, spinner2.getEditText().getText().toString(),
+                                        spinner.getEditText().getText().toString(), this)));
                                 if (!token.equals("")) {
-                                    if (callback.isOnline(requireActivity())) {
+                                    executeCallback(qr);
+                                    /*if (callback.isOnline(requireActivity())) {
                                         mViewModel.checkQR(token, result.getContents(),
                                                 eventId, spinner2.getEditText().getText().toString(),
                                                 spinner.getEditText().getText().toString(), this);
@@ -167,17 +186,22 @@ public class EventDetailsFragment extends Fragment {
                                                         eventId, spinner2.getEditText().getText().toString(),
                                                         spinner.getEditText().getText().toString(), this));
                                         callback.unregisterNetworkCallback();
-                                    }
+                                    }*/
                                 }
                             }
                         });
+
+                FutureTask<Void> ft = new FutureTask<>(() ->
+                        Void.TYPE.cast(mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
+                                day, launcher, null)));
                 loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
                             switch (result.getResultCode()) {
                                 case Activity.RESULT_OK: {
                                     Activity activity = getActivity();
                                     if(activity != null && isAdded()) {
-                                        if (callback.isOnline(requireActivity())) {
+                                        executeCallback(ft);
+                                        /*if (callback.isOnline(requireActivity())) {
                                             mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                                                     day, launcher, null);
                                         } else {
@@ -187,7 +211,7 @@ public class EventDetailsFragment extends Fragment {
                                                     mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
                                                             day, launcher, null));
                                             callback.unregisterNetworkCallback();
-                                        }
+                                        }*/
                                     }
                                     break;
                                 }
@@ -206,6 +230,11 @@ public class EventDetailsFragment extends Fragment {
                         });
             }
         }
+
+        //Aggiungo le transizioni del Fragment
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
 
     @Override

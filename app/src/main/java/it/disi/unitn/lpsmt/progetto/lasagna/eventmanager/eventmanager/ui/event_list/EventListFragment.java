@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,11 @@ public class EventListFragment extends Fragment {
         if (savedInstanceState != null && savedInstanceState.getBoolean("prompt")) {
             prompt = savedInstanceState.getBoolean("prompt");
         }
+
+        //Aggiungo le transizioni del Fragment
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_right));
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
