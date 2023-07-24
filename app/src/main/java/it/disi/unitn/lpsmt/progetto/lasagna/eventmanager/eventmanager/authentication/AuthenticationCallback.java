@@ -44,8 +44,6 @@ public class AuthenticationCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        Log.i("response", String.valueOf(response));
-
         SharedPrefs prefs = new SharedPrefs(
                 "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", a);
 
