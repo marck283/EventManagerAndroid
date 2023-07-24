@@ -90,38 +90,32 @@ public class JsonCallback implements Callback {
     }
 
     private void initAdapter(@Nullable Fragment f, EventList ev, @Nullable String day) {
-        switch(type) {
-            case "org": {
-                if(day != null) {
+        switch (type) {
+            case "org" -> {
+                if (day != null) {
                     p1 = new OrgEvAdapter(new EventCallback(), ev.getList(), day);
                 } else {
                     p1 = new OrgEvAdapter(new EventCallback(), ev.getList());
                 }
 
-                if(f != null) {
+                if (f != null) {
                     Activity activity = f.getActivity();
-                    if(f instanceof EventManagementFragment && activity != null && f.isAdded()) {
+                    if (f instanceof EventManagementFragment && activity != null && f.isAdded()) {
                         DBOrgEvents dbOrg = new DBOrgEvents(f, "updateAll", ev.getList(), mRecyclerView);
                         dbOrg.start();
                     }
                 }
-                break;
             }
-            case "priv": {
+            case "priv" -> {
                 this.day = day;
                 p1 = new PrivEvAdapter(new EventCallback(), ev.getList(), day);
-                break;
             }
-            case "pub": {
-                if(f != null) {
+            case "pub" -> {
+                if (f != null) {
                     p1 = new PubEvAdapter(f, new EventCallback(), ev.getList());
                 }
-                break;
             }
-            default: {
-                Log.i("noCategory", "no category with that name");
-                break;
-            }
+            default -> Log.i("noCategory", "no category with that name");
         }
     }
 
@@ -140,8 +134,6 @@ public class JsonCallback implements Callback {
         if(response.body() != null) {
             if(response.isSuccessful()) {
                 try {
-                    Log.i("orgEvResponse", String.valueOf(response.body()));
-
                     Gson gson = new GsonBuilder().create();
                     ev = ev.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                     if(ev != null && ev.getList().size() > 0) {
@@ -165,23 +157,23 @@ public class JsonCallback implements Callback {
                 } catch(IOException ex) {
                     ex.printStackTrace();
                 }
+                response.body().close();
             } else {
                 Log.i("fail", "Unsuccessful operation");
-                switch(response.code()) {
-                    case 401: {
-                        if(f != null && launcher != null) {
+                switch (response.code()) {
+                    case 401 -> {
+                        if (f != null && launcher != null) {
                             Activity activity = f.getActivity();
-                            if(activity != null && f.isAdded()) {
+                            if (activity != null && f.isAdded()) {
                                 Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
                                 launcher.launch(loginIntent);
                             }
                         }
-                        break;
                     }
-                    case 404: {
-                        if(f != null) {
+                    case 404 -> {
+                        if (f != null) {
                             Activity activity = f.getActivity();
-                            if(activity != null && f.isAdded()) {
+                            if (activity != null && f.isAdded()) {
                                 f.requireActivity().runOnUiThread(() -> {
                                     AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
                                     dialog.setTitle(R.string.no_org_event);
@@ -196,7 +188,6 @@ public class JsonCallback implements Callback {
                                 });
                             }
                         }
-                        break;
                     }
                 }
             }

@@ -50,10 +50,9 @@ public class UserProfileCallback implements Callback {
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         //Set up the ImageView
         if(response.isSuccessful()) {
-            UserInfo user = new UserInfo();
             Gson gson1 = new GsonBuilder().create();
             JsonObject res = gson1.fromJson(response.body().string(), JsonObject.class);
-            final UserInfo userInfo = user.parseJSON(res);
+            final UserInfo userInfo = UserInfo.parseJSON(res);
 
             Activity activity = f.getActivity();
             if(activity != null && f.isAdded()) {
@@ -104,6 +103,7 @@ public class UserProfileCallback implements Callback {
                     }
                 });
             }
+            response.body().close();
         } else {
             Log.i("onlineResponse", "Utente non trovato");
         }

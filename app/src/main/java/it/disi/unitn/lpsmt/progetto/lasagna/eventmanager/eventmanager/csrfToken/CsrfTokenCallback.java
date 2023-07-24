@@ -74,6 +74,7 @@ public class CsrfTokenCallback implements Callback {
                     }
                 }
                 o.start();
+                response.body().close();
             } else {
                 Log.i("null", "Unsuccessful or null response");
             }

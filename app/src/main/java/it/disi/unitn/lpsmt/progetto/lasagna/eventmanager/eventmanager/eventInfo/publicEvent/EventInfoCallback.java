@@ -190,6 +190,7 @@ public class EventInfoCallback implements Callback {
                     });
                 });
             }
+            response.body().close();
         }
     }
 }

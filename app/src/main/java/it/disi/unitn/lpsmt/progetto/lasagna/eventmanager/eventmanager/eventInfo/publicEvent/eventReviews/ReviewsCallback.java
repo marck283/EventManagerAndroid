@@ -20,7 +20,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_d
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 public class ReviewsCallback implements Callback {
 
@@ -50,10 +49,7 @@ public class ReviewsCallback implements Callback {
         if(!response.isSuccessful() || response.body() == null) {
             Log.i("noResponse", String.valueOf(response.code()));
         } else {
-            ResponseBody resBody = response.body();
-            String responseBody = resBody.string();
-
-            Log.i("response", responseBody);
+            String responseBody = response.body().string();
 
             Gson gson = new Gson();
             JsonObject r = gson.fromJson(responseBody, JsonObject.class);
@@ -83,6 +79,7 @@ public class ReviewsCallback implements Callback {
                     });
                 }
             }
+            response.body().close();
         }
     }
 }
