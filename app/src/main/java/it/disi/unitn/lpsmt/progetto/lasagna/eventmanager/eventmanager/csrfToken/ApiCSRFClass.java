@@ -26,7 +26,6 @@ public class ApiCSRFClass {
 
     @NonNull
     public static ApiCSRFClass parseJSON(@NonNull JsonObject json) throws InvalidObjectException {
-
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
         return new ApiCSRFClass(fromJson(gs1, json));
