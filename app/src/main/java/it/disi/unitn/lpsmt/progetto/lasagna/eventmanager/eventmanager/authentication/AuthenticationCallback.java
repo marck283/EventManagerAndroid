@@ -61,7 +61,7 @@ public class AuthenticationCallback implements Callback {
                     a.runOnUiThread(() ->
                             ((NavigationDrawerActivity)a)
                                     .updateUI("login", email, name, profilePic, true));
-                    ((NavigationDrawerActivity)a).getViewModel().setToken(info.getToken());
+                    ((NavigationDrawerActivity)a).getViewModel().postToken(info.getToken());
                 } else {
                     if(a instanceof LoginActivity) {
                         intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",

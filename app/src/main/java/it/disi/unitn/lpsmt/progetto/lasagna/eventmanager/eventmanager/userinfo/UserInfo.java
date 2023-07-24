@@ -27,7 +27,7 @@ public class UserInfo {
         valutazioneMedia = 0.0;
     }
 
-    public UserInfo(@NonNull String id, @NonNull String profilePic, @NonNull String nome,
+    private UserInfo(@NonNull String id, @NonNull String profilePic, @NonNull String nome,
                     @NonNull String email, @NonNull String tel, @NonNull Integer numEvOrg,
                     @NonNull Double valutazioneMedia, @NonNull List<String> EventiIscritto,
                     @NonNull List<String> EventiCreati) {
@@ -80,21 +80,21 @@ public class UserInfo {
         return EventiCreati;
     }
 
-    private String stringFromJson(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
+    private static String stringFromJson(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
         if(json.get(name) != null) {
             return gs1.fromJson(json.get(name), String.class);
         }
         return "";
     }
 
-    private Integer integerFromJson(@NonNull Gson gs1, @NonNull JsonObject json) {
+    private static Integer integerFromJson(@NonNull Gson gs1, @NonNull JsonObject json) {
         if(json.get("numEvOrg") != null) {
             return gs1.fromJson(json.get("numEvOrg"), Integer.class);
         }
         return 0;
     }
 
-    private Double doubleFromJson(@NonNull Gson gs1, @NonNull JsonObject json) {
+    private static Double doubleFromJson(@NonNull Gson gs1, @NonNull JsonObject json) {
         if(json.get("valutazioneMedia") != null) {
             return gs1.fromJson(json.get("valutazioneMedia"), Double.class);
         }
@@ -102,7 +102,7 @@ public class UserInfo {
     }
 
     @NonNull
-    private List<String> fromJsonArr(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
+    private static List<String> fromJsonArr(@NonNull Gson gs1, String name, @NonNull JsonObject json) {
         JsonArray arr = gs1.fromJson(json.get(name), JsonArray.class);
 
         ArrayList<String> res = new ArrayList<>();
@@ -113,7 +113,8 @@ public class UserInfo {
         return res;
     }
 
-    public UserInfo parseJSON(@NonNull JsonObject json) {
+    @NonNull
+    public static UserInfo parseJSON(@NonNull JsonObject json) {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
 

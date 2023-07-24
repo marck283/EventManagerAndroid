@@ -75,9 +75,6 @@ public class Authentication extends ServerOperation {
             if(a == null) {
                 throw new InvalidObjectException("The Activity object was not set.");
             }
-            if(intent == null) {
-                throw new InvalidObjectException("The Intent argument cannot be null.");
-            }
 
             AuthObject authObj;
             FormBody.Builder fbodyBuilder;
@@ -97,6 +94,9 @@ public class Authentication extends ServerOperation {
                 request = getNetworkRequest().getPostRequest(fbodyBuilder.build(), null,
                         getBaseUrl() + "/api/v2/authentications");
             } else {
+                if(intent == null) {
+                    throw new InvalidObjectException("The Intent argument cannot be null.");
+                }
                 if(fbJwt == null || fbJwt.getToken().equals("")) {
                     Log.i("fbJwtNull", "L'Access Token di Facebook non può essere una stringa vuota");
                     return;
