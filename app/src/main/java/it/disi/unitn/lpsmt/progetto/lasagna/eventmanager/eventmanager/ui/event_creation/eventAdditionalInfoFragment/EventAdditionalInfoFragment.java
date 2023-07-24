@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +34,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -43,6 +43,7 @@ import java.io.IOException;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
 public class EventAdditionalInfoFragment extends Fragment {
@@ -129,6 +130,12 @@ public class EventAdditionalInfoFragment extends Fragment {
         }
     }
 
+    private void setOnClickListener(@NotNull FloatingActionButton b, View.OnClickListener listener) {
+        if(!b.hasOnClickListeners()) {
+            b.setOnClickListener(listener);
+        }
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -137,7 +144,7 @@ public class EventAdditionalInfoFragment extends Fragment {
         FloatingActionButton selectImage = view.findViewById(R.id.imageSelector);
         if(selectImage != null) {
             if(pickerAvailable) {
-                selectImage.setOnClickListener(c -> selectImage(null));
+                setOnClickListener(selectImage, c -> selectImage(null));
             } else {
                 ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts
                         .StartActivityForResult(), result -> {
@@ -145,7 +152,7 @@ public class EventAdditionalInfoFragment extends Fragment {
                         setImage(result.getData().getData());
                     }
                 });
-                selectImage.setOnClickListener(c -> selectImage(launcher));
+                setOnClickListener(selectImage, c -> selectImage(launcher));
             }
         } else {
             Log.i("NoButton", "Nessun bottone con quell'id");
@@ -209,7 +216,7 @@ public class EventAdditionalInfoFragment extends Fragment {
                 editOre = dhInputLayout.findViewById(R.id.duration_hours),
                 editMins = dmInputLayout.findViewById(R.id.duration_mins);
 
-        Button forward = view.findViewById(R.id.button14);
+        ListenerButton forward = view.findViewById(R.id.button14);
         forward.setOnClickListener(c -> {
             String giorni = "", ore = "", minuti = "", descrizione = "";
             if(description.getText() != null) {

@@ -59,15 +59,13 @@ public class EventInfoCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if (response.body() != null && response.isSuccessful()) {
+        if (response.isSuccessful()) {
             EventInfo ei = new EventInfo();
 
             Gson gson = new GsonBuilder().create();
             final EventInfo ei1 = ei.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
 
             Activity activity = f.getActivity();
-
-            //E riportate qui
             if(activity != null && f.isAdded()) {
                 f.requireActivity().runOnUiThread(() -> {
                     //Ora imposta il layout in base alla schermata visualizzata
@@ -132,14 +130,16 @@ public class EventInfoCallback implements Callback {
                                         if (!s.toString().equals("---")) {
                                             f.setTime(s1.toString());
 
-                                            indirizzo.setOnClickListener(c -> {
-                                                GeocoderExt geocoder = new GeocoderExt(f, indirizzo);
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                    geocoder.fromLocationName(indirizzo.getText().toString(), 5);
-                                                } else {
-                                                    geocoder.fromLocationNameThread(indirizzo.getText().toString(), 5);
-                                                }
-                                            });
+                                            if(!indirizzo.hasOnClickListeners()) {
+                                                indirizzo.setOnClickListener(c -> {
+                                                    GeocoderExt geocoder = new GeocoderExt(f, indirizzo);
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                        geocoder.fromLocationName(indirizzo.getText().toString(), 5);
+                                                    } else {
+                                                        geocoder.fromLocationNameThread(indirizzo.getText().toString(), 5);
+                                                    }
+                                                });
+                                            }
 
                                             LuogoEv le = ei1.getLuogo(data, s1.toString());
                                             if (le != null) {

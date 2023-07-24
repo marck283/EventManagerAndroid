@@ -70,8 +70,8 @@ public class DBUser extends DBThread {
 
     public void run() {
         synchronized(this) {
-            switch(action) {
-                case "getAll": {
+            switch (action) {
+                case "getAll" -> {
                     User u = user.getUser(id);
 
                     profilePic = u.getProfilePic();
@@ -79,7 +79,7 @@ public class DBUser extends DBThread {
                     a.runOnUiThread(() -> {
                         //Imposta la schermata del profilo dell'utente
                         ImageView iv = v.findViewById(R.id.profilePic);
-                        if(profilePic != null) {
+                        if (profilePic != null) {
                             Glide.with(f.requireActivity()).load(profilePic).circleCrop().into(iv);
                         }
 
@@ -96,41 +96,37 @@ public class DBUser extends DBThread {
                         numEvOrg.setText(f.getString(R.string.numEvOrg, u.getNumEvOrg()));
 
                         Button rating = v.findViewById(R.id.rating);
-                        if(u.getNumEvOrg() == 0) {
+                        if (u.getNumEvOrg() == 0) {
                             rating.setEnabled(false);
                             rating.setVisibility(View.INVISIBLE);
                         } else {
                             rating.setEnabled(true);
                             rating.setVisibility(View.VISIBLE);
                             final double meanRating = u.getValutazioneMedia();
-                            rating.setOnClickListener(c -> {
-                                AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
-                                ad.setTitle(R.string.personal_rating);
-                                ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
-                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
-                                ad.show();
-                            });
+                            if (!rating.hasOnClickListeners()) {
+                                rating.setOnClickListener(c -> {
+                                    AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
+                                    ad.setTitle(R.string.personal_rating);
+                                    ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
+                                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
+                                    ad.show();
+                                });
+                            }
                         }
                     });
-                    break;
                 }
-                case "setProfile": {
-                    if(userInfo != null) {
+                case "setProfile" -> {
+                    if (userInfo != null) {
                         user.updateUserProfile(userInfo.getId(), userInfo.getString("nome"),
                                 userInfo.getString("email"), userInfo.getString("tel"),
                                 userInfo.getString("profilePic"), userInfo.getEventiCreati(),
                                 userInfo.getEventiIscritto(), userInfo.getNumEvOrg(),
                                 userInfo.getValutazioneMedia());
                     }
-                    break;
                 }
             }
             notify();
             close();
         }
-    }
-
-    public String getProfilePic() {
-        return profilePic;
     }
 }

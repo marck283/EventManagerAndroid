@@ -47,8 +47,10 @@ public class UserProfileFragment extends Fragment {
         b.putString("userJwt", token);
 
         MaterialButton evManaging = v.findViewById(R.id.eventManaging);
-        evManaging.setOnClickListener(c -> Navigation.findNavController(v)
-                .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
+        if(!evManaging.hasOnClickListeners()) {
+            evManaging.setOnClickListener(c -> Navigation.findNavController(v)
+                    .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
+        }
     }
 
     @Override

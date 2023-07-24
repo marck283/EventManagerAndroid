@@ -43,16 +43,18 @@ public class ViewHolder extends EventHolder {
             firstDate.setText(f.getString(R.string.event_day, firstDate2));
             firstHour.setText(f.getString(R.string.event_time, dataModel.getLuogo(0).getOra()));
 
-            itemView.setOnClickListener(l -> {
-                try {
-                    Bundle b = new Bundle();
-                    b.putString("eventType", "pub");
-                    b.putString("eventId", dataModel.getString("eventid"));
-                    Navigation.findNavController(itemView).navigate(R.id.action_nav_event_list_to_eventDetailsFragment, b);
-                } catch(Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
+            if(!itemView.hasOnClickListeners()) {
+                itemView.setOnClickListener(l -> {
+                    try {
+                        Bundle b = new Bundle();
+                        b.putString("eventType", "pub");
+                        b.putString("eventId", dataModel.getString("eventid"));
+                        Navigation.findNavController(itemView).navigate(R.id.action_nav_event_list_to_eventDetailsFragment, b);
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

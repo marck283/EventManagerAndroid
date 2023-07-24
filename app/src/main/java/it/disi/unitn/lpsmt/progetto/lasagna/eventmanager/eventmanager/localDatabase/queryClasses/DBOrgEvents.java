@@ -264,14 +264,16 @@ public class DBOrgEvents extends DBThread {
 
                                             address.setText(f.getString(R.string.event_address,
                                                     luogo.getAddress()));
-                                            address.setOnClickListener(c -> {
-                                                GeocoderExt geocoder = new GeocoderExt(f, address);
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                    geocoder.fromLocationName(address.getText().toString(), 5);
-                                                } else {
-                                                    geocoder.fromLocationNameThread(address.getText().toString(), 5);
-                                                }
-                                            });
+                                            if(!address.hasOnClickListeners()) {
+                                                address.setOnClickListener(c -> {
+                                                    GeocoderExt geocoder = new GeocoderExt(f, address);
+                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                        geocoder.fromLocationName(address.getText().toString(), 5);
+                                                    } else {
+                                                        geocoder.fromLocationNameThread(address.getText().toString(), 5);
+                                                    }
+                                                });
+                                            }
                                             address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                                         }
                                     } else {
@@ -314,23 +316,11 @@ public class DBOrgEvents extends DBThread {
         //Azioni da implementare:
         //1) eliminare evento al suo annullamento.
 
-        switch(action) {
-            case "updateAll": {
-                updateAll();
-                break;
-            }
-            case "getAll": {
-                getAll();
-                break;
-            }
-            case "getEventsByName": {
-                getEventsByName();
-                break;
-            }
-            case "getEventById": {
-                getEventById();
-                break;
-            }
+        switch (action) {
+            case "updateAll" -> updateAll();
+            case "getAll" -> getAll();
+            case "getEventsByName" -> getEventsByName();
+            case "getEventById" -> getEventById();
         }
         close();
     }

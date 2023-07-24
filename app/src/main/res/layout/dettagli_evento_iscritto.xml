@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.button.MaterialButton
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
         android:id="@+id/button10"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button9" />
 
-    <com.google.android.material.button.MaterialButton
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
         android:id="@+id/button11"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView39" />
 
-    <com.google.android.material.button.MaterialButton
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
         android:id="@+id/button9"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"

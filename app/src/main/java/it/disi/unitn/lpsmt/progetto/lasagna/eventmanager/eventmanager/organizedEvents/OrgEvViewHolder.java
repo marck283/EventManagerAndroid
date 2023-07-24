@@ -41,19 +41,21 @@ public class OrgEvViewHolder extends EventHolder {
     public void bindData(Event dataModel) {
         try {
             t.setText(dataModel.getString("name"));
-            t.setOnClickListener(c -> {
-                try {
-                    Bundle b = new Bundle();
-                    b.putString("eventType", "org");
-                    b.putString("eventId", dataModel.getString("eventid"));
-                    b.putString("day", day);
+            if(!t.hasOnClickListeners()) {
+                t.setOnClickListener(c -> {
+                    try {
+                        Bundle b = new Bundle();
+                        b.putString("eventType", "org");
+                        b.putString("eventId", dataModel.getString("eventid"));
+                        b.putString("day", day);
 
-                    //Rendere il tipo di azione dinamico
-                    Navigation.findNavController(t).navigate(actionId, b);
-                } catch(Exception ex) {
-                    ex.printStackTrace();
-                }
-            });
+                        //Rendere il tipo di azione dinamico
+                        Navigation.findNavController(t).navigate(actionId, b);
+                    } catch(Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

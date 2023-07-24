@@ -169,7 +169,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
-            <Button
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
                 android:id="@+id/show_ratings"
                 android:layout_width="158dp"
                 android:layout_height="wrap_content"
@@ -181,7 +181,7 @@
                 android:layout_toStartOf="@+id/sign_up_button"
                 android:text="@string/show_reviews" />
 
-            <Button
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
                 android:id="@+id/sign_up_button"
                 android:layout_width="133dp"
                 android:layout_height="59dp"

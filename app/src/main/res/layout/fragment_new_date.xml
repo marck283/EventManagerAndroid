@@ -56,7 +56,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

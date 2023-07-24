@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +28,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.matchers.Matcher;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.text_masks.Mask;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 
 public class NewDateFragment extends DialogFragment {
 
@@ -195,13 +195,13 @@ public class NewDateFragment extends DialogFragment {
         });
         beginTime.addTextChangedListener(new Mask("##:##"));
 
-        Button b = view.findViewById(R.id.button3);
+        ListenerButton b = view.findViewById(R.id.button3);
         b.setOnClickListener(c -> {
             if (beginDate.getText() != null && beginTime.getText() != null && seats.getText() != null &&
                     parseBeginDate(beginDate.getText().toString()) &&
                     parseBeginHour(beginTime.getText().toString(), beginDate.getText().toString()) &&
                     (evm.getPrivEvent() || (!evm.getPrivEvent() &&
-                    parseSeats(seats.getText().toString())))) {
+                            parseSeats(seats.getText().toString())))) {
                 mViewModel.setOk(true);
                 NavHostFragment.findNavController(this).navigate(R.id.action_newDateFragment_to_eventLocationFragment);
             }

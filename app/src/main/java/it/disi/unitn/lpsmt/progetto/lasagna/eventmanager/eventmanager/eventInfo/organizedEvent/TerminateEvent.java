@@ -75,27 +75,19 @@ public class TerminateEvent extends ServerOperation {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 switch (response.code()) {
-                    case 400: {
-                        setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
-                        break;
-                    }
-                    case 401: {
+                    case 400 -> setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
+                    case 401 -> {
                         setAlertDialog(R.string.no_session_title, R.string.no_session_content);
                         launcher.launch(loginIntent);
-                        break;
                     }
-                    case 200: {
+                    case 200 -> {
                         setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
 
                         Button qrCodeScan = v.findViewById(R.id.button8), terminaEvento = v.findViewById(R.id.button12);
                         qrCodeScan.setEnabled(false);
                         terminaEvento.setEnabled(false);
-                        break;
                     }
-                    case 500: {
-                        setAlertDialog(R.string.internal_server_error, R.string.internal_server_error);
-                        break;
-                    }
+                    case 500 -> setAlertDialog(R.string.internal_server_error, R.string.internal_server_error);
                 }
             }
         });

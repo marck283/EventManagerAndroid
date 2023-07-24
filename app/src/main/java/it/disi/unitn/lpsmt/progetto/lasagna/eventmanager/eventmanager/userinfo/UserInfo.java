@@ -8,6 +8,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,17 +47,17 @@ public class UserInfo {
     }
 
     public String getString(@NonNull String string) {
-        switch(string) {
-            case "profilePic": {
+        switch (string) {
+            case "profilePic" -> {
                 return profilePic;
             }
-            case "nome": {
+            case "nome" -> {
                 return nome;
             }
-            case "email": {
+            case "email" -> {
                 return email;
             }
-            case "tel": {
+            case "tel" -> {
                 return tel;
             }
         }
@@ -66,7 +68,7 @@ public class UserInfo {
         return numEvOrg;
     }
 
-    public Double getValutazioneMedia() {
+    public @NotNull Double getValutazioneMedia() {
         return valutazioneMedia;
     }
 

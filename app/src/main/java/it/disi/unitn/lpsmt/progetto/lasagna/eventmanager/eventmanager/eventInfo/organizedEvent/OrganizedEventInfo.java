@@ -101,7 +101,7 @@ public class OrganizedEventInfo extends ServerOperation {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 Gson gson = new Gson();
-                if (response.isSuccessful() && response.body() != null) {
+                if (response.isSuccessful()) {
                     OrganizedEvent event = OrganizedEvent.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                     Log.i("OK", "OK");
 
@@ -171,14 +171,16 @@ public class OrganizedEventInfo extends ServerOperation {
                                                                 terminaEvento = v.findViewById(R.id.button12);
                                                         address.setText(f.getString(R.string.event_address,
                                                                 event.getLuogo(day, hourTextView.getText().toString()).getAddress()));
-                                                        address.setOnClickListener(c -> {
-                                                            GeocoderExt geocoder = new GeocoderExt(f, address);
-                                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                                geocoder.fromLocationName(address.getText().toString(), 5);
-                                                            } else {
-                                                                geocoder.fromLocationNameThread(address.getText().toString(), 5);
-                                                            }
-                                                        });
+                                                        if(!address.hasOnClickListeners()) {
+                                                            address.setOnClickListener(c -> {
+                                                                GeocoderExt geocoder = new GeocoderExt(f, address);
+                                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                                    geocoder.fromLocationName(address.getText().toString(), 5);
+                                                                } else {
+                                                                    geocoder.fromLocationNameThread(address.getText().toString(), 5);
+                                                                }
+                                                            });
+                                                        }
                                                         address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
                                                         String[] day1 = dayText.getText().toString().split("/");
@@ -238,7 +240,7 @@ public class OrganizedEventInfo extends ServerOperation {
                     response.body().close();
                 } else {
                     switch (response.code()) {
-                        case 401: {
+                        case 401 -> {
                             if (loginLauncher != null) {
                                 Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
                                 loginLauncher.launch(loginIntent);
@@ -251,18 +253,14 @@ public class OrganizedEventInfo extends ServerOperation {
                                     dialog.show();
                                 });
                             }
-                            break;
                         }
-                        case 404: {
-                            f.requireActivity().runOnUiThread(() -> {
-                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                                dialog.setTitle(R.string.no_org_event);
-                                dialog.setMessage(f.getString(R.string.no_org_event_message));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                                dialog.show();
-                            });
-                            break;
-                        }
+                        case 404 -> f.requireActivity().runOnUiThread(() -> {
+                            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                            dialog.setTitle(R.string.no_org_event);
+                            dialog.setMessage(f.getString(R.string.no_org_event_message));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                            dialog.show();
+                        });
                     }
                 }
             }

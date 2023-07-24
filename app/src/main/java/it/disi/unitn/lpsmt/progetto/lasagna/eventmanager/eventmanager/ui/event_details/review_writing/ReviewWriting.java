@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RatingBar;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -26,6 +25,7 @@ import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 
 public class ReviewWriting extends Fragment {
 
@@ -93,7 +93,7 @@ public class ReviewWriting extends Fragment {
         prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
                 requireActivity());
 
-        Button postReview = v.findViewById(R.id.button15);
+        ListenerButton postReview = v.findViewById(R.id.button15);
         postReview.setOnClickListener(c -> {
             TextInputLayout titleLayout = v.findViewById(R.id.title), descriptionLayout = v.findViewById(R.id.description);
             RatingBar ratingBar = v.findViewById(R.id.ratingBar);

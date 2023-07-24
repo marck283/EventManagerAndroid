@@ -109,7 +109,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.956" />
 
-        <com.google.android.material.button.MaterialButton
+        <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
             android:id="@+id/button15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

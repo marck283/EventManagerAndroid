@@ -121,7 +121,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </RelativeLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
             android:id="@+id/createEvent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

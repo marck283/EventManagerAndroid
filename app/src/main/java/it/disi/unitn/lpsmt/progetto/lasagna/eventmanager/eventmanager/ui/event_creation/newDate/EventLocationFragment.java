@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerOnItemSelectedListener;
 
 public class EventLocationFragment extends DialogFragment {
@@ -66,7 +66,7 @@ public class EventLocationFragment extends DialogFragment {
         SpinnerOnItemSelectedListener itemSelected = new SpinnerOnItemSelectedListener();
         spinner.setOnItemSelectedListener(itemSelected);
 
-        Button b = view.findViewById(R.id.button6);
+        ListenerButton b = view.findViewById(R.id.button6);
         b.setOnClickListener(c -> {
             TextInputLayout lInputLayout = view.findViewById(R.id.lInputLayout);
             TextInputEditText t = lInputLayout.findViewById(R.id.location_address);

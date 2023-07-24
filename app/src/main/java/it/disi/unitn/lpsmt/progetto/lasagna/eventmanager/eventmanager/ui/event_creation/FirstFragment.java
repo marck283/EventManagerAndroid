@@ -53,27 +53,29 @@ public class FirstFragment extends Fragment {
             speechInterface = new SpeechRecognizerInterface(binding.getRoot(), R.id.category);
             speechInterface.performClick();
         });
-        binding.button5.setOnClickListener(c -> {
-            if (binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
-                if (binding.planetsSpinner.getEditText() != null && !binding.planetsSpinner.getEditText()
-                        .getText().toString().equals("---")) {
-                    evm.setNomeAtt(binding.nomeAtt.getEditText().getText().toString());
-                    Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
+        if(!binding.button5.hasOnClickListeners()) {
+            binding.button5.setOnClickListener(c -> {
+                if (binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
+                    if (binding.planetsSpinner.getEditText() != null && !binding.planetsSpinner.getEditText()
+                            .getText().toString().equals("---")) {
+                        evm.setNomeAtt(binding.nomeAtt.getEditText().getText().toString());
+                        Navigation.findNavController(binding.button5).navigate(R.id.action_FirstFragment_to_SecondFragment);
+                    } else {
+                        AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
+                        ad.setTitle(R.string.invalid_category);
+                        ad.setMessage(getString(R.string.invalid_category_message));
+                        ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        ad.show();
+                    }
                 } else {
                     AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
-                    ad.setTitle(R.string.invalid_category);
-                    ad.setMessage(getString(R.string.invalid_category_message));
+                    ad.setTitle(R.string.event_name_required);
+                    ad.setMessage(getString(R.string.event_name_required_message));
                     ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                     ad.show();
                 }
-            } else {
-                AlertDialog ad = new AlertDialog.Builder(requireContext()).create();
-                ad.setTitle(R.string.event_name_required);
-                ad.setMessage(getString(R.string.event_name_required_message));
-                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                ad.show();
-            }
-        });
+            });
+        }
 
         //Richiedo un'istanza di Spinner (menù dropdown). Maggiori informazioni qui:
         // https://developer.android.com/develop/ui/views/components/spinner#java

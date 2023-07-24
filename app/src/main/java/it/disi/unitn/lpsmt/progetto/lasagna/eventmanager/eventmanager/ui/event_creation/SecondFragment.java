@@ -14,8 +14,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 
 public class SecondFragment extends Fragment {
 
@@ -41,7 +44,8 @@ public class SecondFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.button_second).setOnClickListener(view1 -> {
+        ListenerButton buttonSecond = view.findViewById(R.id.button_second);
+        buttonSecond.setOnClickListener(view1 -> {
             if(countRows > 0) {
                 NavHostFragment.findNavController(this)
                         .navigate(R.id.action_SecondFragment_to_eventAdditionalInfoFragment);
@@ -55,7 +59,6 @@ public class SecondFragment extends Fragment {
         });
 
         EventViewModel evm = new ViewModelProvider(requireActivity()).get(EventViewModel.class);
-
         for(LuogoEv l: evm.getLuogoEv()) {
             addInfo(view, l);
         }
@@ -64,8 +67,11 @@ public class SecondFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        view.findViewById(R.id.floatingActionButton).setOnClickListener(c ->
-                NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment));
+        FloatingActionButton fab = view.findViewById(R.id.floatingActionButton);
+        if(!fab.hasOnClickListeners()) {
+            fab.setOnClickListener(c ->
+                    NavHostFragment.findNavController(this).navigate(R.id.action_SecondFragment_to_newDateFragment));
+        }
     }
 
     public void addInfo(@NonNull View view, @NonNull LuogoEv luogoEv) {

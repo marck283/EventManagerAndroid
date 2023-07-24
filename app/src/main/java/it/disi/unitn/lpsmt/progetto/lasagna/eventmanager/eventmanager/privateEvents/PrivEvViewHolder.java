@@ -29,17 +29,19 @@ public class PrivEvViewHolder extends EventHolder {
     public void bindData(Event dataModel) {
         try {
             t.setText(dataModel.getString("name"));
-            t.setOnClickListener(c -> {
-                try {
-                    Bundle b = new Bundle();
-                    b.putString("eventType", "iscr");
-                    b.putString("eventId", dataModel.getString("eventid"));
-                    b.putString("day", day);
-                    Navigation.findNavController(v).navigate(R.id.action_user_calendar_dialog_to_eventDetailsFragment, b);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+            if(!t.hasOnClickListeners()) {
+                t.setOnClickListener(c -> {
+                    try {
+                        Bundle b = new Bundle();
+                        b.putString("eventType", "iscr");
+                        b.putString("eventId", dataModel.getString("eventid"));
+                        b.putString("day", day);
+                        Navigation.findNavController(v).navigate(R.id.action_user_calendar_dialog_to_eventDetailsFragment, b);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

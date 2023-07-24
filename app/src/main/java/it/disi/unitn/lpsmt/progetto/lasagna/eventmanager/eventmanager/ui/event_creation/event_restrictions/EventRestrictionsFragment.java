@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -28,6 +27,7 @@ import org.jetbrains.annotations.Contract;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
 public class EventRestrictionsFragment extends Fragment {
@@ -109,7 +109,9 @@ public class EventRestrictionsFragment extends Fragment {
                     }
                 });
 
-        Button createEvent = view.findViewById(R.id.createEvent);
+        ListenerButton createEvent = view.findViewById(R.id.createEvent);
+
+        //Controllo che il bottone createEvent non abbia onClickListeners impostati.
         createEvent.setOnClickListener(c -> {
             TextInputEditText etaMinEdit = view.findViewById(R.id.minimum_age_text_view),
                     etaMaxEdit = view.findViewById(R.id.maximum_age_text_view);

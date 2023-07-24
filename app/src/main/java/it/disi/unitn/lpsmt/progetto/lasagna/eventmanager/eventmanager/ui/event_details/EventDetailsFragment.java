@@ -19,7 +19,6 @@ import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
@@ -39,6 +38,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_d
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.RatingsOnClickListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.SignUpOnClickListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.onClickListeners.TerminaEventoOnClickListener;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class EventDetailsFragment extends Fragment {
@@ -103,9 +103,9 @@ public class EventDetailsFragment extends Fragment {
         loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     switch (result.getResultCode()) {
-                        case Activity.RESULT_OK: {
+                        case Activity.RESULT_OK -> {
                             token = prefs.getString("accessToken");
-                            if(!token.equals("")) {
+                            if (!token.equals("")) {
                                 mViewModel.registerUser(token, eventId, this, day, time, null);
                             } else {
                                 AlertDialog d = new AlertDialog.Builder(requireContext()).create();
@@ -113,19 +113,17 @@ public class EventDetailsFragment extends Fragment {
                                 d.setMessage(getString(R.string.log_in));
                                 d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                             }
-                            break;
                         }
-                        case Activity.RESULT_CANCELED: {
+                        case Activity.RESULT_CANCELED -> {
                             prefs.setString("accessToken", "");
                             prefs.apply();
 
                             Activity activity = getActivity();
-                            if(activity != null && isAdded()) {
+                            if (activity != null && isAdded()) {
                                 ((NavigationDrawerActivity) requireActivity())
                                         .updateUI("logout", "", "", "", false);
                                 Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
                             }
-                            break;
                         }
                     }
                 });
@@ -140,13 +138,10 @@ public class EventDetailsFragment extends Fragment {
             loginLauncher1 = registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
-                        switch(result.getResultCode()) {
-                            case Activity.RESULT_OK: {
-                                mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
-                                        day, null, null);
-                                break;
-                            }
-                            case Activity.RESULT_CANCELED: {
+                        switch (result.getResultCode()) {
+                            case Activity.RESULT_OK -> mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
+                                    day, null, null);
+                            case Activity.RESULT_CANCELED -> {
                                 //Ritorna alla schermata principale, reimpostando il token alla stringa vuota
                                 //e chiedendo all'Activity NavigationDrawerActivity di reimpostare il suo menù
                                 //a quello riservato agli utenti non autenticati.
@@ -174,19 +169,6 @@ public class EventDetailsFragment extends Fragment {
                                         spinner.getEditText().getText().toString(), this)));
                                 if (!token.equals("")) {
                                     executeCallback(qr);
-                                    /*if (callback.isOnline(requireActivity())) {
-                                        mViewModel.checkQR(token, result.getContents(),
-                                                eventId, spinner2.getEditText().getText().toString(),
-                                                spinner.getEditText().getText().toString(), this);
-                                    } else {
-                                        setDialog(R.string.no_connection, R.string.no_connection_message);
-                                        callback.registerNetworkCallback();
-                                        callback.addDefaultNetworkActiveListener(() ->
-                                                mViewModel.checkQR(token, result.getContents(),
-                                                        eventId, spinner2.getEditText().getText().toString(),
-                                                        spinner.getEditText().getText().toString(), this));
-                                        callback.unregisterNetworkCallback();
-                                    }*/
                                 }
                             }
                         });
@@ -197,34 +179,21 @@ public class EventDetailsFragment extends Fragment {
                 loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
                             switch (result.getResultCode()) {
-                                case Activity.RESULT_OK: {
+                                case Activity.RESULT_OK -> {
                                     Activity activity = getActivity();
-                                    if(activity != null && isAdded()) {
+                                    if (activity != null && isAdded()) {
                                         executeCallback(ft);
-                                        /*if (callback.isOnline(requireActivity())) {
-                                            mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                                    day, launcher, null);
-                                        } else {
-                                            setDialog(R.string.no_connection, R.string.no_connection_message);
-                                            callback.registerNetworkCallback();
-                                            callback.addDefaultNetworkActiveListener(() ->
-                                                    mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),
-                                                            day, launcher, null));
-                                            callback.unregisterNetworkCallback();
-                                        }*/
                                     }
-                                    break;
                                 }
-                                case Activity.RESULT_CANCELED: {
+                                case Activity.RESULT_CANCELED -> {
                                     Activity activity = getActivity();
-                                    if(activity != null && isAdded()) {
+                                    if (activity != null && isAdded()) {
                                         prefs.setString("accessToken", "");
                                         Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_nav_event_list);
                                         ((NavigationDrawerActivity) requireActivity())
                                                 .updateUI("logout", "", "", "",
                                                         false);
                                     }
-                                    break;
                                 }
                             }
                         });
@@ -241,18 +210,9 @@ public class EventDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         switch (screenType) {
-            case "pub": {
-                view = inflater.inflate(R.layout.public_event_info, container, false);
-                break;
-            }
-            case "iscr": {
-                view = inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
-                break;
-            }
-            case "org": {
-                view = inflater.inflate(R.layout.dettagli_evento_organizzatore, container, false);
-                break;
-            }
+            case "pub" -> view = inflater.inflate(R.layout.public_event_info, container, false);
+            case "iscr" -> view = inflater.inflate(R.layout.dettagli_evento_iscritto, container, false);
+            case "org" -> view = inflater.inflate(R.layout.dettagli_evento_organizzatore, container, false);
         }
 
         return view;
@@ -269,11 +229,11 @@ public class EventDetailsFragment extends Fragment {
         super.onStart();
 
         switch (screenType) {
-            case "pub": {
+            case "pub" -> {
                 mViewModel.getEventInfo("pub", eventId, view, this, null, null,
                         null, null);
 
-                Button b = view.findViewById(R.id.cLayout).findViewById(R.id.sign_up_button);
+                ListenerButton b = view.findViewById(R.id.cLayout).findViewById(R.id.sign_up_button);
                 b.setEnabled(false);
                 b.setOnClickListener(new SignUpOnClickListener(prefs, eventId, day, time, mViewModel,
                         loginLauncher, this));
@@ -282,12 +242,10 @@ public class EventDetailsFragment extends Fragment {
                 ((TextView) view.findViewById(R.id.duration)).setText(getString(R.string.duration, "", "", ""));
                 ((TextView) view.findViewById(R.id.organizerName)).setText(getString(R.string.organizer, ""));
 
-                Button ratings = view.findViewById(R.id.show_ratings);
+                ListenerButton ratings = view.findViewById(R.id.show_ratings);
                 ratings.setOnClickListener(new RatingsOnClickListener(screenType, eventId));
-
-                break;
             }
-            case "iscr": {
+            case "iscr" -> {
                 TextView organizer = view.findViewById(R.id.textView16), dayTextView = view.findViewById(R.id.textView11),
                         time = view.findViewById(R.id.textView20), duration = view.findViewById(R.id.textView39),
                         address = view.findViewById(R.id.textView42);
@@ -299,9 +257,8 @@ public class EventDetailsFragment extends Fragment {
 
                 mViewModel.getEventInfo("iscr", eventId, view, this, nvm.getToken().getValue(),
                         day, null, loginLauncher1);
-                break;
             }
-            case "org": {
+            case "org" -> {
                 TextView duration = view.findViewById(R.id.textView12);
                 duration.setText(getString(R.string.duration, "", "", ""));
 
@@ -311,12 +268,12 @@ public class EventDetailsFragment extends Fragment {
                 spinner = view.findViewById(R.id.spinner);
                 spinner2 = view.findViewById(R.id.spinner2);
 
-                Button qrCodeScan = view.findViewById(R.id.button8),
+                ListenerButton qrCodeScan = view.findViewById(R.id.button8),
                         terminaEvento = view.findViewById(R.id.button12),
                         annullaEvento = view.findViewById(R.id.button13);
 
                 Activity activity = getActivity();
-                if(activity != null && isAdded()) {
+                if (activity != null && isAdded()) {
                     callback = new NetworkCallback(requireActivity());
                     if (callback.isOnline(requireActivity())) {
                         mViewModel.getEventInfo("org", eventId, view, this, nvm.getToken().getValue(),

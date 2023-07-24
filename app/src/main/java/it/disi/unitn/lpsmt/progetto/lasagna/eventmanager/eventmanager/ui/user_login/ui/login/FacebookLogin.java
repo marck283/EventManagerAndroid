@@ -50,19 +50,21 @@ public class FacebookLogin {
         }
         loginManager.setLoginBehavior(behavior);
 
-        loginButton.setOnClickListener(c -> {
-            NetworkCallback callback = new NetworkCallback(a);
-            if(callback.isOnline(a)) {
+        if(!loginButton.hasOnClickListeners()) {
+            loginButton.setOnClickListener(c -> {
+                NetworkCallback callback = new NetworkCallback(a);
+                if(callback.isOnline(a)) {
                     loginManager.logInWithReadPermissions(a,
                             List.of("public_profile", "email"));
-            } else {
-                AlertDialog dialog = new AlertDialog.Builder(a).create();
-                dialog.setTitle(R.string.no_connection);
-                dialog.setMessage(a.getString(R.string.no_connection_message_short));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
-            }
-        });
+                } else {
+                    AlertDialog dialog = new AlertDialog.Builder(a).create();
+                    dialog.setTitle(R.string.no_connection);
+                    dialog.setMessage(a.getString(R.string.no_connection_message_short));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+                }
+            });
+        }
     }
 
     public void registerCallback() {

@@ -47,7 +47,7 @@ public class AuthenticationCallback implements Callback {
         SharedPrefs prefs = new SharedPrefs(
                 "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", a);
 
-        if (response.isSuccessful() && response.body() != null) {
+        if (response.isSuccessful()) {
             try {
                 LoggedInUser info = new LoggedInUser();
                 info = info.parseJSON(auth.parseBody(response.body()));
@@ -75,6 +75,7 @@ public class AuthenticationCallback implements Callback {
             } catch(IOException ex) {
                 ex.printStackTrace();
             }
+            response.body().close();
         } else {
             Log.i("null1", "Unsuccessful or null response");
 

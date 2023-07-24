@@ -21,6 +21,7 @@ import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -138,13 +139,16 @@ public class NavigationDrawerActivity extends AppCompatActivity {
             }
         };
         tracker.startTracking();
-        binding.appBarNavigationDrawer.fab.setOnClickListener(view -> {
-            if(account.getAccount() == null && profile == null) {
-                setAlertDialog(true);
-            } else {
-                showCreaEvento();
-            }
-        });
+        FloatingActionButton fab = binding.appBarNavigationDrawer.fab;
+        if(!fab.hasOnClickListeners()) {
+            fab.setOnClickListener(view -> {
+                if(account.getAccount() == null && profile == null) {
+                    setAlertDialog(true);
+                } else {
+                    showCreaEvento();
+                }
+            });
+        }
 
         vm = new ViewModelProvider(this).get(NavigationSharedViewModel.class);
         ms = new ViewModelProvider(this).get(MenuSettingsViewModel.class);
@@ -333,16 +337,16 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         SharedPrefs prefs = new SharedPrefs(
                 "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
 
-        switch(resultCode) {
-            case Activity.RESULT_OK: {
+        switch (resultCode) {
+            case Activity.RESULT_OK -> {
                 //Autenticato con successo a Google o Facebook, ora autentica al server e
                 //mostra i dati del profilo richiesti
 
                 String email, picture = null;
-                if(which.equals("google")) {
+                if (which.equals("google")) {
                     //Google login
                     GoogleSignInAccount gSignIn = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount");
-                    if(gSignIn != null) {
+                    if (gSignIn != null) {
                         account.setAccount(gSignIn);
                     } else {
                         account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
@@ -353,7 +357,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                     updateUI("login", email, account.getAccount().getDisplayName(), picture, false);
                 } else {
                     //Facebook login
-                    if(data != null) {
+                    if (data != null) {
                         accessToken = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken");
                         email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
 
@@ -364,7 +368,7 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         accessToken = null;
                         email = null;
                     }
-                    if(accessToken != null) {
+                    if (accessToken != null) {
                         vm.setToken(prefs.getString("accessToken"));
                         profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
                         updateUI("login", email, profile.getName(), picture, true);
@@ -372,12 +376,10 @@ public class NavigationDrawerActivity extends AppCompatActivity {
                         updateUI("logout", null, null, null, false);
                     }
                 }
-                break;
             }
-            case Activity.RESULT_CANCELED: {
+            case Activity.RESULT_CANCELED -> {
                 account.setAccount(null);
                 updateUI("logout", null, null, null, false);
-                break;
             }
         }
     }
