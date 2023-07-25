@@ -87,37 +87,25 @@ public class PostReview extends ServerOperation {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 switch (response.code()) {
-                    case 201: {
-                        setAlertDialog(R.string.review_creation_successful, R.string.review_creation_successful_message,
-                                (dialog1, which) -> {
-                                    dialog1.dismiss();
-                                    Navigation.findNavController(v).navigate(R.id.action_reviewWriting_to_nav_user_calendar);
-                                });
-                        break;
-                    }
-                    case 401: {
+                    case 201 -> setAlertDialog(R.string.review_creation_successful, R.string.review_creation_successful_message,
+                            (dialog1, which) -> {
+                                dialog1.dismiss();
+                                Navigation.findNavController(v).navigate(R.id.action_reviewWriting_to_nav_user_calendar);
+                            });
+                    case 401 -> {
                         Intent loginIntent = new Intent(f.requireContext(), LoginActivity.class);
                         loginLauncher.launch(loginIntent);
-                        break;
                     }
-                    case 400: {
-                        // Codice di ritorno utilizzato solo per il debug.
+                    case 400 -> // Codice di ritorno utilizzato solo per il debug.
                         // Non dovrebbero esserci problemi di questo tipo durante l'utilizzo normale
                         // dell'applicazione.
-                        setAlertDialog(R.string.malformed_request, R.string.malformed_request_message,
-                                (dialog1, which) -> dialog1.dismiss());
-                        break;
-                    }
-                    case 500: {
-                        setAlertDialog(R.string.internal_server_error, R.string.retry_later,
-                                (dialog1, which) -> dialog1.dismiss());
-                        break;
-                    }
-                    default: {
-                        //Tutti i codici di errore non gestiti sopra andranno a finire qui...
-                        setAlertDialog(R.string.unknown_error, R.string.unknown_error_message,
-                                (dialog1, which) -> dialog1.dismiss());
-                    }
+                            setAlertDialog(R.string.malformed_request, R.string.malformed_request_message,
+                                    (dialog1, which) -> dialog1.dismiss());
+                    case 500 -> setAlertDialog(R.string.internal_server_error, R.string.retry_later,
+                            (dialog1, which) -> dialog1.dismiss());
+                    default -> //Tutti i codici di errore non gestiti sopra andranno a finire qui...
+                            setAlertDialog(R.string.unknown_error, R.string.unknown_error_message,
+                                    (dialog1, which) -> dialog1.dismiss());
                 }
             }
         });

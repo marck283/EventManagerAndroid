@@ -15,10 +15,6 @@ public class AuthObject {
         this.userId = userId;
     }
 
-    public String getToken() {
-        return csrfToken;
-    }
-
     public String getJwt() {
         return googleJwt;
     }

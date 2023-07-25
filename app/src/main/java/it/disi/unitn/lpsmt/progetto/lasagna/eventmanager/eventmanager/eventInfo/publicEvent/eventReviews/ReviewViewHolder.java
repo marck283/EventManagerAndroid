@@ -31,8 +31,8 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
         TextView rating = itemView.findViewById(R.id.userRating);
         ImageView userPic = itemView.findViewById(R.id.userPicture);
 
-        userName.setText(f.getString(R.string.user_name, review.getUserName()));
-        rating.setText(f.getString(R.string.evaluation, review.getRating()));
+        userName.setText(f.getString(R.string.user_name, review.userName()));
+        rating.setText(f.getString(R.string.evaluation, review.rating()));
 
         ListenerButton showAll = itemView.findViewById(R.id.showAll);
         showAll.setOnClickListener(c -> {
@@ -41,6 +41,6 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
             Navigation.findNavController(itemView).navigate(R.id.action_reviewsFragment_to_fullReviewFragment, b);
         });
 
-        Glide.with(userPic.getContext()).load(review.getUserPic()).circleCrop().into(userPic);
+        Glide.with(userPic.getContext()).load(review.userPic()).circleCrop().into(userPic);
     }
 }

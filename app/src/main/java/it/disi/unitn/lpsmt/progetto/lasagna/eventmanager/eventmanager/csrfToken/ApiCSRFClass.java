@@ -31,10 +31,6 @@ public class ApiCSRFClass {
         return new ApiCSRFClass(fromJson(gs1, json));
     }
 
-    public void setToken(String val) {
-        csrfToken = val;
-    }
-
     public String getToken() {
         return csrfToken;
     }

@@ -60,30 +60,11 @@ public class EventCreationCallback implements Callback {
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         switch (response.code()) {
-            case 201: {
-                setAlertDialog(R.string.event_creation_ok_title, R.string.event_creation_ok_message);
-                break;
-            }
-
-            case 400: {
-                setAlertDialog(R.string.event_creation_error, R.string.event_creation_error_message);
-                break;
-            }
-
-            case 401: {
-                i.launch(loginIntent);
-                break;
-            }
-
-            case 500: {
-                setAlertDialog(R.string.internal_server_error, R.string.retry_later);
-                break;
-            }
-
-            case 503: {
-                setAlertDialog(R.string.service_unavailable, R.string.service_unavailable_message);
-                break;
-            }
+            case 201 -> setAlertDialog(R.string.event_creation_ok_title, R.string.event_creation_ok_message);
+            case 400 -> setAlertDialog(R.string.event_creation_error, R.string.event_creation_error_message);
+            case 401 -> i.launch(loginIntent);
+            case 500 -> setAlertDialog(R.string.internal_server_error, R.string.retry_later);
+            case 503 -> setAlertDialog(R.string.service_unavailable, R.string.service_unavailable_message);
         }
     }
 }

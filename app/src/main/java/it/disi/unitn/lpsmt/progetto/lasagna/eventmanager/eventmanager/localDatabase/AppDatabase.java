@@ -49,7 +49,6 @@ public abstract class AppDatabase extends RoomDatabase {
     /**
      * Deletes all rows from all the tables that are registered to this database as
      * database entities.
-     *
      * After deleting the rows, Room will set a WAL checkpoint and run VACUUM. This means that the
      * data is completely erased. The space will be reclaimed by the system if the amount surpasses
      * the threshold of database file size.

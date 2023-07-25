@@ -74,230 +74,119 @@ public class EventLocationViewModel extends ViewModel {
 
     private String parseProvince() {
         if (provincia != null && !provincia.equals("")) {
-            switch (provincia) {
-                case "Agrigento":
-                    return "AG";
-                case "Alessandria":
-                    return "AL";
-                case "Ancona":
-                    return "AN";
-                case "Aosta":
-                    return "AO";
-                case "Arezzo":
-                    return "AR";
-                case "Ascoli Piceno":
-                    return "AP";
-                case "Asti":
-                    return "AT";
-                case "Avellino":
-                    return "AV";
-                case "Bari":
-                    return "BA";
-                case "Barletta - Andria - Trani":
-                    return "BT";
-                case "Belluno":
-                    return "BL";
-                case "Benevento":
-                    return "BN";
-                case "Bergamo":
-                    return "BG";
-                case "Biella":
-                    return "BI";
-                case "Bologna":
-                    return "BO";
-                case "Bolzano":
-                    return "BZ";
-                case "Brescia":
-                    return "BS";
-                case "Brindisi":
-                    return "BR";
-                case "Cagliari":
-                    return "CA";
-                case "Caltanissetta":
-                    return "CL";
-                case "Campobasso":
-                    return "CB";
-                case "Carbonia-Iglesias":
-                    return "CI";
-                case "Caserta":
-                    return "CE";
-                case "Catania":
-                    return "CT";
-                case "Catanzaro":
-                    return "CZ";
-                case "Chieti":
-                    return "CH";
-                case "Como":
-                    return "CO";
-                case "Cosenza":
-                    return "CS";
-                case "Cremona":
-                    return "CR";
-                case "Crotone":
-                    return "KR";
-                case "Cuneo":
-                    return "CN";
-                case "Enna":
-                    return "EN";
-                case "Fermo":
-                    return "FM";
-                case "Ferrara":
-                    return "FE";
-                case "Firenze":
-                    return "FI";
-                case "Foggia":
-                    return "FG";
-                case "Forlì-Cesena":
-                    return "FC";
-                case "Frosinone":
-                    return "FR";
-                case "Genova":
-                    return "GE";
-                case "Gorizia":
-                    return "GO";
-                case "Grosseto":
-                    return "GR";
-                case "Imperia":
-                    return "IM";
-                case "Isernia":
-                    return "IS";
-                case "L'Aquila":
-                    return "AQ";
-                case "La Spezia":
-                    return "SP";
-                case "Latina":
-                    return "LT";
-                case "Lecce":
-                    return "LE";
-                case "Livorno":
-                    return "LI";
-                case "Lodi":
-                    return "LO";
-                case "Lucca":
-                    return "LU";
-                case "Macerata":
-                    return "MC";
-                case "Mantova":
-                    return "MN";
-                case "Massa e Carrara":
-                    return "MS";
-                case "Matera":
-                    return "MT";
-                case "Medio Campidano":
-                    return "VS";
-                case "Messina":
-                    return "ME";
-                case "Milano":
-                    return "MI";
-                case "Modena":
-                    return "MO";
-                case "Monza e Brianza":
-                    return "MB";
-                case "Napoli":
-                    return "NA";
-                case "Novara":
-                    return "NO";
-                case "Nuoro":
-                    return "NU";
-                case "Ogliastra":
-                    return "OG";
-                case "Olbia-Tempio":
-                    return "OT";
-                case "Oristano":
-                    return "OR";
-                case "Padova":
-                    return "PD";
-                case "Palermo":
-                    return "PA";
-                case "Parma":
-                    return "PR";
-                case "Pavia":
-                    return "PV";
-                case "Perugia":
-                    return "PG";
-                case "Pesaro e Urbino":
-                    return "PU";
-                case "Pescara":
-                    return "PE";
-                case "Piacenza":
-                    return "PC";
-                case "Pisa":
-                    return "PI";
-                case "Pistoia":
-                    return "PT";
-                case "Pordenone":
-                    return "PN";
-                case "Potenza":
-                    return "PZ";
-                case "Prato":
-                    return "PO";
-                case "Ragusa":
-                    return "RG";
-                case "Ravenna":
-                    return "RA";
-                case "Reggio Calabria":
-                    return "RC";
-                case "Reggio Emilia":
-                    return "RE";
-                case "Rieti":
-                    return "RI";
-                case "Rimini":
-                    return "RN";
-                case "Roma":
-                    return "RM";
-                case "Rovigo":
-                    return "RO";
-                case "Salerno":
-                    return "SA";
-                case "Sassari":
-                    return "SS";
-                case "Savona":
-                    return "SV";
-                case "Siena":
-                    return "SI";
-                case "Siracusa":
-                    return "SR";
-                case "Sondrio":
-                    return "SO";
-                case "Sud Sardegna":
-                    return "SU";
-                case "Taranto":
-                    return "TA";
-                case "Teramo":
-                    return "TE";
-                case "Terni":
-                    return "TR";
-                case "Torino":
-                    return "TO";
-                case "Trapani":
-                    return "TP";
-                case "Trento":
-                    return "TN";
-                case "Treviso":
-                    return "TV";
-                case "Trieste":
-                    return "TS";
-                case "Udine":
-                    return "UD";
-                case "Varese":
-                    return "VA";
-                case "Venezia":
-                    return "VE";
-                case "Verbano-Cusio-Ossola":
-                    return "VB";
-                case "Vercelli":
-                    return "VC";
-                case "Verona":
-                    return "VR";
-                case "Vibo Valentia":
-                    return "VV";
-                case "Vicenza":
-                    return "VI";
-                case "Viterbo":
-                    return "VT";
-                default:
-                    return "Nessuna provincia italiana nota con quel nome.";
-            }
+            return switch (provincia) {
+                case "Agrigento" -> "AG";
+                case "Alessandria" -> "AL";
+                case "Ancona" -> "AN";
+                case "Aosta" -> "AO";
+                case "Arezzo" -> "AR";
+                case "Ascoli Piceno" -> "AP";
+                case "Asti" -> "AT";
+                case "Avellino" -> "AV";
+                case "Bari" -> "BA";
+                case "Barletta - Andria - Trani" -> "BT";
+                case "Belluno" -> "BL";
+                case "Benevento" -> "BN";
+                case "Bergamo" -> "BG";
+                case "Biella" -> "BI";
+                case "Bologna" -> "BO";
+                case "Bolzano" -> "BZ";
+                case "Brescia" -> "BS";
+                case "Brindisi" -> "BR";
+                case "Cagliari" -> "CA";
+                case "Caltanissetta" -> "CL";
+                case "Campobasso" -> "CB";
+                case "Carbonia-Iglesias" -> "CI";
+                case "Caserta" -> "CE";
+                case "Catania" -> "CT";
+                case "Catanzaro" -> "CZ";
+                case "Chieti" -> "CH";
+                case "Como" -> "CO";
+                case "Cosenza" -> "CS";
+                case "Cremona" -> "CR";
+                case "Crotone" -> "KR";
+                case "Cuneo" -> "CN";
+                case "Enna" -> "EN";
+                case "Fermo" -> "FM";
+                case "Ferrara" -> "FE";
+                case "Firenze" -> "FI";
+                case "Foggia" -> "FG";
+                case "Forlì-Cesena" -> "FC";
+                case "Frosinone" -> "FR";
+                case "Genova" -> "GE";
+                case "Gorizia" -> "GO";
+                case "Grosseto" -> "GR";
+                case "Imperia" -> "IM";
+                case "Isernia" -> "IS";
+                case "L'Aquila" -> "AQ";
+                case "La Spezia" -> "SP";
+                case "Latina" -> "LT";
+                case "Lecce" -> "LE";
+                case "Livorno" -> "LI";
+                case "Lodi" -> "LO";
+                case "Lucca" -> "LU";
+                case "Macerata" -> "MC";
+                case "Mantova" -> "MN";
+                case "Massa e Carrara" -> "MS";
+                case "Matera" -> "MT";
+                case "Medio Campidano" -> "VS";
+                case "Messina" -> "ME";
+                case "Milano" -> "MI";
+                case "Modena" -> "MO";
+                case "Monza e Brianza" -> "MB";
+                case "Napoli" -> "NA";
+                case "Novara" -> "NO";
+                case "Nuoro" -> "NU";
+                case "Ogliastra" -> "OG";
+                case "Olbia-Tempio" -> "OT";
+                case "Oristano" -> "OR";
+                case "Padova" -> "PD";
+                case "Palermo" -> "PA";
+                case "Parma" -> "PR";
+                case "Pavia" -> "PV";
+                case "Perugia" -> "PG";
+                case "Pesaro e Urbino" -> "PU";
+                case "Pescara" -> "PE";
+                case "Piacenza" -> "PC";
+                case "Pisa" -> "PI";
+                case "Pistoia" -> "PT";
+                case "Pordenone" -> "PN";
+                case "Potenza" -> "PZ";
+                case "Prato" -> "PO";
+                case "Ragusa" -> "RG";
+                case "Ravenna" -> "RA";
+                case "Reggio Calabria" -> "RC";
+                case "Reggio Emilia" -> "RE";
+                case "Rieti" -> "RI";
+                case "Rimini" -> "RN";
+                case "Roma" -> "RM";
+                case "Rovigo" -> "RO";
+                case "Salerno" -> "SA";
+                case "Sassari" -> "SS";
+                case "Savona" -> "SV";
+                case "Siena" -> "SI";
+                case "Siracusa" -> "SR";
+                case "Sondrio" -> "SO";
+                case "Sud Sardegna" -> "SU";
+                case "Taranto" -> "TA";
+                case "Teramo" -> "TE";
+                case "Terni" -> "TR";
+                case "Torino" -> "TO";
+                case "Trapani" -> "TP";
+                case "Trento" -> "TN";
+                case "Treviso" -> "TV";
+                case "Trieste" -> "TS";
+                case "Udine" -> "UD";
+                case "Varese" -> "VA";
+                case "Venezia" -> "VE";
+                case "Verbano-Cusio-Ossola" -> "VB";
+                case "Vercelli" -> "VC";
+                case "Verona" -> "VR";
+                case "Vibo Valentia" -> "VV";
+                case "Vicenza" -> "VI";
+                case "Viterbo" -> "VT";
+                default -> "Nessuna provincia italiana nota con quel nome.";
+            };
         }
         return provincia;
     }

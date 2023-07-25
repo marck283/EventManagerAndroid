@@ -54,46 +54,26 @@ public class UserEventRegistrationCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        switch(response.code()) {
-            case 201: {
-                //Successo
-                setAlertDialog(R.string.event_registration_success_title, R.string.event_registration_success);
-                break;
-            }
-            case 400: {
-                //Richiesta malformata
-                setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
-                break;
-            }
-            case 401: {
+        switch (response.code()) {
+            case 201 -> //Successo
+                    setAlertDialog(R.string.event_registration_success_title, R.string.event_registration_success);
+            case 400 -> //Richiesta malformata
+                    setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
+            case 401 -> {
                 Activity activity = f.getActivity();
-                if(activity != null && f.isAdded()) {
+                if (activity != null && f.isAdded()) {
                     Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
                     launcher.launch(loginIntent);
                 } else {
                     setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
                 }
-                break;
             }
-            case 403:
-            case 404: {
-                setAlertDialog(R.string.error, R.string.max_pers_reached_or_user_already_registered);
-                break;
-            }
-            case 500: {
-                //Errore interno al server
-                setAlertDialog(R.string.internal_server_error, R.string.service_unavailable);
-                break;
-            }
-            case 503: {
-                setAlertDialog(R.string.request_timeout, R.string.request_timeout_message);
-                break;
-            }
-            default: {
-                //Errore sconosciuto
-                setAlertDialog(R.string.unknown_error, R.string.unknown_error_message);
-                break;
-            }
+            case 403, 404 -> setAlertDialog(R.string.error, R.string.max_pers_reached_or_user_already_registered);
+            case 500 -> //Errore interno al server
+                    setAlertDialog(R.string.internal_server_error, R.string.service_unavailable);
+            case 503 -> setAlertDialog(R.string.request_timeout, R.string.request_timeout_message);
+            default -> //Errore sconosciuto
+                    setAlertDialog(R.string.unknown_error, R.string.unknown_error_message);
         }
     }
 }

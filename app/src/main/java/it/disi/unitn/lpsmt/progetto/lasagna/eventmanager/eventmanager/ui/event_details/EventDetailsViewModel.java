@@ -70,27 +70,25 @@ public class EventDetailsViewModel extends ViewModel {
                                   @NonNull EventDetailsFragment f, @Nullable String userJwt,
                                   @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
                                   @Nullable ActivityResultLauncher<Intent> loginLauncher) {
-        switch(which) {
-            case "pub": {
+        switch (which) {
+            case "pub" -> {
                 EventInfoCall c = new EventInfoCall(eventId, view, f);
                 c.start();
-                break;
             }
-            case "iscr": {
-                if(userJwt != null && data != null && loginLauncher != null) {
+            case "iscr" -> {
+                if (userJwt != null && data != null && loginLauncher != null) {
                     RegisteredEventInfo info = new RegisteredEventInfo(userJwt, eventId, f, view, data, loginLauncher);
                     info.start();
                 }
-                break;
             }
-            case "org": {
-                if(userJwt != null && launcher != null) {
+            case "org" -> {
+                if (userJwt != null && launcher != null) {
                     OrganizedEventInfo orgEvInfo;
-                    if(data != null) {
+                    if (data != null) {
                         //La data di un evento è inclusa solo quando la richiesta parte dal calendario dell'utente.
                         orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data);
                     } else {
-                        if(loginLauncher != null) {
+                        if (loginLauncher != null) {
                             //n questo caso, ci potrebbe essere il rischio che l'utente non sia autenticato al sistema.
                             //Questo problema è risolto aggiungendo un ActivityResultLauncher che permette l'avvio
                             //dell'Activity di login e, una volta ricevuto il risultato, esegue di nuovo la
@@ -103,12 +101,11 @@ public class EventDetailsViewModel extends ViewModel {
                     }
                     orgEvInfo.start();
                 }
-                break;
             }
         }
     }
 
-    public Object getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
+    public Void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
                                @NonNull EventDetailsFragment f, @Nullable String userJwt,
                                @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
                                @Nullable ActivityResultLauncher<Intent> loginLauncher) {

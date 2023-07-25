@@ -45,14 +45,14 @@ public class FullReviewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ImageView imgView = view.findViewById(R.id.userPicture);
-        Glide.with(view.getContext()).load(review.getUserPic()).circleCrop().into(imgView);
+        Glide.with(view.getContext()).load(review.userPic()).circleCrop().into(imgView);
 
         TextView userName = view.findViewById(R.id.userName), rating = view.findViewById(R.id.rating);
-        userName.setText(getString(R.string.user_name, review.getUserName()));
-        rating.setText(getString(R.string.evaluation, review.getRating()));
+        userName.setText(getString(R.string.user_name, review.userName()));
+        rating.setText(getString(R.string.evaluation, review.rating()));
 
         MaterialTextView description = view.findViewById(R.id.description);
-        description.setText(review.getDescription());
+        description.setText(review.description());
     }
 
 }

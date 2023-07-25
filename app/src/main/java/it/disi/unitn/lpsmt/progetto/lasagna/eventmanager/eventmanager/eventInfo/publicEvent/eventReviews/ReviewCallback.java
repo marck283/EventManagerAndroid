@@ -11,7 +11,7 @@ public class ReviewCallback extends DiffUtil.ItemCallback<Review> {
         boolean eq = false;
 
         try {
-            eq = Objects.equals(oldItem.getUserName(), newItem.getUserName());
+            eq = Objects.equals(oldItem.userName(), newItem.userName());
         } catch (Exception e) {
             e.printStackTrace();
         }

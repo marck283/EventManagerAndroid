@@ -27,14 +27,11 @@ public class SpeechOnTouchListener implements View.OnTouchListener {
      */
     @Override
     public boolean onTouch(View v, @NonNull MotionEvent event) {
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN -> {
                 return performClick();
             }
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL: {
-                speechRecognizer.stopListening();
-            }
+            case MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> speechRecognizer.stopListening();
         }
         return false;
     }

@@ -70,29 +70,14 @@ public class DeleteTicket extends ServerOperation {
                 * Tra tutti i codici di errore gestiti qui sotto solo "204", "401" e "500" sono realmente utilizzati.
                 * Tutti gli altri servono per ragioni di debugging e non dovrebbero essere mai restituiti dal server.
                 * */
-                switch(response.code()) {
-                    case 204: {
-                        setAlertDialog(R.string.deletion_successful, R.string.deletion_successful_message);
-                        break;
-                    }
-                    case 401: {
-                        //Utente non autenticato
-                        setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
-                        break;
-                    }
-                    case 403: {
-                        setAlertDialog(R.string.user_not_registered, R.string.user_not_registered_message);
-                        break;
-                    }
-                    case 404: {
-                        setAlertDialog(R.string.deletion_404, R.string.deletion_404_message);
-                        break;
-                    }
-                    case 500: {
-                        //Errore interno al server
-                        setAlertDialog(R.string.internal_server_error, R.string.internal_server_error);
-                        break;
-                    }
+                switch (response.code()) {
+                    case 204 -> setAlertDialog(R.string.deletion_successful, R.string.deletion_successful_message);
+                    case 401 -> //Utente non autenticato
+                            setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+                    case 403 -> setAlertDialog(R.string.user_not_registered, R.string.user_not_registered_message);
+                    case 404 -> setAlertDialog(R.string.deletion_404, R.string.deletion_404_message);
+                    case 500 -> //Errore interno al server
+                            setAlertDialog(R.string.internal_server_error, R.string.internal_server_error);
                 }
             }
         });

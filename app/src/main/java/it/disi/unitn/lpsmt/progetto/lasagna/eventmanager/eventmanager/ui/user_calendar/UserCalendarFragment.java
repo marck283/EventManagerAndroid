@@ -36,23 +36,21 @@ public class UserCalendarFragment extends Fragment {
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     switch (result.getResultCode()) {
-                        case Activity.RESULT_OK: {
+                        case Activity.RESULT_OK -> {
                             Bundle b = new Bundle();
                             b.putString("idToken", vm.getToken().getValue());
                             b.putInt("day", d);
                             b.putInt("month", m + 1);
                             b.putInt("year", y);
                             Navigation.findNavController(view).navigate(R.id.action_nav_user_calendar_to_user_calendar_dialog, b);
-                            break;
                         }
-                        case Activity.RESULT_CANCELED: {
+                        case Activity.RESULT_CANCELED -> {
                             Activity activity = getActivity();
-                            if(activity != null && isAdded()) {
-                                ((NavigationDrawerActivity)requireActivity()).updateUI("logout",
+                            if (activity != null && isAdded()) {
+                                ((NavigationDrawerActivity) requireActivity()).updateUI("logout",
                                         null, null, null, false);
                                 Navigation.findNavController(view).navigate(R.id.action_nav_user_calendar_to_nav_event_list);
                             }
-                            break;
                         }
                     }
                 });

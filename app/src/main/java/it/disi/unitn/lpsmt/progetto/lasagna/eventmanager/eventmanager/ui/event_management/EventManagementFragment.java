@@ -76,14 +76,13 @@ public class EventManagementFragment extends Fragment {
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     switch (result.getResultCode()) {
-                        case RESULT_OK: {
+                        case RESULT_OK -> {
                             userJwt = prefs.getString("accessToken");
                             searchEvents(mViewModel.getEvName().getValue(), view, null);
-                            break;
                         }
-                        case Activity.RESULT_CANCELED: {
+                        case Activity.RESULT_CANCELED -> {
                             Activity activity = getActivity();
-                            if(activity != null && isAdded()) {
+                            if (activity != null && isAdded()) {
                                 prefs.setString("accessToken", "");
                                 prefs.apply();
                                 Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_nav_event_list);

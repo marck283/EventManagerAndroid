@@ -75,19 +75,10 @@ public class TicketInfoCallback implements Callback {
             }
             response.body().close();
         } else {
-            switch(response.code()) {
-                case 400: {
-                    setAlertDialog(R.string.malformed_request_or_invalid_date, R.string.malformed_request_or_invalid_date_message);
-                    break;
-                }
-                case 401: {
-                    setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
-                    break;
-                }
-                case 404: {
-                    setAlertDialog(R.string.no_ticket, R.string.no_ticket_message);
-                    break;
-                }
+            switch (response.code()) {
+                case 400 -> setAlertDialog(R.string.malformed_request_or_invalid_date, R.string.malformed_request_or_invalid_date_message);
+                case 401 -> setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+                case 404 -> setAlertDialog(R.string.no_ticket, R.string.no_ticket_message);
             }
         }
     }

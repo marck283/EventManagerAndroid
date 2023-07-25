@@ -107,29 +107,29 @@ public class Event {
      * @return Il valore del campo specificato come parametro.
      */
     public String getString(@NonNull String field) throws Exception {
-        switch(field) {
-            case "id": {
+        switch (field) {
+            case "id" -> {
                 return id;
             }
-            case "eventid": {
+            case "eventid" -> {
                 return eventid;
             }
-            case "self": {
+            case "self" -> {
                 return self;
             }
-            case "name": {
+            case "name" -> {
                 return name;
             }
-            case "category": {
+            case "category" -> {
                 return category;
             }
-            case "eventPic": {
+            case "eventPic" -> {
                 return eventPic;
             }
-            case "orgName": {
+            case "orgName" -> {
                 return orgName;
             }
-            default: {
+            default -> {
                 Log.i("field", field);
                 throw new Exception("No field using this name.");
             }
@@ -139,8 +139,7 @@ public class Event {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Event)) return false;
-        Event that = (Event) o;
+        if (!(o instanceof Event that)) return false;
         return id.equals(that.id) && eventid.equals(that.eventid) && self.equals(that.self) && name.equals(that.name) && category.equals(that.category) && eventPic.equals(that.eventPic);
     }
 
