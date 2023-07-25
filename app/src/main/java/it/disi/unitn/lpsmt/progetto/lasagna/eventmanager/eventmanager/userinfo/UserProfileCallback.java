@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.icu.text.MessageFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -83,7 +84,9 @@ public class UserProfileCallback implements Callback {
                     }
 
                     TextView numEvOrg = v.findViewById(R.id.numEvOrg);
-                    numEvOrg.setText(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()));
+                    String eventi = MessageFormat.format(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()),
+                            new StringBuffer());
+                    numEvOrg.setText(/*f.getString(R.string.numEvOrg, userInfo.getNumEvOrg())*/eventi);
 
                     ListenerButton rating = v.findViewById(R.id.rating);
                     if (userInfo.getNumEvOrg() == 0 || userInfo.getValutazioneMedia() == 0.0) {

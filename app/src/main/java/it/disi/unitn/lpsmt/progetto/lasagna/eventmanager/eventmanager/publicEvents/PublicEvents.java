@@ -11,15 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.JsonCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
-import okhttp3.Dispatcher;
 import okhttp3.Request;
 
 public class PublicEvents extends ServerOperation {
@@ -27,8 +24,6 @@ public class PublicEvents extends ServerOperation {
     private final RecyclerView mRecyclerView;
 
     private final Fragment f;
-
-    private final ExecutorService executor;
 
     private final String token, nomeAtt, categoria, durata, indirizzo, citta, orgName;
 
@@ -58,13 +53,6 @@ public class PublicEvents extends ServerOperation {
                         @Nullable String categoria, @Nullable String durata,
                         @Nullable String indirizzo, @Nullable String citta, @Nullable String orgName) {
         //Limito il numero di thread a disposizione per non inondare il server di richieste
-        executor = Executors.newFixedThreadPool(1);
-        Dispatcher dispatcher = new Dispatcher(executor);
-        dispatcher.setMaxRequests(1);
-        dispatcher.setMaxRequestsPerHost(1);
-
-        super.createOperation(dispatcher);
-
         this.f = f;
 
         //Imposto la RecyclerView

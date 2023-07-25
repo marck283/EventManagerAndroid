@@ -71,7 +71,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/eventManaging" />
 
-    <com.google.android.material.button.MaterialButton
+    <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
         android:id="@+id/eventManaging"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

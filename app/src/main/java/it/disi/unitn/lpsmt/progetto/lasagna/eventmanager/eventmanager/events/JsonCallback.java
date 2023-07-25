@@ -189,6 +189,20 @@ public class JsonCallback implements Callback {
                             }
                         }
                     }
+                    case 500 -> {
+                        if (f != null) {
+                            Activity activity = f.getActivity();
+                            if (activity != null && f.isAdded()) {
+                                f.requireActivity().runOnUiThread(() -> {
+                                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                    dialog.setTitle(R.string.unknown_error);
+                                    dialog.setMessage(f.getString(R.string.unknown_error_message));
+                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                    dialog.show();
+                                });
+                            }
+                        }
+                    }
                 }
             }
         } else {

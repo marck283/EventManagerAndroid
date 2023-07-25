@@ -28,6 +28,7 @@ public class NetworkRequest {
                 .build();
     }
 
+    @NonNull
     private Request.Builder getRequestBuilder(List<Pair<String, String>> headers) {
         Request.Builder builder = new Request.Builder();
 

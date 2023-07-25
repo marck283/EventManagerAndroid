@@ -3,6 +3,7 @@ package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_p
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
+import android.icu.text.MessageFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,13 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.button.MaterialButton;
-
 import org.jetbrains.annotations.Contract;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 
 public class UserProfileFragment extends Fragment {
 
@@ -46,11 +46,9 @@ public class UserProfileFragment extends Fragment {
         Bundle b = new Bundle();
         b.putString("userJwt", token);
 
-        MaterialButton evManaging = v.findViewById(R.id.eventManaging);
-        if(!evManaging.hasOnClickListeners()) {
-            evManaging.setOnClickListener(c -> Navigation.findNavController(v)
-                    .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
-        }
+        ListenerButton evManaging = v.findViewById(R.id.eventManaging);
+        evManaging.setOnClickListener(c -> Navigation.findNavController(v)
+                .navigate(R.id.action_nav_user_profile_to_eventManagement, b));
     }
 
     @Override
@@ -65,7 +63,9 @@ public class UserProfileFragment extends Fragment {
 
         TextView phone_value = v.findViewById(R.id.phone_value), numEvOrg = v.findViewById(R.id.numEvOrg);
         phone_value.setText(getString(R.string.phone, ""));
-        numEvOrg.setText(getString(R.string.numEvOrg, 0));
+
+        String text = MessageFormat.format(getString(R.string.numEvOrg), 0, null);
+        numEvOrg.setText(text);
     }
 
     public void onStart() {

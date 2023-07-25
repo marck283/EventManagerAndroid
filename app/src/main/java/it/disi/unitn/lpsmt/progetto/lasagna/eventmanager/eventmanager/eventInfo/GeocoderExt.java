@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -24,6 +26,32 @@ public class GeocoderExt {
     private final Fragment f;
 
     private final TextView address;
+
+    private class GeocoderThread extends Thread {
+
+        private final String locationName;
+
+        private final int maxResults;
+
+        public GeocoderThread(@NotNull String ln, int maxRes) {
+            locationName = ln;
+            maxResults = maxRes;
+        }
+
+        public void run() {
+            List<Address> addresses;
+            try {
+                addresses = geocoder.getFromLocationName(locationName, maxResults);
+                if (addresses != null && addresses.size() > 0) {
+                    startGoogleMaps((EventDetailsFragment) f, address, addresses);
+                } else {
+                    noSuchAddressDialog(f);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public GeocoderExt(@NonNull Fragment f, @NonNull TextView address) {
         this.f = f;
@@ -65,21 +93,7 @@ public class GeocoderExt {
     }
 
     public void fromLocationNameThread(String locationName, @IntRange int maxResults) {
-        Thread t1 = new Thread() {
-            public void run() {
-                List<Address> addresses;
-                try {
-                    addresses = geocoder.getFromLocationName(locationName, maxResults);
-                    if (addresses != null && addresses.size() > 0) {
-                        startGoogleMaps((EventDetailsFragment) f, address, addresses);
-                    } else {
-                        noSuchAddressDialog(f);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        GeocoderThread t1 = new GeocoderThread(locationName, maxResults);
         t1.start();
     }
 }
