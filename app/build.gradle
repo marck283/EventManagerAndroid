@@ -4,6 +4,7 @@ plugins {
     // Add the Google services Gradle plugin
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'com.google.firebase.firebase-perf'
 }
 
 android {
@@ -55,6 +56,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.2")
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.9.0'))
+    implementation 'com.google.firebase:firebase-perf:20.4.0'
     annotationProcessor("androidx.room:room-compiler:2.5.2")
     annotationProcessor('com.github.bumptech.glide:compiler:4.15.1')
 
