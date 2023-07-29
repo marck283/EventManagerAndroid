@@ -61,7 +61,7 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
     }
 
     @Override
-    //Da reimpementare in tutte le Activity che impiegano Fragment che utilizzano questa classe.
+    //Da reimplementare in tutte le Activity che impiegano Fragment che utilizzano questa classe.
     public void onUnavailable() {
         super.onUnavailable();
         AlertDialog alert = new AlertDialog.Builder(a).create();
