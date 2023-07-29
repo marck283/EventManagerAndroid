@@ -13,7 +13,7 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 
 public class EventInfo {
     private final String id;

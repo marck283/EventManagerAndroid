@@ -13,8 +13,8 @@ import java.util.List;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.JsonCallback;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkRequest;
+import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
 import okhttp3.Request;
 
 public class PrivateEvents extends ServerOperation {

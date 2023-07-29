@@ -17,8 +17,8 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.JsonCallback;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkRequest;
+import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
 import okhttp3.Request;
 
 public class OrganizedEvents extends ServerOperation {
@@ -29,14 +29,15 @@ public class OrganizedEvents extends ServerOperation {
 
     private final ActivityResultLauncher<Intent> launcher;
 
-    private final String evName;
+    private final String evName, authToken, data;
 
     private final NetworkRequest nreq;
 
     private final List<Pair<String, String>> list;
 
     public OrganizedEvents(@IdRes int recyclerViewId, @NonNull Fragment f, @NonNull View layout,
-                           @Nullable ActivityResultLauncher<Intent> launcher) {
+                           @Nullable ActivityResultLauncher<Intent> launcher, @NonNull String authToken,
+                           @Nullable String data) {
         super();
 
         this.f = f;
@@ -52,10 +53,13 @@ public class OrganizedEvents extends ServerOperation {
         evName = null;
         nreq = getNetworkRequest();
         list = new ArrayList<>();
+        this.authToken = authToken;
+        this.data = data;
     }
 
     public OrganizedEvents(@IdRes int recyclerViewId, @NonNull Fragment f, @NonNull View layout,
-                           @Nullable String evName, @Nullable ActivityResultLauncher<Intent> launcher) {
+                           @Nullable String evName, @Nullable ActivityResultLauncher<Intent> launcher,
+                           @NonNull String authToken, @Nullable String data) {
         super();
 
         this.f = f;
@@ -71,9 +75,11 @@ public class OrganizedEvents extends ServerOperation {
         this.evName = evName;
         nreq = getNetworkRequest();
         list = new ArrayList<>();
+        this.authToken = authToken;
+        this.data = data;
     }
 
-    public void getOrgEvents(@NonNull String authToken, @Nullable String data) {
+    /*public void getOrgEvents(@NonNull String authToken, @Nullable String data) {
         Pair<String, String> token = new Pair<>("x-access-token", authToken);
         list.add(token);
         Request req;
@@ -94,6 +100,22 @@ public class OrganizedEvents extends ServerOperation {
         if(evName != null) {
             Request req = nreq.getRequest(list, getBaseUrl() + "/api/v2/EventOrgList");
             nreq.enqueue(req, new JsonCallback(f, "org", mRecyclerView));
+        }
+    }*/
+
+    public void run() {
+        Pair<String, String> token = new Pair<>("x-access-token", authToken), ename = new Pair<>("name", evName);
+        list.add(token);
+        Request req;
+        if(data != null) {
+            req = nreq.getRequest(list, getBaseUrl() + "/api/v2/EventOrgList/" + data);
+            nreq.enqueue(req, new JsonCallback(f, "org", mRecyclerView, data, launcher));
+        } else {
+            if(evName != null) {
+                list.add(ename);
+            }
+            req = nreq.getRequest(list, getBaseUrl() + "/api/v2/EventOrgList");
+            nreq.enqueue(req, new JsonCallback(f, "org", mRecyclerView, launcher));
         }
     }
 }

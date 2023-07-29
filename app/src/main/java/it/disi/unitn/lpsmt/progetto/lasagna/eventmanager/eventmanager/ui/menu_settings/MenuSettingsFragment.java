@@ -15,7 +15,7 @@ import com.android.installreferrer.BuildConfig;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
+import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 
 public class MenuSettingsFragment extends Fragment {
     private MenuSettingsViewModel menuSettingsViewModel;

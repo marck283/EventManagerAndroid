@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 
 public class EventViewModel extends ViewModel {
     private String nomeAtt = "";

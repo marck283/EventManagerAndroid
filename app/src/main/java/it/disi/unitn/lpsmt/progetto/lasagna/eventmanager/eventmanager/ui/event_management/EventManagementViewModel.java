@@ -18,6 +18,8 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedE
 public class EventManagementViewModel extends ViewModel {
     private final MutableLiveData<String> evName = new MutableLiveData<>();
 
+    private OrganizedEvents orgEvs;
+
     public void setEvName(@NonNull String val) {
         evName.setValue(val);
     }
@@ -30,8 +32,9 @@ public class EventManagementViewModel extends ViewModel {
                              @Nullable ActivityResultLauncher<Intent> launcher) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
-            OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, launcher);
-            orgEvs.getOrgEvents(userJwt, null);
+            orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, launcher, userJwt, null);
+            //orgEvs.getOrgEvents(userJwt, null);
+            orgEvs.start();
         }
     }
 
@@ -39,8 +42,9 @@ public class EventManagementViewModel extends ViewModel {
                              @NonNull String evName, @Nullable ActivityResultLauncher<Intent> launcher) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
-            OrganizedEvents orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, evName, launcher);
-            orgEvs.getOrgEventsWithName(userJwt);
+            orgEvs = new OrganizedEvents(R.id.eventRecyclerView, f, v, evName, launcher, userJwt, null);
+            //orgEvs.getOrgEventsWithName(userJwt);
+            orgEvs.start();
         }
     }
 }

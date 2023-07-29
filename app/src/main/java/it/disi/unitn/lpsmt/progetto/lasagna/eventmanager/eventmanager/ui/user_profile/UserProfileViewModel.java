@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.queryClasses.DBUser;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
+import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo.OnlineUserInfo;
 
 public class UserProfileViewModel extends ViewModel {

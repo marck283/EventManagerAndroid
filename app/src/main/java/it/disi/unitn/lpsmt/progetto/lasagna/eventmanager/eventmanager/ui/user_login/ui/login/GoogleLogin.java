@@ -13,9 +13,9 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
+import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 
 public class GoogleLogin {
     private final GSignIn signIn;
@@ -67,7 +67,9 @@ public class GoogleLogin {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("fail", "signInResult:failed code=" + e.getStatusCode());
-            Log.w("fail", e.getMessage());
+            if(e.getMessage() != null) {
+                Log.w("fail", e.getMessage());
+            }
             Log.i("info1", String.valueOf(signIn.getAccount() != null));
             //Not signed in, so return to caller with null results
             a.setResult(Activity.RESULT_CANCELED);

@@ -1,11 +1,13 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,12 +18,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import it.disi.unitn.lasagna.eventcreation.EventCreationInterface;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityEventCreationBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.EventLocationViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.NewDateViewModel;
 
-public class EventCreationActivity extends AppCompatActivity {
+public class EventCreationActivity extends AppCompatActivity implements EventCreationInterface {
 
     private AppBarConfiguration appBarConfiguration;
     private String idToken;
@@ -91,5 +94,36 @@ public class EventCreationActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         nd = null;
+    }
+
+    private void setAlertDialog(@StringRes int title, @StringRes int message) {
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle(title);
+        dialog.setMessage(getString(message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+            dialog1.dismiss();
+            finish();
+        });
+        dialog.show();
+    }
+
+    @Override
+    public void showOK() {
+        setAlertDialog(R.string.event_creation_ok_title, R.string.event_creation_ok_message);
+    }
+
+    @Override
+    public void showEventCreationError() {
+        setAlertDialog(R.string.event_creation_error, R.string.event_creation_error_message);
+    }
+
+    @Override
+    public void showInternalServerError() {
+        setAlertDialog(R.string.internal_server_error, R.string.retry_later);
+    }
+
+    @Override
+    public void showServiceUavailable() {
+        setAlertDialog(R.string.service_unavailable, R.string.service_unavailable_message);
     }
 }

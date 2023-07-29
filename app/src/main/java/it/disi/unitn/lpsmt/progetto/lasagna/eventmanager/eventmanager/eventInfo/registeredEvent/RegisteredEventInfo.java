@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkRequest;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.networkOps.ServerOperation;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkRequest;
+import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import okhttp3.Request;
 

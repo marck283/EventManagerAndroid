@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.event_creation.EventCreation;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
+import it.disi.unitn.lasagna.eventcreation.EventCreation;
+import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class EventAdditionalInfoViewModel extends ViewModel {

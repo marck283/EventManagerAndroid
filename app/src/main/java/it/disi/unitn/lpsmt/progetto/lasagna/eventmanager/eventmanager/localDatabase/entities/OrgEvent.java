@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
+import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 
 @Entity(tableName = "OrgEvents")
 public class OrgEvent implements Serializable {

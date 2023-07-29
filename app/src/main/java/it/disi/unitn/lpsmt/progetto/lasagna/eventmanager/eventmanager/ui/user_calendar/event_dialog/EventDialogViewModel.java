@@ -26,8 +26,9 @@ public class EventDialogViewModel extends ViewModel {
 
         //Parallelizzo le chiamate per ottenere gli eventi organizzati dall'utente che sta visualizzando il calendario
         // e quelli a cui partecipa.
-        OrganizedEvents orgEv = new OrganizedEvents(R.id.organizer_recycler_view, f, l, null);
-        orgEv.getOrgEvents(authToken, data);
+        OrganizedEvents orgEv = new OrganizedEvents(R.id.organizer_recycler_view, f, l, null, authToken, data);
+        //orgEv.getOrgEvents(authToken, data);
+        orgEv.start();
 
         PrivateEvents privEv = new PrivateEvents(l, authToken, data);
         privEv.start();

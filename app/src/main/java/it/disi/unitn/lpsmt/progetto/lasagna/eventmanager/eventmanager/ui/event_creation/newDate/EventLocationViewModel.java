@@ -17,9 +17,9 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.io.IOException;
 import java.util.List;
 
+import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.LuogoEv;
 
 public class EventLocationViewModel extends ViewModel {
     private EventLocationFragment f;
@@ -208,7 +208,7 @@ public class EventLocationViewModel extends ViewModel {
 
         String location = t2.getText().toString().trim() + ", " + t3.getText().toString().trim() + ", "
                 + t4.getText().toString().trim() + ", " + t5.getText().toString().trim() + ", " + parseProvince().trim();
-        Geocoder geocoder = new Geocoder(f.getContext());
+        Geocoder geocoder = new Geocoder(f.requireContext());
 
         try {
             String[] split = location.split(", ");

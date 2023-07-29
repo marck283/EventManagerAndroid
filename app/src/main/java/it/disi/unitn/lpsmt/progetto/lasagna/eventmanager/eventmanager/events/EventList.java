@@ -11,6 +11,8 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
+
 public class EventList {
     final List<Event> pubEvList;
 

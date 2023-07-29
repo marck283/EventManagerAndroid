@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EventSpeechRecognizer implements RecognitionListener {
     private final View a;
@@ -101,7 +102,7 @@ public class EventSpeechRecognizer implements RecognitionListener {
     public void onResults(@NonNull Bundle results) {
         TextInputEditText v = a.findViewById(resId);
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        v.setText(data.get(0));
+        v.setText(Objects.requireNonNull(data).get(0));
     }
 
     /**

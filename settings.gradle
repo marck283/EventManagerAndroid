@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "EventManager"
 include ':app'
+include ':login'
+include ':network'
+include ':sharedPrefs'
+include ':eventcreation'

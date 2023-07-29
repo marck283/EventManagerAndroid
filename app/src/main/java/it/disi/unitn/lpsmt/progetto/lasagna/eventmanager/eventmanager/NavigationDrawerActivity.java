@@ -39,17 +39,19 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.csrfToken.CsrfToken;
+import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
+import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
+import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.network.NetworkCallback;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.sharedpreferences.SharedPrefs;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
+import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
-public class NavigationDrawerActivity extends AppCompatActivity {
+public class NavigationDrawerActivity extends AppCompatActivity implements AuthenticationInterface {
 
     private AppBarConfiguration mAppBarConfiguration;
     private GSignIn account;
@@ -431,5 +433,24 @@ public class NavigationDrawerActivity extends AppCompatActivity {
         accessToken = null;
         profile = null;
         tracker.stopTracking();
+    }
+
+    @Override
+    public void shareData(@NonNull LoggedInUser data, @Nullable Intent intent) {
+        updateUI("login", data.getEmail(), data.getName(), data.getProfilePic(), true);
+        getViewModel().postToken(data.getToken());
+    }
+
+    public void logout(@Nullable Intent intent) {
+        updateUI("logout", null, null, null, false);
+        getViewModel().setToken("");
+    }
+
+    public void showNotLoggedInMsg() {
+        AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle(R.string.user_not_logged_in);
+        dialog.setMessage(getString(R.string.user_not_logged_in_message));
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        dialog.show();
     }
 }
