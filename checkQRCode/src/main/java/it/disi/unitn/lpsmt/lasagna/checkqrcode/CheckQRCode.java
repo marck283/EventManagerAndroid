@@ -1,4 +1,4 @@
-package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.checkQRCode;
+package it.disi.unitn.lpsmt.lasagna.checkqrcode;
 
 import android.util.Log;
 import android.util.Pair;

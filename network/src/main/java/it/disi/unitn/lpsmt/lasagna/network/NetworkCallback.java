@@ -3,7 +3,6 @@ package it.disi.unitn.lpsmt.lasagna.network;
 import static android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
@@ -42,34 +41,23 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
     @Override
     public void onLost(@NonNull Network network) {
         super.onLost(network);
-        AlertDialog alert = new AlertDialog.Builder(a).create();
-        alert.setTitle(R.string.no_connection);
-        alert.setMessage(a.getString(R.string.no_connection_message));
-        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
-        alert.show();
+        ((NetworkCallbackInterface)a).showOnLostMsg();
     }
 
     @Override
-    public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+    public void onCapabilitiesChanged(@NonNull Network network, @NonNull NetworkCapabilities networkCapabilities) {
         Log.e("changedCapabilities", "The default network changed capabilities: " + networkCapabilities);
     }
 
     @Override
-    public void onLinkPropertiesChanged(Network network, LinkProperties linkProperties) {
+    public void onLinkPropertiesChanged(@NonNull Network network, @NonNull LinkProperties linkProperties) {
         Log.e("changedLinkProperties", "The default network changed link properties: " + linkProperties);
     }
 
     @Override
-    //Da reimplementare in tutte le Activity che impiegano Fragment che utilizzano questa classe.
     public void onUnavailable() {
         super.onUnavailable();
-        AlertDialog alert = new AlertDialog.Builder(a).create();
-        alert.setTitle(R.string.no_connection);
-        alert.setMessage(a.getString(R.string.no_connection_message));
-        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        alert.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
-        alert.show();
+        ((NetworkCallbackInterface)a).showOnUnavailableMsg();
     }
 
     public boolean isOnline(Context ctx) {

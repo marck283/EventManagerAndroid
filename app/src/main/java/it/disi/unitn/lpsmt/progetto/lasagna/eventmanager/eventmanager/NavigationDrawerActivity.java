@@ -28,6 +28,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
@@ -40,8 +41,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
 import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
 import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
 import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkCallbackInterface;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
@@ -51,7 +54,8 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_c
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
-public class NavigationDrawerActivity extends AppCompatActivity implements AuthenticationInterface {
+public class NavigationDrawerActivity extends AppCompatActivity implements AuthenticationInterface,
+        NetworkCallbackInterface, OrgEvInterface {
 
     private AppBarConfiguration mAppBarConfiguration;
     private GSignIn account;
@@ -68,11 +72,11 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
 
     private ActivityResultLauncher<Intent> launcher, evLauncher;
 
-    private void setAlertDialog(boolean eventCreation) {
+    private void setAlertDialog(boolean eventCreation, @StringRes int title, @StringRes int message) {
         prompt = false;
         AlertDialog d = new AlertDialog.Builder(this).create();
-        d.setTitle(getString(R.string.no_session_title));
-        d.setMessage(getString(R.string.no_session_content));
+        d.setTitle(getString(title));
+        d.setMessage(getString(message));
         d.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
             if(eventCreation) {
                 Intent intent = new Intent(this, LoginActivity.class);
@@ -145,7 +149,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         if(!fab.hasOnClickListeners()) {
             fab.setOnClickListener(view -> {
                 if(account.getAccount() == null && profile == null) {
-                    setAlertDialog(true);
+                    setAlertDialog(true, R.string.no_session_title, R.string.no_session_content);
                 } else {
                     showCreaEvento();
                 }
@@ -198,7 +202,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
                 if(accessToken.equals("")) {
                     updateUI("logout", null, null, null, false);
                     if(prompt) {
-                        setAlertDialog(false);
+                        setAlertDialog(false, R.string.no_session_title, R.string.no_session_content);
                         prompt = false;
                     }
                 } else {
@@ -214,7 +218,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
             if(accessToken.equals("")) {
                 updateUI("logout", null, null, null, false);
                 if(prompt) {
-                    setAlertDialog(false);
+                    setAlertDialog(false, R.string.no_session_title, R.string.no_session_content);
                     prompt = false;
                 }
             } else {
@@ -447,10 +451,63 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     }
 
     public void showNotLoggedInMsg() {
-        AlertDialog dialog = new AlertDialog.Builder(this).create();
-        dialog.setTitle(R.string.user_not_logged_in);
-        dialog.setMessage(getString(R.string.user_not_logged_in_message));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-        dialog.show();
+        setAlertDialog(false, R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+    }
+
+    @Override
+    public void showOnLostMsg() {
+        AlertDialog alert = new AlertDialog.Builder(this).create();
+        alert.setTitle(R.string.no_connection);
+        alert.setMessage(getString(R.string.no_connection_message_short));
+        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        alert.show();
+    }
+
+    @Override
+    public void showOnUnavailableMsg() {
+        AlertDialog alert = new AlertDialog.Builder(this).create();
+        alert.setTitle(R.string.no_connection);
+        alert.setMessage(getString(R.string.no_connection_message_short));
+        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        alert.show();
+    }
+
+    @Override
+    public void showRes(int resCode) {
+        switch(resCode) {
+            case 401 -> setAlertDialog(false, R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+
+            case 403 -> {
+                AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle(R.string.unauthorized_attempt);
+                dialog.setMessage(getString(R.string.unauthorized_attempt_message));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+            }
+
+            case 200 -> {
+                AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle(R.string.attempt_ok);
+                dialog.setMessage(getString(R.string.attempt_ok_message));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+            }
+
+            case 404 -> {
+                AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle(R.string.no_event);
+                dialog.setMessage(getString(R.string.no_event_message));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+            }
+
+            default -> {
+                AlertDialog dialog = new AlertDialog.Builder(this).create();
+                dialog.setTitle(R.string.unknown_error);
+                dialog.setMessage(getString(R.string.unknown_error_message));
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                dialog.show();
+            }
+        }
     }
 }

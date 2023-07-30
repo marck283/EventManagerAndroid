@@ -18,10 +18,11 @@ import com.google.android.gms.tasks.Task;
 
 import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
 import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
+import it.disi.unitn.lpsmt.lasagna.network.NetworkCallbackInterface;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding;
 
-public class LoginActivity extends AppCompatActivity implements AuthenticationInterface {
+public class LoginActivity extends AppCompatActivity implements AuthenticationInterface, NetworkCallbackInterface {
 
     private static final int REQ_SIGN_IN = 2;
 
@@ -97,5 +98,23 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationIn
         dialog.setMessage(getString(R.string.user_not_logged_in_message));
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
         dialog.show();
+    }
+
+    @Override
+    public void showOnLostMsg() {
+        AlertDialog alert = new AlertDialog.Builder(this).create();
+        alert.setTitle(R.string.no_connection);
+        alert.setMessage(getString(R.string.no_connection_message_short));
+        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        alert.show();
+    }
+
+    @Override
+    public void showOnUnavailableMsg() {
+        AlertDialog alert = new AlertDialog.Builder(this).create();
+        alert.setTitle(R.string.no_connection);
+        alert.setMessage(getString(R.string.no_connection_message_short));
+        alert.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+        alert.show();
     }
 }

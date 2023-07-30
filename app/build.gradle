@@ -61,6 +61,8 @@ dependencies {
     implementation project(path: ':network')
     implementation project(path: ':sharedPrefs')
     implementation project(path: ':eventcreation')
+    implementation project(path: ':checkQRCode')
+    implementation project(path: ':eventInfo')
     annotationProcessor("androidx.room:room-compiler:2.5.2")
     annotationProcessor('com.github.bumptech.glide:compiler:4.15.1')
 

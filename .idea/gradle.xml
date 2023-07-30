@@ -12,6 +12,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/checkQRCode" />
+            <option value="$PROJECT_DIR$/eventInfo" />
             <option value="$PROJECT_DIR$/eventcreation" />
             <option value="$PROJECT_DIR$/login" />
             <option value="$PROJECT_DIR$/network" />
