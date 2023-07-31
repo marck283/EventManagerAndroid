@@ -15,9 +15,11 @@
             <option value="$PROJECT_DIR$/checkQRCode" />
             <option value="$PROJECT_DIR$/eventInfo" />
             <option value="$PROJECT_DIR$/eventcreation" />
+            <option value="$PROJECT_DIR$/localDatabase" />
             <option value="$PROJECT_DIR$/login" />
             <option value="$PROJECT_DIR$/network" />
             <option value="$PROJECT_DIR$/sharedPrefs" />
+            <option value="$PROJECT_DIR$/user_event_registration" />
           </set>
         </option>
       </GradleProjectSettings>

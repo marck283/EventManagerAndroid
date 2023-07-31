@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="write_reviews">Write a review</string>
+    <string name="withdraw_subscription">Delete event subscription</string>
+    <string name="event_picture">Event picture</string>
+    <string name="organizer">Organizer: %1$s</string>
+    <string name="time_not_selectable">Time: %1$s</string>
+    <string name="day_not_selectable">Day: %1$s</string>
+    <string name="duration">Duration: %1$s h, %2$s m and %3$s s</string>
+    <string name="event_address">Address: %1$s</string>
+    <string name="show_ticket">Show ticket</string>
+</resources>

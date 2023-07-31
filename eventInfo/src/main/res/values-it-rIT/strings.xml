@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="write_reviews">Scrivi una recensione</string>
+    <string name="withdraw_subscription">Elimina la tua iscrizione</string>
+    <string name="event_picture">Immagine evento</string>
+    <string name="organizer">Organizzatore: %1$s</string>
+    <string name="time_not_selectable">Orario: %1$s</string>
+    <string name="day_not_selectable">Giorno: %1$s</string>
+    <string name="duration">Durata: %1$s g, %2$s h e %3$s m</string>
+    <string name="event_address">Indirizzo: %1$s</string>
+    <string name="show_ticket">Mostra biglietto</string>
+</resources>

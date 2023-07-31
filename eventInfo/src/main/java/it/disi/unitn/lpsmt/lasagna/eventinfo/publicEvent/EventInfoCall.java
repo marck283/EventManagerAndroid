@@ -6,9 +6,9 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsFragment;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkRequest;
 import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
 import okhttp3.Request;
 
 public class EventInfoCall extends ServerOperation {
