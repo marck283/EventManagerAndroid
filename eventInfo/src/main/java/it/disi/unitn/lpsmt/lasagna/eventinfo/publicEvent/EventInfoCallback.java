@@ -82,7 +82,7 @@ public class EventInfoCallback implements Callback {
                     String[] durataArr = ei1.getDurata().split(":");
                     durata.setText(f.getString(R.string.duration, durataArr[0], durataArr[1], durataArr[2]));
 
-                    ((EventDetailsFragment)f).setEventId(ei1.getId());
+                    f.setEventId(ei1.getId());
 
                     ArrayList<CharSequence> dateArr = new ArrayList<>();
                     dateArr.add("---");
