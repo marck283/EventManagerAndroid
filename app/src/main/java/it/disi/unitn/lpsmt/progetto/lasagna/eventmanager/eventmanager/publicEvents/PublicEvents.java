@@ -21,11 +21,20 @@ import okhttp3.Request;
 
 public class PublicEvents extends ServerOperation {
 
+    private static boolean receivedResult = false;
+
     private final RecyclerView mRecyclerView;
 
     private final Fragment f;
 
     private final String token, nomeAtt, categoria, durata, indirizzo, citta, orgName;
+
+    /**
+     * Imposta il valore del campo che verifica se i risultati siano stati ritornati al client a false.
+     */
+    public void negateResult() {
+        receivedResult = false;
+    }
 
     /**
      * Costruisce l'oggetto PublicEvents applicando i filtri specificati. Si noti che, per ottenere
@@ -73,24 +82,31 @@ public class PublicEvents extends ServerOperation {
 
     /**
      * Esegue la chiamata all'API remota e ottiene gli eventi pubblici presenti secondo i filtri
-     * applicati dall'utente.
+     * applicati dall'utente, cacellando il thread se i risultati sono già stati ricevuti.
      */
     public void run() {
-        Pair<String, String> gtoken = new Pair<>("x-access-token", token), nomeAct = new Pair<>("nomeAtt", nomeAtt),
-                category = new Pair<>("categoria", categoria), duration = new Pair<>("durata", durata),
-                address = new Pair<>("indirizzo", indirizzo), city = new Pair<>("citta", citta),
-                orgNome = new Pair<>("orgName", orgName);
-        List<Pair<String, String>> list = new ArrayList<>();
-        list.add(gtoken);
-        list.add(nomeAct);
-        list.add(category);
-        list.add(duration);
-        list.add(address);
-        list.add(city);
-        list.add(orgNome);
+        if(receivedResult) {
+            if(!isInterrupted()) {
+                interrupt();
+            }
+        } else {
+            Pair<String, String> gtoken = new Pair<>("x-access-token", token), nomeAct = new Pair<>("nomeAtt", nomeAtt),
+                    category = new Pair<>("categoria", categoria), duration = new Pair<>("durata", durata),
+                    address = new Pair<>("indirizzo", indirizzo), city = new Pair<>("citta", citta),
+                    orgNome = new Pair<>("orgName", orgName);
+            List<Pair<String, String>> list = new ArrayList<>();
+            list.add(gtoken);
+            list.add(nomeAct);
+            list.add(category);
+            list.add(duration);
+            list.add(address);
+            list.add(city);
+            list.add(orgNome);
 
-        NetworkRequest nreq = getNetworkRequest();
-        Request req = nreq.getRequest(list, getBaseUrl() + "/api/v2/eventiCalendarioPubblico");
-        nreq.enqueue(req, new JsonCallback(f, "pub", mRecyclerView, null, executor));
+            NetworkRequest nreq = getNetworkRequest();
+            Request req = nreq.getRequest(list, getBaseUrl() + "/api/v2/eventiCalendarioPubblico");
+            nreq.enqueue(req, new JsonCallback(f, "pub", mRecyclerView, null, executor));
+            receivedResult = true;
+        }
     }
 }

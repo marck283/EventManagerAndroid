@@ -238,4 +238,9 @@ public class EventListFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean("prompt", prompt);
     }
+
+    public void onStop() {
+        super.onStop();
+        eventListViewModel.negateResults();
+    }
 }

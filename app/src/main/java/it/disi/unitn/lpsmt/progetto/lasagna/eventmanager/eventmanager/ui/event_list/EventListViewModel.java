@@ -17,6 +17,8 @@ public class EventListViewModel extends ViewModel {
     category = new MutableLiveData<>(), duration = new MutableLiveData<>(), address = new MutableLiveData<>(),
     city = new MutableLiveData<>();
 
+    private PublicEvents pubEv;
+
     public void setEvName(@NonNull String val) {
         evName.setValue(val);
     }
@@ -66,8 +68,12 @@ public class EventListViewModel extends ViewModel {
     }
 
     public void getEvents(@NonNull Fragment f, @NonNull View layout, String accessToken) {
-        PublicEvents pubEv = new PublicEvents(f, layout, accessToken, evName.getValue(), category.getValue(),
+        pubEv = new PublicEvents(f, layout, accessToken, evName.getValue(), category.getValue(),
                 duration.getValue(), address.getValue(), city.getValue(), orgName.getValue());
         pubEv.start();
+    }
+
+    public void negateResults() {
+        pubEv.negateResult();
     }
 }
