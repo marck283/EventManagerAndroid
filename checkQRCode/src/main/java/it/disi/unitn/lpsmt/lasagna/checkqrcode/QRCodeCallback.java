@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InvalidObjectException;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -20,8 +19,23 @@ public class QRCodeCallback implements Callback {
 
     private final Fragment f;
 
-    public QRCodeCallback(@NotNull Fragment f) throws InvalidObjectException {
+    private final int validQRCT, validQRCMsg, invalid_qr_code, invalid_qr_code_message,
+            malformed_request, malformed_request_message, no_session_title, no_session_message;
+
+    public QRCodeCallback(@NotNull Fragment f, @StringRes int validQRCodeTitle,
+                          @StringRes int validQRCodeMsg, @StringRes int invalid_qr_code,
+                          @StringRes int invalid_qr_code_message, @StringRes int malformed_request,
+                          @StringRes int malformed_request_message, @StringRes int no_session_title,
+                          @StringRes int no_session_message) throws InvalidObjectException {
         this.f = f;
+        validQRCT = validQRCodeTitle;
+        validQRCMsg = validQRCodeMsg;
+        this.invalid_qr_code = invalid_qr_code;
+        this.invalid_qr_code_message = invalid_qr_code_message;
+        this.malformed_request = malformed_request;
+        this.malformed_request_message = malformed_request_message;
+        this.no_session_title = no_session_title;
+        this.no_session_message = no_session_message;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -47,13 +61,13 @@ public class QRCodeCallback implements Callback {
     public void onResponse(@NonNull Call call, @NonNull Response response) {
         switch (response.code()) {
             case 200 -> //OK
-                    setAlertDialog(R.string.valid_qr_code, R.string.valid_qr_code_message);
+                    setAlertDialog(validQRCT, validQRCMsg);
             case 400 -> //Richiesta malformata
-                    setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
+                    setAlertDialog(malformed_request, malformed_request_message);
             case 401 -> //Utente non autenticato
-                    setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+                    setAlertDialog(no_session_title, no_session_message);
             case 404 -> //QR Code non valido
-                    setAlertDialog(R.string.qr_code_invalid, R.string.invalid_qr_code_message);
+                    setAlertDialog(invalid_qr_code, invalid_qr_code_message);
         }
     }
 }

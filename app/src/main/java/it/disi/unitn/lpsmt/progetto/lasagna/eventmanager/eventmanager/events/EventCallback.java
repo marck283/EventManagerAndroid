@@ -5,9 +5,10 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.Objects;
 
-public class EventCallback extends DiffUtil.ItemCallback<Event> {
+public class EventCallback extends DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> {
     @Override
-    public boolean areItemsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
+    public boolean areItemsTheSame(@NonNull it.disi.unitn.lpsmt.lasagna.localdatabase.Event oldItem,
+                                   @NonNull it.disi.unitn.lpsmt.lasagna.localdatabase.Event newItem) {
         boolean eq = false;
 
         try {
@@ -20,7 +21,8 @@ public class EventCallback extends DiffUtil.ItemCallback<Event> {
     }
 
     @Override
-    public boolean areContentsTheSame(@NonNull Event oldItem, @NonNull Event newItem) {
+    public boolean areContentsTheSame(@NonNull it.disi.unitn.lpsmt.lasagna.localdatabase.Event oldItem,
+                                      @NonNull it.disi.unitn.lpsmt.lasagna.localdatabase.Event newItem) {
         return oldItem.equals(newItem);
     }
 }

@@ -1,12 +1,11 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.util.Pair;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -14,15 +13,12 @@ import androidx.fragment.app.Fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.TerminatorCallback;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkRequest;
 import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.callbacks.OrganizerCallback;
-import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class TerminateEvent extends ServerOperation {
 
@@ -38,9 +34,17 @@ public class TerminateEvent extends ServerOperation {
 
     private final Intent loginIntent;
 
+    private final int malformed_req, malf_req_msg, no_session_title, no_session_msg, attempt_ok,
+    attempt_ok_msg, but8, but12, internal_server_error;
+
     public TerminateEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull String data,
                           @NonNull String ora, @NonNull View v, @NonNull Fragment f,
-                          @NonNull ActivityResultLauncher<Intent> launcher, @NonNull Intent loginIntent) {
+                          @NonNull ActivityResultLauncher<Intent> launcher, @NonNull Intent loginIntent,
+                          @StringRes int malformed_req,
+                          @StringRes int malf_req_msg, @StringRes int no_session_title,
+                          @StringRes int no_session_content, @StringRes int attempt_ok,
+                          @StringRes int attempt_ok_msg, @IdRes int but8, @IdRes int but12,
+                          @StringRes int internal_server_error) {
         request = new NetworkRequest();
         this.eventId = eventId;
         this.data = data;
@@ -50,16 +54,15 @@ public class TerminateEvent extends ServerOperation {
         this.accessToken = accessToken;
         this.launcher = launcher;
         this.loginIntent = loginIntent;
-    }
-
-    private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(f.getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
-        });
+        this.malformed_req = malformed_req;
+        this.malf_req_msg = malf_req_msg;
+        this.no_session_title = no_session_title;
+        this.no_session_msg = no_session_content;
+        this.attempt_ok = attempt_ok;
+        this.attempt_ok_msg = attempt_ok_msg;
+        this.but8 = but8;
+        this.but12 = but12;
+        this.internal_server_error = internal_server_error;
     }
 
     public void run() {
@@ -71,25 +74,8 @@ public class TerminateEvent extends ServerOperation {
         headers.add(new Pair<>("x-access-token", accessToken));
         Request req = request.getPatchRequest(body, headers,
                 getBaseUrl() + "/api/v2/terminaEvento/" + eventId);
-        request.enqueue(req, new OrganizerCallback() {
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) {
-                switch (response.code()) {
-                    case 400 -> setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
-                    case 401 -> {
-                        setAlertDialog(R.string.no_session_title, R.string.no_session_content);
-                        launcher.launch(loginIntent);
-                    }
-                    case 200 -> {
-                        setAlertDialog(R.string.attempt_ok, R.string.attempt_ok_message);
-
-                        Button qrCodeScan = v.findViewById(R.id.button8), terminaEvento = v.findViewById(R.id.button12);
-                        qrCodeScan.setEnabled(false);
-                        terminaEvento.setEnabled(false);
-                    }
-                    case 500 -> setAlertDialog(R.string.internal_server_error, R.string.internal_server_error);
-                }
-            }
-        });
+        request.enqueue(req, new TerminatorCallback(f, launcher, loginIntent, v, malformed_req,
+                malf_req_msg, no_session_title, no_session_msg, attempt_ok, attempt_ok_msg, but8,
+                but12, internal_server_error));
     }
 }

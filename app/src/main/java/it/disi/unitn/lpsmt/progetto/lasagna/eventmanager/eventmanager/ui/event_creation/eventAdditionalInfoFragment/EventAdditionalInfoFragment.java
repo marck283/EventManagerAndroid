@@ -126,7 +126,11 @@ public class EventAdditionalInfoFragment extends Fragment {
                         }
                     });
         } catch(IllegalStateException ex) {
-            Log.e("Errore", ex.getLocalizedMessage());
+            if(ex.getMessage() != null) {
+                Log.e("Errore", ex.getMessage());
+            } else {
+                Log.e("Errore", "Qualcosa e' andato storto.");
+            }
         }
     }
 

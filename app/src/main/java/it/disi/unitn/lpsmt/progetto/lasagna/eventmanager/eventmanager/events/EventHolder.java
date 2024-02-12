@@ -10,5 +10,5 @@ public abstract class EventHolder extends RecyclerView.ViewHolder {
         super(itemView);
     }
 
-    public abstract void bindData(Event dataModel);
+    public abstract void bindData(it.disi.unitn.lpsmt.lasagna.localdatabase.Event dataModel);
 }

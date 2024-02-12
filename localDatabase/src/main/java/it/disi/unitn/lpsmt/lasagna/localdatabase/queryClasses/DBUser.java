@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 
+import it.disi.unitn.lasagna.eventmanager.userinfo.UserInfo;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.daos.UserDAO;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -25,7 +26,7 @@ public class DBUser extends DBThread {
     private Fragment f;
     private final Activity a;
 
-    private final it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo.UserInfo userInfo;
+    private final UserInfo userInfo;
 
     public DBUser(@NonNull String id, @NonNull String action, @NonNull View v, @NonNull Fragment f) {
         super(f.requireActivity());
@@ -38,8 +39,7 @@ public class DBUser extends DBThread {
         userInfo = null;
         this.id = id;
     }
-    public DBUser(@NonNull Activity a, @NonNull String action, @NonNull View v,
-                  @NonNull it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.userinfo.UserInfo userInfo) {
+    public DBUser(@NonNull Activity a, @NonNull String action, @NonNull View v, UserInfo userInfo) {
         super(a);
         this.action = action;
         user = db.getUserDAO();

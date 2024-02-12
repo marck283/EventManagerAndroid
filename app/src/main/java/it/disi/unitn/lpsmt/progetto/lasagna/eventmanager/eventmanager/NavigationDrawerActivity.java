@@ -40,16 +40,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import it.disi.lasagna.navigationsvm.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
+import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
 import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallbackInterface;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
@@ -186,7 +186,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         ivwidth = navView.getHeaderView(0).getLayoutParams().width;
         ivheight = navView.getHeaderView(0).getLayoutParams().height;
 
-        account = new GSignIn(this);
+        account = new GSignIn(this, R.string.server_client_id);
         vm.init(this);
 
         //Soluzione al problema visivo del menù sbagliato quando la connessione ad Internet non è presente

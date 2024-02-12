@@ -23,4 +23,9 @@ public class AuthObject {
     public String getUserId() {
         return userId;
     }
+
+    @Nullable
+    public String getCsrfToken() {
+        return csrfToken;
+    }
 }

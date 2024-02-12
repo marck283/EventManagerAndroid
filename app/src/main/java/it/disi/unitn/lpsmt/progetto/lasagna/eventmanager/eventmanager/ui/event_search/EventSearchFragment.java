@@ -20,6 +20,8 @@ import android.widget.EditText;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_list.EventListViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_management.EventManagementViewModel;
@@ -50,6 +52,10 @@ public class EventSearchFragment extends DialogFragment {
         return root;
     }
 
+    private String replaceCRLF(@NotNull String val) {
+        return val.replace("\r", "").replace("\n", "");
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -74,12 +80,12 @@ public class EventSearchFragment extends DialogFragment {
             t2 = root.findViewById(R.id.categoryValue), t3 = root.findViewById(R.id.durationValue),
             t4 = root.findViewById(R.id.addressValue), t5 = root.findViewById(R.id.cityValue);
             if(parent.equals("EventListFragment")) {
-                elvm.setEvName(t1.getText().toString());
-                elvm.setOrgName(t.getText().toString());
-                elvm.setCategory(t2.getText().toString());
-                elvm.setDuration(t3.getText().toString());
-                elvm.setAddress(t4.getText().toString());
-                elvm.setCity(t5.getText().toString());
+                elvm.setEvName(replaceCRLF(t1.getText().toString()));
+                elvm.setOrgName(replaceCRLF(t.getText().toString()));
+                elvm.setCategory(replaceCRLF(t2.getText().toString()));
+                elvm.setDuration(replaceCRLF(t3.getText().toString()));
+                elvm.setAddress(replaceCRLF(t4.getText().toString()));
+                elvm.setCity(replaceCRLF(t5.getText().toString()));
             } else {
                 emvm.setEvName(t1.getText().toString());
             }

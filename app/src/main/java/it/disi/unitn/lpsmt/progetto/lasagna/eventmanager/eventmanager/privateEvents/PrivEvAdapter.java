@@ -11,20 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class PrivEvAdapter extends EventAdapter {
     private final String day;
 
-    public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList,
+    public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback,
+                         List<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> evList,
                          String day) {
         super(diffCallback, evList);
         this.day = day;
     }
 
-    protected PrivEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+    protected PrivEvAdapter(@NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback) {
         super(diffCallback);
         this.day = "";
     }

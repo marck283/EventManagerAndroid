@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.post_review;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,9 +42,12 @@ public class PostReview extends ServerOperation {
 
     private final ActivityResultLauncher<Intent> loginLauncher;
 
+    private final Class<? extends Activity> c;
+
     public PostReview(@NonNull String userId, @NonNull String eventId, @NonNull String titolo,
                       @NonNull String motivazione, float valutazione, @NonNull Fragment f,
-                      @NonNull View v, @NotNull ActivityResultLauncher<Intent> loginLauncher) {
+                      @NonNull View v, @NotNull ActivityResultLauncher<Intent> loginLauncher,
+                      @NotNull Class<? extends Activity> c) {
         request = getNetworkRequest();
         this.userId = userId;
         this.eventId = eventId;
@@ -53,6 +57,7 @@ public class PostReview extends ServerOperation {
         this.f = f;
         this.v = v;
         this.loginLauncher = loginLauncher;
+        this.c = c;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message,
@@ -93,7 +98,7 @@ public class PostReview extends ServerOperation {
                                 Navigation.findNavController(v).navigate(R.id.action_reviewWriting_to_nav_user_calendar);
                             });
                     case 401 -> {
-                        Intent loginIntent = new Intent(f.requireContext(), LoginActivity.class);
+                        Intent loginIntent = new Intent(f.requireContext(), c);
                         loginLauncher.launch(loginIntent);
                     }
                     case 400 -> // Codice di ritorno utilizzato solo per il debug.

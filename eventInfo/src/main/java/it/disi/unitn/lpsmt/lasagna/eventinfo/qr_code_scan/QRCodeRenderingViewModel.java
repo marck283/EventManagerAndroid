@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.ticket.TicketInfo;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.ticket.TicketInfo;
 
 public class QRCodeRenderingViewModel extends ViewModel {
     public void getBarcode(@NonNull Fragment f, @NonNull View v, @NonNull String eventId, @NonNull String userId, @NonNull String data, @NonNull String ora) {

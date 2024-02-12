@@ -7,7 +7,7 @@ import androidx.room.Query;
 
 import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.entities.User;
+import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
 
 @Dao
 public interface UserDAO {

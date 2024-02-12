@@ -9,4 +9,5 @@
     <string name="duration">Duration: %1$s h, %2$s m and %3$s s</string>
     <string name="event_address">Address: %1$s</string>
     <string name="show_ticket">Show ticket</string>
+    <string name="qr_code">QR Code</string>
 </resources>

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,9 +31,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.GeocoderExt;
+import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsFragment;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.spinnerImplementation.SpinnerArrayAdapter;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,13 +40,16 @@ import okhttp3.Response;
 
 public class EventInfoCallback implements Callback {
 
-    private final EventDetailsFragment f;
+    private final Fragment f;
 
     private final View v;
 
-    public EventInfoCallback(@NotNull EventDetailsFragment f, @NotNull View v) {
+    private final int registrationsClosed;
+
+    public EventInfoCallback(@NotNull Fragment f, @NotNull View v, @StringRes int regClosed) {
         this.f = f;
         this.v = v;
+        registrationsClosed = regClosed;
     }
 
     @Override
@@ -82,7 +86,7 @@ public class EventInfoCallback implements Callback {
                     String[] durataArr = ei1.getDurata().split(":");
                     durata.setText(f.getString(R.string.duration, durataArr[0], durataArr[1], durataArr[2]));
 
-                    ((EventDetailsFragment)f).setEventId(ei1.getId());
+                    f.setEventId(ei1.getId());
 
                     ArrayList<CharSequence> dateArr = new ArrayList<>();
                     dateArr.add("---");
@@ -158,7 +162,7 @@ public class EventInfoCallback implements Callback {
                                                             sdformat.format(d).compareTo(sdformat.format(toCheck)) > 0)
                                                             || le.getPostiRimanenti() == 0) {
                                                         b.setEnabled(false);
-                                                        b.setText(f.getString(R.string.registrations_closed));
+                                                        b.setText(f.getString(registrationsClosed));
                                                     } else {
                                                         b.setEnabled(true);
                                                     }

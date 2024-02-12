@@ -5,40 +5,53 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.reviews.ReviewsFragment;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
     private final View itemView;
 
-    private final ReviewsFragment f;
+    private final Fragment f;
 
-    public ReviewViewHolder(@NonNull ReviewsFragment f, @NonNull View itemView) {
+    private final int username, userRating, userPicture, userName, userEval, showAll, revFragToFullRevFrag;
+
+    public ReviewViewHolder(@NonNull Fragment f, @NonNull View itemView, @IdRes int username,
+                            @IdRes int userRating, @IdRes int userPicture, @StringRes int userName,
+                            @StringRes int userEval, @IdRes int showAll, @NavigationRes int revFragToFullRevFrag) {
         super(itemView);
         this.f = f;
         this.itemView = itemView;
+        this.username = username;
+        this.userName = userName;
+        this.userRating = userRating;
+        this.userEval = userEval;
+        this.userPicture = userPicture;
+        this.showAll = showAll;
+        this.revFragToFullRevFrag = revFragToFullRevFrag;
     }
 
     public void bindData(@NonNull Review review) {
-        TextView userName = itemView.findViewById(R.id.userName);
-        TextView rating = itemView.findViewById(R.id.userRating);
-        ImageView userPic = itemView.findViewById(R.id.userPicture);
+        TextView userName1 = itemView.findViewById(username);
+        TextView rating = itemView.findViewById(userRating);
+        ImageView userPic = itemView.findViewById(userPicture);
 
-        userName.setText(f.getString(R.string.user_name, review.userName()));
-        rating.setText(f.getString(R.string.evaluation, review.rating()));
+        userName1.setText(f.getString(userName, review.userName()));
+        rating.setText(f.getString(userEval, review.rating()));
 
-        ListenerButton showAll = itemView.findViewById(R.id.showAll);
-        showAll.setOnClickListener(c -> {
+        ListenerButton showAll1 = itemView.findViewById(showAll);
+        showAll1.setOnClickListener(c -> {
             Bundle b = new Bundle();
             b.putSerializable("review", review);
-            Navigation.findNavController(itemView).navigate(R.id.action_reviewsFragment_to_fullReviewFragment, b);
+            Navigation.findNavController(itemView).navigate(revFragToFullRevFrag, b);
         });
 
         Glide.with(userPic.getContext()).load(review.userPic()).circleCrop().into(userPic);

@@ -10,7 +10,6 @@ import androidx.navigation.Navigation;
 import com.google.android.material.button.MaterialButton;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class OrgEvViewHolder extends EventHolder {
@@ -38,7 +37,7 @@ public class OrgEvViewHolder extends EventHolder {
     }
 
     @Override
-    public void bindData(Event dataModel) {
+    public void bindData(it.disi.unitn.lpsmt.lasagna.localdatabase.Event dataModel) {
         try {
             t.setText(dataModel.getString("name"));
             if(!t.hasOnClickListeners()) {

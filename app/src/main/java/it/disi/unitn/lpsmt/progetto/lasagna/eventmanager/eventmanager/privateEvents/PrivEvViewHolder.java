@@ -26,7 +26,7 @@ public class PrivEvViewHolder extends EventHolder {
         this.day = day;
     }
 
-    public void bindData(Event dataModel) {
+    public void bindData(it.disi.unitn.lpsmt.lasagna.localdatabase.Event dataModel) {
         try {
             t.setText(dataModel.getString("name"));
             if(!t.hasOnClickListeners()) {

@@ -1,16 +1,18 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.qr_code_scan;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModelProvider;
-
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
 
 public class QRCodeRenderingFragment extends DialogFragment {
 

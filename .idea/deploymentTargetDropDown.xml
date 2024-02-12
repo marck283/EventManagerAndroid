@@ -1,17 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\marve\.android\avd\Pixel_4_API_24.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-02-17T23:47:25.544228100Z" />
+    <value>
+      <entry key="app">
+        <State />
+      </entry>
+      <entry key="app.navigationsvm">
+        <State />
+      </entry>
+      <entry key="app.userinfo">
+        <State />
+      </entry>
+      <entry key="futuretaskext">
+        <State />
+      </entry>
+      <entry key="geocoder">
+        <State />
+      </entry>
+      <entry key="navigationsvm">
+        <State />
+      </entry>
+      <entry key="qrcodescan">
+        <State />
+      </entry>
+      <entry key="ui_extra">
+        <State />
+      </entry>
+      <entry key="userinfo">
+        <State />
+      </entry>
+    </value>
   </component>
 </project>

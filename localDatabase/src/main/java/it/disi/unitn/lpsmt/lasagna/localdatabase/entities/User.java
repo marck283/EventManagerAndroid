@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.localDatabase.converters.ListConverter;
+import it.disi.unitn.lpsmt.lasagna.localdatabase.converters.ListConverter;
 
 @Entity(tableName = "Users")
 public class User implements Serializable {

@@ -52,7 +52,7 @@ public class EventCreationActivity extends AppCompatActivity implements EventCre
 
         //Controllo di che siano stati garantiti i permessi necessari a registrare la voce dell'utente
         //Se i permessi non sono garantiti, allora chiamo checkPermission().
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             checkPermission();
         }
 

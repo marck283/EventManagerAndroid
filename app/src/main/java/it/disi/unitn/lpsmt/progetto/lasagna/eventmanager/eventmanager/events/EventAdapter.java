@@ -12,15 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class EventAdapter extends ListAdapter<Event, EventHolder> {
-    private final List<Event> evList;
+public abstract class EventAdapter extends ListAdapter<it.disi.unitn.lpsmt.lasagna.localdatabase.Event, EventHolder> {
+    private final List<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> evList;
 
-    public EventAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> evList) {
+    public EventAdapter(@NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback,
+                        List<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> evList) {
         super(diffCallback);
         this.evList = evList;
     }
 
-    protected EventAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+    protected EventAdapter(@NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback) {
         super(diffCallback);
         evList = new ArrayList<>();
     }
@@ -75,7 +76,7 @@ public abstract class EventAdapter extends ListAdapter<Event, EventHolder> {
 
     @Override
     @NonNull
-    public List<Event> getCurrentList() {
+    public List<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> getCurrentList() {
         return evList;
     }
 

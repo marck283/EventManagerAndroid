@@ -4,19 +4,20 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.View;
 
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
+import it.disi.lasagna.navigationsvm.NavigationSharedViewModel;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.NavigationSharedViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsViewModel;
 
 public class AnnullaEventoOnClickListener implements View.OnClickListener {
 
-    private final EventDetailsFragment f;
+    private final Fragment f;
 
     private final NavigationSharedViewModel nvm;
 
@@ -26,9 +27,12 @@ public class AnnullaEventoOnClickListener implements View.OnClickListener {
 
     private final String eventId;
 
-    public AnnullaEventoOnClickListener(@NotNull EventDetailsFragment f, @NotNull NavigationSharedViewModel nvm,
+    private final int noconn, noconnmsg;
+
+    public AnnullaEventoOnClickListener(@NotNull Fragment f, @NotNull NavigationSharedViewModel nvm,
                                         @NotNull NetworkCallback callback, @NotNull EventDetailsViewModel vm,
-                                        @NotNull String eventId) {
+                                        @NotNull String eventId, @StringRes int noconn,
+                                        @StringRes int noconnmsg) {
         if(eventId.equals("")) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' " +
                     "essere una stringa vuota.");
@@ -39,14 +43,16 @@ public class AnnullaEventoOnClickListener implements View.OnClickListener {
         this.callback = callback;
         mViewModel = vm;
         this.eventId = eventId;
+        this.noconn = noconn;
+        this.noconnmsg = noconnmsg;
     }
 
     private void setNoConnectionDialog() {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
             AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(R.string.no_connection);
-            dialog.setMessage(f.getString(R.string.no_connection_message));
+            dialog.setTitle(noconn);
+            dialog.setMessage(f.getString(noconn));
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
             dialog.show();
         }
@@ -62,7 +68,8 @@ public class AnnullaEventoOnClickListener implements View.OnClickListener {
             }
             //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
             //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-            mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, f);
+            mViewModel.deleteEvent(Objects.requireNonNull(nvm.getToken().getValue()), eventId, f,
+                    noconn, noconnmsg);
         }
     }
 }

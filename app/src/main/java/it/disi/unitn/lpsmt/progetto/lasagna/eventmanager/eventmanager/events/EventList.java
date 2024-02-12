@@ -14,7 +14,7 @@ import java.util.List;
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 
 public class EventList {
-    final List<Event> pubEvList;
+    final List<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> pubEvList;
 
     public EventList() {
         pubEvList = new ArrayList<>();
@@ -43,7 +43,7 @@ public class EventList {
         for(JsonElement e: arr) {
             JsonObject eo = e.getAsJsonObject();
 
-            Event pe = new Event(fromJson(gs1, eo, "id"),
+            it.disi.unitn.lpsmt.lasagna.localdatabase.Event pe = new it.disi.unitn.lpsmt.lasagna.localdatabase.Event(fromJson(gs1, eo, "id"),
                     fromJson(gs1, eo, "idevent"),
                     fromJson(gs1, eo, "self"),
                     fromJson(gs1, eo, "name"),
@@ -56,7 +56,7 @@ public class EventList {
         return this;
     }
 
-    public List<Event> getList() {
+    public List<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> getList() {
         return pubEvList;
     }
 }

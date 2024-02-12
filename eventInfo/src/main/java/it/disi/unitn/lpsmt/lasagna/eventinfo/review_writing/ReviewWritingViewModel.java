@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.review_writing;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
@@ -10,14 +11,15 @@ import androidx.lifecycle.ViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.eventInfo.registeredEvent.post_review.PostReview;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.post_review.PostReview;
 
 public class ReviewWritingViewModel extends ViewModel {
     public void postReview(@NonNull String userId, @NonNull String eventId, float rating,
                            @NonNull String title, @NonNull String description, @NonNull Fragment f,
-                           @NonNull View v, @NotNull ActivityResultLauncher<Intent> loginLauncher) {
+                           @NonNull View v, @NotNull ActivityResultLauncher<Intent> loginLauncher,
+                           @NotNull Class<? extends Activity> c) {
         PostReview review = new PostReview(userId, eventId, title, description, rating, f, v,
-                loginLauncher);
+                loginLauncher, c);
         review.start();
     }
 }

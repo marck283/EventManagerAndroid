@@ -17,6 +17,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.Task;
 
 import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
+import it.disi.unitn.lpsmt.lasagna.login.FacebookLogin;
+import it.disi.unitn.lpsmt.lasagna.login.GoogleLogin;
 import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallbackInterface;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -35,26 +37,12 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationIn
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        gLogin = new GoogleLogin(this);
+        gLogin = new GoogleLogin(this, R.id.sign_in_button, R.string.no_connection, R.string.no_connection_message,
+                R.string.server_client_id);
 
-        FacebookLogin fbLogin = new FacebookLogin(this);
+        FacebookLogin fbLogin = new FacebookLogin(this, R.id.login_button, R.string.facebook_login_error_title,
+                R.string.facebook_login_error, R.string.facebook_login_error_title, R.string.facebook_login_error);
         fbLogin.registerCallback();
-    }
-
-    @NonNull
-    public Intent setUpIntent(@NonNull String which, @Nullable AccessToken accessToken) {
-        Intent intent = new Intent();
-        intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
-        if(which.equals("google")) {
-            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount",
-                    gLogin.getSignIn().getAccount());
-        } else {
-            if(accessToken != null) {
-                Log.i("profileNull", accessToken.getToken());
-            }
-            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", accessToken);
-        }
-        return intent;
     }
 
     @Override

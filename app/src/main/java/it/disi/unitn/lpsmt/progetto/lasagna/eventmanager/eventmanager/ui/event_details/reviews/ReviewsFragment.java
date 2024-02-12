@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import org.jetbrains.annotations.Contract;
 
+import it.disi.unitn.lpsmt.lasagna.eventinfo.reviews.ReviewsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class ReviewsFragment extends Fragment {
@@ -50,7 +51,10 @@ public class ReviewsFragment extends Fragment {
 
     public void onStart() {
         super.onStart();
-        mViewModel1.getReviews(this, root.findViewById(R.id.frameLayout5), id);
+        mViewModel1.getReviews(this, root.findViewById(R.id.frameLayout5), id, R.id.recyclerView,
+                R.string.no_reviews, R.string.no_reviews_message, R.layout.review_small_layout,
+                R.id.userName, R.id.userRating, R.id.userPicture, R.string.user_name, R.string.evaluation,
+                R.id.showAll, R.id.action_reviewsFragment_to_fullReviewFragment);
     }
 
 }

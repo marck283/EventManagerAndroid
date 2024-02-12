@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import it.disi.unitn.lpsmt.lasagna.eventinfo.qr_code_scan.QRCodeRenderingViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class QRCodeRenderingFragment extends DialogFragment {

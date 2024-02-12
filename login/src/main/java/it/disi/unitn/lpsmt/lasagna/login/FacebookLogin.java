@@ -7,7 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -27,19 +30,23 @@ import java.util.List;
 
 import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class FacebookLogin {
     private final CallbackManager callbackManager;
     private final LoginButton loginButton;
     private final LoginManager loginManager;
 
-    private final LoginActivity a;
+    private final Activity a;
 
-    public FacebookLogin(@NonNull LoginActivity a) {
+    private final int fbloginerrortitle, fbloginerrormsg;
+
+    public FacebookLogin(@NonNull Activity a, @IdRes int loginbid, @StringRes int noconn,
+                         @StringRes int noconnmsgshort, @StringRes int fberrortitle, @StringRes int fberrormsg) {
         this.a = a;
+        fbloginerrortitle = fberrortitle;
+        fbloginerrormsg = fberrormsg;
         callbackManager = CallbackManager.Factory.create();
-        loginButton = a.findViewById(R.id.login_button);
+        loginButton = a.findViewById(loginbid);
         loginManager = LoginManager.getInstance();
 
         LoginBehavior behavior;
@@ -58,8 +65,8 @@ public class FacebookLogin {
                             List.of("public_profile", "email"));
                 } else {
                     AlertDialog dialog = new AlertDialog.Builder(a).create();
-                    dialog.setTitle(R.string.no_connection);
-                    dialog.setMessage(a.getString(R.string.no_connection_message_short));
+                    dialog.setTitle(noconn);
+                    dialog.setMessage(a.getString(noconnmsgshort));
                     dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                     dialog.show();
                 }
@@ -67,12 +74,23 @@ public class FacebookLogin {
         }
     }
 
+    @NonNull
+    public Intent setUpIntent(@Nullable AccessToken accessToken) {
+        Intent intent = new Intent();
+        intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
+        if(accessToken != null) {
+            Log.i("profileNull", accessToken.getToken());
+        }
+        intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", accessToken);
+        return intent;
+    }
+
     public void registerCallback() {
         loginButton.registerCallback(callbackManager, new FacebookCallback<>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken accessToken = loginResult.getAccessToken();
-                Intent i = a.setUpIntent("facebook", accessToken);
+                Intent i = setUpIntent(accessToken);
 
                 Bundle parameters = new Bundle();
                 parameters.putString("fields", "id,name,picture,email");
@@ -104,8 +122,8 @@ public class FacebookLogin {
             @Override
             public void onError(@NonNull FacebookException e) {
                 AlertDialog dialog = new AlertDialog.Builder(a.getApplicationContext()).create();
-                dialog.setTitle(R.string.facebook_login_error_title);
-                dialog.setMessage(a.getString(R.string.facebook_login_error));
+                dialog.setTitle(fbloginerrortitle);
+                dialog.setMessage(a.getString(fbloginerrormsg));
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
                     dialog1.dismiss();
                     a.setResult(Activity.RESULT_CANCELED);

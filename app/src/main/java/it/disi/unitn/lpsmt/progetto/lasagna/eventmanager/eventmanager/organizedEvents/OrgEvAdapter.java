@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
+import it.disi.unitn.lpsmt.lasagna.localdatabase.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 

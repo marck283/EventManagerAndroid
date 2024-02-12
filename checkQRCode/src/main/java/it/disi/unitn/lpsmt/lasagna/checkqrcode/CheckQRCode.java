@@ -4,6 +4,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import java.io.InvalidObjectException;
@@ -21,8 +22,16 @@ public class CheckQRCode extends ServerOperation {
 
     private final Fragment f;
 
+    private final int validQRCT, validQRCMsg, invalid_qr_code, invalid_qr_code_message,
+            malformed_request, malformed_request_message, no_session_title, no_session_message;
+
     public CheckQRCode(@NonNull String userJwt, @NonNull String qrCode, @NonNull String eventid,
-                       @NonNull String day, @NonNull String hour, @NonNull Fragment f) {
+                       @NonNull String day, @NonNull String hour, @NonNull Fragment f,
+                       @StringRes int validQRCT, @StringRes int validQRCMsg,
+                       @StringRes int invalid_qr_code,
+                       @StringRes int invalid_qr_code_message, @StringRes int malformed_request,
+                       @StringRes int malformed_request_message, @StringRes int no_session_title,
+                       @StringRes int no_session_message) {
         this.userJwt = userJwt;
         this.qrCode = qrCode;
         request = getNetworkRequest();
@@ -30,6 +39,14 @@ public class CheckQRCode extends ServerOperation {
         this.eventid = eventid;
         this.day = day;
         this.hour = hour;
+        this.validQRCT = validQRCT;
+        this.validQRCMsg = validQRCMsg;
+        this.invalid_qr_code = invalid_qr_code;
+        this.invalid_qr_code_message = invalid_qr_code_message;
+        this.malformed_request = malformed_request;
+        this.malformed_request_message = malformed_request_message;
+        this.no_session_title = no_session_title;
+        this.no_session_message = no_session_message;
     }
 
     public void run() {
@@ -42,7 +59,9 @@ public class CheckQRCode extends ServerOperation {
                 getBaseUrl() + "/api/v2/QRCodeCheck/" + qrCode);
         Log.i("code", qrCode);
         try {
-            request.enqueue(req, new QRCodeCallback(f));
+            request.enqueue(req, new QRCodeCallback(f, validQRCT, validQRCMsg, invalid_qr_code,
+                    invalid_qr_code_message, malformed_request, malformed_request_message,
+                    no_session_title, no_session_message));
         } catch (InvalidObjectException e) {
             e.printStackTrace();
         }

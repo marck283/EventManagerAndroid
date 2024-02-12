@@ -7,26 +7,29 @@ import android.content.Intent;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsFragment;
-import it.disi.unitn.lpsmt.lasagna.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class UserEventRegistrationCallback implements Callback {
 
-    private final EventDetailsFragment f;
+    private final Fragment f;
 
     private final ActivityResultLauncher<Intent> launcher;
 
-    public UserEventRegistrationCallback(@NotNull EventDetailsFragment f, @NotNull ActivityResultLauncher<Intent> launcher) {
+    private final Class<? extends Activity> c;
+
+    public UserEventRegistrationCallback(@NotNull Fragment f, @NotNull ActivityResultLauncher<Intent> launcher,
+                                         @NotNull Class<? extends Activity> c) {
         this.f = f;
         this.launcher = launcher;
+        this.c = c;
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
@@ -61,7 +64,7 @@ public class UserEventRegistrationCallback implements Callback {
             case 401 -> {
                 Activity activity = f.getActivity();
                 if (activity != null && f.isAdded()) {
-                    Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
+                    Intent loginIntent = new Intent(f.requireActivity(), c);
                     launcher.launch(loginIntent);
                 } else {
                     setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);

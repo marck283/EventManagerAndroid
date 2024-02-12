@@ -5,39 +5,43 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
+import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gSignIn.GSignIn;
 
 public class GoogleLogin {
     private final GSignIn signIn;
 
-    private final LoginActivity a;
+    private final Activity a;
 
-    public GoogleLogin(@NonNull LoginActivity a) {
+    public GoogleLogin(@NonNull Activity a, @IdRes int signinbid, @StringRes int noconn, @StringRes int noconnmsg,
+                       @StringRes int clientID) {
         this.a = a;
-        signIn = new GSignIn(a);
-        SignInButton signInButton = a.findViewById(R.id.sign_in_button);
+        signIn = new GSignIn(a, clientID);
+        SignInButton signInButton = a.findViewById(signinbid);
         if(!signInButton.hasOnClickListeners()) {
             signInButton.setOnClickListener(v -> {
                 //Sign in the user when the button is clicked
                 NetworkCallback callback = new NetworkCallback(a);
                 if(callback.isOnline(a)) {
-                    if(v.getId() == R.id.sign_in_button) {
+                    if(v.getId() == signinbid) {
                         signIn();
                     }
                 } else {
                     AlertDialog dialog = new AlertDialog.Builder(a).create();
-                    dialog.setTitle(R.string.no_connection);
-                    dialog.setMessage(a.getString(R.string.no_connection_message_short));
+                    dialog.setTitle(noconn);
+                    dialog.setMessage(a.getString(noconnmsg));
                     dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
                     dialog.show();
                 }
@@ -53,13 +57,29 @@ public class GoogleLogin {
         return signIn;
     }
 
+    @NonNull
+    public Intent setUpIntent(@NonNull String which, @Nullable AccessToken accessToken) {
+        Intent intent = new Intent();
+        intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
+        if(which.equals("google")) {
+            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount",
+                    getSignIn().getAccount());
+        } else {
+            if(accessToken != null) {
+                Log.i("profileNull", accessToken.getToken());
+            }
+            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", accessToken);
+        }
+        return intent;
+    }
+
     public void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
         try {
             signIn.getAccountFromCompletedTask(completedTask);
 
             // Signed in successfully, update the database and return to caller with the results
 
-            Intent intent = a.setUpIntent("google", null);
+            Intent intent = setUpIntent("google", null);
             CsrfToken token = new CsrfToken(a, signIn.getAccount().getIdToken(), null, "google", intent);
             signIn.setAccount(completedTask.getResult());
             token.start();

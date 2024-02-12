@@ -4,10 +4,8 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="jbr-17" />
+        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -15,13 +13,20 @@
             <option value="$PROJECT_DIR$/checkQRCode" />
             <option value="$PROJECT_DIR$/eventInfo" />
             <option value="$PROJECT_DIR$/eventcreation" />
+            <option value="$PROJECT_DIR$/futuretaskext" />
+            <option value="$PROJECT_DIR$/geocoder" />
             <option value="$PROJECT_DIR$/localDatabase" />
             <option value="$PROJECT_DIR$/login" />
+            <option value="$PROJECT_DIR$/navigationsvm" />
             <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/qrcodescan" />
             <option value="$PROJECT_DIR$/sharedPrefs" />
+            <option value="$PROJECT_DIR$/ui_extra" />
             <option value="$PROJECT_DIR$/user_event_registration" />
+            <option value="$PROJECT_DIR$/userinfo" />
           </set>
         </option>
+        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

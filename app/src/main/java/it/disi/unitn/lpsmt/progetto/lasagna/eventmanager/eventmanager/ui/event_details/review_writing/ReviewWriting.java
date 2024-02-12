@@ -23,9 +23,11 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.Contract;
 
+import it.disi.unitn.lpsmt.lasagna.eventinfo.review_writing.ReviewWritingViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class ReviewWriting extends Fragment {
 
@@ -57,7 +59,7 @@ public class ReviewWriting extends Fragment {
                     if(result.getResultCode() == Activity.RESULT_OK) {
                         userJwt = prefs.getString("accessToken");
                         mViewModel.postReview(userJwt, eventId, rating, title, description, this,
-                                v, loginLauncher);
+                                v, loginLauncher, LoginActivity.class);
                     }
                 });
     }
@@ -105,7 +107,7 @@ public class ReviewWriting extends Fragment {
                     rating = ratingBar.getRating();
                     if(rating >= 0.5) {
                         mViewModel.postReview(userJwt, eventId, rating, title, description, this,
-                                v, loginLauncher);
+                                v, loginLauncher, LoginActivity.class);
                     } else {
                         //Imposta AlertDialog per valutazione non consentita
                         setAlertDialog(R.string.wrong_rating, R.string.wrong_rating_message);

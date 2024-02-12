@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import java.util.List;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
@@ -22,12 +21,13 @@ public class PubEvAdapter extends EventAdapter {
      * Costruisce un oggetto PubEvAdapter con i parametri forniti.
      * @param pubL La lista di eventi pubblici ottenuta da remoto
      */
-    public PubEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<Event> diffCallback, List<Event> pubL) {
+    public PubEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback,
+                        List<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> pubL) {
         super(diffCallback, pubL);
         this.f = f;
     }
 
-    public PubEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+    public PubEvAdapter(@NonNull Fragment f, @NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback) {
         super(diffCallback);
         this.f = f;
     }
