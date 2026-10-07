@@ -1,6 +1,7 @@
 package it.disi.unitn.lpsmt.lasagna.localdatabase.daos;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -24,5 +25,5 @@ public interface UserDAO {
     void updateUserProfile(@NonNull String id, @NonNull String nome, @NonNull String email,
                            @NonNull String tel, @NonNull String profilePic,
                            @NonNull List<String> eventiCreati, @NonNull List<String> eventiIscritto,
-                           @NonNull Integer numEvOrg, @NonNull Double valutazioneMedia);
+                           @NonNull Integer numEvOrg, @Nullable Double valutazioneMedia);
 }

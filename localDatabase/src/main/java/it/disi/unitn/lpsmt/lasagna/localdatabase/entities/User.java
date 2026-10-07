@@ -7,8 +7,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,8 +133,11 @@ public class User implements Serializable {
      * Ricalcola la valutazione media di un utente, incrementandola tenendo conto del valore passato come parametro.
      * @param val Il valore di cui tenere conto per ricalcolare la valutazione media dell'utente.
      */
-    public void setValutazioneMedia(@NotNull Double val) {
+    public void setValutazioneMedia(@Nullable Double val) {
         double temp = valutazioneMedia*numEvOrg;
+        if (val == null) {
+            val = 0.0;
+        }
         valutazioneMedia = (temp + val) / numEvOrg;
     }
 }
