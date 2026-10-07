@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.FragmentFirstBinding;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.spinnerImplementation.SpinnerArrayAdapter;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerArrayAdapter;
 
 public class FirstFragment extends Fragment {
 
@@ -55,7 +55,7 @@ public class FirstFragment extends Fragment {
         });
         if(!binding.button5.hasOnClickListeners()) {
             binding.button5.setOnClickListener(c -> {
-                if (binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().equals("")) {
+                if (binding.nomeAtt.getEditText() != null && !binding.nomeAtt.getEditText().getText().toString().isEmpty()) {
                     if (binding.planetsSpinner.getEditText() != null && !binding.planetsSpinner.getEditText()
                             .getText().toString().equals("---")) {
                         evm.setNomeAtt(binding.nomeAtt.getEditText().getText().toString());
@@ -99,9 +99,9 @@ public class FirstFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (category.getText() != null && !category.getText()
-                        .toString().equals("") && !category.getText()
-                        .toString().equals("---")) {
+                if (category.getText() != null &&
+                        !category.getText().toString().isEmpty() &&
+                        !category.getText().toString().equals("---")) {
                     evm.setCategoria(category.getText().toString());
                 }
             }

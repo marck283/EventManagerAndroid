@@ -24,10 +24,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.Contract;
 
+import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
 public class EventRestrictionsFragment extends Fragment {
@@ -137,7 +137,7 @@ public class EventRestrictionsFragment extends Fragment {
                                 @StringRes int title, @StringRes int message) {
         try {
             if(eta.isChecked()) {
-                if(etaEdit.getText() == null || etaEdit.getText().toString().equals("")) {
+                if(etaEdit.getText() == null || etaEdit.getText().toString().isEmpty()) {
                     setAlertDialog(title, message);
                 } else {
                     if(which.equals("min")) {

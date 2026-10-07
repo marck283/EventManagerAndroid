@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Contract;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.review_writing.ReviewWritingViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class ReviewWriting extends Fragment {
@@ -100,9 +100,9 @@ public class ReviewWriting extends Fragment {
             TextInputLayout titleLayout = v.findViewById(R.id.title), descriptionLayout = v.findViewById(R.id.description);
             RatingBar ratingBar = v.findViewById(R.id.ratingBar);
 
-            if(titleLayout.getEditText() != null && !titleLayout.getEditText().getText().toString().equals("")) {
+            if(titleLayout.getEditText() != null && !titleLayout.getEditText().getText().toString().isEmpty()) {
                 title = titleLayout.getEditText().getText().toString();
-                if(descriptionLayout.getEditText() != null && !descriptionLayout.getEditText().getText().toString().equals("")) {
+                if(descriptionLayout.getEditText() != null && !descriptionLayout.getEditText().getText().toString().isEmpty()) {
                     description = descriptionLayout.getEditText().getText().toString();
                     rating = ratingBar.getRating();
                     if(rating >= 0.5) {

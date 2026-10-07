@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class ViewHolder extends EventHolder {
@@ -32,7 +31,7 @@ public class ViewHolder extends EventHolder {
         this.itemView = itemView;
     }
 
-    public void bindData(Event dataModel) {
+    public void bindData(it.disi.unitn.lpsmt.lasagna.localdatabase.Event dataModel) {
         try {
             imgView.setImageBitmap(dataModel.decodeBase64());
             evName.setText(dataModel.getString("name"));

@@ -33,7 +33,7 @@ public class FullReviewFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         Bundle b = getArguments();
         if(b != null) {
-            review = (Review)b.getSerializable("review");
+            review = b.getSerializable("review", Review.class);
         }
 
         return inflater.inflate(R.layout.fragment_full_review, container, false);

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -58,7 +58,7 @@ public class TicketInfoCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if(response.body() != null && response.isSuccessful()) {
+        if(response.isSuccessful()) {
             Gson gson = new GsonBuilder().create();
             Ticket ticket = Ticket.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
 

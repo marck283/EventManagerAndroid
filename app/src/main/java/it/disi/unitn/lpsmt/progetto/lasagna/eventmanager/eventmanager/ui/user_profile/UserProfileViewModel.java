@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
 import it.disi.unitn.lasagna.eventmanager.userinfo.OnlineUserInfo;
+import it.disi.unitn.lasagna.eventmanager.userinfo.UserProfileCallback;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
@@ -21,7 +22,7 @@ public class UserProfileViewModel extends ViewModel {
         if(activity1 != null && f.isAdded()) {
             NetworkCallback nc = new NetworkCallback(f.requireActivity());
             if(nc.isOnline(f.requireActivity())) {
-                OnlineUserInfo onlineUserInfo = new OnlineUserInfo(accessToken, l, f);
+                OnlineUserInfo onlineUserInfo = new OnlineUserInfo(accessToken, new UserProfileCallback(f, l));
                 onlineUserInfo.start();
             } else {
                 //Ottieni i dati dell'utente dal database, se disponibili

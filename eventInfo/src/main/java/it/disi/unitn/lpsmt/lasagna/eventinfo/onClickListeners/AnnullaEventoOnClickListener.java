@@ -33,7 +33,7 @@ public class AnnullaEventoOnClickListener implements View.OnClickListener {
                                         @NotNull NetworkCallback callback, @NotNull EventDetailsViewModel vm,
                                         @NotNull String eventId, @StringRes int noconn,
                                         @StringRes int noconnmsg) {
-        if(eventId.equals("")) {
+        if(eventId.isEmpty()) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' " +
                     "essere una stringa vuota.");
         }

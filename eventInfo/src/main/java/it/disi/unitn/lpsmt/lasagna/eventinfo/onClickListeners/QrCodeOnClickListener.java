@@ -27,9 +27,9 @@ public class QrCodeOnClickListener implements View.OnClickListener {
     public void onClick(View view) {
         EditText editText = spinner.getEditText(), editText1 = spinner2.getEditText();
         if (editText != null &&
-                !editText.getText().toString().equals("") &&
+                !editText.getText().toString().isEmpty() &&
                 !editText.getText().toString().equals("---") &&
-                editText1 != null && !editText.getText().toString().equals("") &&
+                editText1 != null && !editText.getText().toString().isEmpty() &&
                 !editText.getText().toString().equals("---")) {
             launcher.launch(new ScanOptions());
         }

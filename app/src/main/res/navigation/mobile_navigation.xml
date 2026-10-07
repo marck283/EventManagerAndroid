@@ -47,6 +47,7 @@
         <action
             android:id="@+id/action_nav_user_calendar_to_nav_event_list2"
             app:destination="@id/nav_event_list" />
+        <deepLink app:uri="app://eventmanager/nav_user_calendar" />
     </fragment>
 
     <fragment
@@ -95,7 +96,7 @@
     </fragment>
     <fragment
         android:id="@+id/eventDetailsFragment"
-        android:name="it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsFragment"
+        android:name="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.EventDetailsFragment"
         android:label="@string/event_details_fragment">
         <action
             android:id="@+id/action_eventDetailsFragment_to_reviewsFragment"

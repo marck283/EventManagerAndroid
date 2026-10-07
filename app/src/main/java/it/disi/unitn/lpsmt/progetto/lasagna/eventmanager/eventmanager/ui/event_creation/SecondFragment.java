@@ -18,7 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 
 public class SecondFragment extends Fragment {
 

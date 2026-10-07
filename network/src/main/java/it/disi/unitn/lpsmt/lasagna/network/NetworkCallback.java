@@ -1,14 +1,11 @@
 package it.disi.unitn.lpsmt.lasagna.network;
 
-import static android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET;
-
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
-import android.net.NetworkInfo;
 import android.net.NetworkRequest;
 import android.util.Log;
 
@@ -22,7 +19,7 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
     public NetworkCallback(@NonNull Activity a) {
         this.a = a;
         req = new NetworkRequest.Builder()
-                .addCapability(NET_CAPABILITY_INTERNET)
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
                 .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
                 .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
                 .build();
@@ -61,14 +58,25 @@ public class NetworkCallback extends ConnectivityManager.NetworkCallback {
     }
 
     public boolean isOnline(Context ctx) {
-        if (ctx == null)
+        if (ctx == null) {
             return false;
-
+        }
+        
         ConnectivityManager cm =
                 (ConnectivityManager) ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (cm == null) {
+            return false;
+        }
 
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+        Network activeNetwork = cm.getActiveNetwork();
+        if (activeNetwork == null) {
+            return false;
+        }
+        NetworkCapabilities capabilities = cm.getNetworkCapabilities(activeNetwork);
+
+        return capabilities != null &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
     }
 
     public void registerNetworkCallback() {

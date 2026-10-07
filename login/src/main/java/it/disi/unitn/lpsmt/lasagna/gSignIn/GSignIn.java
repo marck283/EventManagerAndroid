@@ -1,51 +1,142 @@
 package it.disi.unitn.lpsmt.lasagna.gSignIn;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.MutableContextWrapper;
+import android.net.Uri;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.credentials.Credential;
+import androidx.credentials.CredentialManager;
+import androidx.credentials.CredentialManagerCallback;
+import androidx.credentials.CustomCredential;
+import androidx.credentials.GetCredentialRequest;
+import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.exceptions.GetCredentialException;
+import androidx.credentials.exceptions.NoCredentialException;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
+
+import java.security.SecureRandom;
 
 public class GSignIn {
-    private GoogleSignInAccount account;
-    private final GoogleSignInClient gsi;
+
+    private final CredentialManager credentialManager;
+    private final GetCredentialRequest request;
+    private final MutableContextWrapper mcwrapper;
+
+    private String idToken;
+
+    private final String serverClientId;
 
     public GSignIn(@NonNull Activity a, @StringRes int clientID) {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestProfile()
-                .requestIdToken(a.getString(clientID))
+        serverClientId = a.getString(clientID);
+
+        credentialManager = CredentialManager.create(a);
+        mcwrapper = new MutableContextWrapper(a);
+
+        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(true)
+                .setServerClientId(serverClientId)
+                .setAutoSelectEnabled(true)
+                .setNonce(generateSecureRandomNonce())
                 .build();
 
-        gsi = GoogleSignIn.getClient(a, gso);
-        account = GoogleSignIn.getLastSignedInAccount(a);
+        request = new GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build();
     }
 
-    public GoogleSignInAccount getAccount() {
-        return account;
+    private String generateSecureRandomNonce() {
+        byte[] nonceBytes = new byte[16];
+        new SecureRandom().nextBytes(nonceBytes);
+        return Base64.encodeToString(nonceBytes, Base64.NO_WRAP);
     }
 
-    public void signIn(@NonNull Activity a, int REQ_SIGN_IN) {
-        Intent signInIntent = gsi.getSignInIntent();
-        a.startActivityForResult(signInIntent, REQ_SIGN_IN);
+    public String getIdToken() {
+        return idToken;
     }
 
-    public void getAccountFromCompletedTask(@NonNull Task<GoogleSignInAccount> t) throws ApiException {
-        account = t.getResult(ApiException.class);
+    private void handleResult(GetCredentialResponse result, OnSignInListener listener) {
+        Credential credential = result.getCredential();
+        if (credential instanceof CustomCredential customCredential &&
+                customCredential.getType().equals(GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
+            try {
+                GoogleIdTokenCredential googleIdToken = GoogleIdTokenCredential.createFrom(customCredential.getData());
+                idToken = googleIdToken.getIdToken();
+                // Handle Google ID Token
+
+                String email = googleIdToken.getEmail();
+                String displayName = googleIdToken.getDisplayName();
+                String givenName = googleIdToken.getGivenName();
+                String familyName = googleIdToken.getFamilyName();
+                Uri photoUri = googleIdToken.getProfilePictureUri();
+
+                listener.onSuccess(googleIdToken);
+            } catch (Exception e) {
+                listener.onError(e);
+            }
+        }
     }
 
-    public void setAccount(GoogleSignInAccount a) {
-        account = a;
+    private void signInWithAllAccounts(@NonNull Activity a, OnSignInListener listener) {
+        // 2. Fallback attempt: filterByAuthorizedAccounts = false
+        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(false)
+                .setServerClientId(serverClientId)
+                .setAutoSelectEnabled(false)
+                .setNonce(generateSecureRandomNonce())
+                .build();
+
+        GetCredentialRequest request = new GetCredentialRequest.Builder()
+                .addCredentialOption(googleIdOption)
+                .build();
+
+        credentialManager.getCredentialAsync(
+                mcwrapper,
+                request,
+                null,
+                ContextCompat.getMainExecutor(a),
+                new CredentialManagerCallback<>() {
+
+                    @Override
+                    public void onError(@NonNull GetCredentialException error) {
+                        listener.onError(error);
+                    }
+
+                    @Override
+                    public void onResult(GetCredentialResponse result) {
+                        handleResult(result, listener);
+                    }
+                });
     }
 
-    public Task<Void> signOut() {
-        return gsi.signOut();
+    public void signIn(@NonNull Activity a, OnSignInListener listener) {
+        mcwrapper.setBaseContext(a);
+
+        credentialManager.getCredentialAsync(
+                mcwrapper,
+                request,
+                null,
+                ContextCompat.getMainExecutor(a),
+                new CredentialManagerCallback<>() {
+
+                    @Override
+                    public void onError(@NonNull GetCredentialException error) {
+                        if (error instanceof NoCredentialException) {
+                            signInWithAllAccounts(a, listener);
+                        } else {
+                            listener.onError(error);
+                        }
+                    }
+
+                    @Override
+                    public void onResult(GetCredentialResponse result) {
+                        handleResult(result, listener);
+                    }
+                });
     }
 }

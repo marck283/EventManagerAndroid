@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.InvalidObjectException;
 
+import it.disi.unitn.lpsmt.lasagna.AuthProviders;
 import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
 import okhttp3.FormBody;
 import okhttp3.Request;
@@ -57,10 +58,10 @@ public class Authentication extends ServerOperation {
                     "the JWT token was set to null or to an empty string.");
         }
 
-        if(which.equals("google")) {
+        if(which.equals(AuthProviders.GOOGLE)) {
             googleJwt = token;
         } else {
-            if(which.equals("facebook")) {
+            if(which.equals(AuthProviders.FACEBOOK)) {
                 fbJwt = fbToken;
             }
         }
@@ -71,7 +72,7 @@ public class Authentication extends ServerOperation {
     }
 
     public void setWhich(@NotNull String w) throws InvalidObjectException {
-        if(w.equals("")) {
+        if(w.isEmpty()) {
             throw new InvalidObjectException("The signer of the JWT token was not specified.");
         }
 
@@ -80,7 +81,7 @@ public class Authentication extends ServerOperation {
 
     public void run() {
         try {
-            if(csrfToken == null || which == null || which.equals("")) {
+            if(which == null || which.isEmpty()) {
                 throw new InvalidObjectException("Either the CSRF is null or the signer of the JWT token " +
                         "was not specified.");
             }
@@ -91,8 +92,8 @@ public class Authentication extends ServerOperation {
             AuthObject authObj;
             FormBody.Builder fbodyBuilder;
             Request request;
-            if(which.equals("google")) {
-                if(googleJwt == null || googleJwt.equals("")) {
+            if(which.equals(AuthProviders.GOOGLE)) {
+                if(googleJwt == null || googleJwt.isEmpty()) {
                     Log.i("gJwtNull", "Il token JWT di Google non può essere una stringa vuota");
                     return;
                 }
@@ -100,7 +101,7 @@ public class Authentication extends ServerOperation {
                 fbodyBuilder = new FormBody.Builder()
                         .add("csrfToken", csrfToken)
                         .add("googleJwt", authObj.getJwt());
-                if(authObj.getUserId() != null && !authObj.getUserId().equals("")) {
+                if(authObj.getUserId() != null && !authObj.getUserId().isEmpty()) {
                     fbodyBuilder.add("userId", authObj.getUserId());
                 }
                 request = getNetworkRequest().getPostRequest(fbodyBuilder.build(), null,
@@ -110,7 +111,7 @@ public class Authentication extends ServerOperation {
                     throw new InvalidObjectException("The Intent argument cannot be null.");
                 }
                 //if(fbJwt == null || fbJwt.getToken().equals("")) {
-                if(googleJwt == null || googleJwt.equals("") || userID == null || userID.equals("")) {
+                if(googleJwt == null || googleJwt.isEmpty() || userID == null || userID.isEmpty()) {
                     Log.i("fbJwtNull", "L'Access Token e l'ID utente di Facebook non possono" +
                             " essere una stringhe vuote");
                     return;
@@ -121,7 +122,7 @@ public class Authentication extends ServerOperation {
                 fbodyBuilder = new FormBody.Builder()
                         .add("csrfToken", csrfToken)
                         .add("googleJwt", authObj.getJwt());
-                if(authObj.getUserId() != null && !authObj.getUserId().equals("")) {
+                if(authObj.getUserId() != null && !authObj.getUserId().isEmpty()) {
                     fbodyBuilder.add("userId", authObj.getUserId());
                 }
                 request = getNetworkRequest().getPostRequest(fbodyBuilder.build(), null,

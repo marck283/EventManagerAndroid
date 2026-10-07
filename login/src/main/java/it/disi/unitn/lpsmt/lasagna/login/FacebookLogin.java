@@ -3,7 +3,6 @@ package it.disi.unitn.lpsmt.lasagna.login;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -28,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import it.disi.unitn.lpsmt.lasagna.AuthProviders;
 import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 
@@ -50,11 +50,7 @@ public class FacebookLogin {
         loginManager = LoginManager.getInstance();
 
         LoginBehavior behavior;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            behavior = LoginBehavior.KATANA_ONLY;
-        } else {
-            behavior = LoginBehavior.WEB_ONLY;
-        }
+        behavior = LoginBehavior.KATANA_ONLY;
         loginManager.setLoginBehavior(behavior);
 
         if(!loginButton.hasOnClickListeners()) {
@@ -101,7 +97,7 @@ public class FacebookLogin {
                         Profile p = new Profile(jsonObject);
                         i.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount", p);
 
-                        CsrfToken token = new CsrfToken(a, null, accessToken, "facebook", i);
+                        CsrfToken token = new CsrfToken(a, null, accessToken, AuthProviders.FACEBOOK, i);
                         token.start();
                     } else {
                         Log.i("nullResult", "Risposta null");

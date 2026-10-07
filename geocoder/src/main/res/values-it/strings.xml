@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Geocoder</string>
+    <string name="no_such_address">L\'indirizzo fornito non esiste</string>
+    <string name="address_not_registered">L\'indirizzo fornito non è registrato</string>
+</resources>

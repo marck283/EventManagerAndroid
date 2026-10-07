@@ -40,7 +40,7 @@ public class SignUpOnClickListener implements View.OnClickListener {
                                  @NotNull ActivityResultLauncher<Intent> launcher,
                                  @NotNull Fragment f, @StringRes int noconn, @StringRes int noconnmsg,
                                  @IdRes int spinner, @IdRes int dateArray, @NotNull Class<? extends Activity> c) {
-        if(eventId.equals("") || day.equals("") || time.equals("")) {
+        if(eventId.isEmpty() || day.isEmpty() || time.isEmpty()) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' essere" +
                     " una stringa vuota.");
         }
@@ -63,9 +63,11 @@ public class SignUpOnClickListener implements View.OnClickListener {
         TextInputLayout spinner1 = view.findViewById(spinner), spinner2 = view.findViewById(dateArray);
         EditText spinnerText = spinner1.getEditText(), spinner2Text = spinner2.getEditText();
         String token = prefs.getString("accessToken");
-        if (eventId != null && spinnerText != null && !spinnerText.getText().toString().equals("")
-                && !spinnerText.getText().toString().equals("---") &&
-                spinner2Text != null && !spinner2Text.getText().toString().equals("") &&
+        if (eventId != null &&
+                spinnerText != null &&
+                !spinnerText.getText().toString().isEmpty() &&
+                !spinnerText.getText().toString().equals("---") &&
+                spinner2Text != null && !spinner2Text.getText().toString().isEmpty() &&
                 !spinner2Text.getText().toString().equals("---")) {
             String[] dayArr = spinnerText.getText().toString().split("/");
             day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];

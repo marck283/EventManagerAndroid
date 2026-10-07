@@ -2,7 +2,6 @@ package it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent;
 
 import android.app.Activity;
 import android.graphics.Paint;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -32,8 +31,9 @@ import java.util.Locale;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.spinnerImplementation.SpinnerArrayAdapter;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.EventDetailsInterface;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -86,7 +86,9 @@ public class EventInfoCallback implements Callback {
                     String[] durataArr = ei1.getDurata().split(":");
                     durata.setText(f.getString(R.string.duration, durataArr[0], durataArr[1], durataArr[2]));
 
-                    f.setEventId(ei1.getId());
+                    if (f instanceof EventDetailsInterface edi) {
+                        edi.setEventId(ei1.getId());
+                    }
 
                     ArrayList<CharSequence> dateArr = new ArrayList<>();
                     dateArr.add("---");
@@ -111,8 +113,10 @@ public class EventInfoCallback implements Callback {
 
                             if (!s.toString().equals("---")) {
                                 Log.i("item", s.toString());
-                                f.setDay(s.toString());
-                                f.setTime("");
+                                if (f instanceof EventDetailsInterface edi) {
+                                    edi.setDay(s.toString());
+                                    edi.setTime("");
+                                }
 
                                 indirizzo.setText(f.getString(R.string.event_address, ""));
 
@@ -132,16 +136,14 @@ public class EventInfoCallback implements Callback {
                                     @Override
                                     public void onTextChanged(CharSequence s1, int start, int before, int count) {
                                         if (!s.toString().equals("---")) {
-                                            f.setTime(s1.toString());
+                                            if (f instanceof EventDetailsInterface edi) {
+                                                edi.setTime(s1.toString());
+                                            }
 
                                             if(!indirizzo.hasOnClickListeners()) {
                                                 indirizzo.setOnClickListener(c -> {
                                                     GeocoderExt geocoder = new GeocoderExt(f, indirizzo);
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                        geocoder.fromLocationName(indirizzo.getText().toString(), 5);
-                                                    } else {
-                                                        geocoder.fromLocationNameThread(indirizzo.getText().toString(), 5);
-                                                    }
+                                                    geocoder.fromLocationName(indirizzo.getText().toString(), 5);
                                                 });
                                             }
 

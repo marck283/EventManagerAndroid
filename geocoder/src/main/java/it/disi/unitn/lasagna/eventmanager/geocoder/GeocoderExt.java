@@ -9,12 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.List;
 
 public class GeocoderExt {
@@ -36,17 +34,14 @@ public class GeocoderExt {
         }
 
         public void run() {
-            List<Address> addresses;
-            try {
-                addresses = geocoder.getFromLocationName(locationName, maxResults);
-                if (addresses != null && addresses.size() > 0) {
+            Geocoder.GeocodeListener geocodeListener = addresses -> {
+                if (!addresses.isEmpty()) {
                     startGoogleMaps(f, address, addresses);
                 } else {
                     noSuchAddressDialog(f);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            };
+            geocoder.getFromLocationName(locationName, maxResults, geocodeListener);
         }
     }
 
@@ -78,10 +73,9 @@ public class GeocoderExt {
         });
     }
 
-    @RequiresApi(33)
     public void fromLocationName(String locationName, @IntRange int maxResults) {
         geocoder.getFromLocationName(locationName, maxResults, addresses -> {
-            if (addresses.size() > 0) {
+            if (!addresses.isEmpty()) {
                 startGoogleMaps(f, address, addresses);
             } else {
                 noSuchAddressDialog(f);

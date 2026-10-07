@@ -16,7 +16,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_lo
 public class EventRestrictionsViewModel extends ViewModel {
     public void createPublicEvent(@NonNull Fragment f, @NonNull String userJwt, @NonNull EventViewModel evm,
                                   @Nullable ActivityResultLauncher<Intent> i) {
-        if(!userJwt.equals("")) {
+        if(!userJwt.isEmpty()) {
             Log.i("jwt", userJwt);
             EventCreation creation;
             if(i == null) {

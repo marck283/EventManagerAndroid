@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,8 +22,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
-import it.disi.unitn.lpsmt.lasagna.localdatabase.queryClasses.DBUser;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
+import it.disi.unitn.lpsmt.lasagna.localdatabase.AppDatabase;
+import it.disi.unitn.lpsmt.lasagna.localdatabase.daos.UserDAO;
+import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -56,12 +60,22 @@ public class UserProfileCallback implements Callback {
 
             Activity activity = f.getActivity();
             if(activity != null && f.isAdded()) {
-                DBUser dbUser = new DBUser(f.requireActivity(), "setProfile", v, userInfo);
-                if(!dbUser.checkUser(userInfo.getId())) {
-                    dbUser.start();
-                } else {
-                    dbUser.insert();
-                }
+                AppDatabase db = Room.databaseBuilder(f.requireContext().getApplicationContext(),
+                        AppDatabase.class, "EventManagerDB").fallbackToDestructiveMigration().build();
+                UserDAO userDao = db.getUserDAO();
+                User userEntity = userInfo.toUser();
+                new Thread(() -> {
+                    if (userDao.getUser(userEntity.getId()) == null) {
+                        userDao.insert(userEntity);
+                    } else {
+                        userDao.updateUserProfile(userEntity.getId(), userEntity.getNome(),
+                                userEntity.getEmail(), userEntity.getTel(),
+                                userEntity.getProfilePic(), userEntity.getEventiCreati(),
+                                userEntity.getEventiIscritto(), userEntity.getNumEvOrg(),
+                                userEntity.getValutazioneMedia());
+                    }
+                    db.close();
+                }).start();
 
                 //Imposta la schermata del profilo dell'utente
                 f.requireActivity().runOnUiThread(() -> {
@@ -76,7 +90,7 @@ public class UserProfileCallback implements Callback {
                     email.setText(f.getString(R.string.user_email, userInfo.getString("email")));
 
                     TextView phone = v.findViewById(R.id.phone_value);
-                    if (userInfo.getString("tel") != null && !userInfo.getString("tel").equals("")) {
+                    if (userInfo.getString("tel") != null && !userInfo.getString("tel").isEmpty()) {
                         phone.setText(f.getString(R.string.phone, userInfo.getString("tel")));
                     } else {
                         phone.setText(f.getString(R.string.phone, f.getString(R.string.parameter_not_set)));

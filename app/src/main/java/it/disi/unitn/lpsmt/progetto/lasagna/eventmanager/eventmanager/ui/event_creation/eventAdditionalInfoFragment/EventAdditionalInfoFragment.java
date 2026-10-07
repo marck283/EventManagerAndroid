@@ -40,10 +40,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.speechListeners.SpeechRecognizerInterface;
 
 public class EventAdditionalInfoFragment extends Fragment {
@@ -171,7 +171,7 @@ public class EventAdditionalInfoFragment extends Fragment {
         Toast t;
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
-            if(evm.getBase64Image() != null && !evm.getBase64Image().equals("")) {
+            if(evm.getBase64Image() != null && !evm.getBase64Image().isEmpty()) {
                 t = Toast.makeText(requireActivity(), R.string.add_image_success, Toast.LENGTH_SHORT);
             } else {
                 t = Toast.makeText(requireActivity(), R.string.add_image_no_success, Toast.LENGTH_SHORT);
@@ -239,11 +239,11 @@ public class EventAdditionalInfoFragment extends Fragment {
             evm.setDescription(descrizione);
 
             String image = evm.getBase64Image();
-            if(image == null || image.equals("")) {
+            if(image == null || image.isEmpty()) {
                 setAlertDialog(R.string.no_event_picture, R.string.missing_event_image);
             } else {
                 String description1 = evm.getDescription();
-                if(description1 == null || description1.equals("")) {
+                if(description1 == null || description1.isEmpty()) {
                     setAlertDialog(R.string.no_event_description, R.string.missing_event_description);
                 } else {
                     if(evm.getPrivEvent()) {

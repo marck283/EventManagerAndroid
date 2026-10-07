@@ -32,9 +32,9 @@ public class NetworkRequest {
     private Request.Builder getRequestBuilder(List<Pair<String, String>> headers) {
         Request.Builder builder = new Request.Builder();
 
-        if(headers != null && headers.size() > 0) {
+        if(headers != null && !headers.isEmpty()) {
             for(Pair<String, String> header: headers) {
-                if(header.second != null && !header.second.equals("")) {
+                if(header.second != null && !header.second.isEmpty()) {
                     builder.addHeader(header.first, header.second);
                 }
             }

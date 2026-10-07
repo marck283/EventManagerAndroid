@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -152,7 +151,7 @@ public class OrganizedEventCallback extends OrganizerCallback {
                                     @Override
                                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                                         //L'ultima condizione di questo blocco if non ci dovrebbe essere
-                                        if(hourTextView.getText() != null && !hourTextView.getText().toString().equals("") &&
+                                        if(hourTextView.getText() != null && !hourTextView.getText().toString().isEmpty() &&
                                                 !hourTextView.getText().toString().equals("---")) {
                                             if(hourTextView.getText().toString().equals("---")) {
                                                 address.setText(f.getString(event_address, ""));
@@ -164,11 +163,7 @@ public class OrganizedEventCallback extends OrganizerCallback {
                                                 if(!address.hasOnClickListeners()) {
                                                     address.setOnClickListener(c -> {
                                                         GeocoderExt geocoder = new GeocoderExt(f, address);
-                                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                            geocoder.fromLocationName(address.getText().toString(), 5);
-                                                        } else {
-                                                            geocoder.fromLocationNameThread(address.getText().toString(), 5);
-                                                        }
+                                                        geocoder.fromLocationName(address.getText().toString(), 5);
                                                     });
                                                 }
                                                 address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -176,7 +171,15 @@ public class OrganizedEventCallback extends OrganizerCallback {
                                                 String[] day1 = dayText.getText().toString().split("/");
                                                 if (day1.length > 1) {
                                                     String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
-                                                    if (event.getEventType().equals("priv") || (
+
+                                                    final boolean enabled = !(event.getEventType().equals("priv") || (
+                                                            !dayText.getText().toString().equals("---") &&
+                                                                    !hourTextView.getText().toString().equals("---") &&
+                                                                    event.getLuogo(day2,
+                                                                            hourTextView.getText().toString()).getTerminato()));
+                                                    qrCodeScan.setEnabled(enabled);
+                                                    terminaEvento.setEnabled(enabled);
+                                                    /*if (event.getEventType().equals("priv") || (
                                                             !dayText.getText().toString().equals("---") &&
                                                                     !hourTextView.getText().toString().equals("---") &&
                                                                     event.getLuogo(day2,
@@ -186,7 +189,7 @@ public class OrganizedEventCallback extends OrganizerCallback {
                                                     } else {
                                                         qrCodeScan.setEnabled(true);
                                                         terminaEvento.setEnabled(true);
-                                                    }
+                                                    }*/
                                                 }
                                             }
                                         }
@@ -218,7 +221,7 @@ public class OrganizedEventCallback extends OrganizerCallback {
 
                     TextView duration1 = v.findViewById(tv12);
                     String eventDurata = event.getDurata();
-                    if(event.getDurata() == null || event.getDurata().equals("")) {
+                    if(event.getDurata() == null || event.getDurata().isEmpty()) {
                         duration1.setText(f.getString(duration,
                                 "0", "0", "0"));
                     } else {
@@ -231,18 +234,8 @@ public class OrganizedEventCallback extends OrganizerCallback {
         } else {
             switch (response.code()) {
                 case 401 -> {
-                    if (loginLauncher != null) {
-                        Intent loginIntent = new Intent(f.requireActivity(), c);
-                        loginLauncher.launch(loginIntent);
-                    } else {
-                        f.requireActivity().runOnUiThread(() -> {
-                            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                            dialog.setTitle(user_not_logged_in);
-                            dialog.setMessage(f.getString(user_not_logged_in_message));
-                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                            dialog.show();
-                        });
-                    }
+                    Intent loginIntent = new Intent(f.requireActivity(), c);
+                    loginLauncher.launch(loginIntent);
                 }
                 case 404 -> f.requireActivity().runOnUiThread(() -> {
                     AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();

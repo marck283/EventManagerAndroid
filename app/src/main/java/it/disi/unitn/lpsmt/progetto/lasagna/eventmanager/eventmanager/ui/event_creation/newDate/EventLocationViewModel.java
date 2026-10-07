@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.Build;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -14,7 +13,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.fragment.NavHostFragment;
 
-import java.io.IOException;
 import java.util.List;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
@@ -73,7 +71,7 @@ public class EventLocationViewModel extends ViewModel {
     }
 
     private String parseProvince() {
-        if (provincia != null && !provincia.equals("")) {
+        if (provincia != null && !provincia.isEmpty()) {
             return switch (provincia) {
                 case "Agrigento" -> "AG";
                 case "Alessandria" -> "AL";
@@ -201,7 +199,7 @@ public class EventLocationViewModel extends ViewModel {
 
     public void parseAddress(boolean priv, @NonNull EditText t2, @NonNull EditText t3, @NonNull EditText t4,
                                 @NonNull EditText t5, @NonNull EventViewModel evm, @NonNull NewDateViewModel ndvm) {
-        if (provincia == null || provincia.equals("")) {
+        if (provincia == null || provincia.isEmpty()) {
             setAlertDialog(R.string.incorrect_province_format_title, f.getString(R.string.incorrect_province_format));
             return;
         }
@@ -222,32 +220,7 @@ public class EventLocationViewModel extends ViewModel {
                         split[4], 0, ndvm.getData(), ndvm.getOra(), 0, false);
             }
 
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                geocoder.getFromLocationName(location, 5, addresses -> setAddress(addresses, luogo, evm));
-            } else {
-                Thread t1 = new Thread() {
-                    @Override
-                    public void run() {
-                        List<Address> addresses;
-                        try {
-                            //Exception: only one Looper may be created per thread
-                            addresses = geocoder.getFromLocationName(location, 5);
-                            if (addresses != null && !addresses.isEmpty()) {
-                                setAddress(addresses, luogo, evm);
-                            } else {
-                                Activity activity = f.getActivity();
-                                if(activity != null && f.isAdded()) {
-                                    f.requireActivity().runOnUiThread(() -> setAlertDialog(R.string.no_location_result_title, f.getString(R.string.no_location_result)));
-                                }
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                t1.start();
-            }
+            geocoder.getFromLocationName(location, 5, addresses -> setAddress(addresses, luogo, evm));
         } catch (NumberFormatException ex) {
             setAlertDialog(R.string.incorrect_location_format_title, f.getString(R.string.incorrect_location_format));
         }

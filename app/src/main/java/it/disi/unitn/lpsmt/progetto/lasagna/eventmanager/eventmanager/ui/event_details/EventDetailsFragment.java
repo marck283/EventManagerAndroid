@@ -32,6 +32,7 @@ import it.disi.lasagna.navigationsvm.NavigationSharedViewModel;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lasagna.futuretask.futuretaskext.FutureTaskExt;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.EventDetailsInterface;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.AnnullaEventoOnClickListener;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.QrCodeOnClickListener;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.RatingsOnClickListener;
@@ -45,7 +46,7 @@ import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
-public class EventDetailsFragment extends Fragment {
+public class EventDetailsFragment extends Fragment implements EventDetailsInterface {
 
     private EventDetailsViewModel mViewModel;
     private NavigationSharedViewModel nvm;
@@ -70,11 +71,11 @@ public class EventDetailsFragment extends Fragment {
     private TextInputLayout spinner, spinner2;
 
     private final FutureTaskExt<Void> task = new FutureTaskExt<>(() -> {
-        QRCodeRenderingFragment destination = QRCodeRenderingFragment.newInstance(b);
+        QRCodeRenderingFragment destination = QRCodeRenderingFragment.newInstance(this.task.getBundle());
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         destination.show(transaction, "QRCodeRenderingFragment");
         return null;
-    }, b);
+    }, this.task.getBundle());
 
     public void setEventId(@NonNull String val) {
         eventId = val;
@@ -117,7 +118,7 @@ public class EventDetailsFragment extends Fragment {
                     switch (result.getResultCode()) {
                         case Activity.RESULT_OK -> {
                             token = prefs.getString("accessToken");
-                            if (!token.equals("")) {
+                            if (!token.isEmpty()) {
                                 mViewModel.registerUser(token, eventId, this, day, time, null,
                                         noconn, noconnmsg, LoginActivity.class);
                             } else {
@@ -162,7 +163,8 @@ public class EventDetailsFragment extends Fragment {
                                     R.id.button9, R.id.button10, R.id.action_eventDetailsFragment_to_reviewWriting,
                                     R.id.button11,
                                     R.string.malformed_request, R.string.malformed_request_message,
-                                    R.string.no_event, R.string.no_event_message);
+                                    R.string.no_event, R.string.no_event_message,
+                                    task);
                             case Activity.RESULT_CANCELED -> {
                                 //Ritorna alla schermata principale, reimpostando il token alla stringa vuota
                                 //e chiedendo all'Activity NavigationDrawerActivity di reimpostare il suo menù
@@ -194,7 +196,7 @@ public class EventDetailsFragment extends Fragment {
                                         R.string.invalid_qr_code_message, R.string.malformed_request,
                                         R.string.malformed_request_message, R.string.user_not_logged_in,
                                         R.string.user_not_logged_in_message)));
-                                if (!token.equals("")) {
+                                if (!token.isEmpty()) {
                                     executeCallback(qr);
                                 }
                             }
@@ -305,7 +307,8 @@ public class EventDetailsFragment extends Fragment {
                         R.id.button9, R.id.button10, R.id.action_eventDetailsFragment_to_reviewWriting,
                         R.id.button11,
                         R.string.malformed_request, R.string.malformed_request_message,
-                        R.string.no_event, R.string.no_event_message);
+                        R.string.no_event, R.string.no_event_message,
+                        task);
             }
             case "org" -> {
                 TextView duration = view.findViewById(R.id.textView12);

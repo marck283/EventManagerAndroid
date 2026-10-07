@@ -54,7 +54,7 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
                                         @StringRes int no_session_content, @StringRes int attempt_ok,
                                         @StringRes int attempt_ok_msg, @IdRes int but8, @IdRes int but12,
                                         @StringRes int internal_server_error) {
-        if(token.equals("") || evId.equals("")) {
+        if(token.isEmpty() || evId.isEmpty()) {
             throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' " +
                     "essere una stringa vuota.");
         }
@@ -87,13 +87,16 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
         MaterialAutoCompleteTextView hourTextView = spinner.findViewById(orgHourTextView);
         Activity activity1 = f.getActivity();
         EditText editText1 = spinner2.getEditText();
-        if(day == null) {
-            if(editText1 != null && !editText1.getText().toString().equals("") &&
-                    !editText1.getText().toString().equals("---")) {
+        if(day == null &&
+                editText1 != null &&
+                !editText1.getText().toString().isEmpty() &&
+                !editText1.getText().toString().equals("---")) {
+            /*if(editText1 != null && !editText1.getText().toString().equals("") &&
+                    !editText1.getText().toString().equals("---")) {*/
                 day = editText1.getText().toString();
                 String[] dayArr = day.split("/");
                 day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
-            }
+            // }
         }
         if(activity1 != null && f.isAdded()) {
             if (!callback.isOnline(f.requireActivity())) {
@@ -102,7 +105,7 @@ public class TerminaEventoOnClickListener implements View.OnClickListener {
                 try {
                     //Aggiungere ActivityResultLauncher per ottenere un nuovo token dall'Activity di login.
                     //Ricordarsi anche di aggiornare "token" all'interno del launcher!
-                    if(day == null || day.equals("") || day.equals("---")) {
+                    if(day == null || day.isEmpty() || day.equals("---")) {
                         return;
                     }
                     mViewModel.terminateEvent(token,

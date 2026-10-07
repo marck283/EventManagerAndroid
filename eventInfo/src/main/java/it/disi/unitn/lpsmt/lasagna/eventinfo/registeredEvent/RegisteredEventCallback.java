@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Paint;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,7 +16,6 @@ import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
@@ -28,18 +26,13 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.FutureTask;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.qr_code_scan.QRCodeRenderingFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -172,11 +165,7 @@ public class RegisteredEventCallback implements Callback {
                         if (!address.hasOnClickListeners()) {
                             address.setOnClickListener(c -> {
                                 GeocoderExt geocoder = new GeocoderExt(f, address);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                    geocoder.fromLocationName(address.getText().toString(), 5);
-                                } else {
-                                    geocoder.fromLocationNameThread(address.getText().toString(), 5);
-                                }
+                                geocoder.fromLocationName(address.getText().toString(), 5);
                             });
                         }
 
@@ -200,18 +189,10 @@ public class RegisteredEventCallback implements Callback {
                         ListenerButton writeReview = v.findViewById(button10);
                         String dateTime = dataArr[2]
                                 + "-" + dataArr[0] + "-" + dataArr[1] + "T" + oraS + ":00";
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        {
                             LocalDateTime now = LocalDateTime.now(), eventDateTime = LocalDateTime.parse(dateTime);
                             Log.i("boolean", String.valueOf(now.isBefore(eventDateTime)));
                             writeReview.setEnabled(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato());
-                        } else {
-                            try {
-                                SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH);
-                                Date now = new Date(), eventDateTime = df.parse(dateTime);
-                                writeReview.setEnabled(!now.before(eventDateTime) || event.getLuogoEv().getTerminato());
-                            } catch (ParseException ex) {
-                                ex.printStackTrace();
-                            }
                         }
 
                         writeReview.setOnClickListener(c -> {

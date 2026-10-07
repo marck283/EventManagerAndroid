@@ -63,13 +63,14 @@ public class OrganizedEvent extends Event {
     }
 
     public List<LuogoEv> getOrari(@NonNull String data) {
-        ArrayList<LuogoEv> res = new ArrayList<>();
+        /*ArrayList<LuogoEv> res = new ArrayList<>();
         for(LuogoEv l: luogoEv) {
             if(l.getData().equals(data)) {
                 res.add(l);
             }
         }
-        return res;
+        return res;*/
+        return luogoEv.stream().filter(l -> l.getData().equals(data)).toList();
     }
 
     @NonNull

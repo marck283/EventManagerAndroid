@@ -15,7 +15,7 @@ public class RatingsOnClickListener implements View.OnClickListener {
     private final int evDetFragToRevFrag;
 
     public RatingsOnClickListener(@NotNull String screenType, @NotNull String eventId, @IdRes int toRevFrag) {
-        if(screenType.equals("") || eventId.equals("")) {
+        if(screenType.isEmpty() || eventId.isEmpty()) {
             throw new IllegalArgumentException("Nessuno degli argomenti forniti al costruttore puo' essere null.");
         }
 

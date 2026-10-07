@@ -13,10 +13,9 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 
-import it.disi.unitn.lasagna.eventmanager.userinfo.UserInfo;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.daos.UserDAO;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class DBUser extends DBThread {
     private final String action, id;
@@ -26,7 +25,7 @@ public class DBUser extends DBThread {
     private Fragment f;
     private final Activity a;
 
-    private final UserInfo userInfo;
+    private final User userEntity;
 
     public DBUser(@NonNull String id, @NonNull String action, @NonNull View v, @NonNull Fragment f) {
         super(f.requireActivity());
@@ -36,18 +35,19 @@ public class DBUser extends DBThread {
         user = db.getUserDAO();
         profilePic = "";
         a = f.requireActivity();
-        userInfo = null;
+        userEntity = null;
         this.id = id;
     }
-    public DBUser(@NonNull Activity a, @NonNull String action, @NonNull View v, UserInfo userInfo) {
+
+    public DBUser(@NonNull Activity a, @NonNull String action, @NonNull View v, User userEntity) {
         super(a);
         this.action = action;
         user = db.getUserDAO();
         this.profilePic = "";
         this.v = v;
         this.a = a;
-        this.userInfo = userInfo;
-        id = userInfo.getId();
+        this.userEntity = userEntity;
+        id = userEntity != null ? userEntity.getId() : "";
     }
 
     public boolean checkUser(@NonNull String id) {
@@ -56,16 +56,9 @@ public class DBUser extends DBThread {
     }
 
     public void insert() {
-        User u = new User();
-        u.setId(id);
-        u.setEmail(userInfo.getString("email"));
-        u.setNome(userInfo.getString("nome"));
-        u.setValutazioneMedia(userInfo.getValutazioneMedia());
-        u.setProfilePic(userInfo.getString("profilePic"));
-        u.setTel(userInfo.getString("tel"));
-        u.setEventiIscritto(userInfo.getEventiIscritto());
-        u.setEventiCreati(userInfo.getEventiCreati());
-        user.insert(u);
+        if (userEntity != null) {
+            user.insert(userEntity);
+        }
     }
 
     public void run() {
@@ -116,12 +109,12 @@ public class DBUser extends DBThread {
                     });
                 }
                 case "setProfile" -> {
-                    if (userInfo != null) {
-                        user.updateUserProfile(userInfo.getId(), userInfo.getString("nome"),
-                                userInfo.getString("email"), userInfo.getString("tel"),
-                                userInfo.getString("profilePic"), userInfo.getEventiCreati(),
-                                userInfo.getEventiIscritto(), userInfo.getNumEvOrg(),
-                                userInfo.getValutazioneMedia());
+                    if (userEntity != null) {
+                        user.updateUserProfile(userEntity.getId(), userEntity.getNome(),
+                                userEntity.getEmail(), userEntity.getTel(),
+                                userEntity.getProfilePic(), userEntity.getEventiCreati(),
+                                userEntity.getEventiIscritto(), userEntity.getNumEvOrg(),
+                                userEntity.getValutazioneMedia());
                     }
                 }
             }

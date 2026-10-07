@@ -16,14 +16,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+import it.disi.unitn.lpsmt.lasagna.AuthProviders;
 import it.disi.unitn.lpsmt.lasagna.login.Authentication;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
 public class CsrfTokenCallback implements Callback {
-
-    private /*final*/ Authentication o;
 
     private final Activity a;
 
@@ -57,7 +56,7 @@ public class CsrfTokenCallback implements Callback {
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         synchronized (this) {
-            if (response.isSuccessful() && response.body() != null) {
+            if (response.isSuccessful()) {
                 Gson gson = new GsonBuilder().create();
                 ApiCSRFClass token1 = ApiCSRFClass.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
                 /*o.setActivity(a);
@@ -66,16 +65,25 @@ public class CsrfTokenCallback implements Callback {
                     o.setIntent(i);
                 }
                 o.setWhich(which);*/
-                if(which.equals("google")) {
-                    o = new Authentication(a, token1.getToken(), i, which, gJwt, null);
-                    //o.setUserToken(gJwt, null);
-                } else {
-                    if(which.equals("facebook")) {
-                        //o.setUserToken(null, fbJwt);
-                        if(fbJwt == null) {
-                            throw new NullPointerException("The given Facebook JWT token cannot be null.");
-                        }
+                if (which.equals(AuthProviders.GOOGLE) && gJwt == null) {
+                    throw new NullPointerException("The given Google JWT token cannot be null.");
+                }
+                if (which.equals(AuthProviders.FACEBOOK) && fbJwt == null) {
+                    throw new NullPointerException("The given Facebook JWT token cannot be null.");
+                }
+
+                Authentication o;
+                switch(which) {
+                    case AuthProviders.GOOGLE: {
+                        o = new Authentication(a, token1.getToken(), i, which, gJwt, null);
+                        break;
+                    }
+                    case AuthProviders.FACEBOOK: {
                         o = new Authentication(a, token1.getToken(), i, which, fbJwt.getToken(), fbJwt.getUserId());
+                        break;
+                    }
+                    default: {
+                        throw new IllegalArgumentException("The given provider is not valid.");
                     }
                 }
                 o.start();

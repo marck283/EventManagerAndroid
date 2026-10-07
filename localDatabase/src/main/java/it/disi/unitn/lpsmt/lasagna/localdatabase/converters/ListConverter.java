@@ -37,7 +37,6 @@ public class ListConverter {
             return Collections.emptyList();
         }
 
-        Type listType = new TypeToken<List<String>>() {}.getType();
         String[] arr = str.split(",");
         return new ArrayList<>(Arrays.asList(arr));
     }

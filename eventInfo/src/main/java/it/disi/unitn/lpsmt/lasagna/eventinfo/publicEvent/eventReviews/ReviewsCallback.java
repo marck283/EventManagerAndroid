@@ -66,7 +66,7 @@ public class ReviewsCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if(!response.isSuccessful() || response.body() == null) {
+        if(!response.isSuccessful()) {
             Log.i("noResponse", String.valueOf(response.code()));
         } else {
             String responseBody = response.body().string();
@@ -78,7 +78,7 @@ public class ReviewsCallback implements Callback {
             list.parseJSON(jsonArr);
 
             Activity activity = f.getActivity();
-            if(list.getList() == null || list.getList().size() == 0) {
+            if(list.getList().isEmpty()) {
                 if(activity != null && f.isAdded()) {
                     f.requireActivity().runOnUiThread(() -> {
                         AlertDialog dialog = new AlertDialog.Builder(f.requireContext()).create();

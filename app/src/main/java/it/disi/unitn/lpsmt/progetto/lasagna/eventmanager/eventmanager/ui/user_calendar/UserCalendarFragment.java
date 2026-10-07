@@ -78,7 +78,7 @@ public class UserCalendarFragment extends Fragment {
             SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
                     requireActivity());
             String token = prefs.getString("accessToken");
-            if (token.equals("")) {
+            if (token.isEmpty()) {
                 //Eseguire login, poi permettere la visualizzazione degli eventi
                 Intent login = new Intent(requireContext(), LoginActivity.class);
                 launcher.launch(login);

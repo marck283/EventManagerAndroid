@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
+
 public class UserInfo {
     private String id, profilePic, nome, email, tel;
     private final Integer numEvOrg;
@@ -111,6 +113,35 @@ public class UserInfo {
         }
 
         return res;
+    }
+
+    @NonNull
+    public User toUser() {
+        User u = new User();
+        if (id != null) {
+            u.setId(id);
+        }
+        if (email != null) {
+            u.setEmail(email);
+        }
+        if (nome != null) {
+            u.setNome(nome);
+        }
+        if (profilePic != null) {
+            u.setProfilePic(profilePic);
+        }
+        if (tel != null) {
+            u.setTel(tel);
+        }
+        if (EventiCreati != null) {
+            u.setEventiCreati(EventiCreati);
+        }
+        if (EventiIscritto != null) {
+            u.setEventiIscritto(EventiIscritto);
+        }
+        u.setNumEvOrg(numEvOrg);
+        u.setValutazioneMedia(valutazioneMedia);
+        return u;
     }
 
     @NonNull

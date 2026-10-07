@@ -9,7 +9,6 @@ import androidx.navigation.Navigation;
 import com.google.android.material.button.MaterialButton;
 
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Event;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventHolder;
 
 public class PrivEvViewHolder extends EventHolder {

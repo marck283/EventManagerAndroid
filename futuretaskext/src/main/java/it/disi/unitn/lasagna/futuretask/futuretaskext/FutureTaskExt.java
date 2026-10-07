@@ -2,9 +2,6 @@ package it.disi.unitn.lasagna.futuretask.futuretaskext;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.Callable;
@@ -25,6 +22,10 @@ public class FutureTaskExt<V> extends FutureTask<V> {
         super(callable);
         b = null;
         this.callable = callable;
+    }
+
+    public Bundle getBundle() {
+        return b;
     }
 
     public void run() {

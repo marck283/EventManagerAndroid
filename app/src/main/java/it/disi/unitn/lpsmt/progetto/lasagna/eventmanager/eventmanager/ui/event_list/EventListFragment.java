@@ -100,7 +100,7 @@ public class EventListFragment extends Fragment {
                 vm.getToken().observe(requireActivity(), o -> {
                     if(isAdded()) {
                         if (callback.isOnline(requireActivity())) {
-                            if (o.equals("")) {
+                            if (o.isEmpty()) {
                                 idToken = o;
 
                                 RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
@@ -121,7 +121,7 @@ public class EventListFragment extends Fragment {
                 eventListViewModel.getEvName().observe(getViewLifecycleOwner(), o -> {
                     if(isAdded()) {
                         if (callback.isOnline(requireActivity())) {
-                            if (o != null && !o.equals("")) {
+                            if (o != null && !o.isEmpty()) {
                                 RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                                 if (rv != null) {
                                     rv.invalidate();
@@ -140,7 +140,7 @@ public class EventListFragment extends Fragment {
                 eventListViewModel.getOrgName().observe(getViewLifecycleOwner(), o -> {
                     if(isAdded()) {
                         if (callback.isOnline(requireActivity())) {
-                            if (o != null && !o.equals("")) {
+                            if (o != null && !o.isEmpty()) {
                                 RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                                 if (rv != null) {
                                     rv.invalidate();
@@ -159,7 +159,7 @@ public class EventListFragment extends Fragment {
                 eventListViewModel.getCategory().observe(getViewLifecycleOwner(), o -> {
                     if(isAdded()) {
                         if (callback.isOnline(requireActivity())) {
-                            if (o != null && !o.equals("")) {
+                            if (o != null && !o.isEmpty()) {
                                 RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                                 if (rv != null) {
                                     rv.invalidate();
@@ -178,7 +178,7 @@ public class EventListFragment extends Fragment {
                 eventListViewModel.getDuration().observe(getViewLifecycleOwner(), o -> {
                     if(isAdded()) {
                         if (callback.isOnline(requireActivity())) {
-                            if (o != null && !o.equals("")) {
+                            if (o != null && !o.isEmpty()) {
                                 RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                                 if (rv != null) {
                                     rv.invalidate();
@@ -197,7 +197,7 @@ public class EventListFragment extends Fragment {
                 eventListViewModel.getAddress().observe(getViewLifecycleOwner(), o -> {
                     if(isAdded()) {
                         if (callback.isOnline(requireActivity())) {
-                            if (o != null && !o.equals("")) {
+                            if (o != null && !o.isEmpty()) {
                                 RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                                 if (rv != null) {
                                     rv.invalidate();
@@ -216,7 +216,7 @@ public class EventListFragment extends Fragment {
                 eventListViewModel.getCity().observe(getViewLifecycleOwner(), o -> {
                     if(isAdded()) {
                         if (callback.isOnline(requireActivity())) {
-                            if (o != null && !o.equals("")) {
+                            if (o != null && !o.isEmpty()) {
                                 RecyclerView rv = requireActivity().findViewById(R.id.recycler_view);
                                 if (rv != null) {
                                     rv.invalidate();

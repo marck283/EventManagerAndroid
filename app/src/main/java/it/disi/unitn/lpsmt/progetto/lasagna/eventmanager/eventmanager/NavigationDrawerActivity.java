@@ -18,9 +18,6 @@ import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.Profile;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -41,6 +38,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
 import it.disi.lasagna.navigationsvm.NavigationSharedViewModel;
+import it.disi.unitn.lpsmt.lasagna.AuthProviders;
 import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
@@ -87,7 +85,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         });
         d.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", (dialog1, which) -> dialog1.dismiss());
         d.setOnDismissListener(d1 -> {
-            account.setAccount(null);
+            // account.setAccount(null);
             updateUI("logout", null, null, null, true);
             prompt = false;
         });
@@ -99,9 +97,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         NetworkCallback callback = new NetworkCallback(this);
         if(callback.isOnline(this)) {
             Intent i = new Intent(this, EventCreationActivity.class);
-            if(account != null && account.getAccount() != null) {
+            if(account != null && account.getIdToken() != null) {
                 //L'utente è autenticato con Google
-                i.putExtra("accessToken", account.getAccount().getIdToken());
+                i.putExtra("accessToken", account.getIdToken());
             } else {
                 //L'utente è autenticato con Facebook
                 i.putExtra("accessToken", accessToken.getToken());
@@ -148,7 +146,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         FloatingActionButton fab = binding.appBarNavigationDrawer.fab;
         if(!fab.hasOnClickListeners()) {
             fab.setOnClickListener(view -> {
-                if(account.getAccount() == null && profile == null) {
+                if((account == null || account.getIdToken() == null) && profile == null) {
                     setAlertDialog(true, R.string.no_session_title, R.string.no_session_content);
                 } else {
                     showCreaEvento();
@@ -180,6 +178,22 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         }
     }
 
+    private void checkAuthSetMenu() {
+        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                this);
+        String accessToken = prefs.getString("accessToken");
+        if(accessToken.isEmpty()) {
+            updateUI("logout", null, null, null, false);
+            if(prompt) {
+                setAlertDialog(false, R.string.no_session_title, R.string.no_session_content);
+                prompt = false;
+            }
+        } else {
+            CsrfToken token = new CsrfToken(this, accessToken, null, AuthProviders.GOOGLE, null);
+            token.start();
+        }
+    }
+
     public void onStart() {
         super.onStart();
 
@@ -195,36 +209,10 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         if(!callback.isOnline(this)) {
             updateUI("logout", null, null, null, false);
             callback.registerNetworkCallback();
-            callback.addDefaultNetworkActiveListener(() -> {
-                SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                        this);
-                String accessToken = prefs.getString("accessToken");
-                if(accessToken.equals("")) {
-                    updateUI("logout", null, null, null, false);
-                    if(prompt) {
-                        setAlertDialog(false, R.string.no_session_title, R.string.no_session_content);
-                        prompt = false;
-                    }
-                } else {
-                    CsrfToken token = new CsrfToken(this, accessToken, null, "google", null);
-                    token.start();
-                }
-            });
+            callback.addDefaultNetworkActiveListener(this::checkAuthSetMenu);
             callback.unregisterNetworkCallback();
         } else {
-            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                    this);
-            String accessToken = prefs.getString("accessToken");
-            if(accessToken.equals("")) {
-                updateUI("logout", null, null, null, false);
-                if(prompt) {
-                    setAlertDialog(false, R.string.no_session_title, R.string.no_session_content);
-                    prompt = false;
-                }
-            } else {
-                CsrfToken token = new CsrfToken(this, accessToken, null, "google", null);
-                token.start();
-            }
+            checkAuthSetMenu();
         }
     }
 
@@ -293,7 +281,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
             //Profile non è null, quindi l'utente è autenticato con Facebook. Ottieni il token di accesso e mostra la UI aggiornata.
             //Log.i("id", profile.getId());
             username.setText(getString(R.string.profileName, /*profile.getName()*/name));
-            if(emailF != null && !emailF.equals("")) {
+            if(emailF != null && !emailF.isEmpty()) {
                 email.setText(getString(R.string.email, emailF));
             }
 
@@ -308,16 +296,11 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     public void revokeAccess(MenuItem item) {
         SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
                 this);
-        if(account.getAccount() != null) {
-            Task<Void> t = account.signOut();
-            t.addOnFailureListener(f -> Log.i("logout", "Logout failed"));
-            t.addOnCompleteListener(c -> {
-                account.setAccount(null);
-                vm.setToken("");
-                prefs.setString("accessToken", "");
-                prefs.apply();
-                updateUI("logout", null, null, null, false);
-            });
+        if(account != null && account.getIdToken() != null) {
+            vm.setToken("");
+            prefs.setString("accessToken", "");
+            prefs.apply();
+            updateUI("logout", null, null, null, false);
         } else {
             accessToken = null;
             prefs.setString("accessToken", "");
@@ -349,18 +332,13 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
                 //mostra i dati del profilo richiesti
 
                 String email, picture = null;
-                if (which.equals("google")) {
+                if (which.equals(AuthProviders.GOOGLE)) {
                     //Google login
-                    GoogleSignInAccount gSignIn = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount");
-                    if (gSignIn != null) {
-                        account.setAccount(gSignIn);
-                    } else {
-                        account.setAccount(GoogleSignIn.getLastSignedInAccount(this));
-                    }
                     vm.setToken(prefs.getString("accessToken"));
-                    email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
-                    picture = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture");
-                    updateUI("login", email, account.getAccount().getDisplayName(), picture, false);
+                    email = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail") : null;
+                    picture = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture") : null;
+                    String displayName = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fName") : "";
+                    updateUI("login", email, displayName, picture, false);
                 } else {
                     //Facebook login
                     if (data != null) {
@@ -384,7 +362,6 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
                 }
             }
             case Activity.RESULT_CANCELED -> {
-                account.setAccount(null);
                 updateUI("logout", null, null, null, false);
             }
         }
@@ -396,9 +373,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
 
         if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) {
             if(data != null && data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
-                signInCheck(resultCode, data, "google");
+                signInCheck(resultCode, data, AuthProviders.GOOGLE);
             } else {
-                signInCheck(resultCode, data, "facebook");
+                signInCheck(resultCode, data, AuthProviders.FACEBOOK);
             }
         }
         if(requestCode == REQ_SIGN_IN_EV_CREATION && resultCode == Activity.RESULT_OK) {

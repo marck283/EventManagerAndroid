@@ -6,15 +6,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.facebook.AccessToken;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.Task;
 
 import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
 import it.disi.unitn.lpsmt.lasagna.login.FacebookLogin;
@@ -25,8 +19,6 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity implements AuthenticationInterface, NetworkCallbackInterface {
-
-    private static final int REQ_SIGN_IN = 2;
 
     private GoogleLogin gLogin;
 
@@ -48,13 +40,6 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationIn
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == REQ_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            gLogin.handleSignInResult(task);
-        }
     }
 
     public void onDestroy() {

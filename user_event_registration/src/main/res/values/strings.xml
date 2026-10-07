@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_registration_success_title">User registered successfully</string>
+    <string name="event_registration_success">The registration to the event concluded successfully.</string>
+    <string name="malformed_request">Malformed request</string>
+    <string name="malformed_request_message">The server did not manage to parse the request. Please try again.</string>
+    <string name="user_not_logged_in">User logged out</string>
+    <string name="user_not_logged_in_message">The user is not logged in to the system</string>
+    <string name="error">Error</string>
+    <string name="max_pers_reached_or_user_already_registered">Either the maximum number of people allowed to the event was reached or the user is already registered.</string>
+    <string name="internal_server_error">Internal server error</string>
+    <string name="service_unavailable">The service is temporarily unavailable. Please try again later.</string>
+    <string name="request_timeout">Request timed out</string>
+    <string name="request_timeout_message">The request timed out. Please try again.</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="unknown_error_message">An unknown error just occurred. Please try again later or notify the developer.</string>
+</resources>

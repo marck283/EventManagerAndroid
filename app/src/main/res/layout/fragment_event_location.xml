@@ -111,7 +111,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton
+            <it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton
                 android:id="@+id/button6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

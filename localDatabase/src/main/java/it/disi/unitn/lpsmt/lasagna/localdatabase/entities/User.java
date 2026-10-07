@@ -137,10 +137,6 @@ public class User implements Serializable {
      */
     public void setValutazioneMedia(@NotNull Double val) {
         double temp = valutazioneMedia*numEvOrg;
-        if(val == null) {
-            valutazioneMedia = temp/numEvOrg;
-        } else {
-            valutazioneMedia = (temp + val)/numEvOrg;
-        }
+        valutazioneMedia = (temp + val) / numEvOrg;
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_registration_success_title">Utente registrato con successo</string>
+    <string name="event_registration_success">La registrazione all\'evento si è conclusa con successo.</string>
+    <string name="malformed_request">Richiesta malformata</string>
+    <string name="malformed_request_message">Il server non è riuscito a comprendere la richiesta. Si prega di riprovare.</string>
+    <string name="user_not_logged_in">Utente non autenticato</string>
+    <string name="user_not_logged_in_message">L\'utente non è autenticato.</string>
+    <string name="error">Errore</string>
+    <string name="max_pers_reached_or_user_already_registered">Numero massimo di persone ammesse all\'evento raggiunto o utente già registrato.</string>
+    <string name="internal_server_error">Errore interno al server</string>
+    <string name="service_unavailable">Il servizio è temporaneamente non disponibile. Si prega di riprovare più tardi.</string>
+    <string name="request_timeout">Risposta non ricevuta</string>
+    <string name="request_timeout_message">Il server non ha risposto in tempo alla richiesta. Si prega di riprovare.</string>
+    <string name="unknown_error">Errore sconosciuto</string>
+    <string name="unknown_error_message">Si è verificato un errore sconosciuto. Si prega di riprovare più tardi o contattare lo sviluppatore.</string>
+</resources>

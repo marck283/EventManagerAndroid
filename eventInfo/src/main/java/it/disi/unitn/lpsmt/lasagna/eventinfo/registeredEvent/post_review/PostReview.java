@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.Pair;
 import android.view.View;
 
@@ -11,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDeepLinkRequest;
 import androidx.navigation.Navigation;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +21,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkRequest;
 import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -95,7 +96,10 @@ public class PostReview extends ServerOperation {
                     case 201 -> setAlertDialog(R.string.review_creation_successful, R.string.review_creation_successful_message,
                             (dialog1, which) -> {
                                 dialog1.dismiss();
-                                Navigation.findNavController(v).navigate(R.id.action_reviewWriting_to_nav_user_calendar);
+                                NavDeepLinkRequest deepLinkRequest = NavDeepLinkRequest.Builder
+                                        .fromUri(Uri.parse("app://eventmanager/user_calendar"))
+                                        .build();
+                                Navigation.findNavController(v).navigate(deepLinkRequest);
                             });
                     case 401 -> {
                         Intent loginIntent = new Intent(f.requireContext(), c);

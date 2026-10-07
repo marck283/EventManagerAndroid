@@ -81,7 +81,7 @@ public abstract class EventAdapter extends ListAdapter<it.disi.unitn.lpsmt.lasag
     }
 
     public void clearEventList() {
-        if(evList != null && evList.size() > 0) {
+        if(evList != null && !evList.isEmpty()) {
             evList.clear();
             notifyDataSetChanged();
         }

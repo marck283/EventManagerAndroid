@@ -1,10 +1,8 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent;
 
-import android.app.AlertDialog;
 import android.util.Pair;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
@@ -31,7 +29,7 @@ public class DeleteEvent extends ServerOperation {
         this.f = f;
     }
 
-    private void setAlertDialog(@StringRes int title, @StringRes int message) {
+    /*private void setAlertDialog(@StringRes int title, @StringRes int message) {
         f.requireActivity().runOnUiThread(() -> {
             AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
             dialog.setTitle(title);
@@ -39,7 +37,7 @@ public class DeleteEvent extends ServerOperation {
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
             dialog.show();
         });
-    }
+    }*/
 
     public void run() {
         List<Pair<String, String>> headers = new ArrayList<>();

@@ -9,18 +9,18 @@ buildscript {
     }
     dependencies {
         // Add the dependency for the Google services Gradle plugin
-        classpath 'com.google.gms:google-services:4.4.0'
-        classpath 'com.android.tools.build:gradle:8.2.2'
-        classpath 'com.google.firebase:perf-plugin:1.4.2'
+        classpath 'com.google.gms:google-services:4.5.0'
+        classpath 'com.android.tools.build:gradle:9.4.1'
+        classpath 'com.google.firebase:perf-plugin:2.0.2'
 
     }
 }
 
 plugins {
-    id 'com.android.application' version '8.1.0' apply false
-    id 'com.android.library' version '8.1.0' apply false
+    id 'com.android.application' version '9.4.1' apply false
+    id 'com.android.library' version '9.4.1' apply false
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin' version '2.0.1' apply false
-    id 'com.google.firebase.firebase-perf' version '1.4.2' apply false
+    id 'com.google.firebase.firebase-perf' version '2.0.2' apply false
 }
 
 tasks.register("clean") {

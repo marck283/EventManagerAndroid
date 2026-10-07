@@ -3,7 +3,6 @@ package it.disi.unitn.lpsmt.lasagna.login;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
@@ -11,13 +10,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.facebook.AccessToken;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 
+import it.disi.unitn.lpsmt.lasagna.AuthProviders;
 import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
+import it.disi.unitn.lpsmt.lasagna.gSignIn.OnSignInListener;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 
 public class GoogleLogin {
@@ -50,50 +49,30 @@ public class GoogleLogin {
     }
 
     private void signIn() {
-        signIn.signIn(a, 2);
-    }
+        final OnSignInListener listener = new OnSignInListener() {
 
-    public GSignIn getSignIn() {
-        return signIn;
+            @Override
+            public void onSuccess(GoogleIdTokenCredential credential) {
+                Intent intent = setUpIntent(AuthProviders.GOOGLE, null);
+                CsrfToken token = new CsrfToken(a, credential.getIdToken(), null, AuthProviders.GOOGLE, intent);
+                token.start();
+            }
+
+            @Override
+            public void onError(Exception error) {
+                error.printStackTrace();
+            }
+        };
+        signIn.signIn(a, listener);
     }
 
     @NonNull
     public Intent setUpIntent(@NonNull String which, @Nullable AccessToken accessToken) {
         Intent intent = new Intent();
         intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
-        if(which.equals("google")) {
-            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount",
-                    getSignIn().getAccount());
-        } else {
-            if(accessToken != null) {
-                Log.i("profileNull", accessToken.getToken());
-            }
+        if(which.equals(AuthProviders.FACEBOOK) && accessToken != null) {
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", accessToken);
         }
         return intent;
-    }
-
-    public void handleSignInResult(@NonNull Task<GoogleSignInAccount> completedTask) {
-        try {
-            signIn.getAccountFromCompletedTask(completedTask);
-
-            // Signed in successfully, update the database and return to caller with the results
-
-            Intent intent = setUpIntent("google", null);
-            CsrfToken token = new CsrfToken(a, signIn.getAccount().getIdToken(), null, "google", intent);
-            signIn.setAccount(completedTask.getResult());
-            token.start();
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("fail", "signInResult:failed code=" + e.getStatusCode());
-            if(e.getMessage() != null) {
-                Log.w("fail", e.getMessage());
-            }
-            Log.i("info1", String.valueOf(signIn.getAccount() != null));
-            //Not signed in, so return to caller with null results
-            a.setResult(Activity.RESULT_CANCELED);
-            a.finish();
-        }
     }
 }

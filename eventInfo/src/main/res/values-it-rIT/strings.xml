@@ -10,4 +10,17 @@
     <string name="event_address">Indirizzo: %1$s</string>
     <string name="show_ticket">Mostra biglietto</string>
     <string name="qr_code">Codice QR</string>
+    <string name="deletion_successful">Biglietto cancellato con successo</string>
+    <string name="deletion_successful_message">Il biglietto è stato eliminato con successo.</string>
+    <string name="user_not_logged_in">Utente non autenticato</string>
+    <string name="user_not_logged_in_message">L\'utente non è autenticato.</string>
+    <string name="user_not_registered">Utente non registrato</string>
+    <string name="user_not_registered_message">L\'utente non è registrato a questo evento.</string>
+    <string name="deletion_404">Biglietto non trovato</string>
+    <string name="deletion_404_message">Nessun biglietto trovato per questo utente.</string>
+    <string name="internal_server_error">Errore interno al server</string>
+    <string name="malformed_request_or_invalid_date">Richiesta malformata o data non valida</string>
+    <string name="malformed_request_or_invalid_date_message">Richiesta malformata o data non valida.</string>
+    <string name="no_ticket">Nessun biglietto trovato</string>
+    <string name="no_ticket_message">Nessun biglietto trovato per questo utente.</string>
 </resources>

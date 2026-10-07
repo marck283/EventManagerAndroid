@@ -25,16 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.GeocoderExt;
+import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.OrganizedEvent;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.Event;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.daos.OrgEvDAO;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.OrgEvent;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventAdapter;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.EventCallback;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.spinnerImplementation.SpinnerArrayAdapter;
 
 public class DBOrgEvents extends DBThread {
 
@@ -123,7 +123,7 @@ public class DBOrgEvents extends DBThread {
     private void getAll() {
         List<OrgEvent> evList = orgEvDAO.getAllOrgEvents();
 
-        if(evList.size() == 0) {
+        if(evList.isEmpty()) {
             f.requireActivity().runOnUiThread(() -> {
                 AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
                 dialog.setTitle(R.string.no_org_event);
@@ -152,7 +152,7 @@ public class DBOrgEvents extends DBThread {
         //Mostra tutti gli eventi ottenuti cercando per nome
         List<OrgEvent> orgEvList = orgEvDAO.getOrgEventsByName(eventName);
 
-        if(orgEvList.size() == 0) {
+        if(orgEvList.isEmpty()) {
             f.requireActivity().runOnUiThread(() -> {
                 AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
                 dialog.setTitle(R.string.no_org_event);
@@ -236,7 +236,7 @@ public class DBOrgEvents extends DBThread {
                                 @Override
                                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                                     TextView address = v.findViewById(R.id.textView15);
-                                    if(hourTextView.getText() != null && !hourTextView.getText().toString().equals("") &&
+                                    if(hourTextView.getText() != null && !hourTextView.getText().toString().isEmpty() &&
                                     !hourTextView.getText().toString().equals("---")) {
                                         Button qrCodeScan = v.findViewById(R.id.button8),
                                                 terminaEvento = v.findViewById(R.id.button12);
@@ -267,11 +267,7 @@ public class DBOrgEvents extends DBThread {
                                             if(!address.hasOnClickListeners()) {
                                                 address.setOnClickListener(c -> {
                                                     GeocoderExt geocoder = new GeocoderExt(f, address);
-                                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                                        geocoder.fromLocationName(address.getText().toString(), 5);
-                                                    } else {
-                                                        geocoder.fromLocationNameThread(address.getText().toString(), 5);
-                                                    }
+                                                    geocoder.fromLocationName(address.getText().toString(), 5);
                                                 });
                                             }
                                             address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

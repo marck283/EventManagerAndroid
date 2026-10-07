@@ -28,7 +28,7 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.matchers.Matcher;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.text_masks.Mask;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.special_buttons.ListenerButton;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 
 public class NewDateFragment extends DialogFragment {
 
@@ -132,7 +132,7 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseSeats(@NonNull String t3) {
-        if (t3.equals("")) {
+        if (t3.isEmpty()) {
             setAlertDialog(R.string.error, getString(R.string.empty_seats_field_message));
             return false;
         }

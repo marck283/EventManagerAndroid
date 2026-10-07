@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkRequest;
 import it.disi.unitn.lpsmt.lasagna.network.networkOps.ServerOperation;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;

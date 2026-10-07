@@ -10,4 +10,24 @@
     <string name="event_address">Address: %1$s</string>
     <string name="show_ticket">Show ticket</string>
     <string name="qr_code">QR Code</string>
+    <string name="deletion_successful">Ticket deletion successful</string>
+    <string name="deletion_successful_message">The ticket was successfully deleted.</string>
+    <string name="user_not_logged_in">User not logged in</string>
+    <string name="user_not_logged_in_message">The user is not logged in.</string>
+    <string name="user_not_registered">User not registered to the event</string>
+    <string name="user_not_registered_message">This user is not registered to this event.</string>
+    <string name="deletion_404">Ticket not found</string>
+    <string name="deletion_404_message">This user\'s ticket was not found.</string>
+    <string name="internal_server_error">Internal server error</string>
+    <string name="malformed_request_or_invalid_date">Malformed request or invalid date</string>
+    <string name="malformed_request_or_invalid_date_message">Either the request is malformed or the date is invalid.</string>
+    <string name="no_ticket">No ticket found</string>
+    <string name="no_ticket_message">No ticket found for this user.</string>
+    <string name="review_creation_successful">Review created successfully</string>
+    <string name="review_creation_successful_message">The review was submitted successfully!</string>
+    <string name="malformed_request">Malformed request</string>
+    <string name="malformed_request_message">The request was malformed. Please contact the developer to fix the issue.</string>
+    <string name="retry_later">Internal server error. Please try again later.</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="unknown_error_message">An unknown error has occurred. Please contact the developer.</string>
 </resources>

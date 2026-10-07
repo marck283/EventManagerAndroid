@@ -142,7 +142,7 @@ public class EventManagementFragment extends Fragment {
 
     private void searchEvents(@Nullable String evName,
                               @NonNull View view, @Nullable ActivityResultLauncher<Intent> launcher) {
-        if (evName != null && !evName.equals("")) {
+        if (evName != null && !evName.isEmpty()) {
             mViewModel.getOrgEvents(this, view, userJwt, evName, launcher);
         } else {
             mViewModel.getOrgEvents(this, view, userJwt, launcher);

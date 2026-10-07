@@ -131,85 +131,78 @@ public class JsonCallback implements Callback {
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) {
         EventList ev = new EventList();
-        if(response.body() != null) {
-            if(response.isSuccessful()) {
-                try {
-                    Gson gson = new GsonBuilder().create();
-                    ev = ev.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
-                    if(ev != null && ev.getList().size() > 0) {
-                        initAdapter(f, ev, day);
-                        p1.submitList(ev.getList());
+        if (response.isSuccessful()) {
+            try {
+                Gson gson = new GsonBuilder().create();
+                ev = ev.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
+                if (ev != null && !ev.getList().isEmpty()) {
+                    initAdapter(f, ev, day);
+                    p1.submitList(ev.getList());
 
-                        if(f != null) {
-                            Activity activity = f.getActivity();
-                            if(activity != null && f.isAdded()) {
-                                f.requireActivity().runOnUiThread(() -> mRecyclerView.setAdapter(p1));
-                            }
+                    if (f != null) {
+                        Activity activity = f.getActivity();
+                        if (activity != null && f.isAdded()) {
+                            f.requireActivity().runOnUiThread(() -> mRecyclerView.setAdapter(p1));
                         }
-
-                        if(executor != null) {
-                            //Chiudo la pool di connessioni per terminare i thread in essa contenuti
-                            executor.shutdown();
-                        }
-                    } else {
-                        Log.i("nullP", "Event list is null");
                     }
-                } catch(IOException ex) {
-                    ex.printStackTrace();
+
+                    if (executor != null) {
+                        //Chiudo la pool di connessioni per terminare i thread in essa contenuti
+                        executor.shutdown();
+                    }
+                } else {
+                    Log.i("nullP", "Event list is null");
                 }
-                response.body().close();
-            } else {
-                Log.i("fail", "Unsuccessful operation");
-                switch (response.code()) {
-                    case 401 -> {
-                        if (f != null && launcher != null) {
-                            Activity activity = f.getActivity();
-                            if (activity != null && f.isAdded()) {
-                                Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
-                                launcher.launch(loginIntent);
-                            }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            response.body().close();
+        } else {
+            Log.i("fail", "Unsuccessful operation");
+            switch (response.code()) {
+                case 401 -> {
+                    if (f != null && launcher != null) {
+                        Activity activity = f.getActivity();
+                        if (activity != null && f.isAdded()) {
+                            Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
+                            launcher.launch(loginIntent);
                         }
                     }
-                    case 404 -> {
-                        if (f != null) {
-                            Activity activity = f.getActivity();
-                            if (activity != null && f.isAdded()) {
-                                f.requireActivity().runOnUiThread(() -> {
-                                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                                    dialog.setTitle(R.string.no_org_event);
-                                    dialog.setMessage(f.getString(R.string.no_org_event_message));
-                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                                    dialog.show();
-                                });
-                                f.requireActivity().runOnUiThread(() -> {
-                                    initAdapter(f, new EventList(), day);
-                                    p1.clearEventList();
-                                    mRecyclerView.setAdapter(p1);
-                                });
-                            }
+                }
+                case 404 -> {
+                    if (f != null) {
+                        Activity activity = f.getActivity();
+                        if (activity != null && f.isAdded()) {
+                            f.requireActivity().runOnUiThread(() -> {
+                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                dialog.setTitle(R.string.no_org_event);
+                                dialog.setMessage(f.getString(R.string.no_org_event_message));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                dialog.show();
+                            });
+                            f.requireActivity().runOnUiThread(() -> {
+                                initAdapter(f, new EventList(), day);
+                                p1.clearEventList();
+                                mRecyclerView.setAdapter(p1);
+                            });
                         }
                     }
-                    case 500 -> {
-                        if (f != null) {
-                            Activity activity = f.getActivity();
-                            if (activity != null && f.isAdded()) {
-                                f.requireActivity().runOnUiThread(() -> {
-                                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                                    dialog.setTitle(R.string.unknown_error);
-                                    dialog.setMessage(f.getString(R.string.unknown_error_message));
-                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                                    dialog.show();
-                                });
-                            }
+                }
+                case 500 -> {
+                    if (f != null) {
+                        Activity activity = f.getActivity();
+                        if (activity != null && f.isAdded()) {
+                            f.requireActivity().runOnUiThread(() -> {
+                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
+                                dialog.setTitle(R.string.unknown_error);
+                                dialog.setMessage(f.getString(R.string.unknown_error_message));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                dialog.show();
+                            });
                         }
                     }
                 }
             }
-        } else {
-            Log.i("noResponse", "response is null");
-            initAdapter(f, new EventList(), day);
-            p1.clearEventList();
-            mRecyclerView.setAdapter(p1);
         }
     }
 
