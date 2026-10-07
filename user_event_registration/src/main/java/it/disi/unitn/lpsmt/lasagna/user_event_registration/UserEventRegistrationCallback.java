@@ -34,13 +34,15 @@ public class UserEventRegistrationCallback implements Callback {
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
         Activity activity = f.getActivity();
-        if(activity != null && f.isAdded()) {
-            f.requireActivity().runOnUiThread(() -> {
-                AlertDialog ad = new AlertDialog.Builder(f.requireActivity()).create();
-                ad.setTitle(title);
-                ad.setMessage(f.getString(message));
-                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                ad.show();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    AlertDialog ad = new AlertDialog.Builder(activity).create();
+                    ad.setTitle(title);
+                    ad.setMessage(f.getString(message));
+                    ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    ad.show();
+                }
             });
         }
     }
@@ -63,9 +65,13 @@ public class UserEventRegistrationCallback implements Callback {
                     setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
             case 401 -> {
                 Activity activity = f.getActivity();
-                if (activity != null && f.isAdded()) {
-                    Intent loginIntent = new Intent(f.requireActivity(), c);
-                    launcher.launch(loginIntent);
+                if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                    activity.runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            Intent loginIntent = new Intent(activity, c);
+                            launcher.launch(loginIntent);
+                        }
+                    });
                 } else {
                     setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
                 }

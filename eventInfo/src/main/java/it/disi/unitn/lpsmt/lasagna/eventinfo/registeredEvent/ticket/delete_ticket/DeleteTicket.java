@@ -38,13 +38,18 @@ public class DeleteTicket extends ServerOperation {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(f.getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
-        });
+        android.app.Activity activity = f.getActivity();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                    dialog.setTitle(title);
+                    dialog.setMessage(f.getString(message));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+                }
+            });
+        }
     }
 
     public void run() {

@@ -30,6 +30,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class JsonCallback implements Callback {
+    private static AlertDialog activeNoEventDialog = null;
     private final String type;
     private String day;
     private EventAdapter p1;
@@ -172,18 +173,28 @@ public class JsonCallback implements Callback {
                 case 404 -> {
                     if (f != null) {
                         Activity activity = f.getActivity();
-                        if (activity != null && f.isAdded()) {
-                            f.requireActivity().runOnUiThread(() -> {
-                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                                dialog.setTitle(R.string.no_org_event);
-                                dialog.setMessage(f.getString(R.string.no_org_event_message));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                                dialog.show();
-                            });
-                            f.requireActivity().runOnUiThread(() -> {
-                                initAdapter(f, new EventList(), day);
-                                p1.clearEventList();
-                                mRecyclerView.setAdapter(p1);
+                        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                            activity.runOnUiThread(() -> {
+                                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                    if (activeNoEventDialog == null || !activeNoEventDialog.isShowing()) {
+                                        AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                                        dialog.setTitle(R.string.no_org_event);
+                                        dialog.setMessage(f.getString(R.string.no_org_event_message));
+                                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                                            dialog1.dismiss();
+                                            activeNoEventDialog = null;
+                                        });
+                                        dialog.setOnDismissListener(d -> activeNoEventDialog = null);
+                                        activeNoEventDialog = dialog;
+                                        dialog.show();
+                                    }
+
+                                    initAdapter(f, new EventList(), day);
+                                    if (p1 != null) {
+                                        p1.clearEventList();
+                                    }
+                                    mRecyclerView.setAdapter(p1);
+                                }
                             });
                         }
                     }
@@ -191,13 +202,15 @@ public class JsonCallback implements Callback {
                 case 500 -> {
                     if (f != null) {
                         Activity activity = f.getActivity();
-                        if (activity != null && f.isAdded()) {
-                            f.requireActivity().runOnUiThread(() -> {
-                                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                                dialog.setTitle(R.string.unknown_error);
-                                dialog.setMessage(f.getString(R.string.unknown_error_message));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                                dialog.show();
+                        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                            activity.runOnUiThread(() -> {
+                                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                    AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                                    dialog.setTitle(R.string.unknown_error);
+                                    dialog.setMessage(f.getString(R.string.unknown_error_message));
+                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                    dialog.show();
+                                }
                             });
                         }
                     }

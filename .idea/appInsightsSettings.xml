@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager" />
-                  <option name="mobileSdkAppId" value="1:666454225517:android:6542baa79a897977ac8564" />
-                  <option name="projectId" value="eventmanager-cbe2d" />
-                  <option name="projectNumber" value="666454225517" />
+                  <option name="mobileSdkAppId" value="1:22819640695:android:65721333f54dc91ba23d72" />
+                  <option name="projectId" value="event-manager-1649890278206" />
+                  <option name="projectNumber" value="22819640695" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

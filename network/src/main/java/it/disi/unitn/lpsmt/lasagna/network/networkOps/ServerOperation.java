@@ -22,7 +22,7 @@ public abstract class ServerOperation extends Thread {
     protected final ExecutorService executor;
 
     public ServerOperation() {
-        baseUrl = "https://eventmanager-uo29.onrender.com";
+        baseUrl = "https://eventmanager-85ec.onrender.com";
         executor = Executors.newFixedThreadPool(1);
         Dispatcher dispatcher = new Dispatcher();
         dispatcher.setMaxRequests(1);

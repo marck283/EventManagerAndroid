@@ -37,17 +37,23 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.JsonObject;
+
 import it.disi.lasagna.navigationsvm.NavigationSharedViewModel;
+import it.disi.unitn.lasagna.eventmanager.userinfo.UserInfo;
 import it.disi.unitn.lpsmt.lasagna.AuthProviders;
-import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
 import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallbackInterface;
+import it.disi.unitn.lpsmt.lasagna.network.client.RetrofitClient;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.databinding.ActivityNavigationDrawerBinding;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventCreationActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
@@ -71,6 +77,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     private ActivityResultLauncher<Intent> launcher, evLauncher;
 
     private void setAlertDialog(boolean eventCreation, @StringRes int title, @StringRes int message) {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
         prompt = false;
         AlertDialog d = new AlertDialog.Builder(this).create();
         d.setTitle(getString(title));
@@ -97,15 +106,17 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         NetworkCallback callback = new NetworkCallback(this);
         if(callback.isOnline(this)) {
             Intent i = new Intent(this, EventCreationActivity.class);
-            if(account != null && account.getIdToken() != null) {
-                //L'utente è autenticato con Google
-                i.putExtra("accessToken", account.getIdToken());
-            } else {
-                //L'utente è autenticato con Facebook
-                i.putExtra("accessToken", accessToken.getToken());
+            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+            String token = prefs.getString("accessToken");
+            if ((token == null || token.isEmpty()) && vm != null && vm.getToken() != null && vm.getToken().getValue() != null) {
+                token = vm.getToken().getValue();
             }
+            i.putExtra("access_token", token);
             startActivity(i);
         } else {
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
             AlertDialog dialog = new AlertDialog.Builder(this).create();
             dialog.setTitle(R.string.no_connection);
             dialog.setMessage(getString(R.string.no_connection_message));
@@ -146,7 +157,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         FloatingActionButton fab = binding.appBarNavigationDrawer.fab;
         if(!fab.hasOnClickListeners()) {
             fab.setOnClickListener(view -> {
-                if((account == null || account.getIdToken() == null) && profile == null) {
+                SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+                String token = prefs.getString("accessToken");
+                if((token == null || token.isEmpty()) && profile == null) {
                     setAlertDialog(true, R.string.no_session_title, R.string.no_session_content);
                 } else {
                     showCreaEvento();
@@ -179,18 +192,40 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     }
 
     private void checkAuthSetMenu() {
-        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                this);
+        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
         String accessToken = prefs.getString("accessToken");
-        if(accessToken.isEmpty()) {
+
+        if (accessToken.isEmpty()) {
             updateUI("logout", null, null, null, false);
-            if(prompt) {
+            if (prompt) {
                 setAlertDialog(false, R.string.no_session_title, R.string.no_session_content);
                 prompt = false;
             }
         } else {
-            CsrfToken token = new CsrfToken(this, accessToken, null, AuthProviders.GOOGLE, null);
-            token.start();
+            // Set token on RetrofitClient so AuthInterceptor automatically adds x-access-token header
+            RetrofitClient.getInstance().setAccessToken(accessToken);
+
+            RetrofitClient.getInstance().getUserApi().getUserProfile().enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        JsonObject body = response.body();
+                        UserInfo userInfo = UserInfo.parseJSON(body);
+                        updateUI("login", userInfo.getString("email"), userInfo.getString("nome"), userInfo.getString("profilePic"), true);
+                        vm.setToken(accessToken);
+                    } else {
+                        prefs.setString("accessToken", "");
+                        prefs.setString("userId", "");
+                        prefs.apply();
+                        updateUI("logout", null, null, null, false);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull Throwable t) {
+                    updateUI("logout", null, null, null, false);
+                }
+            });
         }
     }
 
@@ -296,19 +331,14 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     public void revokeAccess(MenuItem item) {
         SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
                 this);
-        if(account != null && account.getIdToken() != null) {
-            vm.setToken("");
-            prefs.setString("accessToken", "");
-            prefs.apply();
-            updateUI("logout", null, null, null, false);
-        } else {
-            accessToken = null;
-            prefs.setString("accessToken", "");
-            prefs.apply();
-            LoginManager.getInstance().logOut();
-            vm.setToken("");
-            updateUI("logout", null, null, null, false);
-        }
+        accessToken = null;
+        profile = null;
+        prefs.setString("accessToken", "");
+        prefs.setString("userId", "");
+        prefs.apply();
+        LoginManager.getInstance().logOut();
+        vm.setToken("");
+        updateUI("logout", null, null, null, false);
 
         navigate(R.id.nav_event_list);
     }
@@ -326,6 +356,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         SharedPrefs prefs = new SharedPrefs(
                 "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
 
+        Log.i("login", which);
         switch (resultCode) {
             case Activity.RESULT_OK -> {
                 //Autenticato con successo a Google o Facebook, ora autentica al server e
@@ -334,7 +365,12 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
                 String email, picture = null;
                 if (which.equals(AuthProviders.GOOGLE)) {
                     //Google login
-                    vm.setToken(prefs.getString("accessToken"));
+                    Log.i("login", "Google login");
+                    String token = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fToken") : null;
+                    if (token == null || token.isEmpty()) {
+                        token = prefs.getString("accessToken");
+                    }
+                    vm.setToken(token);
                     email = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail") : null;
                     picture = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture") : null;
                     String displayName = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fName") : "";
@@ -362,6 +398,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
                 }
             }
             case Activity.RESULT_CANCELED -> {
+                Log.i("login", "Login failed");
                 updateUI("logout", null, null, null, false);
             }
         }
@@ -372,7 +409,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) {
-            if(data != null && data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.gAccount") != null) {
+            if(data != null) {
                 signInCheck(resultCode, data, AuthProviders.GOOGLE);
             } else {
                 signInCheck(resultCode, data, AuthProviders.FACEBOOK);
@@ -433,6 +470,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
 
     @Override
     public void showOnLostMsg() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
         AlertDialog alert = new AlertDialog.Builder(this).create();
         alert.setTitle(R.string.no_connection);
         alert.setMessage(getString(R.string.no_connection_message_short));
@@ -442,6 +482,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
 
     @Override
     public void showOnUnavailableMsg() {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
         AlertDialog alert = new AlertDialog.Builder(this).create();
         alert.setTitle(R.string.no_connection);
         alert.setMessage(getString(R.string.no_connection_message_short));
@@ -451,6 +494,9 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
 
     @Override
     public void showRes(int resCode) {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
         switch(resCode) {
             case 401 -> setAlertDialog(false, R.string.user_not_logged_in, R.string.user_not_logged_in_message);
 

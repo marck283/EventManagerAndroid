@@ -1,5 +1,6 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
@@ -51,13 +52,18 @@ public class TerminatorCallback extends OrganizerCallback {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(f.getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
-        });
+        Activity a = f.getActivity();
+        if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
+            a.runOnUiThread(() -> {
+                if (!a.isFinishing() && !a.isDestroyed()) {
+                    AlertDialog dialog = new AlertDialog.Builder(a).create();
+                    dialog.setTitle(title);
+                    dialog.setMessage(f.getString(message));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+                }
+            });
+        }
     }
 
     @Override
@@ -66,14 +72,25 @@ public class TerminatorCallback extends OrganizerCallback {
             case 400 -> setAlertDialog(malformed_request, malformed_request_message);
             case 401 -> {
                 setAlertDialog(no_session_title, no_session_content);
-                launcher.launch(loginIntent);
+                Activity a = f.getActivity();
+                if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
+                    a.runOnUiThread(() -> {
+                        if (!a.isFinishing() && !a.isDestroyed()) {
+                            launcher.launch(loginIntent);
+                        }
+                    });
+                }
             }
             case 200 -> {
                 setAlertDialog(attempt_ok, attempt_ok_message);
-
-                Button qrCodeScan = v.findViewById(button8), terminaEvento = v.findViewById(button12);
-                qrCodeScan.setEnabled(false);
-                terminaEvento.setEnabled(false);
+                Activity a = f.getActivity();
+                if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
+                    a.runOnUiThread(() -> {
+                        Button qrCodeScan = v.findViewById(button8), terminaEvento = v.findViewById(button12);
+                        if (qrCodeScan != null) qrCodeScan.setEnabled(false);
+                        if (terminaEvento != null) terminaEvento.setEnabled(false);
+                    });
+                }
             }
             case 500 -> setAlertDialog(internal_server_error, internal_server_error);
         }

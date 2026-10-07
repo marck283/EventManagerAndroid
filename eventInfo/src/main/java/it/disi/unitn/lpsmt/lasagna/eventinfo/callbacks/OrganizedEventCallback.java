@@ -232,18 +232,25 @@ public class OrganizedEventCallback extends OrganizerCallback {
             }
             response.body().close();
         } else {
-            switch (response.code()) {
-                case 401 -> {
-                    Intent loginIntent = new Intent(f.requireActivity(), c);
-                    loginLauncher.launch(loginIntent);
+            Activity activity = f.getActivity();
+            if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                switch (response.code()) {
+                    case 401 -> activity.runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            Intent loginIntent = new Intent(activity, c);
+                            loginLauncher.launch(loginIntent);
+                        }
+                    });
+                    case 404 -> activity.runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                            dialog.setTitle(no_org_event);
+                            dialog.setMessage(f.getString(no_org_event_message));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                            dialog.show();
+                        }
+                    });
                 }
-                case 404 -> f.requireActivity().runOnUiThread(() -> {
-                    AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                    dialog.setTitle(no_org_event);
-                    dialog.setMessage(f.getString(no_org_event_message));
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    dialog.show();
-                });
             }
         }
     }

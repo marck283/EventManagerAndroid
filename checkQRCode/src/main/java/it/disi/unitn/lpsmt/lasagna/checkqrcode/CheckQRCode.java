@@ -1,5 +1,30 @@
 package it.disi.unitn.lpsmt.lasagna.checkqrcode;
 
+/*
+package it.disi.unitn.lpsmt.lasagna.checkqrcode;
+
+import androidx.fragment.app.Fragment;
+import it.disi.unitn.lpsmt.lasagna.network.repository.TicketRepository;
+
+public class CheckQRCode {
+
+    public void checkQRCode(Fragment f, String qrCode, QRCodeCallback callback) {
+        TicketRepository ticketRepo = new TicketRepository();
+        ticketRepo.checkQRCode(qrCode, new TicketRepository.TicketActionCallback() {
+            @Override
+            public void onSuccess(int statusCode) {
+                callback.handleResponseCode(statusCode);
+            }
+
+            @Override
+            public void onError(int statusCode, String errorMessage) {
+                callback.handleResponseCode(statusCode);
+            }
+        });
+    }
+}
+*/
+
 import android.util.Log;
 import android.util.Pair;
 

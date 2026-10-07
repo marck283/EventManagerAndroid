@@ -50,37 +50,33 @@ public class UserProfileCallback implements Callback {
         }
     }
 
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        //Set up the ImageView
-        if(response.isSuccessful()) {
-            Gson gson1 = new GsonBuilder().create();
-            JsonObject res = gson1.fromJson(response.body().string(), JsonObject.class);
-            final UserInfo userInfo = UserInfo.parseJSON(res);
+    public void handleProfileSuccess(@NonNull JsonObject userProfile) {
+        final UserInfo userInfo = UserInfo.parseJSON(userProfile);
 
-            Activity activity = f.getActivity();
-            if(activity != null && f.isAdded()) {
-                AppDatabase db = Room.databaseBuilder(f.requireContext().getApplicationContext(),
-                        AppDatabase.class, "EventManagerDB").fallbackToDestructiveMigration().build();
-                UserDAO userDao = db.getUserDAO();
-                User userEntity = userInfo.toUser();
-                new Thread(() -> {
-                    if (userDao.getUser(userEntity.getId()) == null) {
-                        userDao.insert(userEntity);
-                    } else {
-                        userDao.updateUserProfile(userEntity.getId(), userEntity.getNome(),
-                                userEntity.getEmail(), userEntity.getTel(),
-                                userEntity.getProfilePic(), userEntity.getEventiCreati(),
-                                userEntity.getEventiIscritto(), userEntity.getNumEvOrg(),
-                                userEntity.getValutazioneMedia());
-                    }
-                    db.close();
-                }).start();
+        Activity activity = f.getActivity();
+        if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            AppDatabase db = Room.databaseBuilder(activity.getApplicationContext(),
+                    AppDatabase.class, "EventManagerDB").fallbackToDestructiveMigration().build();
+            UserDAO userDao = db.getUserDAO();
+            User userEntity = userInfo.toUser();
+            new Thread(() -> {
+                if (userDao.getUser(userEntity.getId()) == null) {
+                    userDao.insert(userEntity);
+                } else {
+                    userDao.updateUserProfile(userEntity.getId(), userEntity.getNome(),
+                            userEntity.getEmail(), userEntity.getTel(),
+                            userEntity.getProfilePic(), userEntity.getEventiCreati(),
+                            userEntity.getEventiIscritto(), userEntity.getNumEvOrg(),
+                            userEntity.getValutazioneMedia());
+                }
+                db.close();
+            }).start();
 
-                //Imposta la schermata del profilo dell'utente
-                f.requireActivity().runOnUiThread(() -> {
+            //Imposta la schermata del profilo dell'utente
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
                     ImageView iv = v.findViewById(R.id.profilePic);
-                    Glide.with(f.requireActivity()).load(userInfo.getString("profilePic"))
+                    Glide.with(activity).load(userInfo.getString("profilePic"))
                             .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
 
                     TextView username = v.findViewById(R.id.username);
@@ -110,15 +106,28 @@ public class UserProfileCallback implements Callback {
                         rating.setVisibility(View.VISIBLE);
                         final double meanRating = userInfo.getValutazioneMedia();
                         rating.setOnClickListener(c -> {
-                            AlertDialog ad = new AlertDialog.Builder(f.requireContext()).create();
-                            ad.setTitle(R.string.personal_rating);
-                            ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
-                            ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
-                            ad.show();
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                AlertDialog ad = new AlertDialog.Builder(activity).create();
+                                ad.setTitle(R.string.personal_rating);
+                                ad.setMessage(f.getString(R.string.personal_rating_message, meanRating));
+                                ad.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (c1, d) -> c1.dismiss());
+                                ad.show();
+                            }
                         });
                     }
-                });
-            }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+        //Set up the ImageView
+        if(response.isSuccessful()) {
+            Gson gson1 = new GsonBuilder().create();
+            JsonObject res = gson1.fromJson(response.body().string(), JsonObject.class);
+            handleProfileSuccess(res);
+
             response.body().close();
         } else {
             Log.i("onlineResponse", "Utente non trovato");

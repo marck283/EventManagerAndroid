@@ -14,10 +14,13 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 
 import it.disi.unitn.lpsmt.lasagna.AuthProviders;
-import it.disi.unitn.lpsmt.lasagna.csrfToken.CsrfToken;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.OnSignInListener;
+import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
+import it.disi.unitn.lpsmt.lasagna.network.model.LoginResponse;
+import it.disi.unitn.lpsmt.lasagna.network.repository.AuthRepository;
+import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 
 public class GoogleLogin {
     private final GSignIn signIn;
@@ -54,8 +57,35 @@ public class GoogleLogin {
             @Override
             public void onSuccess(GoogleIdTokenCredential credential) {
                 Intent intent = setUpIntent(AuthProviders.GOOGLE, null);
-                CsrfToken token = new CsrfToken(a, credential.getIdToken(), null, AuthProviders.GOOGLE, intent);
-                token.start();
+
+                AuthRepository authRepo = new AuthRepository();
+                authRepo.loginWithGoogle(credential.getIdToken(), new AuthRepository.AuthResultCallback() {
+                    @Override
+                    public void onSuccess(LoginResponse user) {
+                        // 1. Save token and userId to SharedPrefs
+                        SharedPrefs prefs = new SharedPrefs(
+                                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", a);
+                        prefs.setString("accessToken", user.getToken());
+                        prefs.setString("userId", user.getId());
+                        prefs.apply();
+
+                        // 2. Pass LoggedInUser data back to NavigationDrawerActivity
+                        LoggedInUser info = new LoggedInUser(user.getToken(), user.getEmail(), user.getName(),
+                                user.getId(), user.getSelf(), user.getProfilePic());
+
+                        if (a instanceof AuthenticationInterface authInterface) {
+                            authInterface.shareData(info, intent);
+                        }
+                    }
+
+                    @Override
+                    public void onError(String errorMessage) {
+                        if (a instanceof AuthenticationInterface authInterface) {
+                            authInterface.showNotLoggedInMsg();
+                            authInterface.logout(intent);
+                        }
+                    }
+                });
             }
 
             @Override

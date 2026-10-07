@@ -47,6 +47,7 @@ public class DeleteEvent extends ServerOperation {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
                 ((OrgEvInterface)f.requireActivity()).showRes(response.code());
+                response.close();
             }
         });
     }

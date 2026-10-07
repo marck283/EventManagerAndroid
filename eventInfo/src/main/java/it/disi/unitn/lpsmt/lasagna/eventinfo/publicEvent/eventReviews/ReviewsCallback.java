@@ -79,24 +79,28 @@ public class ReviewsCallback implements Callback {
 
             Activity activity = f.getActivity();
             if(list.getList().isEmpty()) {
-                if(activity != null && f.isAdded()) {
-                    f.requireActivity().runOnUiThread(() -> {
-                        AlertDialog dialog = new AlertDialog.Builder(f.requireContext()).create();
-                        dialog.setTitle(norevs);
-                        dialog.setMessage(f.getString(norevsmsg));
-                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) ->
-                                dialog1.dismiss());
-                        dialog.show();
+                if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                    activity.runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                            dialog.setTitle(norevs);
+                            dialog.setMessage(f.getString(norevsmsg));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) ->
+                                    dialog1.dismiss());
+                            dialog.show();
+                        }
                     });
                 }
             } else {
                 adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList(), revSmallLayout,
                         username, userRating, userPicture, userName, userEval, showAll, revFragToFullRevFrag);
 
-                if(activity != null && f.isAdded()) {
-                    f.requireActivity().runOnUiThread(() -> {
-                        adapter.submitList(list.getList());
-                        rv.setAdapter(adapter);
+                if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                    activity.runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            adapter.submitList(list.getList());
+                            rv.setAdapter(adapter);
+                        }
                     });
                 }
             }

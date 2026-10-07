@@ -39,12 +39,19 @@ public class EventCreationCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        switch (response.code()) {
-            case 201 -> ((EventCreationInterface)f.requireActivity()).showOK();
-            case 400 -> ((EventCreationInterface)f.requireActivity()).showEventCreationError();
-            case 401 -> i.launch(loginIntent);
-            case 500 -> ((EventCreationInterface)f.requireActivity()).showInternalServerError();
-            case 503 -> ((EventCreationInterface)f.requireActivity()).showServiceUavailable();
+        android.app.Activity activity = f.getActivity();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    switch (response.code()) {
+                        case 201 -> ((EventCreationInterface) activity).showOK();
+                        case 400 -> ((EventCreationInterface) activity).showEventCreationError();
+                        case 401 -> i.launch(loginIntent);
+                        case 500 -> ((EventCreationInterface) activity).showInternalServerError();
+                        case 503 -> ((EventCreationInterface) activity).showServiceUavailable();
+                    }
+                }
+            });
         }
     }
 }

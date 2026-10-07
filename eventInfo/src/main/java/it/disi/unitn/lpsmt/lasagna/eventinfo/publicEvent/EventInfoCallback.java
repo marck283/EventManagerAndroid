@@ -70,8 +70,9 @@ public class EventInfoCallback implements Callback {
             final EventInfo ei1 = ei.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
 
             Activity activity = f.getActivity();
-            if(activity != null && f.isAdded()) {
-                f.requireActivity().runOnUiThread(() -> {
+            if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
                     //Ora imposta il layout in base alla schermata visualizzata
                     ImageView imgView = v.findViewById(R.id.eventPicture);
                     imgView.setImageBitmap(ei1.decodeBase64());
@@ -194,6 +195,7 @@ public class EventInfoCallback implements Callback {
                             //Nothing
                         }
                     });
+                }
                 });
             }
             response.body().close();

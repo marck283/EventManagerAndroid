@@ -63,13 +63,18 @@ public class PostReview extends ServerOperation {
 
     private void setAlertDialog(@StringRes int title, @StringRes int message,
                                 @NonNull DialogInterface.OnClickListener click) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(f.getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", click);
-            dialog.show();
-        });
+        Activity activity = f.getActivity();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                    dialog.setTitle(title);
+                    dialog.setMessage(f.getString(message));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", click);
+                    dialog.show();
+                }
+            });
+        }
     }
 
     public void run() {
@@ -102,8 +107,15 @@ public class PostReview extends ServerOperation {
                                 Navigation.findNavController(v).navigate(deepLinkRequest);
                             });
                     case 401 -> {
-                        Intent loginIntent = new Intent(f.requireContext(), c);
-                        loginLauncher.launch(loginIntent);
+                        Activity activity = f.getActivity();
+                        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                            activity.runOnUiThread(() -> {
+                                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                    Intent loginIntent = new Intent(activity, c);
+                                    loginLauncher.launch(loginIntent);
+                                }
+                            });
+                        }
                     }
                     case 400 -> // Codice di ritorno utilizzato solo per il debug.
                         // Non dovrebbero esserci problemi di questo tipo durante l'utilizzo normale

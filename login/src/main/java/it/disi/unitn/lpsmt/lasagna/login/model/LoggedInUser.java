@@ -1,7 +1,5 @@
 package it.disi.unitn.lpsmt.lasagna.login.model;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -59,10 +57,8 @@ public class LoggedInUser {
     public LoggedInUser parseJSON(@NonNull JsonObject json) {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
-        LoggedInUser user = new LoggedInUser(fromJson(gs1, "token", json), fromJson(gs1, "email", json),
+        return new LoggedInUser(fromJson(gs1, "token", json), fromJson(gs1, "email", json),
                 fromJson(gs1, "name", json), fromJson(gs1, "id", json), fromJson(gs1, "self", json),
                 fromJson(gs1, "profilePic", json));
-        Log.i("OK", json.toString());
-        return user;
     }
 }

@@ -102,15 +102,6 @@ public class EventManagementFragment extends Fragment {
             callback = new NetworkCallback(requireActivity());
             prefs = new SharedPrefs(
                     "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", requireActivity());
-            if (callback.isOnline(requireActivity())) {
-                searchEvents(null, view, launcher);
-            } else {
-                DBOrgEvents orgEvs = new DBOrgEvents(this, "getAll", view.findViewById(R.id.eventRecyclerView));
-                orgEvs.start();
-                callback.registerNetworkCallback();
-                callback.addDefaultNetworkActiveListener(() -> searchEvents(null, view, launcher));
-                callback.unregisterNetworkCallback();
-            }
         }
 
         FloatingActionButton fab = view.findViewById(R.id.floatingActionButton2);

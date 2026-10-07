@@ -28,6 +28,25 @@ public class EventManagementViewModel extends ViewModel {
         return evName;
     }
 
+    /*
+    public void getOrgEvents(@NonNull Fragment f, @NonNull View v, @NonNull String userJwt,
+                         @Nullable ActivityResultLauncher<Intent> launcher) {
+        RetrofitClient.getInstance().setAccessToken(userJwt);
+        OrganizedEventRepository repo = new OrganizedEventRepository();
+        repo.getOrganizedEvents(new OrganizedEventRepository.EventListCallback() {
+            @Override
+            public void onSuccess(JsonObject eventsJson) {
+                // Update UI/Adapter with eventsJson
+            }
+
+            @Override
+            public void onError(int statusCode, String errorMessage) {
+                // Handle error
+            }
+        });
+    }
+     */
+
     public void getOrgEvents(@NonNull Fragment f, @NonNull View v, @NonNull String userJwt,
                              @Nullable ActivityResultLauncher<Intent> launcher) {
         Activity activity = f.getActivity();

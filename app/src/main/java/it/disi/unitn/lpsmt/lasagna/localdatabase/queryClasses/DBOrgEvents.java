@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -37,6 +36,8 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.events.Eve
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.organizedEvents.OrgEvAdapter;
 
 public class DBOrgEvents extends DBThread {
+
+    private static AlertDialog activeDbNoEventDialog = null;
 
     private final Fragment f;
 
@@ -124,13 +125,25 @@ public class DBOrgEvents extends DBThread {
         List<OrgEvent> evList = orgEvDAO.getAllOrgEvents();
 
         if(evList.isEmpty()) {
-            f.requireActivity().runOnUiThread(() -> {
-                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                dialog.setTitle(R.string.no_org_event);
-                dialog.setMessage(f.getString(R.string.no_org_event_message));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
-            });
+            Activity a = f.getActivity();
+            if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
+                a.runOnUiThread(() -> {
+                    if (!a.isFinishing() && !a.isDestroyed()) {
+                        if (activeDbNoEventDialog == null || !activeDbNoEventDialog.isShowing()) {
+                            AlertDialog dialog = new AlertDialog.Builder(a).create();
+                            dialog.setTitle(R.string.no_org_event);
+                            dialog.setMessage(f.getString(R.string.no_org_event_message));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                                dialog1.dismiss();
+                                activeDbNoEventDialog = null;
+                            });
+                            dialog.setOnDismissListener(d -> activeDbNoEventDialog = null);
+                            activeDbNoEventDialog = dialog;
+                            dialog.show();
+                        }
+                    }
+                });
+            }
             return;
         }
 
@@ -140,12 +153,15 @@ public class DBOrgEvents extends DBThread {
             helpList.add(new OrganizedEvent(o.getEventType(), o.getIdevent(), o.getSelf(), o.getName(),
                     o.getCategory(), o.getEventPic(), o.getOrgName(), o.getLuogoEv(), o.getDurata()));
         }
-        f.requireActivity().runOnUiThread(() -> {
-            recView.invalidate();
-            EventAdapter p1 = new OrgEvAdapter(new EventCallback(), helpList);
-            p1.submitList(helpList);
-            recView.setAdapter(p1);
-        });
+        Activity a1 = f.getActivity();
+        if (a1 != null && !a1.isFinishing() && !a1.isDestroyed() && f.isAdded()) {
+            a1.runOnUiThread(() -> {
+                recView.invalidate();
+                EventAdapter p1 = new OrgEvAdapter(new EventCallback(), helpList);
+                p1.submitList(helpList);
+                recView.setAdapter(p1);
+            });
+        }
     }
 
     private void getEventsByName() {
@@ -153,13 +169,25 @@ public class DBOrgEvents extends DBThread {
         List<OrgEvent> orgEvList = orgEvDAO.getOrgEventsByName(eventName);
 
         if(orgEvList.isEmpty()) {
-            f.requireActivity().runOnUiThread(() -> {
-                AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-                dialog.setTitle(R.string.no_org_event);
-                dialog.setMessage(f.getString(R.string.no_org_event_with_this_name));
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                dialog.show();
-            });
+            Activity a = f.getActivity();
+            if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
+                a.runOnUiThread(() -> {
+                    if (!a.isFinishing() && !a.isDestroyed()) {
+                        if (activeDbNoEventDialog == null || !activeDbNoEventDialog.isShowing()) {
+                            AlertDialog dialog = new AlertDialog.Builder(a).create();
+                            dialog.setTitle(R.string.no_org_event);
+                            dialog.setMessage(f.getString(R.string.no_org_event_with_this_name));
+                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                                dialog1.dismiss();
+                                activeDbNoEventDialog = null;
+                            });
+                            dialog.setOnDismissListener(d -> activeDbNoEventDialog = null);
+                            activeDbNoEventDialog = dialog;
+                            dialog.show();
+                        }
+                    }
+                });
+            }
             return;
         }
 

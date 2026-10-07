@@ -106,13 +106,18 @@ public class RegisteredEventCallback implements Callback {
     }
 
     private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        f.requireActivity().runOnUiThread(() -> {
-            AlertDialog dialog = new AlertDialog.Builder(f.requireActivity()).create();
-            dialog.setTitle(title);
-            dialog.setMessage(f.getString(message));
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-            dialog.show();
-        });
+        Activity activity = f.getActivity();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                    AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                    dialog.setTitle(title);
+                    dialog.setMessage(f.getString(message));
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                    dialog.show();
+                }
+            });
+        }
     }
 
     @Override
@@ -213,10 +218,15 @@ public class RegisteredEventCallback implements Callback {
             }
             case 400 -> setAlertDialog(malformed_request, malformed_request_message);
             case 401 -> {
-                //Utente non autenticato. Esegui un launcher con Intent riferito a LoginActivity.class e,
-                //in caso di Activity.RESULT_OK, ripeti la richiesta.
-                Intent loginIntent = new Intent(f.requireActivity(), c);
-                loginLauncher.launch(loginIntent);
+                Activity activity = f.getActivity();
+                if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                    activity.runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            Intent loginIntent = new Intent(activity, c);
+                            loginLauncher.launch(loginIntent);
+                        }
+                    });
+                }
             }
             case 404 -> setAlertDialog(no_event, no_event_message);
         }

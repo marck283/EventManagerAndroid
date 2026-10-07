@@ -7,10 +7,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
-import it.disi.unitn.lasagna.eventmanager.userinfo.OnlineUserInfo;
+import com.google.gson.JsonObject;
+
 import it.disi.unitn.lasagna.eventmanager.userinfo.UserProfileCallback;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.queryClasses.DBUser;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
+import it.disi.unitn.lpsmt.lasagna.network.client.RetrofitClient;
+import it.disi.unitn.lpsmt.lasagna.network.repository.UserRepository;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 
 public class UserProfileViewModel extends ViewModel {
@@ -21,17 +24,35 @@ public class UserProfileViewModel extends ViewModel {
         Activity activity1 = f.getActivity();
         if(activity1 != null && f.isAdded()) {
             NetworkCallback nc = new NetworkCallback(f.requireActivity());
-            if(nc.isOnline(f.requireActivity())) {
-                OnlineUserInfo onlineUserInfo = new OnlineUserInfo(accessToken, new UserProfileCallback(f, l));
-                onlineUserInfo.start();
+            if (nc.isOnline(f.requireActivity())) {
+                RetrofitClient.getInstance().setAccessToken(accessToken);
+
+                UserRepository userRepo = new UserRepository();
+                userRepo.getUserProfile(new UserRepository.UserProfileCallback() {
+                    @Override
+                    public void onSuccess(JsonObject userProfile) {
+                        // Pass JSON directly to UserProfileCallback
+                        UserProfileCallback callback = new UserProfileCallback(f, l);
+                        callback.handleProfileSuccess(userProfile);
+                    }
+
+                    @Override
+                    public void onError(int statusCode, String errorMessage) {
+                        // Fallback to local DB on failure
+                        loadFromLocalDb(f, l);
+                    }
+                });
             } else {
-                //Ottieni i dati dell'utente dal database, se disponibili
-                SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                        f.requireActivity());
-                DBUser dbUser = new DBUser(prefs.getString("userId"), "getAll", l, f);
-                dbUser.start();
+                loadFromLocalDb(f, l);
             }
         }
+    }
+
+    private void loadFromLocalDb(@NonNull Fragment f, @NonNull ConstraintLayout l) {
+        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
+                f.requireActivity());
+        DBUser dbUser = new DBUser(prefs.getString("userId"), "getAll", l, f);
+        dbUser.start();
     }
 
 }
