@@ -28,7 +28,7 @@ public class OrgEvAdapter extends EventAdapter {
         this.day = null;
     }
 
-    protected OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
+    public OrgEvAdapter(@NonNull DiffUtil.ItemCallback<Event> diffCallback) {
         super(diffCallback);
         day = null;
     }

@@ -1,7 +1,7 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.event_restrictions;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -9,24 +9,55 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
-import it.disi.unitn.lasagna.eventcreation.EventCreation;
+import org.json.JSONObject;
+
+import it.disi.unitn.lasagna.eventcreation.EventCreationInterface;
 import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
+import it.disi.unitn.lpsmt.lasagna.network.client.RetrofitClient;
+import it.disi.unitn.lpsmt.lasagna.network.repository.EventRepository;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 public class EventRestrictionsViewModel extends ViewModel {
     public void createPublicEvent(@NonNull Fragment f, @NonNull String userJwt, @NonNull EventViewModel evm,
-                                  @Nullable ActivityResultLauncher<Intent> i) {
+                                  @Nullable ActivityResultLauncher<Intent> launcher) {
         if(!userJwt.isEmpty()) {
-            Log.i("jwt", userJwt);
-            EventCreation creation;
-            if(i == null) {
-                creation = new EventCreation(f, userJwt, evm);
-            } else {
-                Intent loginIntent = new Intent(f.requireContext(), LoginActivity.class);
-                creation = new EventCreation(f, userJwt, evm, i, loginIntent);
-            }
+            JSONObject jsonObject = evm.toJson();
+            RequestBody body = RequestBody.create(jsonObject.toString(), MediaType.parse("application/json; charset=utf-8"));
 
-            creation.start();
+            RetrofitClient.getInstance().setAccessToken(userJwt);
+            EventRepository repo = new EventRepository();
+
+            Intent loginIntent = (launcher != null) ? new Intent(f.requireContext(), LoginActivity.class) : null;
+
+            repo.createPublicEvent(body, new EventRepository.EventActionCallback() {
+                @Override
+                public void onSuccess() {
+                    Activity activity = f.getActivity();
+                    if (activity instanceof EventCreationInterface eci && !activity.isFinishing() && !activity.isDestroyed()) {
+                        eci.showOK();
+                    }
+                }
+
+                @Override
+                public void onError(int statusCode, String errorMessage) {
+                    Activity activity = f.getActivity();
+                    if (activity instanceof EventCreationInterface eci && !activity.isFinishing() && !activity.isDestroyed()) {
+                        if (statusCode == 400) {
+                            eci.showEventCreationError();
+                        } else if (statusCode == 401 && launcher != null && loginIntent != null) {
+                            launcher.launch(loginIntent);
+                        } else if (statusCode == 500) {
+                            eci.showInternalServerError();
+                        } else if (statusCode == 503) {
+                            eci.showServiceUavailable();
+                        } else {
+                            eci.showEventCreationError();
+                        }
+                    }
+                }
+            });
         }
     }
 }

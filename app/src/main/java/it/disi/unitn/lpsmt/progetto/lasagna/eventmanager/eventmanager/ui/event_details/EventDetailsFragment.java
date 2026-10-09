@@ -70,12 +70,13 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
 
     private TextInputLayout spinner, spinner2;
 
+    private final Bundle taskBundle = new Bundle();
     private final FutureTaskExt<Void> task = new FutureTaskExt<>(() -> {
-        QRCodeRenderingFragment destination = QRCodeRenderingFragment.newInstance(this.task.getBundle());
+        QRCodeRenderingFragment destination = QRCodeRenderingFragment.newInstance(taskBundle);
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         destination.show(transaction, "QRCodeRenderingFragment");
         return null;
-    }, this.task.getBundle());
+    }, taskBundle);
 
     public void setEventId(@NonNull String val) {
         eventId = val;
@@ -119,7 +120,12 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                         case Activity.RESULT_OK -> {
                             token = prefs.getString("accessToken");
                             if (!token.isEmpty()) {
-                                mViewModel.registerUser(token, eventId, this, day, time, null,
+                                if (day != null) {
+                                    day = String.join("-", day.split("/"));
+                                } else {
+                                    day = "";
+                                }
+                                mViewModel.registerUser(token, eventId, this, day, time != null ? time : "", null,
                                         noconn, noconnmsg, LoginActivity.class);
                             } else {
                                 AlertDialog d = new AlertDialog.Builder(requireContext()).create();
@@ -187,7 +193,7 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                                     spinner2.getEditText() != null && spinner2.getEditText().getText() != null &&
                                     !spinner2.getEditText().getText().toString().equals("---")) {
                                 String token = prefs.getString("accessToken");
-                                FutureTask<Void> qr = new FutureTask<>(() -> Void.TYPE.cast(mViewModel.checkQR(token,
+                                FutureTask<Void> qr = new FutureTask<>(() -> Void.TYPE.cast(mViewModel.checkQR(
                                         result.getContents(),
                                         eventId, spinner2.getEditText().getText().toString(),
                                         spinner.getEditText().getText().toString(), this,
@@ -209,7 +215,6 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                                 R.string.info_on_event, R.id.spinner2, R.id.orgDateTextView, R.id.textView15,
                                 R.id.spinner, R.id.orgHourTextView, R.layout.list_item, R.string.event_address,
                                 R.id.button8, R.id.button12, R.id.textView12, R.string.duration,
-                                R.string.user_not_logged_in, R.string.user_not_logged_in_message,
                                 R.string.no_org_event, R.string.no_org_event_message)));
                 loginLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                         result -> {
@@ -272,7 +277,6 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                         R.string.info_on_event, R.id.spinner2, R.id.orgDateTextView, R.id.textView15,
                         R.id.spinner, R.id.orgHourTextView, R.layout.list_item, R.string.event_address,
                         R.id.button8, R.id.button12, R.id.textView12, R.string.duration,
-                        R.string.user_not_logged_in, R.string.user_not_logged_in_message,
                         R.string.no_org_event, R.string.no_org_event_message);
 
                 ListenerButton b = view.findViewById(R.id.cLayout).findViewById(R.id.sign_up_button);
@@ -334,7 +338,6 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                                 R.string.info_on_event, R.id.spinner2, R.id.orgDateTextView, R.id.textView15,
                                 R.id.spinner, R.id.orgHourTextView, R.layout.list_item, R.string.event_address,
                                 R.id.button8, R.id.button12, R.id.textView12, R.string.duration,
-                                R.string.user_not_logged_in, R.string.user_not_logged_in_message,
                                 R.string.no_org_event, R.string.no_org_event_message);
                     } else {
                         //Nessuna connessione ad Internet. Acquisire i dati dal database e visualizzarli a schermo

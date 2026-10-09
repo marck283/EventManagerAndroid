@@ -64,6 +64,39 @@ public class ReviewsCallback implements Callback {
         }
     }
 
+    public void handleReviewsSuccess(JsonObject r) {
+        JsonArray jsonArr = r.getAsJsonArray("recensioni");
+        ReviewList list = new ReviewList();
+        list.parseJSON(jsonArr);
+
+        Activity activity = f.getActivity();
+        if (list.getList().isEmpty()) {
+            if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                        dialog.setTitle(norevs);
+                        dialog.setMessage(f.getString(norevsmsg));
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        dialog.show();
+                    }
+                });
+            }
+        } else {
+            adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList(), revSmallLayout,
+                    username, userRating, userPicture, userName, userEval, showAll, revFragToFullRevFrag);
+
+            if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        adapter.submitList(list.getList());
+                        rv.setAdapter(adapter);
+                    }
+                });
+            }
+        }
+    }
+
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         if(!response.isSuccessful()) {
@@ -73,37 +106,7 @@ public class ReviewsCallback implements Callback {
 
             Gson gson = new Gson();
             JsonObject r = gson.fromJson(responseBody, JsonObject.class);
-            JsonArray jsonArr = r.getAsJsonArray("recensioni");
-            ReviewList list = new ReviewList();
-            list.parseJSON(jsonArr);
-
-            Activity activity = f.getActivity();
-            if(list.getList().isEmpty()) {
-                if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                    activity.runOnUiThread(() -> {
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            AlertDialog dialog = new AlertDialog.Builder(activity).create();
-                            dialog.setTitle(norevs);
-                            dialog.setMessage(f.getString(norevsmsg));
-                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) ->
-                                    dialog1.dismiss());
-                            dialog.show();
-                        }
-                    });
-                }
-            } else {
-                adapter = new ReviewAdapter(f, new ReviewCallback(), list.getList(), revSmallLayout,
-                        username, userRating, userPicture, userName, userEval, showAll, revFragToFullRevFrag);
-
-                if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                    activity.runOnUiThread(() -> {
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            adapter.submitList(list.getList());
-                            rv.setAdapter(adapter);
-                        }
-                    });
-                }
-            }
+            handleReviewsSuccess(r);
             response.body().close();
         }
     }

@@ -2,6 +2,9 @@ package it.disi.unitn.lpsmt.lasagna.network.repository;
 
 import androidx.annotation.NonNull;
 import com.google.gson.JsonObject;
+
+import org.jetbrains.annotations.NotNull;
+
 import it.disi.unitn.lpsmt.lasagna.network.client.RetrofitClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -20,7 +23,7 @@ public class ReviewRepository {
         void onError(int statusCode, String errorMessage);
     }
 
-    public void getEventReviews(String eventId, ReviewDataCallback callback) {
+    public void getEventReviews(String eventId, @NotNull ReviewDataCallback callback) {
         RetrofitClient.getInstance().getReviewApi().getEventReviews(eventId).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
@@ -38,7 +41,7 @@ public class ReviewRepository {
         });
     }
 
-    public void postReview(String eventId, String title, String evaluation, String description, ReviewActionCallback callback) {
+    public void postReview(String eventId, String title, String evaluation, String description, @NonNull ReviewActionCallback callback) {
         RetrofitClient.getInstance().getReviewApi().postReview(eventId, title, evaluation, description).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

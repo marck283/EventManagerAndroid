@@ -69,7 +69,7 @@ public class RegisteredEventCallback implements Callback {
                                    @IdRes int textView20, @StringRes int time_not_selectable,
                                    @IdRes int textView39, @StringRes int duration, @IdRes int textView42,
                                    @StringRes int event_address, @IdRes int button9, @IdRes int button10,
-                                   @NavigationRes int action_eventDetailsFragment_to_reviewWriting,
+                                   @IdRes int action_eventDetailsFragment_to_reviewWriting,
                                    @IdRes int button11, @StringRes int malformed_request,
                                    @StringRes int malformed_request_message, @StringRes int no_event,
                                    @StringRes int no_event_message, @NotNull FutureTask<Void> task) {
@@ -129,6 +129,105 @@ public class RegisteredEventCallback implements Callback {
         }
     }
 
+    public void handleInfoSuccess(@NonNull JsonObject data) {
+        RegisteredEvent event = RegisteredEvent.parseJSON(data);
+
+        Activity activity = f.getActivity();
+        if (activity != null && f.isAdded()) {
+            f.requireActivity().runOnUiThread(() -> {
+                ImageView image = v.findViewById(eventPicture);
+                Glide.with(v).load(event.decodeBase64()).into(image);
+
+
+                TextView title1 = v.findViewById(title);
+                title1.setText(event.getEventName());
+
+                TextView organizzatore = v.findViewById(textView16);
+                organizzatore.setText(f.getString(organizer, event.getOrgName()));
+
+                TextView giorno = v.findViewById(textView11);
+                String[] dataArr = event.getLuogoEv().getData().split("-");
+                giorno.setText(f.getString(day_not_selectable,
+                        "\n" + dataArr[1] + "/" + dataArr[0] + "/" + dataArr[2]));
+
+                TextView ora = v.findViewById(textView20);
+                String oraS = event.getLuogoEv().getOra();
+                ora.setText(f.getString(time_not_selectable,
+                        "\n" + oraS));
+
+                String[] sDurata = event.getDurata().split(":");
+                TextView durata = v.findViewById(textView39);
+                durata.setText(f.getString(duration, sDurata[0], sDurata[1], sDurata[2]));
+
+                TextView address = v.findViewById(textView42);
+                address.setText(f.getString(event_address, event.getLuogoEv().toString()));
+                if (!address.hasOnClickListeners()) {
+                    address.setOnClickListener(c -> {
+                        GeocoderExt geocoder = new GeocoderExt(f, address);
+                        geocoder.fromLocationName(address.getText().toString(), 5);
+                    });
+                }
+
+                LuogoEv le = event.getLuogoEv();
+                if (le != null) {
+                    address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                    address.setText(f.getString(event_address, le.getAddress()));
+                }
+
+                ListenerButton qrCodeRender = v.findViewById(button9);
+                qrCodeRender.setOnClickListener(c -> {
+                    Bundle b = new Bundle();
+                    b.putString("eventId", event.getIdEvent());
+                    b.putString("userId", userJwt);
+                    b.putString("data", event.getLuogoEv().getData());
+                    b.putString("ora", event.getLuogoEv().getOra());
+
+                    task.run();
+                });
+
+                ListenerButton writeReview = v.findViewById(button10);
+                String dateTime = dataArr[2]
+                        + "-" + dataArr[0] + "-" + dataArr[1] + "T" + oraS + ":00";
+                {
+                    LocalDateTime now = LocalDateTime.now(), eventDateTime = LocalDateTime.parse(dateTime);
+                    Log.i("boolean", String.valueOf(now.isBefore(eventDateTime)));
+                    writeReview.setEnabled(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato());
+                }
+
+                writeReview.setOnClickListener(c -> {
+                    Bundle b = new Bundle();
+                    b.putString("userId", userJwt);
+                    b.putString("eventId", eventId);
+                    Navigation.findNavController(v).navigate(action_eventDetailsFragment_to_reviewWriting, b);
+                });
+
+                ListenerButton deleteTicket = v.findViewById(button11);
+                deleteTicket.setOnClickListener(c ->
+                        eventVM.deleteTicket(userJwt, event.getTicketId(),
+                                event.getIdEvent(), f, event.getLuogoEv().getData(),
+                                event.getLuogoEv().getOra(), noconn, noconnmsg));
+            });
+        }
+    }
+
+    public void handleInfoError(int statusCode) {
+        switch(statusCode) {
+            case 400 -> setAlertDialog(malformed_request, malformed_request_message);
+            case 401 -> {
+                Activity activity = f.getActivity();
+                if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                    activity.runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                            Intent loginIntent = new Intent(activity, c);
+                            loginLauncher.launch(loginIntent);
+                        }
+                    });
+                }
+            }
+            case 404 -> setAlertDialog(no_event, no_event_message);
+        }
+    }
+
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         switch (response.code()) {
@@ -136,84 +235,7 @@ public class RegisteredEventCallback implements Callback {
                 Gson gson = new GsonBuilder().create();
 
                 String body = response.body().string();
-                RegisteredEvent event = RegisteredEvent.parseJSON(gson.fromJson(body, JsonObject.class));
-
-                Activity activity = f.getActivity();
-                if (activity != null && f.isAdded()) {
-                    f.requireActivity().runOnUiThread(() -> {
-                        ImageView image = v.findViewById(eventPicture);
-                        Glide.with(v).load(event.decodeBase64()).into(image);
-
-
-                        TextView title1 = v.findViewById(title);
-                        title1.setText(event.getEventName());
-
-                        TextView organizzatore = v.findViewById(textView16);
-                        organizzatore.setText(f.getString(organizer, event.getOrgName()));
-
-                        TextView giorno = v.findViewById(textView11);
-                        String[] dataArr = event.getLuogoEv().getData().split("-");
-                        giorno.setText(f.getString(day_not_selectable,
-                                "\n" + dataArr[1] + "/" + dataArr[0] + "/" + dataArr[2]));
-
-                        TextView ora = v.findViewById(textView20);
-                        String oraS = event.getLuogoEv().getOra();
-                        ora.setText(f.getString(time_not_selectable,
-                                "\n" + oraS));
-
-                        String[] sDurata = event.getDurata().split(":");
-                        TextView durata = v.findViewById(textView39);
-                        durata.setText(f.getString(duration, sDurata[0], sDurata[1], sDurata[2]));
-
-                        TextView address = v.findViewById(textView42);
-                        address.setText(f.getString(event_address, event.getLuogoEv().toString()));
-                        if (!address.hasOnClickListeners()) {
-                            address.setOnClickListener(c -> {
-                                GeocoderExt geocoder = new GeocoderExt(f, address);
-                                geocoder.fromLocationName(address.getText().toString(), 5);
-                            });
-                        }
-
-                        LuogoEv le = event.getLuogoEv();
-                        if (le != null) {
-                            address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                            address.setText(f.getString(event_address, le.getAddress()));
-                        }
-
-                        ListenerButton qrCodeRender = v.findViewById(button9);
-                        qrCodeRender.setOnClickListener(c -> {
-                            Bundle b = new Bundle();
-                            b.putString("eventId", event.getIdEvent());
-                            b.putString("userId", userJwt);
-                            b.putString("data", event.getLuogoEv().getData());
-                            b.putString("ora", event.getLuogoEv().getOra());
-
-                            task.run();
-                        });
-
-                        ListenerButton writeReview = v.findViewById(button10);
-                        String dateTime = dataArr[2]
-                                + "-" + dataArr[0] + "-" + dataArr[1] + "T" + oraS + ":00";
-                        {
-                            LocalDateTime now = LocalDateTime.now(), eventDateTime = LocalDateTime.parse(dateTime);
-                            Log.i("boolean", String.valueOf(now.isBefore(eventDateTime)));
-                            writeReview.setEnabled(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato());
-                        }
-
-                        writeReview.setOnClickListener(c -> {
-                            Bundle b = new Bundle();
-                            b.putString("userId", userJwt);
-                            b.putString("eventId", eventId);
-                            Navigation.findNavController(v).navigate(action_eventDetailsFragment_to_reviewWriting, b);
-                        });
-
-                        ListenerButton deleteTicket = v.findViewById(button11);
-                        deleteTicket.setOnClickListener(c ->
-                                eventVM.deleteTicket(userJwt, event.getTicketId(),
-                                        event.getIdEvent(), f, event.getLuogoEv().getData(),
-                                        event.getLuogoEv().getOra(), noconn, noconnmsg));
-                    });
-                }
+                handleInfoSuccess(gson.fromJson(body, JsonObject.class));
                 response.body().close();
             }
             case 400 -> setAlertDialog(malformed_request, malformed_request_message);

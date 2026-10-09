@@ -41,7 +41,6 @@ import com.google.gson.JsonObject;
 
 import it.disi.lasagna.navigationsvm.NavigationSharedViewModel;
 import it.disi.unitn.lasagna.eventmanager.userinfo.UserInfo;
-import it.disi.unitn.lpsmt.lasagna.AuthProviders;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.login.AuthenticationInterface;
@@ -329,17 +328,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     }
 
     public void revokeAccess(MenuItem item) {
-        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                this);
-        accessToken = null;
-        profile = null;
-        prefs.setString("accessToken", "");
-        prefs.setString("userId", "");
-        prefs.apply();
-        LoginManager.getInstance().logOut();
-        vm.setToken("");
-        updateUI("logout", null, null, null, false);
-
+        logout(null);
         navigate(R.id.nav_event_list);
     }
 
@@ -352,50 +341,28 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         launcher.launch(intent);
     }
 
-    private void signInCheck(int resultCode, Intent data, @NonNull String which) {
+    private void signInCheck(int resultCode, Intent data) {
         SharedPrefs prefs = new SharedPrefs(
                 "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
 
-        Log.i("login", which);
         switch (resultCode) {
             case Activity.RESULT_OK -> {
                 //Autenticato con successo a Google o Facebook, ora autentica al server e
                 //mostra i dati del profilo richiesti
 
-                String email, picture = null;
-                if (which.equals(AuthProviders.GOOGLE)) {
-                    //Google login
-                    Log.i("login", "Google login");
-                    String token = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fToken") : null;
-                    if (token == null || token.isEmpty()) {
-                        token = prefs.getString("accessToken");
-                    }
-                    vm.setToken(token);
-                    email = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail") : null;
-                    picture = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture") : null;
-                    String displayName = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fName") : "";
-                    updateUI("login", email, displayName, picture, false);
-                } else {
-                    //Facebook login
-                    if (data != null) {
-                        accessToken = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken");
-                        email = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail");
+                String email, picture;
 
-                        //Prima modifica questa istruzione per usare il solo URL al posto di tutti i dettagli dell'immagine
-                        //Poi carica l'immagine nell'ImageView del NavigationDrawer usando Glide
-                        picture = data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture");
-                    } else {
-                        accessToken = null;
-                        email = null;
-                    }
-                    if (accessToken != null) {
-                        vm.setToken(prefs.getString("accessToken"));
-                        profile = data.getParcelableExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccount");
-                        updateUI("login", email, profile.getName(), picture, true);
-                    } else {
-                        updateUI("logout", null, null, null, false);
-                    }
+                //Google login
+                Log.i("login", "Google login");
+                String token = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fToken") : null;
+                if (token == null || token.isEmpty()) {
+                    token = prefs.getString("accessToken");
                 }
+                vm.setToken(token);
+                email = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail") : null;
+                picture = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture") : null;
+                String displayName = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fName") : "";
+                updateUI("login", email, displayName, picture, false);
             }
             case Activity.RESULT_CANCELED -> {
                 Log.i("login", "Login failed");
@@ -408,12 +375,8 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) {
-            if(data != null) {
-                signInCheck(resultCode, data, AuthProviders.GOOGLE);
-            } else {
-                signInCheck(resultCode, data, AuthProviders.FACEBOOK);
-            }
+        if((requestCode == REQ_SIGN_IN || requestCode == REQ_SIGN_IN_EV_CREATION) && data != null) {
+            signInCheck(resultCode, data);
         }
         if(requestCode == REQ_SIGN_IN_EV_CREATION && resultCode == Activity.RESULT_OK) {
             showCreaEvento();
@@ -460,8 +423,19 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     }
 
     public void logout(@Nullable Intent intent) {
-        updateUI("logout", null, null, null, false);
+        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+        prefs.setString("accessToken", "");
+        prefs.setString("userId", "");
+        prefs.apply();
+
         getViewModel().setToken("");
+        it.disi.unitn.lpsmt.lasagna.network.client.RetrofitClient.getInstance().setAccessToken("");
+
+        if (account != null) {
+            account.signOut(this, () -> updateUI("logout", null, null, null, false));
+        } else {
+            updateUI("logout", null, null, null, false);
+        }
     }
 
     public void showNotLoggedInMsg() {

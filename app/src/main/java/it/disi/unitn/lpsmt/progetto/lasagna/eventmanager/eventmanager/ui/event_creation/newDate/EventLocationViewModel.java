@@ -16,8 +16,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import java.util.List;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
+import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 
 public class EventLocationViewModel extends ViewModel {
     private EventLocationFragment f;

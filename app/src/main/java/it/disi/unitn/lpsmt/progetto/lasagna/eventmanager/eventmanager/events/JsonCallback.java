@@ -120,102 +120,100 @@ public class JsonCallback implements Callback {
         }
     }
 
-    /**
-     * Invoked for a received HTTP response.
-     *
-     * <p>Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-     * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-     *
-     * @param call
-     * @param response
-     */
+    public void handleJsonSuccess(JsonObject body) {
+        EventList ev = new EventList();
+        ev = ev.parseJSON(body);
+        if (ev != null && !ev.getList().isEmpty()) {
+            initAdapter(f, ev, day);
+            p1.submitList(ev.getList());
+
+            if (f != null) {
+                Activity activity = f.getActivity();
+                if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                    activity.runOnUiThread(() -> mRecyclerView.setAdapter(p1));
+                }
+            }
+
+            if (executor != null) {
+                executor.shutdown();
+            }
+        }
+    }
+
+    public void handleJsonError(int statusCode) {
+        switch (statusCode) {
+            case 401 -> {
+                if (f != null && launcher != null) {
+                    Activity activity = f.getActivity();
+                    if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                        activity.runOnUiThread(() -> {
+                            Intent loginIntent = new Intent(activity, LoginActivity.class);
+                            launcher.launch(loginIntent);
+                        });
+                    }
+                }
+            }
+            case 404 -> {
+                if (f != null) {
+                    Activity activity = f.getActivity();
+                    if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                        activity.runOnUiThread(() -> {
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                if (activeNoEventDialog == null || !activeNoEventDialog.isShowing()) {
+                                    AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                                    dialog.setTitle(R.string.no_org_event);
+                                    dialog.setMessage(f.getString(R.string.no_org_event_message));
+                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
+                                        dialog1.dismiss();
+                                        activeNoEventDialog = null;
+                                    });
+                                    dialog.setOnDismissListener(d -> activeNoEventDialog = null);
+                                    activeNoEventDialog = dialog;
+                                    dialog.show();
+                                }
+
+                                initAdapter(f, new EventList(), day);
+                                if (p1 != null) {
+                                    p1.clearEventList();
+                                }
+                                mRecyclerView.setAdapter(p1);
+                            }
+                        });
+                    }
+                }
+            }
+            case 500 -> {
+                if (f != null) {
+                    Activity activity = f.getActivity();
+                    if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                        activity.runOnUiThread(() -> {
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                                dialog.setTitle(R.string.unknown_error);
+                                dialog.setMessage(f.getString(R.string.unknown_error_message));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                                dialog.show();
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) {
-        EventList ev = new EventList();
         if (response.isSuccessful()) {
             try {
                 Gson gson = new GsonBuilder().create();
-                ev = ev.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
-                if (ev != null && !ev.getList().isEmpty()) {
-                    initAdapter(f, ev, day);
-                    p1.submitList(ev.getList());
-
-                    if (f != null) {
-                        Activity activity = f.getActivity();
-                        if (activity != null && f.isAdded()) {
-                            f.requireActivity().runOnUiThread(() -> mRecyclerView.setAdapter(p1));
-                        }
-                    }
-
-                    if (executor != null) {
-                        //Chiudo la pool di connessioni per terminare i thread in essa contenuti
-                        executor.shutdown();
-                    }
-                } else {
-                    Log.i("nullP", "Event list is null");
-                }
+                JsonObject body = gson.fromJson(response.body().string(), JsonObject.class);
+                handleJsonSuccess(body);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
             response.body().close();
         } else {
-            Log.i("fail", "Unsuccessful operation");
-            switch (response.code()) {
-                case 401 -> {
-                    if (f != null && launcher != null) {
-                        Activity activity = f.getActivity();
-                        if (activity != null && f.isAdded()) {
-                            Intent loginIntent = new Intent(f.requireActivity(), LoginActivity.class);
-                            launcher.launch(loginIntent);
-                        }
-                    }
-                }
-                case 404 -> {
-                    if (f != null) {
-                        Activity activity = f.getActivity();
-                        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                            activity.runOnUiThread(() -> {
-                                if (!activity.isFinishing() && !activity.isDestroyed()) {
-                                    if (activeNoEventDialog == null || !activeNoEventDialog.isShowing()) {
-                                        AlertDialog dialog = new AlertDialog.Builder(activity).create();
-                                        dialog.setTitle(R.string.no_org_event);
-                                        dialog.setMessage(f.getString(R.string.no_org_event_message));
-                                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
-                                            dialog1.dismiss();
-                                            activeNoEventDialog = null;
-                                        });
-                                        dialog.setOnDismissListener(d -> activeNoEventDialog = null);
-                                        activeNoEventDialog = dialog;
-                                        dialog.show();
-                                    }
-
-                                    initAdapter(f, new EventList(), day);
-                                    if (p1 != null) {
-                                        p1.clearEventList();
-                                    }
-                                    mRecyclerView.setAdapter(p1);
-                                }
-                            });
-                        }
-                    }
-                }
-                case 500 -> {
-                    if (f != null) {
-                        Activity activity = f.getActivity();
-                        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                            activity.runOnUiThread(() -> {
-                                if (!activity.isFinishing() && !activity.isDestroyed()) {
-                                    AlertDialog dialog = new AlertDialog.Builder(activity).create();
-                                    dialog.setTitle(R.string.unknown_error);
-                                    dialog.setMessage(f.getString(R.string.unknown_error_message));
-                                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                                    dialog.show();
-                                }
-                            });
-                        }
-                    }
-                }
-            }
+            handleJsonError(response.code());
         }
     }
 

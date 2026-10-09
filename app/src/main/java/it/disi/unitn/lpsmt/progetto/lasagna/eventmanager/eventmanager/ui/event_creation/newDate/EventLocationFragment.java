@@ -20,10 +20,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.Contract;
 
+import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerOnItemSelectedListener;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.EventViewModel;
 
 public class EventLocationFragment extends DialogFragment {
 

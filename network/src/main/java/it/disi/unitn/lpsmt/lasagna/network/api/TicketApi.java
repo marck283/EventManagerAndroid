@@ -9,10 +9,19 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+
 public interface TicketApi {
 
+    @FormUrlEncoded
     @POST("/api/v2/EventiPubblici/{eventId}/Iscrizioni")
-    Call<ResponseBody> registerForPublicEvent(@Path("eventId") String eventId);
+    Call<ResponseBody> registerForPublicEvent(
+            @Path("eventId") String eventId,
+            @Field("giorno") String giorno,
+            @Field("data") String data,
+            @Field("ora") String ora
+    );
 
     @DELETE("/api/v2/EventiPubblici/{eventId}/Iscrizioni/{ticketId}")
     Call<ResponseBody> deleteTicket(
@@ -23,8 +32,13 @@ public interface TicketApi {
     );
 
     @GET("/api/v2/ticket/{eventId}")
-    Call<JsonObject> getTicketInfo(@Path("eventId") String eventId);
+    Call<JsonObject> getTicketInfo(@Path("eventId") String eventId,
+                                   @Header("giorno") String giorno,
+                                   @Header("ora") String ora);
 
     @GET("/api/v2/QRCodeCheck/{qrCode}")
-    Call<ResponseBody> checkQRCode(@Path("qrCode") String qrCode);
+    Call<ResponseBody> checkQRCode(@Path("qrCode") String qrCode,
+                                   @Header("eventoid") String eventId,
+                                   @Header("day") String day,
+                                   @Header("hour") String hour);
 }

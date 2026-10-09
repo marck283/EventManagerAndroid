@@ -66,9 +66,8 @@ public class TerminatorCallback extends OrganizerCallback {
         }
     }
 
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) {
-        switch (response.code()) {
+    public void handleResponseCode(int code) {
+        switch(code) {
             case 400 -> setAlertDialog(malformed_request, malformed_request_message);
             case 401 -> {
                 setAlertDialog(no_session_title, no_session_content);
@@ -94,5 +93,10 @@ public class TerminatorCallback extends OrganizerCallback {
             }
             case 500 -> setAlertDialog(internal_server_error, internal_server_error);
         }
+    }
+
+    @Override
+    public void onResponse(@NonNull Call call, @NonNull Response response) {
+        handleResponseCode(response.code());
     }
 }

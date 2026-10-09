@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -50,9 +49,22 @@ public class OrganizedEventCallback extends OrganizerCallback {
 
     private final Class<? extends Activity> c;
 
-    private final int iv3, tv6, info_on_event, spinner2, orgDateTextView, tv15, spinner, orgHourTextView,
-    list_item, event_address, bt8, bt12, tv12, duration, user_not_logged_in, user_not_logged_in_message,
-    no_org_event, no_org_event_message;
+    private final int iv3;
+    private final int tv6;
+    private final int info_on_event;
+    private final int spinner2;
+    private final int orgDateTextView;
+    private final int tv15;
+    private final int spinner;
+    private final int orgHourTextView;
+    private final int list_item;
+    private final int event_address;
+    private final int bt8;
+    private final int bt12;
+    private final int tv12;
+    private final int duration;
+    private final int no_org_event;
+    private final int no_org_event_message;
 
     public OrganizedEventCallback(@NotNull View v, @NotNull Fragment f, @NotNull ActivityResultLauncher<Intent> loginLauncher,
                                   String day, @NotNull Class<? extends Activity> c, @IdRes int iv3,
@@ -60,7 +72,6 @@ public class OrganizedEventCallback extends OrganizerCallback {
                                   @IdRes int orgDateTextView, @IdRes int tv15, @IdRes int spinner,
                                   @IdRes int orgHourTextView, @LayoutRes int list_item, @StringRes int event_address,
                                   @IdRes int bt8, @IdRes int bt12, @IdRes int tv12, @StringRes int duration,
-                                  @StringRes int user_not_logged_in, @StringRes int user_not_logged_in_message,
                                   @StringRes int no_org_event, @StringRes int no_org_event_message) {
         this.v = v;
         this.f = f;
@@ -81,177 +92,161 @@ public class OrganizedEventCallback extends OrganizerCallback {
         this.bt12 = bt12;
         this.tv12 = tv12;
         this.duration = duration;
-        this.user_not_logged_in = user_not_logged_in;
-        this.user_not_logged_in_message = user_not_logged_in_message;
         this.no_org_event = no_org_event;
         this.no_org_event_message = no_org_event_message;
+    }
+
+    public void handleInfoSuccess(@NotNull JsonObject body) {
+        Gson gson = new Gson();
+        OrganizedEvent event = OrganizedEvent.parseJSON(body);
+
+        Activity activity = f.getActivity();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                ImageView iView = v.findViewById(iv3);
+                Bitmap bm = event.decodeBase64();
+                if (bm != null) {
+                    Glide.with(v).load(bm).into(iView);
+                }
+
+                TextView evName = v.findViewById(tv6);
+                evName.setText(f.getString(info_on_event, event.getEventName()));
+
+                TextInputLayout evDay = v.findViewById(spinner2);
+                MaterialAutoCompleteTextView dayText = evDay.findViewById(orgDateTextView);
+
+                ArrayList<CharSequence> dayArr = new ArrayList<>();
+                dayArr.add("---");
+                for (LuogoEv l : event.getLuogoEv()) {
+                    String[] dateArr = l.getData().split("-");
+                    dayArr.add(dateArr[1] + "/" + dateArr[0] + "/" + dateArr[2]);
+                }
+
+                dayText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (evDay.getEditText() != null &&
+                                !evDay.getEditText().getText().toString().equals("---")) {
+                            TextView address = v.findViewById(tv15);
+                            TextInputLayout spinner1 = v.findViewById(spinner);
+                            MaterialAutoCompleteTextView hourTextView = spinner1.findViewById(orgHourTextView);
+
+                            ArrayList<CharSequence> hourArr = new ArrayList<>();
+                            hourArr.add("---");
+
+                            String[] dayArr = evDay.getEditText().getText().toString().split("/");
+                            day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
+                            for (LuogoEv l : event.getOrari(day)) {
+                                hourArr.add(l.getOra());
+                            }
+
+                            hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
+                                    list_item, hourArr));
+
+                            hourTextView.addTextChangedListener(new TextWatcher() {
+                                @Override
+                                public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                                @Override
+                                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    if (hourTextView.getText() != null && !hourTextView.getText().toString().isEmpty() &&
+                                            !hourTextView.getText().toString().equals("---")) {
+                                        if (hourTextView.getText().toString().equals("---")) {
+                                            address.setText(f.getString(event_address, ""));
+                                        } else {
+                                            Button qrCodeScan = v.findViewById(bt8),
+                                                    terminaEvento = v.findViewById(bt12);
+                                            address.setText(f.getString(event_address,
+                                                    event.getLuogo(day, hourTextView.getText().toString()).getAddress()));
+                                            if (!address.hasOnClickListeners()) {
+                                                address.setOnClickListener(c -> {
+                                                    GeocoderExt geocoder = new GeocoderExt(f, address);
+                                                    geocoder.fromLocationName(address.getText().toString(), 5);
+                                                });
+                                            }
+                                            address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+                                            String[] day1 = dayText.getText().toString().split("/");
+                                            if (day1.length > 1) {
+                                                String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
+
+                                                final boolean enabled = !(event.getEventType().equals("priv") || (
+                                                        !dayText.getText().toString().equals("---") &&
+                                                                !hourTextView.getText().toString().equals("---") &&
+                                                                event.getLuogo(day2,
+                                                                        hourTextView.getText().toString()).getTerminato()));
+                                                qrCodeScan.setEnabled(enabled);
+                                                terminaEvento.setEnabled(enabled);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void afterTextChanged(Editable s) { }
+                            });
+                        } else {
+                            TextInputLayout hour = v.findViewById(spinner);
+                            MaterialAutoCompleteTextView hourTextView = hour.findViewById(orgHourTextView);
+                            hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
+                                    list_item, new ArrayList<>()));
+                            hourTextView.setText("");
+
+                            TextView address = v.findViewById(tv15);
+                            address.setText(f.getString(event_address, ""));
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) { }
+                });
+                dayText.setAdapter(new SpinnerArrayAdapter(f.requireContext(), list_item, dayArr));
+
+                TextView duration1 = v.findViewById(tv12);
+                String eventDurata = event.getDurata();
+                if (event.getDurata() == null || event.getDurata().isEmpty()) {
+                    duration1.setText(f.getString(duration, "0", "0", "0"));
+                } else {
+                    String[] durata = eventDurata.split(":");
+                    duration1.setText(f.getString(duration, durata[0], durata[1], durata[2]));
+                }
+            });
+        }
+    }
+
+    public void handleInfoError(int statusCode) {
+        Activity activity = f.getActivity();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            switch (statusCode) {
+                case 401 -> activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        Intent loginIntent = new Intent(activity, c);
+                        loginLauncher.launch(loginIntent);
+                    }
+                });
+                case 404 -> activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        AlertDialog dialog = new AlertDialog.Builder(activity).create();
+                        dialog.setTitle(no_org_event);
+                        dialog.setMessage(f.getString(no_org_event_message));
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
+                        dialog.show();
+                    }
+                });
+            }
+        }
     }
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         Gson gson = new Gson();
         if (response.isSuccessful()) {
-            OrganizedEvent event = OrganizedEvent.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
-            Log.i("OK", "OK");
-
-            Activity activity = f.getActivity();
-            if (activity != null && f.isAdded()) {
-                f.requireActivity().runOnUiThread(() -> {
-                    ImageView iView = v.findViewById(iv3);
-                    Bitmap bm = event.decodeBase64();
-                    if (bm != null) {
-                        Glide.with(v).load(bm).into(iView);
-                    }
-
-                    TextView evName = v.findViewById(tv6);
-                    evName.setText(f.getString(info_on_event, event.getEventName()));
-
-                    TextInputLayout evDay = v.findViewById(spinner2);
-                    MaterialAutoCompleteTextView dayText = evDay.findViewById(orgDateTextView);
-
-                    ArrayList<CharSequence> dayArr = new ArrayList<>();
-                    dayArr.add("---");
-                    for (LuogoEv l : event.getLuogoEv()) {
-                        String[] dateArr = l.getData().split("-");
-                        dayArr.add(dateArr[1] + "/" + dateArr[0] + "/" + dateArr[2]);
-                    }
-
-                    dayText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                            //Nulla da scrivere qui...
-                        }
-
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            if (evDay.getEditText() != null &&
-                                    !evDay.getEditText().getText().toString().equals("---")) {
-                                TextView address = v.findViewById(tv15);
-                                TextInputLayout spinner1 = v.findViewById(spinner);
-                                MaterialAutoCompleteTextView hourTextView = spinner1.findViewById(orgHourTextView);
-
-                                ArrayList<CharSequence> hourArr = new ArrayList<>();
-                                hourArr.add("---");
-
-                                String[] dayArr = evDay.getEditText().getText().toString().split("/");
-                                day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
-                                for (LuogoEv l : event.getOrari(day)) {
-                                    hourArr.add(l.getOra());
-                                }
-
-                                hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
-                                        list_item, hourArr));
-
-                                hourTextView.addTextChangedListener(new TextWatcher() {
-                                    @Override
-                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                        //Nulla da scrivere qui...
-                                    }
-
-                                    @Override
-                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                        //L'ultima condizione di questo blocco if non ci dovrebbe essere
-                                        if(hourTextView.getText() != null && !hourTextView.getText().toString().isEmpty() &&
-                                                !hourTextView.getText().toString().equals("---")) {
-                                            if(hourTextView.getText().toString().equals("---")) {
-                                                address.setText(f.getString(event_address, ""));
-                                            } else {
-                                                Button qrCodeScan = v.findViewById(bt8),
-                                                        terminaEvento = v.findViewById(bt12);
-                                                address.setText(f.getString(event_address,
-                                                        event.getLuogo(day, hourTextView.getText().toString()).getAddress()));
-                                                if(!address.hasOnClickListeners()) {
-                                                    address.setOnClickListener(c -> {
-                                                        GeocoderExt geocoder = new GeocoderExt(f, address);
-                                                        geocoder.fromLocationName(address.getText().toString(), 5);
-                                                    });
-                                                }
-                                                address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
-                                                String[] day1 = dayText.getText().toString().split("/");
-                                                if (day1.length > 1) {
-                                                    String day2 = day1[1] + "-" + day1[0] + "-" + day1[2];
-
-                                                    final boolean enabled = !(event.getEventType().equals("priv") || (
-                                                            !dayText.getText().toString().equals("---") &&
-                                                                    !hourTextView.getText().toString().equals("---") &&
-                                                                    event.getLuogo(day2,
-                                                                            hourTextView.getText().toString()).getTerminato()));
-                                                    qrCodeScan.setEnabled(enabled);
-                                                    terminaEvento.setEnabled(enabled);
-                                                    /*if (event.getEventType().equals("priv") || (
-                                                            !dayText.getText().toString().equals("---") &&
-                                                                    !hourTextView.getText().toString().equals("---") &&
-                                                                    event.getLuogo(day2,
-                                                                            hourTextView.getText().toString()).getTerminato())) {
-                                                        qrCodeScan.setEnabled(false);
-                                                        terminaEvento.setEnabled(false);
-                                                    } else {
-                                                        qrCodeScan.setEnabled(true);
-                                                        terminaEvento.setEnabled(true);
-                                                    }*/
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void afterTextChanged(Editable s) {
-                                        //Nulla da scrivere qui...
-                                    }
-                                });
-                            } else {
-                                TextInputLayout hour = v.findViewById(spinner);
-                                MaterialAutoCompleteTextView hourTextView = hour.findViewById(orgHourTextView);
-                                hourTextView.setAdapter(new SpinnerArrayAdapter(f.requireContext(),
-                                        list_item, new ArrayList<>()));
-                                hourTextView.setText("");
-
-                                TextView address = v.findViewById(tv15);
-                                address.setText(f.getString(event_address, ""));
-                            }
-                        }
-
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            //Nulla da scrivere qui...
-                        }
-                    });
-                    dayText.setAdapter(new SpinnerArrayAdapter(f.requireContext(), list_item, dayArr));
-
-                    TextView duration1 = v.findViewById(tv12);
-                    String eventDurata = event.getDurata();
-                    if(event.getDurata() == null || event.getDurata().isEmpty()) {
-                        duration1.setText(f.getString(duration,
-                                "0", "0", "0"));
-                    } else {
-                        String[] durata = eventDurata.split(":");
-                        duration1.setText(f.getString(duration, durata[0], durata[1], durata[2]));
-                    }
-                });
-            }
-            response.body().close();
+            handleInfoSuccess(gson.fromJson(response.body().string(), JsonObject.class));
         } else {
-            Activity activity = f.getActivity();
-            if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                switch (response.code()) {
-                    case 401 -> activity.runOnUiThread(() -> {
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            Intent loginIntent = new Intent(activity, c);
-                            loginLauncher.launch(loginIntent);
-                        }
-                    });
-                    case 404 -> activity.runOnUiThread(() -> {
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            AlertDialog dialog = new AlertDialog.Builder(activity).create();
-                            dialog.setTitle(no_org_event);
-                            dialog.setMessage(f.getString(no_org_event_message));
-                            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                            dialog.show();
-                        }
-                    });
-                }
-            }
+            handleInfoError(response.code());
         }
     }
 

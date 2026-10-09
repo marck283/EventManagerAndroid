@@ -3,17 +3,22 @@ package it.disi.unitn.lpsmt.lasagna.gSignIn;
 import android.app.Activity;
 import android.content.MutableContextWrapper;
 import android.net.Uri;
+import android.os.CancellationSignal;
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
+import androidx.credentials.ClearCredentialStateRequest;
 import androidx.credentials.Credential;
 import androidx.credentials.CredentialManager;
 import androidx.credentials.CredentialManagerCallback;
 import androidx.credentials.CustomCredential;
 import androidx.credentials.GetCredentialRequest;
 import androidx.credentials.GetCredentialResponse;
+import androidx.credentials.exceptions.ClearCredentialException;
 import androidx.credentials.exceptions.GetCredentialException;
 import androidx.credentials.exceptions.NoCredentialException;
 
@@ -41,7 +46,7 @@ public class GSignIn {
         GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(true)
                 .setServerClientId(serverClientId)
-                .setAutoSelectEnabled(true)
+                .setAutoSelectEnabled(false)
                 .setNonce(generateSecureRandomNonce())
                 .build();
 
@@ -138,5 +143,34 @@ public class GSignIn {
                         handleResult(result, listener);
                     }
                 });
+    }
+
+    public void signOut(@NonNull Activity activity, @Nullable Runnable onComplete) {
+        CredentialManager cm = CredentialManager.create(activity);
+        ClearCredentialStateRequest clearRequest = new ClearCredentialStateRequest();
+        cm.clearCredentialStateAsync(
+                clearRequest,
+                new CancellationSignal(),
+                ContextCompat.getMainExecutor(activity),
+                new CredentialManagerCallback<>() {
+                    @Override
+                    public void onResult(Void result) {
+                        Log.i("GSignIn", "Credential state cleared successfully");
+                        idToken = null;
+                        if (onComplete != null) {
+                            activity.runOnUiThread(onComplete);
+                        }
+                    }
+
+                    @Override
+                    public void onError(@NonNull ClearCredentialException e) {
+                        Log.e("GSignIn", "Error clearing credential state: " + e.getMessage());
+                        idToken = null;
+                        if (onComplete != null) {
+                            activity.runOnUiThread(onComplete);
+                        }
+                    }
+                }
+        );
     }
 }

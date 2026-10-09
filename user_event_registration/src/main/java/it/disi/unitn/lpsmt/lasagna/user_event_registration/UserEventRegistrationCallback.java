@@ -56,9 +56,8 @@ public class UserEventRegistrationCallback implements Callback {
         }
     }
 
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        switch (response.code()) {
+    public void handleResponseCode(int statusCode) {
+        switch (statusCode) {
             case 201 -> //Successo
                     setAlertDialog(R.string.event_registration_success_title, R.string.event_registration_success);
             case 400 -> //Richiesta malformata
@@ -83,5 +82,10 @@ public class UserEventRegistrationCallback implements Callback {
             default -> //Errore sconosciuto
                     setAlertDialog(R.string.unknown_error, R.string.unknown_error_message);
         }
+    }
+
+    @Override
+    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+        handleResponseCode(response.code());
     }
 }

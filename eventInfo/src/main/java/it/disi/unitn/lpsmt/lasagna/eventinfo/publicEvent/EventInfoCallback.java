@@ -61,18 +61,14 @@ public class EventInfoCallback implements Callback {
         }
     }
 
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if (response.isSuccessful()) {
-            EventInfo ei = new EventInfo();
+    public void handleInfoSuccess(@NotNull JsonObject data) {
+        EventInfo ei = new EventInfo();
+        final EventInfo ei1 = ei.parseJSON(data);
 
-            Gson gson = new GsonBuilder().create();
-            final EventInfo ei1 = ei.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
-
-            Activity activity = f.getActivity();
-            if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                activity.runOnUiThread(() -> {
-                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+        Activity activity = f.getActivity();
+        if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                if (!activity.isFinishing() && !activity.isDestroyed()) {
                     //Ora imposta il layout in base alla schermata visualizzata
                     ImageView imgView = v.findViewById(R.id.eventPicture);
                     imgView.setImageBitmap(ei1.decodeBase64());
@@ -196,9 +192,16 @@ public class EventInfoCallback implements Callback {
                         }
                     });
                 }
-                });
-            }
-            response.body().close();
+            });
         }
+    }
+
+    @Override
+    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+        if (response.isSuccessful()) {
+            Gson gson = new GsonBuilder().create();
+            handleInfoSuccess(gson.fromJson(response.body().string(), JsonObject.class));
+        }
+        response.body().close();
     }
 }

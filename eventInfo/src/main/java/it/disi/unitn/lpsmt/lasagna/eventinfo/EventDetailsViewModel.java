@@ -8,27 +8,34 @@ import android.view.View;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 
+import com.google.gson.JsonObject;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.concurrent.FutureTask;
 
 import it.disi.unitn.lpsmt.lasagna.checkqrcode.CheckQRCode;
+import it.disi.unitn.lpsmt.lasagna.checkqrcode.QRCodeCallback;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.OrganizedEventCallback;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.TerminatorCallback;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent.EventInfoCallback;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.RegisteredEventCallback;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.DeleteEvent;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.OrganizedEventInfo;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.TerminateEvent;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent.EventInfoCall;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.RegisteredEventInfo;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.ticket.delete_ticket.DeleteTicket;
-import it.disi.unitn.lpsmt.lasagna.user_event_registration.UserEventRegistration;
+import it.disi.unitn.lpsmt.lasagna.network.client.RetrofitClient;
+import it.disi.unitn.lpsmt.lasagna.network.repository.EventRepository;
+import it.disi.unitn.lpsmt.lasagna.network.repository.OrganizedEventRepository;
+import it.disi.unitn.lpsmt.lasagna.network.repository.TicketRepository;
+import it.disi.unitn.lpsmt.lasagna.user_event_registration.UserEventRegistrationCallback;
 
 public class EventDetailsViewModel extends ViewModel {
     private NetworkCallback callback;
@@ -51,13 +58,27 @@ public class EventDetailsViewModel extends ViewModel {
                                @StringRes int attempt_ok_msg, @IdRes int but8, @IdRes int but12,
                                @StringRes int internal_server_error) {
         Activity activity = f.getActivity();
-        if(activity != null && f.isAdded()) {
+        if (activity != null && f.isAdded()) {
             callback = new NetworkCallback(f.requireActivity());
-            if(callback.isOnline(f.requireActivity())) {
-                TerminateEvent terminate = new TerminateEvent(accessToken, eventId, data, ora, v, f,
-                        loginLauncher, loginIntent, malformed_req, malf_req_msg, no_session_title,
-                        no_session_content, attempt_ok, attempt_ok_msg, but8, but12, internal_server_error);
-                terminate.start();
+            if (callback.isOnline(f.requireActivity())) {
+                RetrofitClient.getInstance().setAccessToken(accessToken);
+
+                TerminatorCallback termCallback = new TerminatorCallback(f, loginLauncher, loginIntent, v,
+                        malformed_req, malf_req_msg, no_session_title, no_session_content, attempt_ok,
+                        attempt_ok_msg, but8, but12, internal_server_error);
+
+                OrganizedEventRepository repo = new OrganizedEventRepository(new OrganizedEventRepository.ActionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        termCallback.handleResponseCode(200);
+                    }
+
+                    @Override
+                    public void onError(int statusCode, String errorMessage) {
+                        termCallback.handleResponseCode(statusCode);
+                    }
+                });
+                repo.terminateEvent(eventId, data, ora);
             } else {
                 setNoConnectionDialog(activity, noconn, noconnmsg);
             }
@@ -67,10 +88,28 @@ public class EventDetailsViewModel extends ViewModel {
     public void deleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull Fragment f,
                             @StringRes int noconn, @StringRes int noconnmsg) {
         Activity activity = f.getActivity();
-        if(activity != null && f.isAdded()) {
-            if(callback.isOnline(f.requireActivity())) {
-                DeleteEvent deleteEvent = new DeleteEvent(accessToken, eventId, f);
-                deleteEvent.start();
+        if (activity != null && f.isAdded()) {
+            if (callback.isOnline(f.requireActivity())) {
+                RetrofitClient.getInstance().setAccessToken(accessToken);
+
+                OrganizedEventRepository repo = new OrganizedEventRepository(new OrganizedEventRepository.ActionCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Activity a = f.getActivity();
+                        if (a instanceof OrgEvInterface oei && !a.isFinishing() && !a.isDestroyed()) {
+                            oei.showRes(200);
+                        }
+                    }
+
+                    @Override
+                    public void onError(int statusCode, String errorMessage) {
+                        Activity a = f.getActivity();
+                        if (a instanceof OrgEvInterface oei && !a.isFinishing() && !a.isDestroyed()) {
+                            oei.showRes(statusCode);
+                        }
+                    }
+                });
+                repo.cancelEvent(eventId);
             } else {
                 setNoConnectionDialog(activity, noconn, noconnmsg);
             }
@@ -95,13 +134,25 @@ public class EventDetailsViewModel extends ViewModel {
                                    @StringRes int no_event_message, @StringRes int event_address,
                                    @StringRes int duration, @NotNull FutureTask<Void> task) {
         if (userJwt != null && data != null && loginLauncher != null) {
-            RegisteredEventInfo info = new RegisteredEventInfo(userJwt, eventId, f, view, data,
-                    loginLauncher, this, noconn, noconnmsg, c, eventPicture,
-                    title, organizer, textView16, textView11, day_not_selectable, textView20,
-                    time_not_selectable, textView39, duration, textView42, event_address,
-                    button9, button10, action_eventDetailsFragment_to_reviewWriting, button11,
-                    malformed_request, malformed_request_message, no_event, no_event_message, task);
-            info.start();
+            RetrofitClient.getInstance().setAccessToken(userJwt);
+            RegisteredEventCallback callback = new RegisteredEventCallback(f, view, userJwt, eventId,
+                    loginLauncher, this, noconn, noconnmsg, c, eventPicture, title, organizer, textView16,
+                    textView11, day_not_selectable, textView20, time_not_selectable, textView39, duration,
+                    textView42, event_address, button9, button10, action_eventDetailsFragment_to_reviewWriting,
+                    button11, malformed_request, malformed_request_message, no_event, no_event_message, task);
+
+            EventRepository repo = new EventRepository();
+            repo.getPublicEventInfo(eventId, new EventRepository.EventDataCallback() {
+                @Override
+                public void onSuccess(JsonObject data) {
+                    callback.handleInfoSuccess(data);
+                }
+
+                @Override
+                public void onError(int statusCode, String errorMessage) {
+                    callback.handleInfoError(statusCode);
+                }
+            });
         }
     }
 
@@ -115,42 +166,41 @@ public class EventDetailsViewModel extends ViewModel {
                                   @IdRes int orgDateTextView, @IdRes int tv15, @IdRes int spinner,
                                   @IdRes int orgHourTextView, @LayoutRes int list_item, @StringRes int event_address,
                                   @IdRes int bt8, @IdRes int bt12, @IdRes int tv12, @StringRes int duration,
-                                  @StringRes int user_not_logged_in, @StringRes int user_not_logged_in_message,
                                   @StringRes int no_org_event, @StringRes int no_org_event_message) {
         switch (which) {
             case "pub" -> {
-                EventInfoCall c1 = new EventInfoCall(eventId, view, f, regClosed);
-                c1.start();
+                EventInfoCallback infoCallback = new EventInfoCallback(f, view, regClosed);
+                EventRepository repo = new EventRepository();
+                repo.getPublicEventInfo(eventId, new EventRepository.EventDataCallback() {
+                    @Override
+                    public void onSuccess(JsonObject data) {
+                        infoCallback.handleInfoSuccess(data);
+                    }
+
+                    @Override
+                    public void onError(int statusCode, String errorMessage) { }
+                });
             }
             case "org" -> {
-                if (userJwt != null && launcher != null) {
-                    OrganizedEventInfo orgEvInfo;
-                    if (data != null) {
-                        //La data di un evento è inclusa solo quando la richiesta parte dal calendario dell'utente.
-                        orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, data, c, iv3, tv6, info_on_event,
-                                spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                                bt8, bt12, tv12, duration, user_not_logged_in, user_not_logged_in_message, no_org_event,
-                                no_org_event_message);
-                    } else {
-                        if (loginLauncher != null) {
-                            //n questo caso, ci potrebbe essere il rischio che l'utente non sia autenticato al sistema.
-                            //Questo problema è risolto aggiungendo un ActivityResultLauncher che permette l'avvio
-                            //dell'Activity di login e, una volta ricevuto il risultato, esegue di nuovo la
-                            //richiesta al server.
-                            orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, loginLauncher,
-                                    c, iv3, tv6, info_on_event,
-                                    spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                                    bt8, bt12, tv12, duration, user_not_logged_in, user_not_logged_in_message, no_org_event,
-                                    no_org_event_message);
-                        } else {
-                            //La richiesta al server viene eseguita di nuovo passando per questa riga di codice.
-                            orgEvInfo = new OrganizedEventInfo(view, f, userJwt, eventId, c, iv3, tv6, info_on_event,
-                                    spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                                    bt8, bt12, tv12, duration, user_not_logged_in, user_not_logged_in_message, no_org_event,
-                                    no_org_event_message);
+                if (userJwt != null) {
+                    RetrofitClient.getInstance().setAccessToken(userJwt);
+                    OrganizedEventCallback callback = new OrganizedEventCallback(view, f, loginLauncher, data, c, iv3, tv6, info_on_event,
+                            spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
+                            bt8, bt12, tv12, duration,
+                            no_org_event, no_org_event_message);
+
+                    OrganizedEventRepository repo = new OrganizedEventRepository();
+                    repo.getOrganizedEventInfo(eventId, new OrganizedEventRepository.EventInfoCallback() {
+                        @Override
+                        public void onSuccess(JsonObject eventInfo) {
+                            callback.handleInfoSuccess(eventInfo);
                         }
-                    }
-                    orgEvInfo.start();
+
+                        @Override
+                        public void onError(int statusCode, String errorMessage) {
+                            callback.handleInfoError(statusCode);
+                        }
+                    });
                 }
             }
         }
@@ -209,7 +259,6 @@ public class EventDetailsViewModel extends ViewModel {
                              @IdRes int orgDateTextView, @IdRes int tv15, @IdRes int spinner,
                              @IdRes int orgHourTextView, @LayoutRes int list_item, @StringRes int event_address,
                              @IdRes int bt8, @IdRes int bt12, @IdRes int tv12, @StringRes int duration,
-                             @StringRes int user_not_logged_in, @StringRes int user_not_logged_in_message,
                              @StringRes int no_org_event, @StringRes int no_org_event_message) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
@@ -218,7 +267,7 @@ public class EventDetailsViewModel extends ViewModel {
                 requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher,
                         regClosed, c, iv3, tv6, info_on_event,
                         spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                        bt8, bt12, tv12, duration, user_not_logged_in, user_not_logged_in_message, no_org_event,
+                        bt8, bt12, tv12, duration, no_org_event,
                         no_org_event_message);
             } else {
                 //Aggiungi un listener per cercare le informazioni sull'evento quando sarà tornata la connessione ad Internet.
@@ -227,7 +276,7 @@ public class EventDetailsViewModel extends ViewModel {
                         requestEventInfo(which, eventId, view, f, userJwt, data, launcher,
                                 loginLauncher, regClosed, c, iv3, tv6, info_on_event,
                                 spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                                bt8, bt12, tv12, duration, user_not_logged_in, user_not_logged_in_message, no_org_event,
+                                bt8, bt12, tv12, duration, no_org_event,
                                 no_org_event_message));
                 callback.unregisterNetworkCallback();
                 setNoConnectionDialog(activity, noconn, noconnmsg);
@@ -237,19 +286,37 @@ public class EventDetailsViewModel extends ViewModel {
     }
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull Fragment f,
-                             @NonNull String day, @NonNull String time, @Nullable ActivityResultLauncher<Intent> launcher,
+                             @NonNull String day, @NonNull String time,
+                             @Nullable ActivityResultLauncher<Intent> launcher,
                              @StringRes int noconn, @StringRes int noconnmsg, @NotNull Class<? extends Activity> c) {
         Activity activity = f.getActivity();
-        if(activity != null && f.isAdded()) {
+        if (activity != null && f.isAdded()) {
             callback = new NetworkCallback(f.requireActivity());
-            if(callback.isOnline(f.requireActivity())) {
-                UserEventRegistration uer = new UserEventRegistration(accessToken, eventId, day,
-                        time, f, launcher, c);
-                uer.start();
+            if (callback.isOnline(f.requireActivity())) {
+                RetrofitClient.getInstance().setAccessToken(accessToken);
+                TicketRepository repo = getTicketRepository(f, launcher, c);
+                repo.registerForPublicEvent(eventId, day, time);
             } else {
                 setNoConnectionDialog(activity, noconn, noconnmsg);
             }
         }
+    }
+
+    @NonNull
+    private static TicketRepository getTicketRepository(@NonNull Fragment f, @Nullable ActivityResultLauncher<Intent> launcher, @NonNull Class<? extends Activity> c) {
+        UserEventRegistrationCallback uerCallback = new UserEventRegistrationCallback(f, launcher, c);
+
+        return new TicketRepository(new TicketRepository.TicketActionCallback() {
+            @Override
+            public void onSuccess(int statusCode) {
+                uerCallback.handleResponseCode(statusCode);
+            }
+
+            @Override
+            public void onError(int statusCode, String errorMessage) {
+                uerCallback.handleResponseCode(statusCode);
+            }
+        });
     }
 
     public void deleteTicket(@NonNull String accessToken, @NonNull String ticketId,
@@ -257,18 +324,48 @@ public class EventDetailsViewModel extends ViewModel {
                              @NonNull String data, @NonNull String ora,
                              @StringRes int noconn, @StringRes int noconnmsg) {
         Activity activity = f.getActivity();
-        if(activity != null && f.isAdded()) {
+        if (activity != null && f.isAdded()) {
             callback = new NetworkCallback(f.requireActivity());
-            if(callback.isOnline(f.requireActivity())) {
-                DeleteTicket delete = new DeleteTicket(eventId, ticketId, accessToken, f, data, ora);
-                delete.start();
+            if (callback.isOnline(f.requireActivity())) {
+                RetrofitClient.getInstance().setAccessToken(accessToken);
+
+                TicketRepository repo = new TicketRepository(new TicketRepository.TicketActionCallback() {
+                    @Override
+                    public void onSuccess(int statusCode) {
+                        Activity a = f.getActivity();
+                        if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
+                            a.runOnUiThread(() -> {
+                                AlertDialog dialog = new AlertDialog.Builder(a).create();
+                                dialog.setTitle(R.string.deletion_successful);
+                                dialog.setMessage(f.getString(R.string.deletion_successful_message));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (d, w) -> d.dismiss());
+                                dialog.show();
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onError(int statusCode, String errorMessage) {
+                        Activity a = f.getActivity();
+                        if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
+                            a.runOnUiThread(() -> {
+                                AlertDialog dialog = new AlertDialog.Builder(a).create();
+                                dialog.setTitle(R.string.internal_server_error);
+                                dialog.setMessage(f.getString(R.string.internal_server_error));
+                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (d, w) -> d.dismiss());
+                                dialog.show();
+                            });
+                        }
+                    }
+                });
+                repo.deleteTicket(eventId, ticketId, data, ora);
             } else {
                 setNoConnectionDialog(activity, noconn, noconnmsg);
             }
         }
     }
 
-    public Void checkQR(@NonNull String userJwt, @NonNull String qrCode, @NonNull String eventId,
+    public Void checkQR(@NonNull String qrCode, @NonNull String eventId,
                         @NonNull String day, @NonNull String hour, @NonNull Fragment f,
                         @StringRes int validQRCT, @StringRes int validQRCMsg,
                         @StringRes int noconn, @StringRes int noconnmsg, @StringRes int invalid_qr_code,
@@ -281,10 +378,15 @@ public class EventDetailsViewModel extends ViewModel {
             if(callback.isOnline(f.requireActivity())) {
                 String[] dataArr = day.split("/");
                 day = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
-                CheckQRCode check = new CheckQRCode(userJwt, qrCode, eventId, day, hour, f,
-                        validQRCT, validQRCMsg, invalid_qr_code, invalid_qr_code_message,
-                        malformed_request, malformed_request_message, no_session_title, no_session_message);
-                check.start();
+                try {
+                    QRCodeCallback callback = new QRCodeCallback(f, validQRCT, validQRCMsg, invalid_qr_code,
+                            invalid_qr_code_message, malformed_request, malformed_request_message,
+                            no_session_title, no_session_message);
+                    CheckQRCode check = new CheckQRCode();
+                    check.checkQRCode(qrCode, eventId, day, hour, callback);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             } else {
                 setNoConnectionDialog(activity, noconn, noconnmsg);
             }

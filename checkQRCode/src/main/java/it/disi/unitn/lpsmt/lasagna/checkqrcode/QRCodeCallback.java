@@ -53,6 +53,19 @@ public class QRCodeCallback implements Callback {
         }
     }
 
+    public void handleResponseCode(int statusCode) {
+        switch (statusCode) {
+            case 200 -> // OK
+                    setAlertDialog(validQRCT, validQRCMsg);
+            case 400 -> // Richiesta malformata
+                    setAlertDialog(malformed_request, malformed_request_message);
+            case 401 -> // Utente non autenticato
+                    setAlertDialog(no_session_title, no_session_message);
+            case 404 -> // QR Code non valido
+                    setAlertDialog(invalid_qr_code, invalid_qr_code_message);
+        }
+    }
+
     @Override
     public void onFailure(@NonNull Call call, @NonNull IOException e) {
         try {
@@ -64,15 +77,6 @@ public class QRCodeCallback implements Callback {
 
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) {
-        switch (response.code()) {
-            case 200 -> //OK
-                    setAlertDialog(validQRCT, validQRCMsg);
-            case 400 -> //Richiesta malformata
-                    setAlertDialog(malformed_request, malformed_request_message);
-            case 401 -> //Utente non autenticato
-                    setAlertDialog(no_session_title, no_session_message);
-            case 404 -> //QR Code non valido
-                    setAlertDialog(invalid_qr_code, invalid_qr_code_message);
-        }
+        handleResponseCode(response.code());
     }
 }

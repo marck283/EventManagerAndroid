@@ -17,6 +17,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
+import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 

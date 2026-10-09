@@ -24,7 +24,7 @@ public class PrivEvAdapter extends EventAdapter {
         this.day = day;
     }
 
-    protected PrivEvAdapter(@NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback) {
+    public PrivEvAdapter(@NonNull DiffUtil.ItemCallback<it.disi.unitn.lpsmt.lasagna.localdatabase.Event> diffCallback) {
         super(diffCallback);
         this.day = "";
     }

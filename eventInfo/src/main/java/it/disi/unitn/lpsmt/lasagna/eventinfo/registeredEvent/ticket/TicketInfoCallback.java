@@ -58,30 +58,38 @@ public class TicketInfoCallback implements Callback {
         }
     }
 
+    public void handleTicketSuccess(JsonObject ticketJson) {
+        Ticket ticket = Ticket.parseJSON(ticketJson);
+
+        Activity activity = f.getActivity();
+        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+            activity.runOnUiThread(() -> {
+                try {
+                    ImageView imageViewQrCode = v.findViewById(R.id.qrCode);
+                    Glide.with(v).load(ticket.getQR()).into(imageViewQrCode);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
+    public void handleTicketError(int statusCode) {
+        switch (statusCode) {
+            case 400 -> setAlertDialog(R.string.malformed_request_or_invalid_date, R.string.malformed_request_or_invalid_date_message);
+            case 401 -> setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
+            case 404 -> setAlertDialog(R.string.no_ticket, R.string.no_ticket_message);
+        }
+    }
+
     @Override
     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
         if(response.isSuccessful()) {
             Gson gson = new GsonBuilder().create();
-            Ticket ticket = Ticket.parseJSON(gson.fromJson(response.body().string(), JsonObject.class));
-
-            Activity activity = f.getActivity();
-            if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                activity.runOnUiThread(() -> {
-                    try {
-                        ImageView imageViewQrCode = v.findViewById(R.id.qrCode);
-                        Glide.with(v).load(ticket.getQR()).into(imageViewQrCode);
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
+            handleTicketSuccess(gson.fromJson(response.body().string(), JsonObject.class));
             response.body().close();
         } else {
-            switch (response.code()) {
-                case 400 -> setAlertDialog(R.string.malformed_request_or_invalid_date, R.string.malformed_request_or_invalid_date_message);
-                case 401 -> setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
-                case 404 -> setAlertDialog(R.string.no_ticket, R.string.no_ticket_message);
-            }
+            handleTicketError(response.code());
         }
     }
 }

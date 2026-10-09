@@ -36,18 +36,18 @@ public class SignUpOnClickListener implements View.OnClickListener {
     private final Class<? extends Activity> c;
 
     public SignUpOnClickListener(@NotNull SharedPrefs prefs, @NotNull String eventId,
-                                 @NotNull String day, @NotNull String time, @NotNull EventDetailsViewModel vm,
+                                 @org.jetbrains.annotations.Nullable String day, @org.jetbrains.annotations.Nullable String time,
+                                 @NotNull EventDetailsViewModel vm,
                                  @NotNull ActivityResultLauncher<Intent> launcher,
                                  @NotNull Fragment f, @StringRes int noconn, @StringRes int noconnmsg,
                                  @IdRes int spinner, @IdRes int dateArray, @NotNull Class<? extends Activity> c) {
-        if(eventId.isEmpty() || day.isEmpty() || time.isEmpty()) {
-            throw new IllegalArgumentException("Nessun argomento fornito a questo costruttore puo' essere" +
-                    " una stringa vuota.");
+        if (eventId == null || eventId.isEmpty()) {
+            throw new IllegalArgumentException("eventId non puo' essere null o una stringa vuota.");
         }
         this.prefs = prefs;
         this.eventId = eventId;
-        this.day = day;
-        this.time = time;
+        this.day = day != null ? day : "";
+        this.time = time != null ? time : "";
         mViewModel = vm;
         loginLauncher = launcher;
         this.f = f;
@@ -60,14 +60,19 @@ public class SignUpOnClickListener implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        TextInputLayout spinner1 = view.findViewById(spinner), spinner2 = view.findViewById(dateArray);
+        View root = f.getView() != null ? f.getView() : view.getRootView();
+        TextInputLayout spinner1 = root.findViewById(spinner), spinner2 = root.findViewById(dateArray);
+        if (spinner1 == null || spinner2 == null) {
+            return;
+        }
         EditText spinnerText = spinner1.getEditText(), spinner2Text = spinner2.getEditText();
         String token = prefs.getString("accessToken");
         if (eventId != null &&
-                spinnerText != null &&
+                spinnerText != null && spinnerText.getText() != null &&
                 !spinnerText.getText().toString().isEmpty() &&
                 !spinnerText.getText().toString().equals("---") &&
-                spinner2Text != null && !spinner2Text.getText().toString().isEmpty() &&
+                spinner2Text != null && spinner2Text.getText() != null &&
+                !spinner2Text.getText().toString().isEmpty() &&
                 !spinner2Text.getText().toString().equals("---")) {
             String[] dayArr = spinnerText.getText().toString().split("/");
             day = dayArr[1] + "-" + dayArr[0] + "-" + dayArr[2];
