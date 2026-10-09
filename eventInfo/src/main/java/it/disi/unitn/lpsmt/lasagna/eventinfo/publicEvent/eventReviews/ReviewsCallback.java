@@ -2,7 +2,6 @@ package it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent.eventReviews;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.util.Log;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
@@ -12,19 +11,12 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-public class ReviewsCallback implements Callback {
+public class ReviewsCallback {
 
     private ReviewAdapter adapter;
 
@@ -55,16 +47,7 @@ public class ReviewsCallback implements Callback {
         this.revFragToFullRevFrag = revFragToFullRevFrag;
     }
 
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        try {
-            throw e;
-        } catch (Throwable e1) {
-            e1.printStackTrace();
-        }
-    }
-
-    public void handleReviewsSuccess(JsonObject r) {
+    public void handleReviewsSuccess(@NonNull JsonObject r) {
         JsonArray jsonArr = r.getAsJsonArray("recensioni");
         ReviewList list = new ReviewList();
         list.parseJSON(jsonArr);
@@ -94,20 +77,6 @@ public class ReviewsCallback implements Callback {
                     }
                 });
             }
-        }
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if(!response.isSuccessful()) {
-            Log.i("noResponse", String.valueOf(response.code()));
-        } else {
-            String responseBody = response.body().string();
-
-            Gson gson = new Gson();
-            JsonObject r = gson.fromJson(responseBody, JsonObject.class);
-            handleReviewsSuccess(r);
-            response.body().close();
         }
     }
 }

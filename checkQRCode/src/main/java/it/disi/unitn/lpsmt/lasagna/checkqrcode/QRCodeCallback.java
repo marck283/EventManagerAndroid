@@ -2,20 +2,14 @@ package it.disi.unitn.lpsmt.lasagna.checkqrcode;
 
 import android.app.AlertDialog;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-public class QRCodeCallback implements Callback {
+public class QRCodeCallback {
 
     private final Fragment f;
 
@@ -64,19 +58,5 @@ public class QRCodeCallback implements Callback {
             case 404 -> // QR Code non valido
                     setAlertDialog(invalid_qr_code, invalid_qr_code_message);
         }
-    }
-
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        try {
-            throw e;
-        } catch(IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) {
-        handleResponseCode(response.code());
     }
 }

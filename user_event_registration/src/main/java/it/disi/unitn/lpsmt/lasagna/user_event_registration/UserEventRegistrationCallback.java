@@ -5,19 +5,12 @@ import android.app.AlertDialog;
 import android.content.Intent;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
-public class UserEventRegistrationCallback implements Callback {
+public class UserEventRegistrationCallback {
 
     private final Fragment f;
 
@@ -47,15 +40,6 @@ public class UserEventRegistrationCallback implements Callback {
         }
     }
 
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        try {
-            throw e;
-        } catch (Throwable e1) {
-            e1.printStackTrace();
-        }
-    }
-
     public void handleResponseCode(int statusCode) {
         switch (statusCode) {
             case 201 -> //Successo
@@ -82,10 +66,5 @@ public class UserEventRegistrationCallback implements Callback {
             default -> //Errore sconosciuto
                     setAlertDialog(R.string.unknown_error, R.string.unknown_error_message);
         }
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        handleResponseCode(response.code());
     }
 }

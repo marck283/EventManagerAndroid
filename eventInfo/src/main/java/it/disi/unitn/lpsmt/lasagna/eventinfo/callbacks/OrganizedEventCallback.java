@@ -15,29 +15,24 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.OrganizedEvent;
-import okhttp3.Call;
-import okhttp3.Response;
 
-public class OrganizedEventCallback extends OrganizerCallback {
+public class OrganizedEventCallback {
 
     private final View v;
 
@@ -97,7 +92,6 @@ public class OrganizedEventCallback extends OrganizerCallback {
     }
 
     public void handleInfoSuccess(@NotNull JsonObject body) {
-        Gson gson = new Gson();
         OrganizedEvent event = OrganizedEvent.parseJSON(body);
 
         Activity activity = f.getActivity();
@@ -239,15 +233,4 @@ public class OrganizedEventCallback extends OrganizerCallback {
             }
         }
     }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        Gson gson = new Gson();
-        if (response.isSuccessful()) {
-            handleInfoSuccess(gson.fromJson(response.body().string(), JsonObject.class));
-        } else {
-            handleInfoError(response.code());
-        }
-    }
-
 }

@@ -82,7 +82,6 @@ public class GoogleLogin {
                     public void onError(String errorMessage) {
                         if (a instanceof AuthenticationInterface authInterface) {
                             authInterface.showNotLoggedInMsg();
-                            authInterface.logout(intent);
                         }
                     }
                 });

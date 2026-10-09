@@ -15,20 +15,19 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.jetbrains.annotations.Contract;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.matchers.Matcher;
-import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_creation.newDate.text_masks.Mask;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
+
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 
 public class NewDateFragment extends DialogFragment {
 
@@ -36,20 +35,9 @@ public class NewDateFragment extends DialogFragment {
 
     private EventViewModel evm;
 
-    private boolean dateOK = false;
-
     @NonNull
     public static NewDateFragment newInstance() {
         return new NewDateFragment();
-    }
-
-    @NonNull
-    @Contract(pure = true)
-    private String padStart(@NonNull String s) {
-        if(s.length() < 2) {
-            return "0" + s;
-        }
-        return s;
     }
 
     @Override
@@ -59,75 +47,46 @@ public class NewDateFragment extends DialogFragment {
     }
 
     private boolean parseBeginDate(@NonNull String t) {
-        if (t.length() == 10) {
-            try {
-                Matcher matcher;
-                int substr = Integer.parseInt(t.substring(6));
-                if (substr % 400 == 0 || (substr % 100 == 0 && substr % 4 != 0)) {
-                    //Anno bisestile
-                    matcher = new Matcher("(((10|[0-2][1-9])/02)|(([23]0|[0-2][1-9])/" +
-                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9][0-9]\\d{2}", t);
-                } else {
-                    matcher = new Matcher("((([12]0|[01]9|[0-2][1-8])/02)|(([23]0|[0-2][1-9])/" +
-                            "(0[469]|11))|((31|[123]0|[0-2][1-9])/(0[13578]|1[02])))/[1-9][0-9]\\d{2}", t);
-                }
-                if (matcher.isValid()) {
-                    SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
+        if (t.isEmpty()) {
+            return false;
+        }
+        try {
+            SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
 
-                    //Soluzione al problema dell'inserimento della data corrente
-                    Calendar calendar = new GregorianCalendar(Locale.ITALIAN);
-                    String today = padStart(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))) + "/"
-                            + padStart(String.valueOf(calendar.get(Calendar.MONTH) + 1))
-                            + "/" + calendar.get(Calendar.YEAR);
+            Date toCheck = sdformat.parse(t);
+            Date d = sdformat.parse(sdformat.format(new Date()));
 
-                    boolean over = false;
-                    Date toCheck = sdformat.parse(t);
-                    Date d = sdformat.parse(today);
-
-                    if (toCheck != null && toCheck.compareTo(d) >= 0) {
-                        over = true;
-
-                        String[] dataArr = t.split("/");
-                        t = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
-                        mViewModel.setData(t);
-                    } else {
-                        setAlertDialog(R.string.wrong_date, getString(R.string.date_less_than_current_date));
-                    }
-                    return over;
-                } else {
-                    setAlertDialog(R.string.incorrect_date_format_title, getString(R.string.incorrect_date_format));
-                }
-            } catch (NumberFormatException ex) {
-                setAlertDialog(R.string.incorrect_date_format_title, getString(R.string.non_numeric_year_inserted));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            if (toCheck != null && toCheck.compareTo(d) >= 0) {
+                String[] dataArr = t.split("/");
+                t = dataArr[1] + "-" + dataArr[0] + "-" + dataArr[2];
+                mViewModel.setData(t);
+                return true;
+            } else {
+                setAlertDialog(R.string.wrong_date, getString(R.string.date_less_than_current_date));
             }
-        } else {
-            setAlertDialog(R.string.incorrect_date_format_title, getString(R.string.incorrect_date_format));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return false;
     }
 
     private boolean parseBeginHour(@NonNull String t1, @NonNull String date) {
-        Matcher matcher = new Matcher("([0-1]\\d|2[0-3]):[0-5]\\d", t1);
-        if (matcher.matches()) {
-            //Soluzione al problema dell'orario passato per la giornata corrente
-            if(dateOK) {
-                Date now = new Date();
-                String[] dateArr = date.split("/"), hourArr = t1.split(":");
-                Calendar calendar = new GregorianCalendar(Integer.parseInt(dateArr[2]),
-                        Integer.parseInt(dateArr[1]), Integer.parseInt(dateArr[0]), Integer.parseInt(hourArr[0]),
-                        Integer.parseInt(hourArr[1]));
-                if(now.before(calendar.getTime())) {
-                    mViewModel.setOra(t1);
-                    return true;
-                } else {
-                    setAlertDialog(R.string.incorrect_hour_value, getString(R.string.incorrect_hour_value_message));
-                }
-            }
+        if (t1.isEmpty() || date.isEmpty()) {
             return false;
         }
-        setAlertDialog(R.string.incorrect_hour_format_title, getString(R.string.incorrect_hour_format));
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ITALIAN);
+            Date eventDateTime = sdf.parse(date + " " + t1);
+
+            if (eventDateTime != null && eventDateTime.after(new Date())) {
+                mViewModel.setOra(t1);
+                return true;
+            } else {
+                setAlertDialog(R.string.incorrect_hour_value, getString(R.string.incorrect_hour_value_message));
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -137,16 +96,17 @@ public class NewDateFragment extends DialogFragment {
             return false;
         }
 
-        Matcher matcher = new Matcher("[1-9]\\d*", t3);
         try {
-            if (matcher.isValid()) {
-                mViewModel.setPosti(Integer.parseInt(t3));
+            int seats = Integer.parseInt(t3);
+            if (seats > 0) {
+                mViewModel.setPosti(seats);
                 return true;
             }
-            setAlertDialog(R.string.incorrect_seats_format, getString(R.string.incorrect_seats_format));
-        } catch (NumberFormatException ex) {
-            setAlertDialog(R.string.incorrect_seats_format, getString(R.string.incorrect_seats_format));
+        } catch (NumberFormatException ignored) {
+            // Purposefully left blank here...
         }
+
+        setAlertDialog(R.string.incorrect_seats_format, getString(R.string.incorrect_seats_format));
         return false;
     }
 
@@ -181,19 +141,52 @@ public class NewDateFragment extends DialogFragment {
         TextInputEditText beginDate = beginDateInputLayout.findViewById(R.id.begin_date);
         beginDate.setOnFocusChangeListener((v, hasFocus) -> {
             if(!hasFocus && beginDate.getText() != null) {
-                dateOK = parseBeginDate(beginDate.getText().toString());
+                parseBeginDate(beginDate.getText().toString());
             }
         });
-        beginDate.addTextChangedListener(new Mask("##/##/####"));
+
+        View.OnClickListener showDatePicker = v -> {
+            MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                    .setTitleText(R.string.insert_date)
+                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                    .build();
+
+            datePicker.addOnPositiveButtonClickListener(selection -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALIAN);
+                String formattedDate = sdf.format(new Date(selection));
+                beginDate.setText(formattedDate);
+                parseBeginDate(formattedDate);
+            });
+
+            datePicker.show(getChildFragmentManager(), "DATE_PICKER");
+        };
+        beginDate.setOnClickListener(showDatePicker);
+        beginDateInputLayout.setEndIconOnClickListener(showDatePicker);
 
         TextInputLayout beginTimeLayout = view.findViewById(R.id.btInputLayout);
         TextInputEditText beginTime = beginTimeLayout.findViewById(R.id.begin_time);
-        beginTime.setOnFocusChangeListener((v, hasFocus) -> {
-            if(!hasFocus && beginTime.getText() != null && beginDate.getText() != null) {
-                parseBeginHour(beginTime.getText().toString(), beginDate.getText().toString());
-            }
-        });
-        beginTime.addTextChangedListener(new Mask("##:##"));
+
+        View.OnClickListener showTimePicker = v -> {
+            Calendar calendar = Calendar.getInstance();
+            MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
+                    .setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setHour(calendar.get(Calendar.HOUR_OF_DAY))
+                    .setMinute(calendar.get(Calendar.MINUTE))
+                    .setTitleText(R.string.insert_hour)
+                    .build();
+
+            timePicker.addOnPositiveButtonClickListener(v1 -> {
+                String formattedTime = String.format(Locale.ITALIAN, "%02d:%02d", timePicker.getHour(), timePicker.getMinute());
+                beginTime.setText(formattedTime);
+                if (beginDate.getText() != null) {
+                    parseBeginHour(formattedTime, beginDate.getText().toString());
+                }
+            });
+
+            timePicker.show(getChildFragmentManager(), "TIME_PICKER");
+        };
+        beginTime.setOnClickListener(showTimePicker);
+        beginTimeLayout.setEndIconOnClickListener(showTimePicker);
 
         ListenerButton b = view.findViewById(R.id.button3);
         b.setOnClickListener(c -> {

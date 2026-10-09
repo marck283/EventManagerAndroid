@@ -11,8 +11,6 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 public class GeocoderExt {
@@ -21,29 +19,6 @@ public class GeocoderExt {
     private final Fragment f;
 
     private final TextView address;
-
-    private class GeocoderThread extends Thread {
-
-        private final String locationName;
-
-        private final int maxResults;
-
-        public GeocoderThread(@NotNull String ln, int maxRes) {
-            locationName = ln;
-            maxResults = maxRes;
-        }
-
-        public void run() {
-            Geocoder.GeocodeListener geocodeListener = addresses -> {
-                if (!addresses.isEmpty()) {
-                    startGoogleMaps(f, address, addresses);
-                } else {
-                    noSuchAddressDialog(f);
-                }
-            };
-            geocoder.getFromLocationName(locationName, maxResults, geocodeListener);
-        }
-    }
 
     public GeocoderExt(@NonNull Fragment f, @NonNull TextView address) {
         this.f = f;
@@ -81,10 +56,5 @@ public class GeocoderExt {
                 noSuchAddressDialog(f);
             }
         });
-    }
-
-    public void fromLocationNameThread(String locationName, @IntRange int maxResults) {
-        GeocoderThread t1 = new GeocoderThread(locationName, maxResults);
-        t1.start();
     }
 }

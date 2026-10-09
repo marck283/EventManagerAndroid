@@ -46,7 +46,7 @@ public class QRCodeRenderingFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         QRCodeRenderingViewModel mViewModel = new ViewModelProvider(this).get(QRCodeRenderingViewModel.class);
-        mViewModel.getBarcode(this, v, eventId, userId, data, ora);
+        mViewModel.getBarcode(this, v, eventId, userId, data, ora, R.id.qrCode);
     }
 
 }

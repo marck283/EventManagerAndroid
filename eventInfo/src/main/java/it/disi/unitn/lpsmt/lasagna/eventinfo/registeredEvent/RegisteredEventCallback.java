@@ -12,20 +12,16 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.IdRes;
-import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.concurrent.FutureTask;
 
@@ -33,11 +29,8 @@ import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
-public class RegisteredEventCallback implements Callback {
+public class RegisteredEventCallback {
     private final Fragment f;
 
     private final View v;
@@ -117,15 +110,6 @@ public class RegisteredEventCallback implements Callback {
                     dialog.show();
                 }
             });
-        }
-    }
-
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        try {
-            throw e;
-        } catch (IOException e1) {
-            e1.printStackTrace();
         }
     }
 
@@ -212,32 +196,6 @@ public class RegisteredEventCallback implements Callback {
 
     public void handleInfoError(int statusCode) {
         switch(statusCode) {
-            case 400 -> setAlertDialog(malformed_request, malformed_request_message);
-            case 401 -> {
-                Activity activity = f.getActivity();
-                if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-                    activity.runOnUiThread(() -> {
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
-                            Intent loginIntent = new Intent(activity, c);
-                            loginLauncher.launch(loginIntent);
-                        }
-                    });
-                }
-            }
-            case 404 -> setAlertDialog(no_event, no_event_message);
-        }
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        switch (response.code()) {
-            case 200 -> {
-                Gson gson = new GsonBuilder().create();
-
-                String body = response.body().string();
-                handleInfoSuccess(gson.fromJson(body, JsonObject.class));
-                response.body().close();
-            }
             case 400 -> setAlertDialog(malformed_request, malformed_request_message);
             case 401 -> {
                 Activity activity = f.getActivity();

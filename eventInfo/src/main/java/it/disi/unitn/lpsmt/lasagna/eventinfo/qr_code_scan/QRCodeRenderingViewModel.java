@@ -14,7 +14,9 @@ import it.disi.unitn.lpsmt.lasagna.network.repository.TicketRepository;
 
 public class QRCodeRenderingViewModel extends ViewModel {
 
-    public void getBarcode(@NonNull Fragment f, @NonNull View v, @NonNull String eventId, @NonNull String userId, @NonNull String data, @NonNull String ora) {
+    public void getBarcode(@NonNull Fragment f, @NonNull View v, @NonNull String eventId,
+                           @NonNull String userId, @NonNull String data, @NonNull String ora,
+                           int qrCodeViewId) {
         if (!eventId.isEmpty() && !userId.isEmpty() && !data.isEmpty() && !ora.isEmpty()) {
             RetrofitClient.getInstance().setAccessToken(userId);
             TicketInfoCallback callback = new TicketInfoCallback(f, v);
@@ -23,7 +25,7 @@ public class QRCodeRenderingViewModel extends ViewModel {
             repo.getTicketInfo(eventId, data, ora, new TicketRepository.TicketDataCallback() {
                 @Override
                 public void onSuccess(JsonObject data) {
-                    callback.handleTicketSuccess(data);
+                    callback.handleTicketSuccess(data, qrCodeViewId);
                 }
 
                 @Override

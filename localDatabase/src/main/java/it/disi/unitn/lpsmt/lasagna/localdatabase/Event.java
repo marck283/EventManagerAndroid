@@ -56,9 +56,10 @@ public class Event {
      * @return Il valore decodificato in tipo Bitmap
      */
     public Bitmap decodeBase64() {
-        byte[] decodedImg = Base64.decode(eventPic
-                .replace("data:image/png;base64,", "")
-                .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
+        int commaIndex = eventPic.indexOf(',');
+        byte[] decodedImg = Base64.decode(
+                (commaIndex != -1) ? eventPic.substring(commaIndex + 1) : eventPic,
+                Base64.DEFAULT); //Ritorna una stringa in formato Base64
         return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
     }
 

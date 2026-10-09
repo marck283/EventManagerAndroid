@@ -38,12 +38,12 @@ import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.QrCodeOnClickListe
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.RatingsOnClickListener;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.SignUpOnClickListener;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.TerminaEventoOnClickListener;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.qr_code_scan.QRCodeRenderingFragment;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
+import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.event_details.qr_code_scan.QRCodeRenderingFragment;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_login.ui.login.LoginActivity;
 
 public class EventDetailsFragment extends Fragment implements EventDetailsInterface {

@@ -23,4 +23,11 @@
     <string name="malformed_request_or_invalid_date_message">Richiesta malformata o data non valida.</string>
     <string name="no_ticket">Nessun biglietto trovato</string>
     <string name="no_ticket_message">Nessun biglietto trovato per questo utente.</string>
+    <string name="review_creation_successful">Recensione creata con successo</string>
+    <string name="review_creation_successful_message">La recensione è stata pubblicata con successo!</string>
+    <string name="malformed_request">Richiesta malformata</string>
+    <string name="malformed_request_message">La richiesta inviata era malformata. contattare lo sviluppatore per sistemare il problema.</string>
+    <string name="retry_later">Errore interno al server. Si prega di riprovare più tardi.</string>
+    <string name="unknown_error">Errore sconosciuto</string>
+    <string name="unknown_error_message">Si è verificato un errore sconosciuto. Si prega di contattare lo sviluppatore.</string>
 </resources>

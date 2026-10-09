@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class TerminatorCallback extends OrganizerCallback {
+public class TerminatorCallback {
 
     private final Fragment f;
 
@@ -93,10 +93,5 @@ public class TerminatorCallback extends OrganizerCallback {
             }
             case 500 -> setAlertDialog(internal_server_error, internal_server_error);
         }
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) {
-        handleResponseCode(response.code());
     }
 }

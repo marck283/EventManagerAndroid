@@ -34,7 +34,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/insert_hour"
-                    android:inputType="time" />
+                    android:focusable="false"
+                    android:clickable="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,7 +53,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/insert_date"
-                    android:inputType="date" />
+                    android:focusable="false"
+                    android:clickable="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/insert_seats"
-                    android:inputType="number"/>
+                    android:inputType="number" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

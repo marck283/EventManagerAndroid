@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationIn
         dialog.setMessage(getString(R.string.user_not_logged_in_message));
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> {
             dialog1.dismiss();
-            finish();
+            logout(null);
         });
         dialog.show();
     }

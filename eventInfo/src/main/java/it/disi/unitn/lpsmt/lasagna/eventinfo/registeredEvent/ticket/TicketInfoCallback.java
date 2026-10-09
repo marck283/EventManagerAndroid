@@ -5,25 +5,17 @@ import android.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
 import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
-public class TicketInfoCallback implements Callback {
+public class TicketInfoCallback {
 
     private final Fragment f;
 
@@ -49,23 +41,14 @@ public class TicketInfoCallback implements Callback {
         }
     }
 
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        try {
-            throw e;
-        } catch(IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void handleTicketSuccess(JsonObject ticketJson) {
+    public void handleTicketSuccess(JsonObject ticketJson, int qrCodeViewId) {
         Ticket ticket = Ticket.parseJSON(ticketJson);
 
         Activity activity = f.getActivity();
         if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
             activity.runOnUiThread(() -> {
                 try {
-                    ImageView imageViewQrCode = v.findViewById(R.id.qrCode);
+                    ImageView imageViewQrCode = v.findViewById(qrCodeViewId);
                     Glide.with(v).load(ticket.getQR()).into(imageViewQrCode);
                 } catch(Exception e) {
                     e.printStackTrace();
@@ -79,17 +62,6 @@ public class TicketInfoCallback implements Callback {
             case 400 -> setAlertDialog(R.string.malformed_request_or_invalid_date, R.string.malformed_request_or_invalid_date_message);
             case 401 -> setAlertDialog(R.string.user_not_logged_in, R.string.user_not_logged_in_message);
             case 404 -> setAlertDialog(R.string.no_ticket, R.string.no_ticket_message);
-        }
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if(response.isSuccessful()) {
-            Gson gson = new GsonBuilder().create();
-            handleTicketSuccess(gson.fromJson(response.body().string(), JsonObject.class));
-            response.body().close();
-        } else {
-            handleTicketError(response.code());
         }
     }
 }

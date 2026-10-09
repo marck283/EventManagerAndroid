@@ -10,19 +10,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,11 +30,8 @@ import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.EventDetailsInterface;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
-public class EventInfoCallback implements Callback {
+public class EventInfoCallback {
 
     private final Fragment f;
 
@@ -50,15 +43,6 @@ public class EventInfoCallback implements Callback {
         this.f = f;
         this.v = v;
         registrationsClosed = regClosed;
-    }
-
-    @Override
-    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-        try {
-            throw e;
-        } catch(Throwable e1) {
-            e1.printStackTrace();
-        }
     }
 
     public void handleInfoSuccess(@NotNull JsonObject data) {
@@ -194,14 +178,5 @@ public class EventInfoCallback implements Callback {
                 }
             });
         }
-    }
-
-    @Override
-    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-        if (response.isSuccessful()) {
-            Gson gson = new GsonBuilder().create();
-            handleInfoSuccess(gson.fromJson(response.body().string(), JsonObject.class));
-        }
-        response.body().close();
     }
 }
