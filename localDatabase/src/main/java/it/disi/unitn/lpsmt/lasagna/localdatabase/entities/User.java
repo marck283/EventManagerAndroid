@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.lasagna.localdatabase.entities;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -29,7 +31,7 @@ public class User implements Serializable {
 
     @ColumnInfo(name = "profilePic")
     @Nullable
-    private String profilePic;
+    private Uri profilePic;
 
     @ColumnInfo(name = "tel")
     @Nullable
@@ -77,12 +79,12 @@ public class User implements Serializable {
     }
 
     @Nullable
-    public String getProfilePic() {
+    public Uri getProfilePic() {
         return profilePic;
     }
 
     //Non dovrebbe essere utilizzato se non in casi molto particolari.
-    public void setProfilePic(@Nullable String val) {
+    public void setProfilePic(@Nullable Uri val) {
         profilePic = val;
     }
 

@@ -102,8 +102,7 @@ public class EventRestrictionsFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     Activity activity = getActivity();
                     if(result != null && result.getData() != null && activity != null && isAdded()) {
-                        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                requireActivity());
+                        SharedPrefs prefs = new SharedPrefs(activity.getApplicationContext());
                         String jwt = prefs.getString("accessToken");
                         mViewModel.createPublicEvent(this, jwt, evm, loginLauncher);
                     }
@@ -124,9 +123,7 @@ public class EventRestrictionsFragment extends Fragment {
                 //Valori OK, ora crea l'evento...
                 Activity activity = getActivity();
                 if(activity != null && isAdded()) {
-                    SharedPrefs prefs = new SharedPrefs(
-                            "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                            requireActivity());
+                    SharedPrefs prefs = new SharedPrefs(activity.getApplicationContext());
                     mViewModel.createPublicEvent(this, prefs.getString("accessToken"), evm, null);
                 }
             }

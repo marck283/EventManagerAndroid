@@ -10,9 +10,8 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class AuthProviders {
     public static final String GOOGLE = "google";
-    public static final String FACEBOOK = "facebook";
 
     @Retention(RetentionPolicy.SOURCE)
-    @StringDef({GOOGLE, FACEBOOK})
+    @StringDef({GOOGLE})
     public @interface Provider {}
 }

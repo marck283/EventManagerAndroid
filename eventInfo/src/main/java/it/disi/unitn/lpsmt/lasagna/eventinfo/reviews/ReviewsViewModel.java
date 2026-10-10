@@ -4,7 +4,6 @@ import android.view.View;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -26,7 +25,7 @@ public class ReviewsViewModel extends ViewModel {
                            @LayoutRes int revSmallLayout,
                            @IdRes int username,
                            @IdRes int userRating, @IdRes int userPicture, @StringRes int userName,
-                           @StringRes int userEval, @IdRes int showAll, @NavigationRes int revFragToFullRevFrag) {
+                           @StringRes int userEval, @IdRes int showAll, @IdRes int revFragToFullRevFrag) {
         RecyclerView rv = layout.findViewById(recyclerView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(layout.getContext());
         rv.setLayoutManager(mLayoutManager);

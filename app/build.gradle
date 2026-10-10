@@ -37,8 +37,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     buildFeatures {
         viewBinding = true
@@ -57,7 +57,7 @@ dependencies {
     implementation("androidx.room:room-runtime:2.8.5")
     implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     implementation(platform('org.jetbrains.kotlin:kotlin-bom:1.9.22'))
-    implementation 'com.google.firebase:firebase-perf:22.0.6'
+    implementation 'com.google.firebase:firebase-perf:23.0.0'
     implementation project(path: ':login')
     implementation project(path: ':network')
     implementation project(path: ':sharedPrefs')
@@ -80,8 +80,8 @@ dependencies {
     implementation "com.google.android.material:material:1.14.0"
     implementation 'com.google.code.gson:gson:2.14.0'
     implementation 'com.squareup.okhttp3:okhttp:5.5.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
+    implementation 'com.squareup.retrofit2:retrofit:3.0.0'
+    implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
     implementation 'androidx.appcompat:appcompat:1.8.0'
     implementation 'androidx.activity:activity:1.13.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.2'

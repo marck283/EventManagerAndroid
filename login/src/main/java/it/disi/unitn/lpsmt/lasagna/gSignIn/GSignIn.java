@@ -82,9 +82,12 @@ public class GSignIn {
 
                 listener.onSuccess(googleIdToken);
             } catch (Exception e) {
+                Log.e("signInError", "Sign In exception");
                 listener.onError(e);
             }
         }
+
+        Log.e("credentialError", "Wrong credential");
     }
 
     private void signInWithAllAccounts(@NonNull Activity a, OnSignInListener listener) {
@@ -109,6 +112,7 @@ public class GSignIn {
 
                     @Override
                     public void onError(@NonNull GetCredentialException error) {
+                        Log.e("signInError", "Sign In was not successful");
                         listener.onError(error);
                     }
 
@@ -134,6 +138,7 @@ public class GSignIn {
                         if (error instanceof NoCredentialException) {
                             signInWithAllAccounts(a, listener);
                         } else {
+                            Log.e("signInError", "Sign In not successful");
                             listener.onError(error);
                         }
                     }

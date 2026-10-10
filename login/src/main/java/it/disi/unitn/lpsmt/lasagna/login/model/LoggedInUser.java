@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.lasagna.login.model;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -11,13 +13,14 @@ import com.google.gson.JsonObject;
  */
 public class LoggedInUser {
 
-    private String token, email, name, id, self, profilePic;
+    private String token, email, name, id, self;
+    private Uri profilePic;
 
     public LoggedInUser() {
         //Costruttore vuoto
     }
 
-    public LoggedInUser(String token, String email, String name, String id, String self, String profilePic) {
+    public LoggedInUser(String token, String email, String name, String id, String self, Uri profilePic) {
         this.token = token;
         this.email = email;
         this.id = id;
@@ -46,7 +49,7 @@ public class LoggedInUser {
         return self;
     }
 
-    public String getProfilePic() {
+    public Uri getProfilePic() {
         return profilePic;
     }
 
@@ -54,11 +57,18 @@ public class LoggedInUser {
         return gs1.fromJson(json.get(name), String.class);
     }
 
+    private Uri uriFromJson(@NonNull JsonObject json) {
+        if (json.get("profilePic") != null && !json.get("profilePic").isJsonNull()) {
+            return Uri.parse(json.get("profilePic").getAsString());
+        }
+        return null;
+    }
+
     public LoggedInUser parseJSON(@NonNull JsonObject json) {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
         return new LoggedInUser(fromJson(gs1, "token", json), fromJson(gs1, "email", json),
                 fromJson(gs1, "name", json), fromJson(gs1, "id", json), fromJson(gs1, "self", json),
-                fromJson(gs1, "profilePic", json));
+                uriFromJson(json));
     }
 }

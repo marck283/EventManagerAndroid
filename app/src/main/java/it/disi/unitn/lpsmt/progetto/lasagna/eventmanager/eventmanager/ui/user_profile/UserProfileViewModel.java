@@ -49,8 +49,7 @@ public class UserProfileViewModel extends ViewModel {
     }
 
     private void loadFromLocalDb(@NonNull Fragment f, @NonNull ConstraintLayout l) {
-        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                f.requireActivity());
+        SharedPrefs prefs = new SharedPrefs(f.requireActivity().getApplicationContext());
         DBUser dbUser = new DBUser(prefs.getString("userId"), "getAll", l, f);
         dbUser.start();
     }

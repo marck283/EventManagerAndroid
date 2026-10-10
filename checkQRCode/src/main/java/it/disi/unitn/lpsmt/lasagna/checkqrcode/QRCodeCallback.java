@@ -36,7 +36,7 @@ public class QRCodeCallback {
         android.app.Activity activity = f.getActivity();
         if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
             activity.runOnUiThread(() -> {
-                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                if (!activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
                     AlertDialog dialog = new AlertDialog.Builder(activity).create();
                     dialog.setTitle(title);
                     dialog.setMessage(f.getString(message));

@@ -17,20 +17,6 @@ public class EventDialog extends DialogFragment {
     private EventDialogViewModel vm;
     private View root;
 
-    @NonNull
-    public static EventDialog newInstance(String idToken, int d, int m, int y) {
-        EventDialog ev = new EventDialog();
-
-        Bundle b = new Bundle();
-        b.putString("idToken", idToken);
-        b.putInt("day", d);
-        b.putInt("month", m);
-        b.putInt("year", y);
-        ev.setArguments(b);
-
-        return ev;
-    }
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

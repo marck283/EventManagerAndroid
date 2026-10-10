@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
@@ -22,7 +22,7 @@ public class Event {
     private final String category;
     private final String eventPic; //Informazioni sull'evento
     private final String orgName;
-    private final ArrayList<LuogoEv> luogo;
+    private final List<LuogoEv> luogo;
 
     private final String durata;
 
@@ -39,7 +39,7 @@ public class Event {
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
                  @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,
-                 @NotNull ArrayList<LuogoEv> luogo, @NonNull String durata) {
+                 @NotNull List<LuogoEv> luogo, @NonNull String durata) {
         this.id = id;
         eventid = idevent;
         self = s;
@@ -91,7 +91,7 @@ public class Event {
         return orgName;
     }
 
-    public ArrayList<LuogoEv> getLuogoEv() {
+    public List<LuogoEv> getLuogoEv() {
         return luogo;
     }
 

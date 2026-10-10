@@ -30,4 +30,15 @@
     <string name="retry_later">Internal server error. Please try again later.</string>
     <string name="unknown_error">Unknown error</string>
     <string name="unknown_error_message">An unknown error has occurred. Please contact the developer.</string>
+    <string name="scan_qr_code">Scan QR code</string>
+    <string name="info_on_event">Information on the event %1$s</string>
+    <string name="no_connection">No Internet connection</string>
+    <string name="no_connection_message">No Internet connection is currently available. Please check your network settings.</string>
+    <string name="no_session_title">You are not authenticated!</string>
+    <string name="no_session_content">There is no existing session. Please log in.</string>
+    <string name="attempt_ok">Event terminated</string>
+    <string name="attempt_ok_message">The event was successfully terminated.</string>
+    <string name="no_event">No event found</string>
+    <string name="no_event_message">No event was found.</string>
+    <string name="registrations_closed">Registrations closed</string>
 </resources>

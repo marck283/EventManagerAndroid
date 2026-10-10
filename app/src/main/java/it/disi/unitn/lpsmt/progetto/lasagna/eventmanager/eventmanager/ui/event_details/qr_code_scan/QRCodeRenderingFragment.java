@@ -17,20 +17,29 @@ import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 
 public class QRCodeRenderingFragment extends DialogFragment {
 
-    private final String eventId, userId, data, ora;
+    private String eventId, userId, data, ora;
 
     private View v;
 
-    public QRCodeRenderingFragment(@NonNull Bundle b) {
-        eventId = b.getString("eventId");
-        userId = b.getString("userId");
-        data = b.getString("data");
-        ora = b.getString("ora");
-    }
-
     @NonNull
     public static QRCodeRenderingFragment newInstance(@NonNull Bundle b) {
-        return new QRCodeRenderingFragment(b);
+        QRCodeRenderingFragment fragment = new QRCodeRenderingFragment();
+        fragment.setArguments(b);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            eventId = args.getString("eventId");
+            userId = args.getString("userId");
+            data = args.getString("data");
+            ora = args.getString("ora");
+        }
     }
 
     @Override

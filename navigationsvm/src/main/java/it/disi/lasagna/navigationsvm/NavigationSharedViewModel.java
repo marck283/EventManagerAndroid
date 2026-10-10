@@ -15,7 +15,7 @@ public class NavigationSharedViewModel extends ViewModel {
     private final MutableLiveData<String> idToken = new MutableLiveData<>();
 
     public void init(@NonNull Activity a) {
-        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", a);
+        SharedPrefs prefs = new SharedPrefs(a.getApplicationContext());
         idToken.setValue(prefs.getString("accessToken"));
     }
 

@@ -1,8 +1,8 @@
 package it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.user_profile;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
 import android.icu.text.MessageFormat;
 import android.os.Bundle;
 
@@ -16,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.jetbrains.annotations.Contract;
-
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
 import it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences.SharedPrefs;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui.menu_settings.MenuSettingsViewModel;
@@ -28,12 +26,6 @@ public class UserProfileFragment extends Fragment {
     private UserProfileViewModel mViewModel;
     private MenuSettingsViewModel ms;
     private View v;
-
-    @NonNull
-    @Contract(" -> new")
-    public static UserProfileFragment newInstance() {
-        return new UserProfileFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -71,10 +63,9 @@ public class UserProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        Activity activity = getActivity();
+        FragmentActivity activity = getActivity();
         if(activity != null && isAdded()) {
-            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                    requireActivity());
+            SharedPrefs prefs = new SharedPrefs(activity.getApplicationContext());
 
             String token = prefs.getString("accessToken");
             if(!token.isEmpty()) {
@@ -83,8 +74,8 @@ public class UserProfileFragment extends Fragment {
 
             mViewModel.getUserInfo(this, prefs.getString("accessToken"), v.findViewById(R.id.frameLayout2));
 
-            ms.getChecked().observe(requireActivity(), o -> {
-                if(!((boolean) o)) {
+            ms.getChecked().observe(activity, o -> {
+                if(!o) {
                     v.findViewById(R.id.phone_value).setVisibility(View.INVISIBLE);
                 } else {
                     v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
@@ -97,7 +88,7 @@ public class UserProfileFragment extends Fragment {
             //Ne consegue anche qui che il nome qui fornito dovrebbe essere modificato per tutte le
             //istanze di SharedPreferences che richiamano questa specifica Shared Preference.
             SharedPrefs sp = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.MenuSettingsSharedPreferences",
-                    requireActivity());
+                    activity);
             if(sp.getBoolean("showTel")) {
                 v.findViewById(R.id.phone_value).setVisibility(View.VISIBLE);
             } else {

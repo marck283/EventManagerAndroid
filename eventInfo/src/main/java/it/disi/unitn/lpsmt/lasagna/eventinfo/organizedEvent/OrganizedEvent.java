@@ -4,13 +4,11 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.Contract;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
@@ -18,11 +16,11 @@ import it.disi.unitn.lpsmt.lasagna.localdatabase.Event;
 
 public class OrganizedEvent extends Event {
     private final String id, idevent, self, name, category, eventPic, orgName, durata;
-    private final ArrayList<LuogoEv> luogoEv;
+    private final List<LuogoEv> luogoEv;
 
     public OrganizedEvent(@NonNull String id, @NonNull String idevent, @NonNull String self,
                           @NonNull String name, @NonNull String category, @NonNull String eventPic,
-                          @NonNull String orgName, @NonNull ArrayList<LuogoEv> luogoEv,
+                          @NonNull String orgName, @NonNull List<LuogoEv> luogoEv,
                           @NonNull String durata) {
         super(id, idevent, self, name, category, eventPic, orgName, luogoEv, durata);
         this.id = id;
@@ -41,15 +39,12 @@ public class OrganizedEvent extends Event {
     }
 
     @NonNull
-    private static ArrayList<LuogoEv> fromJsonArray(@NonNull JsonObject json) {
-        ArrayList<LuogoEv> arr = new ArrayList<>();
-        JsonArray jsonArr = json.getAsJsonArray("luogoEv");
-
-        for(JsonElement e: jsonArr) {
-            arr.add(LuogoEv.parseJSON(e.getAsJsonObject()));
-        }
-
-        return arr;
+    private static List<LuogoEv> fromJsonArray(@NonNull JsonObject json) {
+        return json.getAsJsonArray("luogoEv")
+                .asList().stream()
+                .map(JsonElement::getAsJsonObject)
+                .map(LuogoEv::parseJSON)
+                .toList();
     }
 
     public LuogoEv getLuogo(@NonNull String data, @NonNull String ora) {

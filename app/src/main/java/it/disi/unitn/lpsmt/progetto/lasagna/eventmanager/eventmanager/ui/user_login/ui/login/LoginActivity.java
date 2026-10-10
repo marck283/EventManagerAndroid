@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity implements AuthenticationIn
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail",
                     data.getEmail());
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture",
-                    data.getProfilePic());
+                    data.getProfilePic() != null ? data.getProfilePic().toString() : null);
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fName",
                     data.getName());
             intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fUserId",

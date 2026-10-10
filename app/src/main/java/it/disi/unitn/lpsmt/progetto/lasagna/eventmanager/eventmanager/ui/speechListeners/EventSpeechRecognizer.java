@@ -102,7 +102,7 @@ public class EventSpeechRecognizer implements RecognitionListener {
     public void onResults(@NonNull Bundle results) {
         TextInputEditText v = a.findViewById(resId);
         ArrayList<String> data = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        v.setText(Objects.requireNonNull(data).get(0));
+        v.setText(Objects.requireNonNull(data).getFirst());
     }
 
     /**

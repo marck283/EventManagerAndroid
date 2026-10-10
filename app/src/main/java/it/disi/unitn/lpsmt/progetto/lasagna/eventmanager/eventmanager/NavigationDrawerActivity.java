@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -105,7 +106,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         NetworkCallback callback = new NetworkCallback(this);
         if(callback.isOnline(this)) {
             Intent i = new Intent(this, EventCreationActivity.class);
-            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+            SharedPrefs prefs = new SharedPrefs(this.getApplicationContext());
             String token = prefs.getString("accessToken");
             if ((token == null || token.isEmpty()) && vm != null && vm.getToken() != null && vm.getToken().getValue() != null) {
                 token = vm.getToken().getValue();
@@ -156,7 +157,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         FloatingActionButton fab = binding.appBarNavigationDrawer.fab;
         if(!fab.hasOnClickListeners()) {
             fab.setOnClickListener(view -> {
-                SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+                SharedPrefs prefs = new SharedPrefs(this.getApplicationContext());
                 String token = prefs.getString("accessToken");
                 if((token == null || token.isEmpty()) && profile == null) {
                     setAlertDialog(true, R.string.no_session_title, R.string.no_session_content);
@@ -191,7 +192,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     }
 
     private void checkAuthSetMenu() {
-        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+        SharedPrefs prefs = new SharedPrefs(this.getApplicationContext());
         String accessToken = prefs.getString("accessToken");
 
         if (accessToken.isEmpty()) {
@@ -204,13 +205,13 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
             // Set token on RetrofitClient so AuthInterceptor automatically adds x-access-token header
             RetrofitClient.getInstance().setAccessToken(accessToken);
 
-            RetrofitClient.getInstance().getUserApi().getUserProfile().enqueue(new Callback<JsonObject>() {
+            RetrofitClient.getInstance().getUserApi().getUserProfile().enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         JsonObject body = response.body();
                         UserInfo userInfo = UserInfo.parseJSON(body);
-                        updateUI("login", userInfo.getString("email"), userInfo.getString("nome"), userInfo.getString("profilePic"), true);
+                        updateUI("login", userInfo.getString("email"), userInfo.getString("nome"), userInfo.getProfilePic(), true);
                         vm.setToken(accessToken);
                     } else {
                         prefs.setString("accessToken", "");
@@ -292,7 +293,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         }
     }
 
-    public void updateUI(@NonNull String request, @Nullable String emailF, String name, String pictureF, boolean reauth) {
+    public void updateUI(@NonNull String request, @Nullable String emailF, String name, Uri pictureF, boolean reauth) {
         navView.getMenu().clear();
 
         LinearLayout l = (LinearLayout) navView.getHeaderView(0);
@@ -342,8 +343,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     }
 
     private void signInCheck(int resultCode, Intent data) {
-        SharedPrefs prefs = new SharedPrefs(
-                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+        SharedPrefs prefs = new SharedPrefs(this.getApplicationContext());
 
         switch (resultCode) {
             case Activity.RESULT_OK -> {
@@ -362,7 +362,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
                 email = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fEmail") : null;
                 picture = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fPicture") : null;
                 String displayName = data != null ? data.getStringExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fName") : "";
-                updateUI("login", email, displayName, picture, false);
+                updateUI("login", email, displayName, Uri.parse(picture), false);
             }
             case Activity.RESULT_CANCELED -> {
                 Log.i("login", "Login failed");
@@ -401,8 +401,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
         super.onDestroy();
 
         //Salva il token di accesso nelle SharedPreferences per utilizzarlo al successivo accesso all'app.
-        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                this);
+        SharedPrefs prefs = new SharedPrefs(this.getApplicationContext());
         if(vm.getToken().getValue() == null) {
             prefs.setString("accessToken", "");
         } else {
@@ -423,7 +422,7 @@ public class NavigationDrawerActivity extends AppCompatActivity implements Authe
     }
 
     public void logout(@Nullable Intent intent) {
-        SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", this);
+        SharedPrefs prefs = new SharedPrefs(this.getApplicationContext());
         prefs.setString("accessToken", "");
         prefs.setString("userId", "");
         prefs.apply();

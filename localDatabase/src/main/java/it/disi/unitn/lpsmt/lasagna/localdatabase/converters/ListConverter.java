@@ -1,11 +1,11 @@
 package it.disi.unitn.lpsmt.lasagna.localdatabase.converters;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.TypeConverter;
 
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,7 +61,6 @@ public class ListConverter {
         }
 
         ArrayList<LuogoEv> evList = new ArrayList<>();
-        Type listType = new TypeToken<List<String>>() {}.getType();
         String[] arr = str.split("; ");
         for (String s : arr) {
             String[] arr1 = s.split(", ");
@@ -73,5 +72,17 @@ public class ListConverter {
         }
 
         return evList;
+    }
+
+    @Nullable
+    @TypeConverter
+    public static String fromUri(@Nullable Uri uri) {
+        return uri == null ? null : uri.toString();
+    }
+
+    @Nullable
+    @TypeConverter
+    public static Uri toUri(@Nullable String uriString) {
+        return uriString == null ? null : Uri.parse(uriString);
     }
 }

@@ -48,14 +48,14 @@ public class OrgEvent implements Serializable {
 
     @NonNull
     @ColumnInfo(name = "luogoEv")
-    private ArrayList<LuogoEv> luogoEv;
+    private List<LuogoEv> luogoEv;
 
     @ColumnInfo(name = "durata")
     private String durata;
 
     public OrgEvent(@NonNull String eventType, @NonNull String idevent, @NonNull String self,
                     @NonNull String name, @NonNull String category, @NonNull String eventPic,
-                    @NonNull String orgName, @NonNull ArrayList<LuogoEv> luogoEv, @NonNull String durata) {
+                    @NonNull String orgName, @NonNull List<LuogoEv> luogoEv, @NonNull String durata) {
         this.eventType = eventType;
         this.idevent = idevent;
         this.self = self;
@@ -138,11 +138,11 @@ public class OrgEvent implements Serializable {
     }
 
     @NonNull
-    public ArrayList<LuogoEv> getLuogoEv() {
+    public List<LuogoEv> getLuogoEv() {
         return luogoEv;
     }
 
-    public void setLuogoEv(@NonNull ArrayList<LuogoEv> val) {
+    public void setLuogoEv(@NonNull List<LuogoEv> val) {
         luogoEv = val;
     }
 

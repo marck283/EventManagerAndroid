@@ -31,7 +31,12 @@ public class QrCodeOnClickListener implements View.OnClickListener {
                 !editText.getText().toString().equals("---") &&
                 editText1 != null && !editText.getText().toString().isEmpty() &&
                 !editText.getText().toString().equals("---")) {
-            launcher.launch(new ScanOptions());
+            ScanOptions options = new ScanOptions();
+            options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+            options.setBeepEnabled(false);
+            options.setOrientationLocked(true);
+            options.setCameraId(0);
+            launcher.launch(options);
         }
     }
 }

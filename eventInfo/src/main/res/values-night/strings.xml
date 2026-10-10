@@ -10,4 +10,6 @@
     <string name="event_address">Address: %1$s</string>
     <string name="show_ticket">Show ticket</string>
     <string name="qr_code">QR Code</string>
+    <string name="scan_qr_code">Scan QR code</string>
+    <string name="info_on_event">Information on the event %1$s</string>
 </resources>

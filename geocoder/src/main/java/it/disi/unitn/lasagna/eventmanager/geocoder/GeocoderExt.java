@@ -28,7 +28,7 @@ public class GeocoderExt {
 
     private void startGoogleMaps(@NonNull Fragment f, @NonNull TextView indirizzo,
                                  @NonNull List<Address> addresses) {
-        Address address = addresses.get(0);
+        Address address = addresses.getFirst();
 
         Uri gmURI = Uri.parse("geo:" + address.getLatitude() + "," + address.getLongitude()
                 + "?q=" + indirizzo.getText().toString());

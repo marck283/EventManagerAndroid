@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.lasagna.localdatabase.daos;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Dao;
@@ -13,7 +15,7 @@ import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
 @Dao
 public interface UserDAO {
 
-    @Query("SELECT U.id, U.profilePic, U.nome, U.email, U.tel, U.numEvOrg, U.valutazioneMedia FROM Users U WHERE U.id = :id")
+    @Query("SELECT * FROM Users WHERE id = :id")
     User getUser(@NonNull String id);
 
     @Insert
@@ -23,7 +25,7 @@ public interface UserDAO {
             "eventiCreati = :eventiCreati, eventiIscritto = :eventiIscritto, numEvOrg = :numEvOrg," +
             "valutazioneMedia = :valutazioneMedia WHERE id = :id")
     void updateUserProfile(@NonNull String id, @NonNull String nome, @NonNull String email,
-                           @NonNull String tel, @NonNull String profilePic,
+                           @NonNull String tel, @NonNull Uri profilePic,
                            @NonNull List<String> eventiCreati, @NonNull List<String> eventiIscritto,
                            @NonNull Integer numEvOrg, @Nullable Double valutazioneMedia);
 }

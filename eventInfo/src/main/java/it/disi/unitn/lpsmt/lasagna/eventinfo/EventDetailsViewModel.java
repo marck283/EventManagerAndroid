@@ -1,33 +1,32 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
-import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.JsonObject;
-import com.journeyapps.barcodescanner.ScanOptions;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.concurrent.FutureTask;
 
 import it.disi.unitn.lpsmt.lasagna.checkqrcode.CheckQRCode;
 import it.disi.unitn.lpsmt.lasagna.checkqrcode.QRCodeCallback;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.OrganizedEventCallback;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.TerminatorCallback;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.fields.DialogState;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.fields.Field;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.OrganizedEvent;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent.EventInfo;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent.EventInfoCallback;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.RegisteredEventCallback;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
@@ -40,56 +39,101 @@ import it.disi.unitn.lpsmt.lasagna.user_event_registration.UserEventRegistration
 public class EventDetailsViewModel extends ViewModel {
     private NetworkCallback callback;
 
-    private void setNoConnectionDialog(@NonNull Activity f, @StringRes int noconn, @StringRes int noconnmsg) {
-        AlertDialog dialog = new AlertDialog.Builder(f).create();
-        dialog.setTitle(noconn);
-        dialog.setMessage(f.getString(noconnmsg));
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which1) -> dialog1.dismiss());
-        dialog.show();
+    private final MutableLiveData<Field> fieldList = new MutableLiveData<>();
+    private final MutableLiveData<EventInfo> publicEventInfo = new MutableLiveData<>();
+    private final MutableLiveData<OrganizedEvent> organizedEvent = new MutableLiveData<>();
+    private final MutableLiveData<DialogState> dialogState = new MutableLiveData<>();
+
+    private String ticketId = "";
+    private String eventDate = "";
+    private String eventTime = "";
+
+    public void setField(@NonNull Field field) {
+        fieldList.postValue(field);
+    }
+
+    public LiveData<Field> getFieldList() {
+        return fieldList;
+    }
+
+    public void setPublicEventInfo(@NonNull EventInfo info) {
+        publicEventInfo.postValue(info);
+    }
+
+    public LiveData<EventInfo> getPublicEventInfo() {
+        return publicEventInfo;
+    }
+
+    public void setOrganizedEvent(@NonNull OrganizedEvent event) {
+        organizedEvent.postValue(event);
+    }
+
+    public LiveData<OrganizedEvent> getOrganizedEvent() {
+        return organizedEvent;
+    }
+
+    public void showDialog(@StringRes int titleRes, @StringRes int messageRes) {
+        dialogState.postValue(new DialogState(titleRes, messageRes));
+    }
+
+    public LiveData<DialogState> getDialogState() {
+        return dialogState;
+    }
+
+    public void setTicketDetails(String ticketId, String eventDate, String eventTime) {
+        this.ticketId = ticketId != null ? ticketId : "";
+        this.eventDate = eventDate != null ? eventDate : "";
+        this.eventTime = eventTime != null ? eventTime : "";
+    }
+
+    public String getTicketId() { return ticketId; }
+    public String getEventDate() { return eventDate; }
+    public String getEventTime() { return eventTime; }
+
+    private void setNoConnectionDialog(@StringRes int noconn, @StringRes int noconnmsg) {
+        showDialog(noconn, noconnmsg);
     }
 
     public void terminateEvent(@NonNull String accessToken, @NonNull Fragment f,
                                @NonNull String eventId, @NonNull String data, @NonNull String ora,
-                               @NonNull View v, @NonNull ActivityResultLauncher<Intent> loginLauncher,
-                               @NonNull Intent loginIntent, @StringRes int noconn, @StringRes int noconnmsg,
-                               @StringRes int malformed_req,
-                               @StringRes int malf_req_msg, @StringRes int no_session_title,
-                               @StringRes int no_session_content, @StringRes int attempt_ok,
-                               @StringRes int attempt_ok_msg, @IdRes int but8, @IdRes int but12,
-                               @StringRes int internal_server_error) {
+                               @NonNull ActivityResultLauncher<Intent> loginLauncher,
+                               @NonNull Intent loginIntent) {
         Activity activity = f.getActivity();
         if (activity != null && f.isAdded()) {
             callback = new NetworkCallback(f.requireActivity());
             if (callback.isOnline(f.requireActivity())) {
                 RetrofitClient.getInstance().setAccessToken(accessToken);
 
-                TerminatorCallback termCallback = new TerminatorCallback(f, loginLauncher, loginIntent, v,
-                        malformed_req, malf_req_msg, no_session_title, no_session_content, attempt_ok,
-                        attempt_ok_msg, but8, but12, internal_server_error);
-
-                OrganizedEventRepository repo = new OrganizedEventRepository(new OrganizedEventRepository.ActionCallback() {
-                    @Override
-                    public void onSuccess() {
-                        termCallback.handleResponseCode(200);
-                    }
-
-                    @Override
-                    public void onError(int statusCode, String errorMessage) {
-                        termCallback.handleResponseCode(statusCode);
-                    }
-                });
+                OrganizedEventRepository repo = getOrganizedEventRepository(f, loginLauncher, loginIntent);
                 repo.terminateEvent(eventId, data, ora);
             } else {
-                setNoConnectionDialog(activity, noconn, noconnmsg);
+                showDialog(R.string.no_connection, R.string.no_connection_message);
             }
         }
+    }
+
+    @NonNull
+    private OrganizedEventRepository getOrganizedEventRepository(@NonNull Fragment f, @NonNull ActivityResultLauncher<Intent> loginLauncher, @NonNull Intent loginIntent) {
+        TerminatorCallback termCallback = new TerminatorCallback(f, this, loginLauncher, loginIntent);
+
+        return new OrganizedEventRepository(new OrganizedEventRepository.ActionCallback() {
+            @Override
+            public void onSuccess() {
+                termCallback.handleResponseCode(200);
+            }
+
+            @Override
+            public void onError(int statusCode, String errorMessage) {
+                termCallback.handleResponseCode(statusCode);
+            }
+        });
     }
 
     public void deleteEvent(@NonNull String accessToken, @NonNull String eventId, @NonNull Fragment f,
                             @StringRes int noconn, @StringRes int noconnmsg) {
         Activity activity = f.getActivity();
         if (activity != null && f.isAdded()) {
-            if (callback.isOnline(f.requireActivity())) {
+            if (callback.isOnline(activity)) {
                 RetrofitClient.getInstance().setAccessToken(accessToken);
 
                 OrganizedEventRepository repo = new OrganizedEventRepository(new OrganizedEventRepository.ActionCallback() {
@@ -111,35 +155,19 @@ public class EventDetailsViewModel extends ViewModel {
                 });
                 repo.cancelEvent(eventId);
             } else {
-                setNoConnectionDialog(activity, noconn, noconnmsg);
+                setNoConnectionDialog(noconn, noconnmsg);
             }
         }
     }
 
-    private void requestEvInfoIscr(@NonNull View view,
-                                   @NonNull Fragment f, @Nullable String userJwt,
+    private void requestEvInfoIscr(@NonNull Fragment f, @Nullable String userJwt,
                                    @Nullable String data, @NonNull String eventId,
                                    @Nullable ActivityResultLauncher<Intent> loginLauncher,
-                                   @StringRes int noconn, @StringRes int noconnmsg,
-                                   @NotNull Class<? extends Activity> c, @IdRes int eventPicture,
-                                   @StringRes int title, @StringRes int organizer,
-                                   @IdRes int textView16, @IdRes int textView11,
-                                   @StringRes int day_not_selectable,
-                                   @IdRes int textView20, @StringRes int time_not_selectable,
-                                   @IdRes int textView39, @IdRes int textView42,
-                                   @IdRes int button9, @IdRes int button10,
-                                   @IdRes int action_eventDetailsFragment_to_reviewWriting,
-                                   @IdRes int button11, @StringRes int malformed_request,
-                                   @StringRes int malformed_request_message, @StringRes int no_event,
-                                   @StringRes int no_event_message, @StringRes int event_address,
-                                   @StringRes int duration, @NotNull FutureTask<Void> task) {
+                                   @NotNull Class<? extends Activity> c) {
         if (userJwt != null && data != null && loginLauncher != null) {
             RetrofitClient.getInstance().setAccessToken(userJwt);
-            RegisteredEventCallback callback = new RegisteredEventCallback(f, view, userJwt, eventId,
-                    loginLauncher, this, noconn, noconnmsg, c, eventPicture, title, organizer, textView16,
-                    textView11, day_not_selectable, textView20, time_not_selectable, textView39, duration,
-                    textView42, event_address, button9, button10, action_eventDetailsFragment_to_reviewWriting,
-                    button11, malformed_request, malformed_request_message, no_event, no_event_message, task);
+            RegisteredEventCallback callback = new RegisteredEventCallback(f,
+                    loginLauncher, this, c);
 
             EventRepository repo = new EventRepository();
             repo.getPublicEventInfo(eventId, new EventRepository.EventDataCallback() {
@@ -156,20 +184,13 @@ public class EventDetailsViewModel extends ViewModel {
         }
     }
 
-    private void requestEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
+    private void requestEventInfo(@NonNull String which, @NonNull String eventId,
                                   @NonNull Fragment f, @Nullable String userJwt,
-                                  @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
                                   @Nullable ActivityResultLauncher<Intent> loginLauncher,
-                                  @StringRes int regClosed,
-                                  @NotNull Class<? extends Activity> c, @IdRes int iv3,
-                                  @IdRes int tv6, @StringRes int info_on_event, @IdRes int spinner2,
-                                  @IdRes int orgDateTextView, @IdRes int tv15, @IdRes int spinner,
-                                  @IdRes int orgHourTextView, @LayoutRes int list_item, @StringRes int event_address,
-                                  @IdRes int bt8, @IdRes int bt12, @IdRes int tv12, @StringRes int duration,
-                                  @StringRes int no_org_event, @StringRes int no_org_event_message) {
+                                  @NotNull Class<? extends Activity> c) {
         switch (which) {
             case "pub" -> {
-                EventInfoCallback infoCallback = new EventInfoCallback(f, view, regClosed);
+                EventInfoCallback infoCallback = new EventInfoCallback(f, this);
                 EventRepository repo = new EventRepository();
                 repo.getPublicEventInfo(eventId, new EventRepository.EventDataCallback() {
                     @Override
@@ -182,12 +203,9 @@ public class EventDetailsViewModel extends ViewModel {
                 });
             }
             case "org" -> {
-                if (userJwt != null) {
+                if (userJwt != null && loginLauncher != null) {
                     RetrofitClient.getInstance().setAccessToken(userJwt);
-                    OrganizedEventCallback callback = new OrganizedEventCallback(view, f, loginLauncher, data, c, iv3, tv6, info_on_event,
-                            spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                            bt8, bt12, tv12, duration,
-                            no_org_event, no_org_event_message);
+                    OrganizedEventCallback callback = new OrganizedEventCallback(f, this, loginLauncher, c);
 
                     OrganizedEventRepository repo = new OrganizedEventRepository();
                     repo.getOrganizedEventInfo(eventId, new OrganizedEventRepository.EventInfoCallback() {
@@ -206,83 +224,48 @@ public class EventDetailsViewModel extends ViewModel {
         }
     }
 
-    public void getEventInfoIscr(@NotNull View v, @NonNull Fragment f, @Nullable String userJwt,
+    public void getEventInfoIscr(@NonNull Fragment f, @Nullable String userJwt,
                                  @StringRes int noconn, @StringRes int noconnmsg,
                                  @Nullable String data, @NonNull String eventId,
                                  @Nullable ActivityResultLauncher<Intent> loginLauncher,
-                                 @NotNull Class<? extends Activity> c,
-                                 @IdRes int eventPicture,
-                                 @StringRes int title, @StringRes int organizer, @StringRes int event_address,
-                                 @StringRes int duration,
-                                 @IdRes int textView16, @IdRes int textView11,
-                                 @StringRes int day_not_selectable,
-                                 @IdRes int textView20, @StringRes int time_not_selectable,
-                                 @IdRes int textView39, @IdRes int textView42,
-                                 @IdRes int button9, @IdRes int button10,
-                                 @IdRes int action_eventDetailsFragment_to_reviewWriting,
-                                 @IdRes int button11, @StringRes int malformed_request,
-                                 @StringRes int malformed_request_message, @StringRes int no_event,
-                                 @StringRes int no_event_message, @NotNull FutureTask<Void> task) {
+                                 @NotNull Class<? extends Activity> c) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
-            callback = new NetworkCallback(f.requireActivity());
-            if(callback.isOnline(f.requireActivity())) {
-                requestEvInfoIscr(v, f, userJwt, data, eventId, loginLauncher, noconn, noconnmsg,
-                        c, eventPicture, title, organizer, textView16, textView11, day_not_selectable,
-                        textView20, time_not_selectable, textView39, textView42, button9, button10,
-                        action_eventDetailsFragment_to_reviewWriting, button11, malformed_request,
-                        malformed_request_message, no_event, no_event_message, event_address,
-                        duration, task);
+            callback = new NetworkCallback(activity);
+            if(callback.isOnline(activity)) {
+                requestEvInfoIscr(f, userJwt, data, eventId, loginLauncher,
+                        c);
             } else {
                 //Aggiungi un listener per cercare le informazioni sull'evento quando sarà tornata la connessione ad Internet.
                 callback.registerNetworkCallback();
                 callback.addDefaultNetworkActiveListener(() ->
-                        requestEvInfoIscr(v, f, userJwt, data, eventId, loginLauncher, noconn, noconnmsg,
-                                c, eventPicture, title, organizer, textView16, textView11, day_not_selectable,
-                                textView20, time_not_selectable, textView39, textView42, button9, button10,
-                                action_eventDetailsFragment_to_reviewWriting, button11, malformed_request,
-                                malformed_request_message, no_event, no_event_message, event_address,
-                                duration, task));
+                        requestEvInfoIscr(f, userJwt, data, eventId, loginLauncher,
+                                c));
                 callback.unregisterNetworkCallback();
-                setNoConnectionDialog(activity, noconn, noconnmsg);
+                setNoConnectionDialog(noconn, noconnmsg);
             }
         }
     }
 
-    public Void getEventInfo(@NonNull String which, @NonNull String eventId, @NonNull View view,
-                               @NonNull Fragment f, @Nullable String userJwt,
-                               @Nullable String data, @Nullable ActivityResultLauncher<ScanOptions> launcher,
-                               @Nullable ActivityResultLauncher<Intent> loginLauncher,
-                             @StringRes int regClosed, @StringRes int noconn, @StringRes int noconnmsg,
-                             @NotNull Class<? extends Activity> c, @IdRes int iv3,
-                             @IdRes int tv6, @StringRes int info_on_event, @IdRes int spinner2,
-                             @IdRes int orgDateTextView, @IdRes int tv15, @IdRes int spinner,
-                             @IdRes int orgHourTextView, @LayoutRes int list_item, @StringRes int event_address,
-                             @IdRes int bt8, @IdRes int bt12, @IdRes int tv12, @StringRes int duration,
-                             @StringRes int no_org_event, @StringRes int no_org_event_message) {
+    public void getEventInfo(@NonNull String which, @NonNull String eventId,
+                            @NonNull Fragment f, @Nullable String userJwt,
+                            @Nullable ActivityResultLauncher<Intent> loginLauncher,
+                            @NotNull Class<? extends Activity> c,
+                            @StringRes int noconn, @StringRes int noconnmsg) {
         Activity activity = f.getActivity();
         if(activity != null && f.isAdded()) {
             callback = new NetworkCallback(f.requireActivity());
             if(callback.isOnline(f.requireActivity())) {
-                requestEventInfo(which, eventId, view, f, userJwt, data, launcher, loginLauncher,
-                        regClosed, c, iv3, tv6, info_on_event,
-                        spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                        bt8, bt12, tv12, duration, no_org_event,
-                        no_org_event_message);
+                requestEventInfo(which, eventId, f, userJwt, loginLauncher, c);
             } else {
                 //Aggiungi un listener per cercare le informazioni sull'evento quando sarà tornata la connessione ad Internet.
                 callback.registerNetworkCallback();
                 callback.addDefaultNetworkActiveListener(() ->
-                        requestEventInfo(which, eventId, view, f, userJwt, data, launcher,
-                                loginLauncher, regClosed, c, iv3, tv6, info_on_event,
-                                spinner2, orgDateTextView, tv15, spinner, orgHourTextView, list_item, event_address,
-                                bt8, bt12, tv12, duration, no_org_event,
-                                no_org_event_message));
+                        requestEventInfo(which, eventId, f, userJwt, loginLauncher, c));
                 callback.unregisterNetworkCallback();
-                setNoConnectionDialog(activity, noconn, noconnmsg);
+                setNoConnectionDialog(noconn, noconnmsg);
             }
         }
-        return null;
     }
 
     public void registerUser(@NonNull String accessToken, @NonNull String eventId, @NonNull Fragment f,
@@ -297,7 +280,7 @@ public class EventDetailsViewModel extends ViewModel {
                 TicketRepository repo = getTicketRepository(f, launcher, c);
                 repo.registerForPublicEvent(eventId, day, time);
             } else {
-                setNoConnectionDialog(activity, noconn, noconnmsg);
+                setNoConnectionDialog(noconn, noconnmsg);
             }
         }
     }
@@ -332,35 +315,17 @@ public class EventDetailsViewModel extends ViewModel {
                 TicketRepository repo = new TicketRepository(new TicketRepository.TicketActionCallback() {
                     @Override
                     public void onSuccess(int statusCode) {
-                        Activity a = f.getActivity();
-                        if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
-                            a.runOnUiThread(() -> {
-                                AlertDialog dialog = new AlertDialog.Builder(a).create();
-                                dialog.setTitle(R.string.deletion_successful);
-                                dialog.setMessage(f.getString(R.string.deletion_successful_message));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (d, w) -> d.dismiss());
-                                dialog.show();
-                            });
-                        }
+                        showDialog(R.string.deletion_successful, R.string.deletion_successful_message);
                     }
 
                     @Override
                     public void onError(int statusCode, String errorMessage) {
-                        Activity a = f.getActivity();
-                        if (a != null && !a.isFinishing() && !a.isDestroyed() && f.isAdded()) {
-                            a.runOnUiThread(() -> {
-                                AlertDialog dialog = new AlertDialog.Builder(a).create();
-                                dialog.setTitle(R.string.internal_server_error);
-                                dialog.setMessage(f.getString(R.string.internal_server_error));
-                                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (d, w) -> d.dismiss());
-                                dialog.show();
-                            });
-                        }
+                        showDialog(R.string.internal_server_error, R.string.internal_server_error);
                     }
                 });
                 repo.deleteTicket(eventId, ticketId, data, ora);
             } else {
-                setNoConnectionDialog(activity, noconn, noconnmsg);
+                setNoConnectionDialog(noconn, noconnmsg);
             }
         }
     }
@@ -388,7 +353,7 @@ public class EventDetailsViewModel extends ViewModel {
                     ex.printStackTrace();
                 }
             } else {
-                setNoConnectionDialog(activity, noconn, noconnmsg);
+                setNoConnectionDialog(noconn, noconnmsg);
             }
         }
 

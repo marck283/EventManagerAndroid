@@ -43,6 +43,10 @@ public class EventInfo {
         return durata;
     }
 
+    public String getEventPic() {
+        return eventPic;
+    }
+
     /**
      * Decodifica il valore della stringa base64 che rappresenta l'immagine dell'evento in Bitmap.
      * @return Il valore decodificato in tipo Bitmap

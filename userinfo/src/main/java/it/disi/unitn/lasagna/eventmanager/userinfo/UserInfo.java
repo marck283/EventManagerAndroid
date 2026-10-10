@@ -1,6 +1,9 @@
 package it.disi.unitn.lasagna.eventmanager.userinfo;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,7 +19,8 @@ import java.util.List;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
 
 public class UserInfo {
-    private String id, profilePic, nome, email, tel;
+    private String id, nome, email, tel;
+    private Uri profilePic;
     private final Integer numEvOrg;
     private final Double valutazioneMedia;
 
@@ -29,7 +33,7 @@ public class UserInfo {
         valutazioneMedia = 0.0;
     }
 
-    private UserInfo(@NonNull String id, @NonNull String profilePic, @NonNull String nome,
+    private UserInfo(@NonNull String id, @NonNull Uri profilePic, @NonNull String nome,
                     @NonNull String email, @NonNull String tel, @NonNull Integer numEvOrg,
                     @NonNull Double valutazioneMedia, @NonNull List<String> EventiIscritto,
                     @NonNull List<String> EventiCreati) {
@@ -50,9 +54,6 @@ public class UserInfo {
 
     public String getString(@NonNull String string) {
         switch (string) {
-            case "profilePic" -> {
-                return profilePic;
-            }
             case "nome" -> {
                 return nome;
             }
@@ -62,8 +63,14 @@ public class UserInfo {
             case "tel" -> {
                 return tel;
             }
+            default -> {
+                return "";
+            }
         }
-        return "";
+    }
+
+    public Uri getProfilePic() {
+        return profilePic;
     }
 
     public Integer getNumEvOrg() {
@@ -87,6 +94,14 @@ public class UserInfo {
             return gs1.fromJson(json.get(name), String.class);
         }
         return "";
+    }
+
+    @Nullable
+    private static Uri uriFromJson(@NonNull JsonObject json) {
+        if (json.get("picture") != null) {
+            return Uri.parse(json.get("picture").getAsString());
+        }
+        return null;
     }
 
     private static Integer integerFromJson(@NonNull Gson gs1, @NonNull JsonObject json) {
@@ -149,7 +164,7 @@ public class UserInfo {
         GsonBuilder gson = new GsonBuilder();
         Gson gs1 = gson.create();
 
-        return new UserInfo(stringFromJson(gs1, "id", json), stringFromJson(gs1, "picture", json),
+        return new UserInfo(stringFromJson(gs1, "id", json), uriFromJson(json),
                 stringFromJson(gs1, "nome", json), stringFromJson(gs1, "email", json),
                 stringFromJson(gs1, "tel", json), integerFromJson(gs1, json),
                 doubleFromJson(gs1, json), fromJsonArr(gs1, "EventiIscritto", json),

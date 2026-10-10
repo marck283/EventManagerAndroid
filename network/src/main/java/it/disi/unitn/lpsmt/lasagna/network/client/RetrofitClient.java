@@ -1,5 +1,11 @@
 package it.disi.unitn.lpsmt.lasagna.network.client;
 
+import android.net.Uri;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import it.disi.unitn.lpsmt.lasagna.network.adapter.UriTypeAdapter;
 import it.disi.unitn.lpsmt.lasagna.network.api.AuthApi;
 import it.disi.unitn.lpsmt.lasagna.network.api.EventApi;
 import it.disi.unitn.lpsmt.lasagna.network.api.OrganizedEventsApi;
@@ -29,10 +35,14 @@ public class RetrofitClient {
                 .addInterceptor(authInterceptor)
                 .build();
 
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriTypeAdapter())
+                .create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
         authApi = retrofit.create(AuthApi.class);

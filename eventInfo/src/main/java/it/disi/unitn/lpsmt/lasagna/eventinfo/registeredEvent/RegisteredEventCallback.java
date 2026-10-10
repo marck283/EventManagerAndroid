@@ -3,39 +3,27 @@ package it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Paint;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
-import com.bumptech.glide.Glide;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
+
 import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.FutureTask;
 
-import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
-import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
-import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.fields.Field;
 
 public class RegisteredEventCallback {
+
     private final Fragment f;
-
-    private final View v;
-
-    private final String userJwt, eventId;
 
     private final ActivityResultLauncher<Intent> loginLauncher;
 
@@ -43,74 +31,14 @@ public class RegisteredEventCallback {
 
     private final Class<? extends Activity> c;
 
-    private final int noconn, noconnmsg, eventPicture, title, organizer, textView16, textView11, day_not_selectable;
-
-    private final int textView20, time_not_selectable, textView39, duration, textView42, event_address, button9;
-
-    private final int button10, action_eventDetailsFragment_to_reviewWriting, button11,
-            malformed_request, malformed_request_message, no_event, no_event_message;
-
-    private final FutureTask<Void> task;
-
-    public RegisteredEventCallback(@NotNull Fragment f, @NotNull View v, @NotNull String ujwt,
-                                   @NotNull String eid, @NotNull ActivityResultLauncher<Intent> loginLauncher,
-                                   @NotNull EventDetailsViewModel eventVM, @StringRes int noconn,
-                                   @StringRes int noconnmsg, @NotNull Class<? extends Activity> c,
-                                   @IdRes int eventPicture, @StringRes int title, @StringRes int organizer,
-                                   @IdRes int textView16, @IdRes int textView11,
-                                   @StringRes int day_not_selectable,
-                                   @IdRes int textView20, @StringRes int time_not_selectable,
-                                   @IdRes int textView39, @StringRes int duration, @IdRes int textView42,
-                                   @StringRes int event_address, @IdRes int button9, @IdRes int button10,
-                                   @IdRes int action_eventDetailsFragment_to_reviewWriting,
-                                   @IdRes int button11, @StringRes int malformed_request,
-                                   @StringRes int malformed_request_message, @StringRes int no_event,
-                                   @StringRes int no_event_message, @NotNull FutureTask<Void> task) {
+    public RegisteredEventCallback(@NotNull Fragment f,
+                                   @NotNull ActivityResultLauncher<Intent> loginLauncher,
+                                   @NotNull EventDetailsViewModel eventVM,
+                                   @NotNull Class<? extends Activity> c) {
         this.f = f;
-        this.v = v;
-        userJwt = ujwt;
-        eventId = eid;
         this.loginLauncher = loginLauncher;
         this.eventVM = eventVM;
         this.c = c;
-        this.noconn = noconn;
-        this.noconnmsg = noconnmsg;
-        this.eventPicture = eventPicture;
-        this.title = title;
-        this.organizer = organizer;
-        this.textView16 = textView16;
-        this.textView11 = textView11;
-        this.day_not_selectable = day_not_selectable;
-        this.textView20 = textView20;
-        this.time_not_selectable = time_not_selectable;
-        this.textView39 = textView39;
-        this.duration = duration;
-        this.textView42 = textView42;
-        this.event_address = event_address;
-        this.button9 = button9;
-        this.button10 = button10;
-        this.action_eventDetailsFragment_to_reviewWriting = action_eventDetailsFragment_to_reviewWriting;
-        this.button11 = button11;
-        this.malformed_request = malformed_request;
-        this.malformed_request_message = malformed_request_message;
-        this.no_event = no_event;
-        this.no_event_message = no_event_message;
-        this.task = task;
-    }
-
-    private void setAlertDialog(@StringRes int title, @StringRes int message) {
-        Activity activity = f.getActivity();
-        if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-            activity.runOnUiThread(() -> {
-                if (!activity.isFinishing() && !activity.isDestroyed()) {
-                    AlertDialog dialog = new AlertDialog.Builder(activity).create();
-                    dialog.setTitle(title);
-                    dialog.setMessage(f.getString(message));
-                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", (dialog1, which) -> dialog1.dismiss());
-                    dialog.show();
-                }
-            });
-        }
     }
 
     public void handleInfoSuccess(@NonNull JsonObject data) {
@@ -118,85 +46,65 @@ public class RegisteredEventCallback {
 
         Activity activity = f.getActivity();
         if (activity != null && f.isAdded()) {
-            f.requireActivity().runOnUiThread(() -> {
-                ImageView image = v.findViewById(eventPicture);
-                Glide.with(v).load(event.decodeBase64()).into(image);
+            eventVM.setTicketDetails(event.getTicketId(), event.getLuogoEv().getData(), event.getLuogoEv().getOra());
 
+            Field eventPic = new Field();
+            eventPic.setFieldId("eventPicture");
+            eventPic.setFieldValue(event.getEventPic());
+            eventVM.setField(eventPic);
 
-                TextView title1 = v.findViewById(title);
-                title1.setText(event.getEventName());
+            Field title1 = new Field();
+            title1.setFieldId("title");
+            title1.setFieldValue(event.getEventName());
+            eventVM.setField(title1);
 
-                TextView organizzatore = v.findViewById(textView16);
-                organizzatore.setText(f.getString(organizer, event.getOrgName()));
+            Field organizer = new Field();
+            organizer.setFieldId("organizer");
+            organizer.setFieldValue(f.getString(R.string.organizer, event.getOrgName()));
+            eventVM.setField(organizer);
 
-                TextView giorno = v.findViewById(textView11);
-                String[] dataArr = event.getLuogoEv().getData().split("-");
-                giorno.setText(f.getString(day_not_selectable,
-                        "\n" + dataArr[1] + "/" + dataArr[0] + "/" + dataArr[2]));
+            Field day = new Field();
+            String[] dateArr = event.getLuogoEv().getData().split("-");
+            day.setFieldId("day");
+            day.setFieldValue(f.getString(R.string.day_not_selectable,
+                    "\n" + String.join("/",
+                            dateArr)));
+            eventVM.setField(day);
 
-                TextView ora = v.findViewById(textView20);
-                String oraS = event.getLuogoEv().getOra();
-                ora.setText(f.getString(time_not_selectable,
-                        "\n" + oraS));
+            Field time = new Field();
+            String sTime = event.getLuogoEv().getOra();
+            time.setFieldId("time");
+            time.setFieldValue(f.getString(R.string.time_not_selectable,
+                    "\n" + sTime));
+            eventVM.setField(time);
 
-                String[] sDurata = event.getDurata().split(":");
-                TextView durata = v.findViewById(textView39);
-                durata.setText(f.getString(duration, sDurata[0], sDurata[1], sDurata[2]));
+            Field duration = new Field();
+            String[] sDuration = event.getDurata().split(":");
+            duration.setFieldId("duration");
+            duration.setFieldValue(f.getString(R.string.duration, sDuration[0], sDuration[1], sDuration[2]));
+            eventVM.setField(duration);
 
-                TextView address = v.findViewById(textView42);
-                address.setText(f.getString(event_address, event.getLuogoEv().toString()));
-                if (!address.hasOnClickListeners()) {
-                    address.setOnClickListener(c -> {
-                        GeocoderExt geocoder = new GeocoderExt(f, address);
-                        geocoder.fromLocationName(address.getText().toString(), 5);
-                    });
-                }
+            Field address = new Field();
+            address.setFieldId("address");
+            address.setFieldValue(f.getString(R.string.event_address, event.getLuogoEv().getAddress()));
+            eventVM.setField(address);
 
-                LuogoEv le = event.getLuogoEv();
-                if (le != null) {
-                    address.setPaintFlags(address.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                    address.setText(f.getString(event_address, le.getAddress()));
-                }
-
-                ListenerButton qrCodeRender = v.findViewById(button9);
-                qrCodeRender.setOnClickListener(c -> {
-                    Bundle b = new Bundle();
-                    b.putString("eventId", event.getIdEvent());
-                    b.putString("userId", userJwt);
-                    b.putString("data", event.getLuogoEv().getData());
-                    b.putString("ora", event.getLuogoEv().getOra());
-
-                    task.run();
-                });
-
-                ListenerButton writeReview = v.findViewById(button10);
-                String dateTime = dataArr[2]
-                        + "-" + dataArr[0] + "-" + dataArr[1] + "T" + oraS + ":00";
-                {
-                    LocalDateTime now = LocalDateTime.now(), eventDateTime = LocalDateTime.parse(dateTime);
-                    Log.i("boolean", String.valueOf(now.isBefore(eventDateTime)));
-                    writeReview.setEnabled(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato());
-                }
-
-                writeReview.setOnClickListener(c -> {
-                    Bundle b = new Bundle();
-                    b.putString("userId", userJwt);
-                    b.putString("eventId", eventId);
-                    Navigation.findNavController(v).navigate(action_eventDetailsFragment_to_reviewWriting, b);
-                });
-
-                ListenerButton deleteTicket = v.findViewById(button11);
-                deleteTicket.setOnClickListener(c ->
-                        eventVM.deleteTicket(userJwt, event.getTicketId(),
-                                event.getIdEvent(), f, event.getLuogoEv().getData(),
-                                event.getLuogoEv().getOra(), noconn, noconnmsg));
-            });
+            Field writeReview = new Field();
+            writeReview.setFieldId("writeReview");
+            String dateTime = dateArr[2]
+                    + "-" + dateArr[0] + "-" + dateArr[1] + "T" + sTime + ":00";
+            {
+                LocalDateTime now = LocalDateTime.now(), eventDateTime = LocalDateTime.parse(dateTime);
+                Log.i("boolean", String.valueOf(now.isBefore(eventDateTime)));
+                writeReview.setFieldValue(String.valueOf(!now.isBefore(eventDateTime) || event.getLuogoEv().getTerminato()));
+            }
+            eventVM.setField(writeReview);
         }
     }
 
     public void handleInfoError(int statusCode) {
         switch(statusCode) {
-            case 400 -> setAlertDialog(malformed_request, malformed_request_message);
+            case 400 -> eventVM.showDialog(R.string.malformed_request, R.string.malformed_request_message);
             case 401 -> {
                 Activity activity = f.getActivity();
                 if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
@@ -208,7 +116,7 @@ public class RegisteredEventCallback {
                     });
                 }
             }
-            case 404 -> setAlertDialog(no_event, no_event_message);
+            case 404 -> eventVM.showDialog(R.string.no_event, R.string.no_event_message);
         }
     }
 }

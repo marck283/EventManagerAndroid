@@ -92,8 +92,7 @@ public class ReviewWriting extends Fragment {
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(v, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ReviewWritingViewModel.class);
-        prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                requireActivity());
+        prefs = new SharedPrefs(requireActivity().getApplicationContext());
 
         ListenerButton postReview = v.findViewById(R.id.button15);
         postReview.setOnClickListener(c -> {

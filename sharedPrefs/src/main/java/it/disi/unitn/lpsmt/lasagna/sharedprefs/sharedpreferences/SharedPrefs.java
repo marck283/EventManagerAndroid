@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.lasagna.sharedprefs.sharedpreferences;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -12,8 +11,14 @@ public class SharedPrefs {
     private final SharedPreferences prefs;
     private final SharedPreferences.Editor editor;
 
-    public SharedPrefs(@NonNull String prefString, @NonNull Activity a) {
-        prefs = a.getSharedPreferences(prefString, Context.MODE_PRIVATE);
+    public static final String PREF_NAME = "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok";
+
+    public SharedPrefs(@NonNull Context context) {
+        this(PREF_NAME, context);
+    }
+
+    public SharedPrefs(@NonNull String prefString, @NonNull Context context) {
+        prefs = context.getSharedPreferences(prefString, Context.MODE_PRIVATE);
         editor = prefs.edit();
     }
 

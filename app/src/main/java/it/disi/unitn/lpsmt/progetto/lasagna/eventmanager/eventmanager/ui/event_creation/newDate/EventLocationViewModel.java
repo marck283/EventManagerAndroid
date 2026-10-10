@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.navigation.fragment.NavHostFragment;
 
 import java.util.List;
+import java.util.Locale;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lasagna.eventcreation.viewmodel.EventViewModel;
@@ -52,9 +53,12 @@ public class EventLocationViewModel extends ViewModel {
                 evm.setLuogoEv(luogo);
 
                 Activity activity = f.getActivity();
-                if(activity != null && f.isAdded()) {
-                    f.requireActivity().runOnUiThread(() ->
-                            NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment));
+                if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                    f.requireActivity().runOnUiThread(() -> {
+                        if (!activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                            NavHostFragment.findNavController(f).navigate(R.id.action_eventLocationFragment_to_SecondFragment);
+                        }
+                    });
                 }
                 break;
             } else {
@@ -72,7 +76,8 @@ public class EventLocationViewModel extends ViewModel {
 
     private String parseProvince() {
         if (provincia != null && !provincia.isEmpty()) {
-            return switch (provincia) {
+            return new Address(Locale.ITALIAN).getSubAdminArea();
+            /*return switch (provincia) {
                 case "Agrigento" -> "AG";
                 case "Alessandria" -> "AL";
                 case "Ancona" -> "AN";
@@ -184,7 +189,7 @@ public class EventLocationViewModel extends ViewModel {
                 case "Vicenza" -> "VI";
                 case "Viterbo" -> "VT";
                 default -> "Nessuna provincia italiana nota con quel nome.";
-            };
+            };*/
         }
         return provincia;
     }

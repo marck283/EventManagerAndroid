@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.lasagna.localdatabase.queryClasses;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +20,7 @@ import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.User;
 
 public class DBUser extends DBThread {
     private final String action, id;
-    private String profilePic;
+    private Uri profilePic;
     private final UserDAO user;
     private final View v;
     private Fragment f;
@@ -33,7 +34,7 @@ public class DBUser extends DBThread {
         this.v = v;
         this.f = f;
         user = db.getUserDAO();
-        profilePic = "";
+        profilePic = null;
         a = f.requireActivity();
         userEntity = null;
         this.id = id;
@@ -43,7 +44,7 @@ public class DBUser extends DBThread {
         super(a);
         this.action = action;
         user = db.getUserDAO();
-        this.profilePic = "";
+        this.profilePic = null;
         this.v = v;
         this.a = a;
         this.userEntity = userEntity;

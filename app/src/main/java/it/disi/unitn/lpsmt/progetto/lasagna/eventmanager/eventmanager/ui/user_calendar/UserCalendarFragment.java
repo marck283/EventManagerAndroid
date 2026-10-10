@@ -58,7 +58,6 @@ public class UserCalendarFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_user_calendar, container, false);
 
         return view;
@@ -75,8 +74,7 @@ public class UserCalendarFragment extends Fragment {
         v.setOnDateChangeListener((v1, d, m, y) -> {
             Bundle b = new Bundle();
 
-            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                    requireActivity());
+            SharedPrefs prefs = new SharedPrefs(requireActivity().getApplicationContext());
             String token = prefs.getString("accessToken");
             if (token.isEmpty()) {
                 //Eseguire login, poi permettere la visualizzazione degli eventi

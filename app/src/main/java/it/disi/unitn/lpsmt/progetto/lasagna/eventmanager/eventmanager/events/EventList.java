@@ -28,8 +28,8 @@ public class EventList {
     private ArrayList<LuogoEv> fromJsonArr(@NonNull JsonArray json) {
         ArrayList<LuogoEv> larr = new ArrayList<>();
 
-        for(int i = 0; i < json.size(); i++) {
-            larr.add(LuogoEv.parseJSON(json.get(i).getAsJsonObject()));
+        for(JsonElement el: json) {
+            larr.add(LuogoEv.parseJSON(el.getAsJsonObject()));
         }
 
         return larr;
@@ -43,7 +43,8 @@ public class EventList {
         for(JsonElement e: arr) {
             JsonObject eo = e.getAsJsonObject();
 
-            it.disi.unitn.lpsmt.lasagna.localdatabase.Event pe = new it.disi.unitn.lpsmt.lasagna.localdatabase.Event(fromJson(gs1, eo, "id"),
+            it.disi.unitn.lpsmt.lasagna.localdatabase.Event pe = new it.disi.unitn.lpsmt.lasagna.localdatabase.Event(
+                    fromJson(gs1, eo, "id"),
                     fromJson(gs1, eo, "idevent"),
                     fromJson(gs1, eo, "self"),
                     fromJson(gs1, eo, "name"),

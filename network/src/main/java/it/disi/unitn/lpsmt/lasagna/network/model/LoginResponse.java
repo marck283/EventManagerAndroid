@@ -1,5 +1,7 @@
 package it.disi.unitn.lpsmt.lasagna.network.model;
 
+import android.net.Uri;
+
 import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
@@ -19,14 +21,14 @@ public class LoginResponse {
     @SerializedName("self")
     private String self;
 
-    @SerializedName("profilePic")
-    private String profilePic;
+    @SerializedName(value = "profilePic", alternate = {"picture", "profile_pic"})
+    private Uri profilePic;
 
     public LoginResponse() {
         // Required for Gson
     }
 
-    public LoginResponse(String token, String email, String name, String id, String self, String profilePic) {
+    public LoginResponse(String token, String email, String name, String id, String self, Uri profilePic) {
         this.token = token;
         this.email = email;
         this.name = name;
@@ -55,7 +57,7 @@ public class LoginResponse {
         return self;
     }
 
-    public String getProfilePic() {
+    public Uri getProfilePic() {
         return profilePic;
     }
 }

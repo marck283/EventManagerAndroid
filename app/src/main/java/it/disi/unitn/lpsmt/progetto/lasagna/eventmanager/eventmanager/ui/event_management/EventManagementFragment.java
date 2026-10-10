@@ -87,7 +87,7 @@ public class EventManagementFragment extends Fragment {
                                 prefs.apply();
                                 Navigation.findNavController(view).navigate(R.id.action_eventManagement_to_nav_event_list);
                                 ((NavigationDrawerActivity) requireActivity()).updateUI("logout",
-                                        "", "", "", false);
+                                        "", "", null, false);
                             }
                         }
                     }
@@ -100,8 +100,7 @@ public class EventManagementFragment extends Fragment {
         Activity activity = getActivity();
         if(activity != null && isAdded()) {
             callback = new NetworkCallback(requireActivity());
-            prefs = new SharedPrefs(
-                    "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", requireActivity());
+            prefs = new SharedPrefs(activity.getApplicationContext());
         }
 
         FloatingActionButton fab = view.findViewById(R.id.floatingActionButton2);

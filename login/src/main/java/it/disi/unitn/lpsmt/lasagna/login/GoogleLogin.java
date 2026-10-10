@@ -3,17 +3,16 @@ package it.disi.unitn.lpsmt.lasagna.login;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
-import com.facebook.AccessToken;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential;
 
-import it.disi.unitn.lpsmt.lasagna.AuthProviders;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.GSignIn;
 import it.disi.unitn.lpsmt.lasagna.gSignIn.OnSignInListener;
 import it.disi.unitn.lpsmt.lasagna.login.model.LoggedInUser;
@@ -56,22 +55,22 @@ public class GoogleLogin {
 
             @Override
             public void onSuccess(GoogleIdTokenCredential credential) {
-                Intent intent = setUpIntent(AuthProviders.GOOGLE, null);
+                Intent intent = setUpIntent();
 
                 AuthRepository authRepo = new AuthRepository();
                 authRepo.loginWithGoogle(credential.getIdToken(), new AuthRepository.AuthResultCallback() {
                     @Override
                     public void onSuccess(LoginResponse user) {
                         // 1. Save token and userId to SharedPrefs
-                        SharedPrefs prefs = new SharedPrefs(
-                                "it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok", a);
+                        SharedPrefs prefs = new SharedPrefs(a.getApplicationContext());
                         prefs.setString("accessToken", user.getToken());
                         prefs.setString("userId", user.getId());
                         prefs.apply();
 
                         // 2. Pass LoggedInUser data back to NavigationDrawerActivity
+                        Uri profilePic = user.getProfilePic() != null ? user.getProfilePic() : credential.getProfilePictureUri();
                         LoggedInUser info = new LoggedInUser(user.getToken(), user.getEmail(), user.getName(),
-                                user.getId(), user.getSelf(), user.getProfilePic());
+                                user.getId(), user.getSelf(), profilePic);
 
                         if (a instanceof AuthenticationInterface authInterface) {
                             authInterface.shareData(info, intent);
@@ -81,6 +80,7 @@ public class GoogleLogin {
                     @Override
                     public void onError(String errorMessage) {
                         if (a instanceof AuthenticationInterface authInterface) {
+                            Log.e("loginError", errorMessage);
                             authInterface.showNotLoggedInMsg();
                         }
                     }
@@ -96,12 +96,9 @@ public class GoogleLogin {
     }
 
     @NonNull
-    public Intent setUpIntent(@NonNull String which, @Nullable AccessToken accessToken) {
+    public Intent setUpIntent() {
         Intent intent = new Intent();
         intent.setClassName("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.ui", "NavigationDrawerActivity");
-        if(which.equals(AuthProviders.FACEBOOK) && accessToken != null) {
-            intent.putExtra("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.fAccessToken", accessToken);
-        }
         return intent;
     }
 }

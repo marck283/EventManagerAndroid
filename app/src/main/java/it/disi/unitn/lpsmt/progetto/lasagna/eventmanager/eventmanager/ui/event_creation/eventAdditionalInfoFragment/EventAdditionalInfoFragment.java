@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,7 +20,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,7 +51,6 @@ public class EventAdditionalInfoFragment extends Fragment {
     private EventAdditionalInfoViewModel mViewModel;
     private EventViewModel evm;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
-    private boolean pickerAvailable = false;
 
     private View view;
     private ActivityResultLauncher<Intent> loginLauncher;
@@ -75,7 +74,7 @@ public class EventAdditionalInfoFragment extends Fragment {
         if(activity != null && isAdded()) {
             if(uri != null) {
                 try {
-                    final Bitmap selectedImage = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+                    final Bitmap selectedImage = ImageDecoder.decodeBitmap(ImageDecoder.createSource(activity.getContentResolver(), uri));
                     updateEventImage(encodeImage(selectedImage));
                 } catch(FileNotFoundException ex) {
                     AlertDialog dialog = new AlertDialog.Builder(requireActivity()).create();
@@ -90,41 +89,26 @@ public class EventAdditionalInfoFragment extends Fragment {
         }
     }
 
-    public void selectImage(@Nullable ActivityResultLauncher<Intent> launcher) {
-        if(launcher == null) {
-            //Posso usare PhotoPicker
-            pickMedia.launch(new PickVisualMediaRequest.Builder()
-                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
-                    .build());
-        } else {
-            //Non posso usare PhotoPicker
-            Intent intent = new Intent();
-            intent.setType("image/");
-            intent.setAction(Intent.ACTION_PICK);
-
-            launcher.launch(intent);
-        }
+    public void selectImage() {
+        pickMedia.launch(new PickVisualMediaRequest.Builder()
+                .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                .build());
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
-            if(ActivityResultContracts.PickVisualMedia.isPhotoPickerAvailable(requireContext())) {
-                pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::setImage);
-                pickerAvailable = true;
-            }
-
+            pickMedia = registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), this::setImage);
             loginLauncher = registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(), result -> {
-                        Activity activity = getActivity();
-                        if(result != null && result.getData() != null && activity != null && isAdded()) {
-                            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                    requireActivity());
-                            String jwt = prefs.getString("accessToken");
-                            mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
-                        }
-                    });
+                    Activity activity = getActivity();
+                    if(result != null && result.getData() != null && activity != null && isAdded()) {
+                        SharedPrefs prefs = new SharedPrefs(activity.getApplicationContext());
+                        String jwt = prefs.getString("accessToken");
+                        mViewModel.createPrivateEvent(this, jwt, evm, loginLauncher);
+                    }
+                });
         } catch(IllegalStateException ex) {
             if(ex.getMessage() != null) {
                 Log.e("Errore", ex.getMessage());
@@ -147,17 +131,7 @@ public class EventAdditionalInfoFragment extends Fragment {
 
         FloatingActionButton selectImage = view.findViewById(R.id.imageSelector);
         if(selectImage != null) {
-            if(pickerAvailable) {
-                setOnClickListener(selectImage, c -> selectImage(null));
-            } else {
-                ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts
-                        .StartActivityForResult(), result -> {
-                    if(result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        setImage(result.getData().getData());
-                    }
-                });
-                setOnClickListener(selectImage, c -> selectImage(launcher));
-            }
+            setOnClickListener(selectImage, c -> selectImage());
         } else {
             Log.i("NoButton", "Nessun bottone con quell'id");
         }
@@ -249,8 +223,7 @@ public class EventAdditionalInfoFragment extends Fragment {
                     if(evm.getPrivEvent()) {
                         Activity activity = getActivity();
                         if(activity != null && isAdded()) {
-                            SharedPrefs prefs = new SharedPrefs("it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.AccTok",
-                                    requireActivity());
+                            SharedPrefs prefs = new SharedPrefs(activity.getApplicationContext());
                             mViewModel.createPrivateEvent(this, prefs.getString("accessToken"),
                                     evm, loginLauncher);
                         }

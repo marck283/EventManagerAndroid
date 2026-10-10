@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -38,11 +37,11 @@ public class UserProfileCallback {
 
         Activity activity = f.getActivity();
         if(activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
-            AppDatabase db = Room.databaseBuilder(activity.getApplicationContext(),
-                    AppDatabase.class, "EventManagerDB").fallbackToDestructiveMigration().build();
+            AppDatabase db = AppDatabase.getInstance(activity.getApplicationContext());
             UserDAO userDao = db.getUserDAO();
             User userEntity = userInfo.toUser();
-            new Thread(() -> {
+
+            AppDatabase.databaseWriteExecutor.execute(() -> {
                 if (userDao.getUser(userEntity.getId()) == null) {
                     userDao.insert(userEntity);
                 } else {
@@ -52,14 +51,13 @@ public class UserProfileCallback {
                             userEntity.getEventiIscritto(), userEntity.getNumEvOrg(),
                             userEntity.getValutazioneMedia());
                 }
-                db.close();
-            }).start();
+            });
 
             //Imposta la schermata del profilo dell'utente
             activity.runOnUiThread(() -> {
                 if (!activity.isFinishing() && !activity.isDestroyed()) {
                     ImageView iv = v.findViewById(R.id.profilePic);
-                    Glide.with(activity).load(userInfo.getString("profilePic"))
+                    Glide.with(activity.getApplicationContext()).load(userInfo.getString("profilePic"))
                             .diskCacheStrategy(DiskCacheStrategy.ALL).circleCrop().into(iv);
 
                     TextView username = v.findViewById(R.id.username);
@@ -78,7 +76,7 @@ public class UserProfileCallback {
                     TextView numEvOrg = v.findViewById(R.id.numEvOrg);
                     String eventi = MessageFormat.format(f.getString(R.string.numEvOrg, userInfo.getNumEvOrg()),
                             new StringBuffer());
-                    numEvOrg.setText(/*f.getString(R.string.numEvOrg, userInfo.getNumEvOrg())*/eventi);
+                    numEvOrg.setText(eventi);
 
                     ListenerButton rating = v.findViewById(R.id.rating);
                     if (userInfo.getNumEvOrg() == 0 || userInfo.getValutazioneMedia() == 0.0) {

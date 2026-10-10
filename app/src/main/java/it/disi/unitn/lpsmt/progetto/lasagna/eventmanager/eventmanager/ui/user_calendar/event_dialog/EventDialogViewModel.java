@@ -69,7 +69,7 @@ public class EventDialogViewModel extends ViewModel {
     @NonNull
     private static OrganizedEventRepository getOrgRepo(@NonNull Fragment f, RecyclerView orgRv, String data) {
         JsonCallback orgCallback = new JsonCallback(f, "org", orgRv, data);
-        OrganizedEventRepository orgRepo = new OrganizedEventRepository(new OrganizedEventRepository.EventListCallback() {
+        return new OrganizedEventRepository(new OrganizedEventRepository.EventListCallback() {
             @Override
             public void onSuccess(JsonObject eventsJson) {
                 orgCallback.handleJsonSuccess(eventsJson);
@@ -80,6 +80,5 @@ public class EventDialogViewModel extends ViewModel {
                 orgCallback.handleJsonError(statusCode);
             }
         });
-        return orgRepo;
     }
 }

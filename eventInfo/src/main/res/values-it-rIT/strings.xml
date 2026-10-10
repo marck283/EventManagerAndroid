@@ -30,4 +30,15 @@
     <string name="retry_later">Errore interno al server. Si prega di riprovare più tardi.</string>
     <string name="unknown_error">Errore sconosciuto</string>
     <string name="unknown_error_message">Si è verificato un errore sconosciuto. Si prega di contattare lo sviluppatore.</string>
+    <string name="scan_qr_code">Scansiona codice QR</string>
+    <string name="info_on_event">Informazioni sull\'evento %1$s</string>
+    <string name="no_connection">Nessuna connessione ad Internet</string>
+    <string name="no_connection_message">Nessuna connessione ad Internet al momento disponibile. Verificare le impostazioni di rete.</string>
+    <string name="no_session_title">Non sei autenticato!</string>
+    <string name="no_session_content">Nessuna sessione attiva. Si prega di autenticarsi.</string>
+    <string name="attempt_ok">Evento terminato</string>
+    <string name="attempt_ok_message">L\'evento è stato terminato con successo.</string>
+    <string name="no_event">Nessun evento trovato</string>
+    <string name="no_event_message">Nessun evento è stato trovato.</string>
+    <string name="registrations_closed">Iscrizioni chiuse</string>
 </resources>

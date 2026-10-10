@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -31,7 +30,7 @@ public class ReviewsCallback {
                            @StringRes int norevs, @StringRes int norevsmsg, @LayoutRes int revSmallLayout,
                            @IdRes int username,
                            @IdRes int userRating, @IdRes int userPicture, @StringRes int userName,
-                           @StringRes int userEval, @IdRes int showAll, @NavigationRes int revFragToFullRevFrag) {
+                           @StringRes int userEval, @IdRes int showAll, @IdRes int revFragToFullRevFrag) {
         this.adapter = adapter;
         this.f = f;
         this.rv = rv;

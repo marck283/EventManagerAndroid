@@ -29,7 +29,7 @@ public class UserEventRegistrationCallback {
         Activity activity = f.getActivity();
         if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
             activity.runOnUiThread(() -> {
-                if (!activity.isFinishing() && !activity.isDestroyed()) {
+                if (!activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
                     AlertDialog ad = new AlertDialog.Builder(activity).create();
                     ad.setTitle(title);
                     ad.setMessage(f.getString(message));
@@ -48,9 +48,9 @@ public class UserEventRegistrationCallback {
                     setAlertDialog(R.string.malformed_request, R.string.malformed_request_message);
             case 401 -> {
                 Activity activity = f.getActivity();
-                if (activity != null && !activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
+                if (activity != null) {
                     activity.runOnUiThread(() -> {
-                        if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        if (!activity.isFinishing() && !activity.isDestroyed() && f.isAdded()) {
                             Intent loginIntent = new Intent(activity, c);
                             launcher.launch(loginIntent);
                         }
