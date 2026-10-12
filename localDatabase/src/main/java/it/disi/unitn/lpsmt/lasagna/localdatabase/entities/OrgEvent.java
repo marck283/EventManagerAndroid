@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
+import it.disi.unitn.lpsmt.lasagna.localdatabase.Event;
 
 @Entity(tableName = "OrgEvents")
 public class OrgEvent implements Serializable {
     @NonNull
-    @ColumnInfo(name = "id")
+    @ColumnInfo(name = "eventType")
     private String eventType;
 
     @PrimaryKey
@@ -177,5 +178,9 @@ public class OrgEvent implements Serializable {
 
     public void setDurata(@NonNull String val) {
         durata = val;
+    }
+
+    public Event toEvent() {
+        return new Event(eventType, idevent, self, name, category, eventPic, orgName, luogoEv, durata);
     }
 }

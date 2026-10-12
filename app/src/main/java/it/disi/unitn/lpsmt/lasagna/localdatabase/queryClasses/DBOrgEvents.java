@@ -26,7 +26,6 @@ import java.util.List;
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerArrayAdapter;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.OrganizedEvent;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.Event;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.daos.OrgEvDAO;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.OrgEvent;
@@ -122,7 +121,8 @@ public class DBOrgEvents extends DBThread {
     }
 
     private void getAll() {
-        List<OrgEvent> evList = orgEvDAO.getAllOrgEvents();
+        List<Event> evList = new ArrayList<>();
+        orgEvDAO.getAllOrgEvents().forEach(e -> evList.add(e.toEvent()));
 
         if(evList.isEmpty()) {
             Activity a = f.getActivity();
@@ -148,17 +148,12 @@ public class DBOrgEvents extends DBThread {
         }
 
         //Mostra tutti gli eventi nella tabella degli eventi organizzati dall'utente
-        List<Event> helpList = new ArrayList<>();
-        for(OrgEvent o: evList) {
-            helpList.add(new OrganizedEvent(o.getEventType(), o.getIdevent(), o.getSelf(), o.getName(),
-                    o.getCategory(), o.getEventPic(), o.getOrgName(), o.getLuogoEv(), o.getDurata()));
-        }
         Activity a1 = f.getActivity();
         if (a1 != null && !a1.isFinishing() && !a1.isDestroyed() && f.isAdded()) {
             a1.runOnUiThread(() -> {
                 recView.invalidate();
-                EventAdapter p1 = new OrgEvAdapter(new EventCallback(), helpList);
-                p1.submitList(helpList);
+                EventAdapter p1 = new OrgEvAdapter(new EventCallback(), evList);
+                p1.submitList(evList);
                 recView.setAdapter(p1);
             });
         }
@@ -166,7 +161,8 @@ public class DBOrgEvents extends DBThread {
 
     private void getEventsByName() {
         //Mostra tutti gli eventi ottenuti cercando per nome
-        List<OrgEvent> orgEvList = orgEvDAO.getOrgEventsByName(eventName);
+        List<Event> orgEvList = new ArrayList<>();
+        orgEvDAO.getOrgEventsByName(eventName).forEach(e -> orgEvList.add(e.toEvent()));
 
         if(orgEvList.isEmpty()) {
             Activity a = f.getActivity();
@@ -191,14 +187,9 @@ public class DBOrgEvents extends DBThread {
             return;
         }
 
-        List<Event> helpList = new ArrayList<>();
-        for(OrgEvent o: orgEvList) {
-            helpList.add(new OrganizedEvent(o.getEventType(), o.getIdevent(), o.getSelf(), o.getName(),
-                    o.getCategory(), o.getEventPic(), o.getOrgName(), o.getLuogoEv(), o.getDurata()));
-        }
         f.requireActivity().runOnUiThread(() -> {
-            EventAdapter p1 = new OrgEvAdapter(new EventCallback(), helpList);
-            p1.submitList(helpList);
+            EventAdapter p1 = new OrgEvAdapter(new EventCallback(), orgEvList);
+            p1.submitList(orgEvList);
             recView.setAdapter(p1);
         });
     }

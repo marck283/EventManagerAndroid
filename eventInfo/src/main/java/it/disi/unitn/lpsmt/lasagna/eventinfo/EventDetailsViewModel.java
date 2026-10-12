@@ -23,11 +23,8 @@ import it.disi.unitn.lpsmt.lasagna.checkqrcode.QRCodeCallback;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.OrganizedEventCallback;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.TerminatorCallback;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.fields.DialogState;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.fields.Field;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.OrgEvInterface;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.OrganizedEvent;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent.EventInfo;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.publicEvent.EventInfoCallback;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks.EventInfoCallback;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.RegisteredEventCallback;
 import it.disi.unitn.lpsmt.lasagna.network.NetworkCallback;
 import it.disi.unitn.lpsmt.lasagna.network.client.RetrofitClient;
@@ -39,37 +36,23 @@ import it.disi.unitn.lpsmt.lasagna.user_event_registration.UserEventRegistration
 public class EventDetailsViewModel extends ViewModel {
     private NetworkCallback callback;
 
-    private final MutableLiveData<Field> fieldList = new MutableLiveData<>();
-    private final MutableLiveData<EventInfo> publicEventInfo = new MutableLiveData<>();
-    private final MutableLiveData<OrganizedEvent> organizedEvent = new MutableLiveData<>();
+    private final MutableLiveData<EventInfo> eventInfo = new MutableLiveData<>();
     private final MutableLiveData<DialogState> dialogState = new MutableLiveData<>();
 
-    private String ticketId = "";
-    private String eventDate = "";
-    private String eventTime = "";
-
-    public void setField(@NonNull Field field) {
-        fieldList.postValue(field);
+    public void setEventInfo(@NonNull EventInfo event) {
+        eventInfo.postValue(event);
     }
 
-    public LiveData<Field> getFieldList() {
-        return fieldList;
+    public LiveData<EventInfo> getEventInfo() {
+        return eventInfo;
     }
 
-    public void setPublicEventInfo(@NonNull EventInfo info) {
-        publicEventInfo.postValue(info);
-    }
-
-    public LiveData<EventInfo> getPublicEventInfo() {
-        return publicEventInfo;
-    }
-
-    public void setOrganizedEvent(@NonNull OrganizedEvent event) {
-        organizedEvent.postValue(event);
-    }
-
-    public LiveData<OrganizedEvent> getOrganizedEvent() {
-        return organizedEvent;
+    public EventInfo getEventFromId(@NonNull String eventId) {
+        if (eventInfo.getValue() != null && eventInfo.getValue().getId().equals(eventId)) {
+            return eventInfo.getValue();
+        } else {
+            return null;
+        }
     }
 
     public void showDialog(@StringRes int titleRes, @StringRes int messageRes) {
@@ -79,16 +62,6 @@ public class EventDetailsViewModel extends ViewModel {
     public LiveData<DialogState> getDialogState() {
         return dialogState;
     }
-
-    public void setTicketDetails(String ticketId, String eventDate, String eventTime) {
-        this.ticketId = ticketId != null ? ticketId : "";
-        this.eventDate = eventDate != null ? eventDate : "";
-        this.eventTime = eventTime != null ? eventTime : "";
-    }
-
-    public String getTicketId() { return ticketId; }
-    public String getEventDate() { return eventDate; }
-    public String getEventTime() { return eventTime; }
 
     private void setNoConnectionDialog(@StringRes int noconn, @StringRes int noconnmsg) {
         showDialog(noconn, noconnmsg);
@@ -104,7 +77,7 @@ public class EventDetailsViewModel extends ViewModel {
             if (callback.isOnline(f.requireActivity())) {
                 RetrofitClient.getInstance().setAccessToken(accessToken);
 
-                OrganizedEventRepository repo = getOrganizedEventRepository(f, loginLauncher, loginIntent);
+                OrganizedEventRepository repo = getOrganizedEventRepository(eventId, f, loginLauncher, loginIntent);
                 repo.terminateEvent(eventId, data, ora);
             } else {
                 showDialog(R.string.no_connection, R.string.no_connection_message);
@@ -113,18 +86,18 @@ public class EventDetailsViewModel extends ViewModel {
     }
 
     @NonNull
-    private OrganizedEventRepository getOrganizedEventRepository(@NonNull Fragment f, @NonNull ActivityResultLauncher<Intent> loginLauncher, @NonNull Intent loginIntent) {
+    private OrganizedEventRepository getOrganizedEventRepository(@NonNull String eventId, @NonNull Fragment f, @NonNull ActivityResultLauncher<Intent> loginLauncher, @NonNull Intent loginIntent) {
         TerminatorCallback termCallback = new TerminatorCallback(f, this, loginLauncher, loginIntent);
 
         return new OrganizedEventRepository(new OrganizedEventRepository.ActionCallback() {
             @Override
             public void onSuccess() {
-                termCallback.handleResponseCode(200);
+                termCallback.handleResponseCode(200, eventId);
             }
 
             @Override
             public void onError(int statusCode, String errorMessage) {
-                termCallback.handleResponseCode(statusCode);
+                termCallback.handleResponseCode(statusCode, eventId);
             }
         });
     }

@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import org.jetbrains.annotations.NotNull;
 
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.EventInfo;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.fields.Field;
 
 public class TerminatorCallback {
 
@@ -31,7 +32,7 @@ public class TerminatorCallback {
         loginIntent = lintent;
     }
 
-    public void handleResponseCode(int code) {
+    public void handleResponseCode(int code, @NonNull String eventId) {
         switch(code) {
             case 400 -> eventVM.showDialog(R.string.malformed_request, R.string.malformed_request_message);
             case 401 -> {
@@ -47,10 +48,9 @@ public class TerminatorCallback {
             }
             case 200 -> {
                 eventVM.showDialog(R.string.attempt_ok, R.string.attempt_ok_message);
-                Field terminated = new Field();
-                terminated.setFieldId("eventTerminated");
-                terminated.setFieldValue("true");
-                eventVM.setField(terminated);
+                EventInfo info = eventVM.getEventFromId(eventId);
+                info.setTerminato(true);
+                eventVM.setEventInfo(info);
             }
             case 500 -> eventVM.showDialog(R.string.internal_server_error, R.string.internal_server_error);
         }

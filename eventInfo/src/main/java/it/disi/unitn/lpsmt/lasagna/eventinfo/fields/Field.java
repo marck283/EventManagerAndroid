@@ -1,6 +1,5 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.fields;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 
 public class Field {

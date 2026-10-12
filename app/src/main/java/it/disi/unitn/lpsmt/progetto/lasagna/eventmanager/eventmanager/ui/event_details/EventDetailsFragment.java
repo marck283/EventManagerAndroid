@@ -25,15 +25,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
+import java.util.ArrayList;
 import java.util.concurrent.FutureTask;
 
 import it.disi.lasagna.navigationsvm.NavigationSharedViewModel;
+import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
 import it.disi.unitn.lasagna.eventmanager.geocoder.GeocoderExt;
 import it.disi.unitn.lasagna.eventmanager.ui_extra.special_buttons.ListenerButton;
+import it.disi.unitn.lasagna.eventmanager.ui_extra.spinnerImplementation.SpinnerArrayAdapter;
 import it.disi.unitn.lasagna.futuretask.futuretaskext.FutureTaskExt;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.interfaces.EventDetailsInterface;
@@ -42,6 +46,7 @@ import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.QrCodeOnClickListe
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.RatingsOnClickListener;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.SignUpOnClickListener;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.onClickListeners.TerminaEventoOnClickListener;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent.RegisteredEvent;
 import it.disi.unitn.lpsmt.lasagna.localdatabase.queryClasses.DBOrgEvents;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.NavigationDrawerActivity;
 import it.disi.unitn.lpsmt.progetto.lasagna.eventmanager.eventmanager.R;
@@ -191,9 +196,9 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                     new ActivityResultContracts.StartActivityForResult(),
                     result -> {
                         switch (result.getResultCode()) {
-                            case Activity.RESULT_OK -> mViewModel.getEventInfoIscr(this, nvm.getToken().getValue(),
-                                    noconn, noconnmsg, day, eventId, null,
-                                    LoginActivity.class);
+                            case Activity.RESULT_OK -> mViewModel.getEventInfoIscr(this, prefs.getString("accessToken"),
+                                noconn, noconnmsg, day, eventId, null,
+                                LoginActivity.class);
                             case Activity.RESULT_CANCELED -> {
                                 //Ritorna alla schermata principale, reimpostando il token alla stringa vuota
                                 //e chiedendo all'Activity NavigationDrawerActivity di reimpostare il suo menù
@@ -209,7 +214,7 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
         } else {
             if(screenType != null && screenType.equals("org")) {
                 FutureTask<Void> ft = new FutureTask<>(() -> {
-                    mViewModel.getEventInfo("org", eventId, this, nvm.getToken().getValue(),
+                    mViewModel.getEventInfo("org", eventId, this, prefs.getString("accessToken"),
                             null, LoginActivity.class, noconn, noconnmsg);
                     return null;
                 });
@@ -261,72 +266,99 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
         mViewModel = new ViewModelProvider(this).get(EventDetailsViewModel.class);
         nvm = new ViewModelProvider(requireActivity()).get(NavigationSharedViewModel.class);
 
-        mViewModel.getFieldList().observe(getViewLifecycleOwner(), field -> {
-            switch(field.getFieldId()) {
-                case "eventPicture" -> {
-                    ImageView image = view.findViewById(R.id.imageView3);
-                    Glide.with(view).load(field.getFieldValue()).into(image);
-                }
-                case "title" -> {
-                    TextView titleView = view.findViewById(R.id.textView6);
-                    if (titleView != null) {
-                        titleView.setText(field.getFieldValue());
+        mViewModel.getEventInfo().observe(getViewLifecycleOwner(), eventInfo -> {
+            if (eventInfo == null) return;
+
+            ImageView image = view.findViewById(R.id.imageView3);
+            Glide.with(view).load(eventInfo.getEventPic()).into(image);
+
+            TextView titleView = view.findViewById(R.id.textView6);
+            if (titleView != null) {
+                titleView.setText(eventInfo.getNomeAtt());
+            }
+
+            TextView orgView = view.findViewById(R.id.textView16);
+            if (orgView != null) {
+                orgView.setText(eventInfo.getOrgName());
+            }
+
+            TextView dayView = view.findViewById(R.id.textView11);
+            TextView timeView = view.findViewById(R.id.textView20);
+            MaterialAutoCompleteTextView dayText = view.findViewById(R.id.orgDateTextView);
+            MaterialAutoCompleteTextView timeText = view.findViewById(R.id.orgHourTextView);
+
+            // 1. Populate the Date Spinner List
+            ArrayList<CharSequence> dateArr = new ArrayList<>();
+            dateArr.add("---");
+            dateArr.addAll(eventInfo.getLuoghi());
+            if (dayText != null) {
+                dayText.setAdapter(new SpinnerArrayAdapter(requireContext(), R.layout.list_item, dateArr));
+                dayText.setEnabled(true);
+
+                dayText.setOnItemClickListener((parent, view1, position, id) -> {
+                    String selectedDate = parent.getItemAtPosition(position).toString();
+                    if (!selectedDate.equals("---")) {
+                        if (dayView != null) {
+                            dayView.setText(getString(R.string.day_not_selectable, selectedDate));
+                            setDay(selectedDate);
+                        }
+
+                        // Convert MM/DD/YYYY to YYYY-MM-DD for eventInfo queries
+                        String[] parts = selectedDate.split("/");
+                        String isoDate = parts[1] + "-" + parts[0] + "-" + parts[2];
+
+                        // 2. Populate Time Spinner List based on selected Date
+                        if (timeText != null) {
+                            ArrayList<CharSequence> timeArr = new ArrayList<>();
+                            timeArr.add("---");
+                            timeArr.addAll(eventInfo.getOrari(isoDate));
+                            timeText.setAdapter(new SpinnerArrayAdapter(requireContext(), R.layout.list_item, timeArr));
+                            timeText.setEnabled(true);
+
+                            timeText.setOnItemClickListener((parent1, view2, pos2, id2) -> {
+                                String selectedTime = parent1.getItemAtPosition(pos2).toString();
+                                if (!selectedTime.equals("---")) {
+                                    if (timeView != null) {
+                                        timeView.setText(getString(R.string.time_not_selectable, selectedTime));
+                                        setTime(selectedTime);
+                                    }
+
+                                    // 3. Show Address and Duration for selected Date + Time
+                                    LuogoEv luogo = eventInfo.getLuogo(isoDate, selectedTime);
+                                    if (luogo != null) {
+                                        TextView addrView = view.findViewById(R.id.textView15); // or R.id.textView15
+                                        if (addrView != null) {
+                                            addrView.setPaintFlags(addrView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                                            addrView.setText(getString(R.string.event_address, luogo.getAddress()));
+                                            addrView.setOnClickListener(l -> {
+                                                GeocoderExt geocoder = new GeocoderExt(this, addrView);
+                                                geocoder.fromLocationName(addrView.getText().toString(), 1);
+                                            });
+                                        }
+
+                                        TextView durView = view.findViewById(R.id.textView12); // or R.id.textView39
+                                        if (durView != null && eventInfo.getDurata() != null) {
+                                            String[] sDurata = eventInfo.getDurata().split(":");
+                                            durView.setText(getString(R.string.duration, sDurata[0], sDurata[1], sDurata[2]));
+                                        }
+                                    }
+                                } else {
+                                    if (timeView != null) {
+                                        timeView.setText(getString(R.string.time_not_selectable, ""));
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        if (dayView != null) {
+                            dayView.setText(getString(R.string.day_not_selectable, ""));
+                        }
+                        if (timeText != null) {
+                            timeText.setAdapter(new SpinnerArrayAdapter(requireContext(), R.layout.list_item, new ArrayList<>()));
+                            timeText.setText("");
+                        }
                     }
-                }
-                case "organizer" -> {
-                    TextView orgView = view.findViewById(R.id.textView16);
-                    if (orgView != null) {
-                        orgView.setText(field.getFieldValue());
-                    }
-                }
-                case "day" -> {
-                    TextView dayView = view.findViewById(R.id.textView11);
-                    if (dayView != null) {
-                        dayView.setText(field.getFieldValue());
-                    }
-                }
-                case "time" -> {
-                    TextView timeView = view.findViewById(R.id.textView20);
-                    if (timeView != null) {
-                        timeView.setText(field.getFieldValue());
-                    }
-                }
-                case "duration" -> {
-                    TextView durView = view.findViewById(R.id.textView39);
-                    if (durView != null) {
-                        durView.setText(field.getFieldValue());
-                    }
-                }
-                case "address" -> {
-                    TextView addrView = view.findViewById(R.id.textView42);
-                    if (addrView != null) {
-                        addrView.setPaintFlags(addrView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                        addrView.setText(field.getFieldValue());
-                        addrView.setOnClickListener(c -> {
-                            GeocoderExt geocoder = new GeocoderExt(this, addrView);
-                            geocoder.fromLocationName(addrView.getText().toString(), 5);
-                        });
-                    }
-                }
-                case "writeReview" -> {
-                    boolean canWrite = Boolean.parseBoolean(field.getFieldValue());
-                    ListenerButton writeReviewBtn = view.findViewById(R.id.button10);
-                    if (writeReviewBtn != null) {
-                        writeReviewBtn.setEnabled(canWrite);
-                        writeReviewBtn.setOnClickListener(c -> {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("userId", prefs.getString(SharedPrefs.PREF_NAME));
-                            bundle.putString("eventId", eventId);
-                            Navigation.findNavController(view).navigate(R.id.action_eventDetailsFragment_to_reviewWriting, bundle);
-                        });
-                    }
-                }
-                case "eventTerminated" -> {
-                    ListenerButton qrCodeScan = view.findViewById(R.id.button8);
-                    ListenerButton terminaEvento = view.findViewById(R.id.button12);
-                    if (qrCodeScan != null) qrCodeScan.setEnabled(false);
-                    if (terminaEvento != null) terminaEvento.setEnabled(false);
-                }
+                });
             }
         });
 
@@ -338,10 +370,17 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
 
         ListenerButton deleteTicket = view.findViewById(R.id.button11);
         if (deleteTicket != null && !deleteTicket.hasOnClickListeners()) {
-            deleteTicket.setOnClickListener(c ->
-                    mViewModel.deleteTicket(prefs.getString(SharedPrefs.PREF_NAME), mViewModel.getTicketId(),
-                            eventId, this, mViewModel.getEventDate(),
-                            mViewModel.getEventTime(), R.string.no_connection, R.string.no_connection_message));
+            deleteTicket.setOnClickListener(c -> {
+                RegisteredEvent eventInfo = (RegisteredEvent) mViewModel.getEventInfo().getValue();
+                mViewModel.deleteTicket(prefs.getString(SharedPrefs.PREF_NAME), eventInfo.getTicketId(),
+                        eventId, this, day,
+                        time, R.string.no_connection, R.string.no_connection_message);
+                    });
+        }
+
+        ListenerButton showQrCode = view.findViewById(R.id.button9);
+        if (showQrCode != null && !showQrCode.hasOnClickListeners()) {
+            showQrCode.setOnClickListener(c -> task.run());
         }
     }
 
@@ -376,7 +415,7 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                 duration.setText(getString(R.string.duration, "", "", ""));
                 address.setText(getString(R.string.event_address, ""));
 
-                mViewModel.getEventInfoIscr(this, nvm.getToken().getValue(),
+                mViewModel.getEventInfoIscr(this, prefs.getString("accessToken"),
                         noconn, noconnmsg, day, eventId, loginLauncher1,
                         LoginActivity.class);
             }
@@ -398,7 +437,7 @@ public class EventDetailsFragment extends Fragment implements EventDetailsInterf
                 if (activity != null && isAdded()) {
                     callback = new NetworkCallback(requireActivity());
                     if (callback.isOnline(requireActivity())) {
-                        mViewModel.getEventInfo("org", eventId, this, nvm.getToken().getValue(),
+                        mViewModel.getEventInfo("org", eventId, this, prefs.getString("accessToken"),
                                 loginLauncher, LoginActivity.class, noconn, noconnmsg);
                     } else {
                         //Nessuna connessione ad Internet. Acquisire i dati dal database e visualizzarli a schermo

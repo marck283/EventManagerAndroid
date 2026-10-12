@@ -29,13 +29,13 @@ public class Event {
     /**
      * Costruisce l'oggetto PublicEvent. NOTA: nessuno dei seguenti parametri pu&ograve; essere null.
      * @param id Il tipo dell'evento ("pub" poiché si tratta di eventi pubblici)
-     * @param idevent L'ID dell'evento
-     * @param s L'URL dell'evento
-     * @param n Il nome dell'evento
-     * @param c La categoria dell'evento
-     * @param ep L'immagine dell'evento codificata come valore stringa base64
-     * @param orgName Il nome dell'utente organizzatore
-     * @param luogo La lista di luoghi in cui si terrà l'evento
+     * @param idevent L&rsquo;ID dell&rsquo;evento
+     * @param s L&rsquo;URL dell&rsquo;evento
+     * @param n Il nome dell&rsquo;evento
+     * @param c La categoria dell&rsquo;evento
+     * @param ep L&rsquo;immagine dell&rsquo;evento codificata come valore stringa base64
+     * @param orgName Il nome dell&rsquo;utente organizzatore
+     * @param luogo La lista di luoghi in cui si terr&agrave; l'evento
      */
     public Event(@NotNull String id, @NotNull String idevent, @NotNull String s,
                  @NotNull String n, @NotNull String c, @NotNull String ep, @NotNull String orgName,

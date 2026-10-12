@@ -1,9 +1,5 @@
 package it.disi.unitn.lpsmt.lasagna.eventinfo.registeredEvent;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
-
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -12,26 +8,20 @@ import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.ArrayList;
+
 import it.disi.unitn.lasagna.eventcreation.helpers.LuogoEv;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.EventInfo;
 
-public class RegisteredEvent {
+public class RegisteredEvent extends EventInfo {
 
-    private final String id, idevent, self, name, category, eventPic, orgName, durata, idIscr;
-    private final LuogoEv luogoEv;
+    private final String idIscr;
 
     public RegisteredEvent(@NonNull String id, @NonNull String idevent, @NonNull String self,
                            @NonNull String name, @NonNull String category, @NonNull String eventPic,
-                           @NonNull String orgName, @NonNull LuogoEv luogoEv, @NonNull String durata,
+                           @NonNull String orgName, @NonNull ArrayList<LuogoEv> luogoEv, @NonNull String durata,
                            @NonNull String idIscr) {
-        this.id = id;
-        this.idevent = idevent;
-        this.self = self;
-        this.name = name;
-        this.category = category;
-        this.eventPic = eventPic;
-        this.orgName = orgName;
-        this.luogoEv = luogoEv;
-        this.durata = durata;
+        super(id, idevent, self, name, category, eventPic, durata, false, luogoEv, orgName);
         this.idIscr = idIscr;
     }
 
@@ -47,8 +37,8 @@ public class RegisteredEvent {
      * Ritorna l'id dell'evento così come identificato dal server.
      * @return l'id dell'evento così come identificato dal server
      */
-    public String getIdEvent() {
-        return idevent;
+    public String getEventType() {
+        return eventType;
     }
 
     public String getSelf() {
@@ -56,34 +46,15 @@ public class RegisteredEvent {
     }
 
     public String getEventName() {
-        return name;
+        return nomeAtt;
     }
 
     public String getCategory() {
-        return category;
+        return categoria;
     }
 
-    public String getEventPic() {
-        return eventPic;
-    }
-
-    public String getOrgName() {
-        return orgName;
-    }
-
-    public LuogoEv getLuogoEv() {
-        return luogoEv;
-    }
-
-    public String getDurata() {
-        return durata;
-    }
-
-    public Bitmap decodeBase64() {
-        byte[] decodedImg = Base64.decode(eventPic
-                .replace("data:image/png;base64,", "")
-                .replace("data:image/jpeg;base64,",""), Base64.DEFAULT); //Ritorna una stringa in formato Base64
-        return BitmapFactory.decodeByteArray(decodedImg, 0, decodedImg.length); //Decodifico la stringa ottenuta
+    public ArrayList<LuogoEv> getLuogoEv() {
+        return luogoEvento;
     }
 
     /**
@@ -105,12 +76,14 @@ public class RegisteredEvent {
 
         JsonObject event = json.get("event").getAsJsonObject().get("event").getAsJsonObject();
         String ticketId = json.get("biglietto").getAsString();
+        ArrayList<LuogoEv> luogoEv = new ArrayList<>();
+        luogoEv.add(LuogoEv.parseJSON(json.getAsJsonArray("luogoEv").get(0).getAsJsonObject()));
         return new RegisteredEvent(fromJsonString(gs1, event, "id"),
                 fromJsonString(gs1, event, "idevent"),
                 fromJsonString(gs1, event, "self"), fromJsonString(gs1, event, "name"),
                 fromJsonString(gs1, event, "category"), fromJsonString(gs1, event, "eventPic"),
                 fromJsonString(gs1, event, "orgName"),
-                LuogoEv.parseJSON(event.getAsJsonArray("luogoEv").get(0).getAsJsonObject()),
+                luogoEv,
                 fromJsonString(gs1, event, "durata"), ticketId);
     }
 }

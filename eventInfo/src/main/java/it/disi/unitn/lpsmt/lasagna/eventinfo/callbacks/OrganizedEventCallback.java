@@ -2,6 +2,7 @@ package it.disi.unitn.lpsmt.lasagna.eventinfo.callbacks;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
@@ -11,9 +12,7 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.fields.Field;
-import it.disi.unitn.lpsmt.lasagna.eventinfo.organizedEvent.OrganizedEvent;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.EventInfo;
 
 public class OrganizedEventCallback {
     private final Fragment f;
@@ -31,31 +30,14 @@ public class OrganizedEventCallback {
     }
 
     public void handleInfoSuccess(@NotNull JsonObject body) {
-        OrganizedEvent event = OrganizedEvent.parseJSON(body);
+        EventInfo event = EventInfo.parseJSON(body);
 
         Activity activity = f.getActivity();
         if (activity != null && f.isAdded()) {
-            Field eventPic = new Field();
-            eventPic.setFieldId("eventPicture");
-            eventPic.setFieldValue(event.getEventPic());
-            eventVM.setField(eventPic);
-
-            Field title = new Field();
-            title.setFieldId("title");
-            title.setFieldValue(event.getEventName());
-            eventVM.setField(title);
-
-            Field duration = new Field();
-            if (event.getDurata() == null || event.getDurata().isEmpty()) {
-                duration.setFieldValue(f.getString(R.string.duration, "0", "0", "0"));
-            } else {
-                String[] durataArr = event.getDurata().split(":");
-                duration.setFieldValue(f.getString(R.string.duration, durataArr[0], durataArr[1], durataArr[2]));
-            }
-            duration.setFieldId("duration");
-            eventVM.setField(duration);
-
-            eventVM.setOrganizedEvent(event);
+            Log.i("OrgEvCallback", "activity not null");
+            eventVM.setEventInfo(event);
+        } else {
+            Log.i("OrgEvCallback", "activity null or Fragment not added");
         }
     }
 

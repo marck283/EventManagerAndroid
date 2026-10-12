@@ -12,15 +12,15 @@ import it.disi.unitn.lpsmt.lasagna.localdatabase.entities.OrgEvent;
 @Dao
 public interface OrgEvDAO {
 
-    @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
+    @Query("SELECT O.eventType, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
             "FROM OrgEvents O WHERE O.name = :evName")
     List<OrgEvent> getOrgEventsByName(@NonNull String evName);
 
-    @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
+    @Query("SELECT O.eventType, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
             "FROM OrgEvents O")
     List<OrgEvent> getAllOrgEvents();
 
-    @Query("SELECT O.id, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
+    @Query("SELECT O.eventType, O.idevent, O.self, O.name, O.category, O.eventPic, O.orgName, O.luogoEv, O.durata " +
             "FROM OrgEvents O WHERE O.idevent = :idevent")
     OrgEvent getOrgEventById(@NonNull String idevent);
 
