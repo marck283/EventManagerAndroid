@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventDetailsViewModel;
 import it.disi.unitn.lpsmt.lasagna.eventinfo.EventInfo;
+import it.disi.unitn.lpsmt.lasagna.eventinfo.R;
 
 public class OrganizedEventCallback {
     private final Fragment f;
@@ -49,6 +50,16 @@ public class OrganizedEventCallback {
                     if (!activity.isFinishing() && !activity.isDestroyed()) {
                         Intent loginIntent = new Intent(activity, c);
                         loginLauncher.launch(loginIntent);
+                    }
+                });
+                case 404 -> activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        eventVM.showDialog(R.string.event_not_found, R.string.event_not_found_msg);
+                    }
+                });
+                default -> activity.runOnUiThread(() -> {
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        eventVM.showDialog(R.string.unknown_error, R.string.unknown_error_message);
                     }
                 });
             }

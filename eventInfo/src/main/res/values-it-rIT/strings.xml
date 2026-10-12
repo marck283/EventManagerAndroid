@@ -41,4 +41,6 @@
     <string name="no_event">Nessun evento trovato</string>
     <string name="no_event_message">Nessun evento è stato trovato.</string>
     <string name="registrations_closed">Iscrizioni chiuse</string>
+    <string name="event_not_found">Evento non trovato</string>
+    <string name="event_not_found_msg">Questo evento non esiste.</string>
 </resources>

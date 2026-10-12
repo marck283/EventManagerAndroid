@@ -12,4 +12,6 @@
     <string name="qr_code">QR Code</string>
     <string name="scan_qr_code">Scan QR code</string>
     <string name="info_on_event">Information on the event %1$s</string>
+    <string name="event_not_found">Event not found</string>
+    <string name="event_not_found_msg">This event does not exist.</string>
 </resources>
